@@ -5,9 +5,7 @@ import { JudgeSchema } from '../../judges'
 export interface ClientSchema extends AddressBaseSchema, StatusBaseSchema, BaseModelSchema {
   name: string
   a_number?: string
-  address: string
-  phone: string
-  email?: string
+  email: string
   judge_id?: number
   // orm_mode
   judge?: JudgeSchema
@@ -42,4 +40,34 @@ export interface HistoryClientSchema extends AddressBaseSchema, BaseModelSchema 
   // orm_mode
   client?: ClientSchema
   judge?: JudgeSchema
+}
+
+export interface ClientsState {
+  isCloseModal: boolean
+  clients: ClientSchema[]
+  selectedClient: ClientSchema
+}
+
+export interface ClientsAction extends ClientsState {
+  type: string
+}
+
+export const DefaultClientSchema: ClientSchema = {
+  name: '',
+  a_number: '',
+  status: '',
+  comments: '',
+  street_address: '',
+  city: '',
+  state: '',
+  zip_code: '',
+  phone_number: '',
+  email: '',
+  judge_id: 0,
+}
+
+export const DefaultClientState: ClientsState = {
+  isCloseModal: true,
+  clients: [],
+  selectedClient: DefaultClientSchema,
 }

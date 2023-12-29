@@ -1,8 +1,21 @@
+// actions
+import { getClient, getClients } from './actions/clients.action'
 // components
 import Client from './components/Client'
 import Clients from './components/Clients'
+// reducers
+import clients from './reducers/clients.reducer'
 // types
-import { ClientResponse, ClientSchema, HistoryClientSchema, NoteClientSchema } from './types/clients.data.types'
+import {
+  ClientResponse,
+  ClientsAction,
+  ClientSchema,
+  ClientsState,
+  HistoryClientSchema,
+  NoteClientSchema,
+} from './types/clients.data.types'
 
+export { getClient, getClients }
 export { Client, Clients }
-export type { ClientSchema, ClientResponse, NoteClientSchema, HistoryClientSchema }
+export { clients }
+export type { ClientSchema, ClientResponse, NoteClientSchema, HistoryClientSchema, ClientsState, ClientsAction }
