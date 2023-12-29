@@ -17,18 +17,18 @@ import {
   BUTTON_RESET,
   BUTTON_UPDATE,
 } from '../../constants'
+import { getJudges, JudgeSchema } from '../../judges'
 import { addClient, deleteClient, editClient, getClients } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
 import { ClientSchema, DefaultClientSchema } from '../types/clients.data.types'
 import { isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
-import { getJudges, JudgeSchema } from '../../judges'
 
 const mapStateToProps = ({ clients, judges, statuses }: GlobalState) => {
   return {
     isCloseModal: clients.isCloseModal,
     clientsList: clients.clients,
     statusList: statuses.statuses,
-    judges: judges.judges
+    judges: judges.judges,
   }
 }
 
@@ -39,7 +39,7 @@ const mapDispatchToProps = {
   deleteClient: (id: number) => deleteClient(id),
   unmountPage: () => unmountPage(CLIENTS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  getJudges: () => getJudges()
+  getJudges: () => getJudges(),
 }
 
 interface ClientsProps {
@@ -71,7 +71,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const [clientStatusList, setClientStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if ((clientsList.length === 0 || judgesList.length === 0)  && !isFetchRunDone.current) {
+    if ((clientsList.length === 0 || judgesList.length === 0) && !isFetchRunDone.current) {
       getClients()
       getJudges()
       isFetchRunDone.current = true

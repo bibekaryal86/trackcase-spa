@@ -6,47 +6,47 @@ export const DefaultStatusesState: StatusState = {
     court: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
     judge: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
     client: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
     form: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
     court_case: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
     case_collections: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
     cash_collections: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
     hearing_calendar: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
     task_calendar: {
       active: [],
       inactive: [],
-      all: []
+      all: [],
     },
   },
 }
