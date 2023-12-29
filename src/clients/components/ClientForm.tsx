@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField'
 import React from 'react'
 
 import { STATES_LIST } from '../../constants'
+import { JudgeSchema } from '../../judges'
 import { ClientSchema } from '../types/clients.data.types'
 import { handleClientFormOnChange, isClientFormFieldError } from '../utils/clients.utils'
 
@@ -14,10 +15,11 @@ interface ClientFormProps {
   setSelectedClient: (selectedClient: ClientSchema) => void
   clientStatusList: string[]
   isShowOneClient: boolean
+  judgesList: JudgeSchema[]
 }
 
 const ClientForm = (props: ClientFormProps): React.ReactElement => {
-  const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient } = props
+  const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList } = props
 
   const clientName = () => (
     <TextField
@@ -181,30 +183,35 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       onChange={(e) => handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient)}
     />
   )
+  const clientJudgesList = () => (
+    <FormControl
+      sx={{ minWidth: 425, mt: '16px', mb: '8px' }}
+      required
+      error={!selectedClient.judge_id || selectedClient.judge_id <= 0}
+    >
+      <InputLabel sx={{ left: '-0.9em' }}>Court</InputLabel>
+      <Select
+        labelId="client-select-judge"
+        id="client-select-judge-id"
+        variant="standard"
+        value={!selectedClient.judge_id || selectedClient.judge_id <= 0 ? '' : selectedClient.judge_id}
+        onChange={(e) =>
+          handleClientFormOnChange('judgeId', e.target.value.toString(), selectedClient, setSelectedClient)
+        }
+      >
+        {judgesList.map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {x.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
 
   return isShowOneClient ? (
     <div>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
         {clientName()}
-        {clientPhoneNumber()}
-        {clientPhoneNumber()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientStreetAddress()}
-        {clientCity()}
-        {clientState()}
-        {clientZipCode()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientANumber()}
-        {clientStatus()}
-        {clientComments()}
-      </div>
-    </div>
-  ) : (
-    <div>
-      {clientName()}
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
         {clientPhoneNumber()}
         {clientEmail()}
       </div>
@@ -212,10 +219,33 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
         {clientStreetAddress()}
         {clientCity()}
         {clientState()}
+        {clientZipCode()}
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientZipCode()}
         {clientANumber()}
+        {clientJudgesList()}
+        {clientStatus()}
+      </div>
+      {clientComments()}
+    </div>
+  ) : (
+    <div>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
+        {clientName()}
+        {clientPhoneNumber()}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
+        {clientEmail()}
+        {clientStreetAddress()}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
+        {clientCity()}
+        {clientState()}
+        {clientZipCode()}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
+        {clientANumber()}
+        {clientJudgesList()}
         {clientStatus()}
       </div>
     </div>

@@ -59,9 +59,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
         value={selectedJudge.court_id <= 0 ? '' : selectedJudge.court_id}
         onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge)}
       >
-        {courtsList.map((ct) => (
-          <MenuItem key={ct.id} value={ct.id}>
-            {ct.name}
+        {courtsList.map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {x.name}
           </MenuItem>
         ))}
       </Select>
