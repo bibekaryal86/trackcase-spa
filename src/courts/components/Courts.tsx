@@ -70,7 +70,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
       getCourts()
       isFetchRunDone.current = true
     }
-  }, [courtsList, getCourts])
+  }, [courtsList.length, getCourts])
 
   useEffect(() => {
     if (isCloseModal) {

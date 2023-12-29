@@ -1,4 +1,4 @@
-import { isNumericOnly, validateAddress } from '../../app'
+import { isNumericOnly, validateAddress, validateEmailAddress } from '../../app'
 import { ClientSchema } from '../types/clients.data.types'
 
 export const validateClient = (client: ClientSchema) =>
@@ -93,7 +93,7 @@ export const handleClientFormOnChange = (
         zip_code: isNumericOnly(value) ? value : selectedClient.zip_code,
       }
       break
-    case 'phone':
+    case 'phoneNumber':
       updatedClient = {
         ...selectedClient,
         phone_number: isNumericOnly(value) ? value : selectedClient.phone_number,
@@ -103,15 +103,17 @@ export const handleClientFormOnChange = (
   setSelectedClient(updatedClient)
 }
 
-export const isClientFormFieldError = (name: string, value: string, selectedClient: ClientSchema) => {
+export const isClientFormFieldError = (name: string, value: string | undefined, selectedClient: ClientSchema) => {
   switch (name) {
     case 'name':
     case 'aNumber':
-    case 'email':
     case 'status':
     case 'comments':
-    case 'phoneNumber':
       return !value || value.trim() === ''
+    case 'phoneNumber':
+      return !value || value.trim().length !== 10
+    case 'email':
+      return !value || !validateEmailAddress(value.trim())
     case 'judgeId':
       return !value || Number(value) <= 0
     case 'streetAddress':

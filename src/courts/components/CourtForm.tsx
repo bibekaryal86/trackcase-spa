@@ -86,7 +86,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       required
       error={isCourtFormFieldError(selectedCourt.state)}
     >
-      <InputLabel>State</InputLabel>
+      <InputLabel sx={{ left: '-0.9em' }}>State</InputLabel>
       <Select
         labelId="court-select-state"
         id="court-select-state-id"
@@ -135,7 +135,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       required
       error={isCourtFormFieldError(selectedCourt.status)}
     >
-      <InputLabel>Status</InputLabel>
+      <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
       <Select
         labelId="court-select-status"
         id="court-select-status-id"

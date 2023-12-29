@@ -69,7 +69,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   )
   const judgeStatus = () => (
     <FormControl sx={{ minWidth: 120, mt: '16px', mb: '8px' }} required error={!selectedJudge.status}>
-      <InputLabel>Status</InputLabel>
+      <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
       <Select
         labelId="judge-select-status"
         id="judge-select-status-id"

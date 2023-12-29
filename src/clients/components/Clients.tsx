@@ -28,7 +28,7 @@ const mapStateToProps = ({ clients, judges, statuses }: GlobalState) => {
     isCloseModal: clients.isCloseModal,
     clientsList: clients.clients,
     statusList: statuses.statuses,
-    judges: judges.judges,
+    judgesList: judges.judges,
   }
 }
 

@@ -96,6 +96,8 @@ export const validateAddress = (
   zipCode.trim() &&
   zipCode.trim().length === 5
 
+export const validateEmailAddress = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]{2,3}$/.test(email)
+
 export const isNumericOnly = (input: string, is_allow_period: boolean = false): boolean =>
   is_allow_period ? /^\d*\.?\d*$/.test(input) : /^\d*$/.test(input)
 
