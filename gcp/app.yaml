@@ -10,7 +10,7 @@ handlers:
     upload: build/(.*)
 automatic_scaling:
   min_instances: 1
-  max_instances: 3
+  max_instances: 2
   min_idle_instances: 1
   max_idle_instances: 2
   min_pending_latency: 5000ms
