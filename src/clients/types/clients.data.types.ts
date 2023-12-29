@@ -33,8 +33,6 @@ export interface HistoryClientSchema extends AddressBaseSchema, BaseModelSchema 
   comments?: string
   name?: string
   a_number?: string
-  address?: string
-  phone?: string
   email?: string
   judge_id?: number
   // orm_mode

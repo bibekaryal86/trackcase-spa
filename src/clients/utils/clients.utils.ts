@@ -93,7 +93,7 @@ export const handleClientFormOnChange = (
         zip_code: isNumericOnly(value) ? value : selectedClient.zip_code,
       }
       break
-    case 'phoneNumber':
+    case 'phone':
       updatedClient = {
         ...selectedClient,
         phone_number: isNumericOnly(value) ? value : selectedClient.phone_number,

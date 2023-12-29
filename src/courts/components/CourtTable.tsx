@@ -32,7 +32,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
         isDisableSorting: true,
       },
       {
-        id: 'phoneNumber',
+        id: 'phone',
         label: 'Phone Number',
         isDisableSorting: true,
       },
@@ -106,7 +106,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
         return {
           name: `${x.name}, ${x.state}`,
           address: getFullAddress(x.street_address || '', x.city || '', x.state || '', x.zip_code || ''),
-          phoneNumber: x.phone_number || '',
+          phone: x.phone_number || '',
           dhsAddress: x.dhs_address || '',
           status: x.status || '',
           user: x.user_name,
@@ -118,7 +118,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
         return {
           name: linkToCourt(x),
           address: getFullAddress(x.street_address || '', x.city || '', x.state || '', x.zip_code || ''),
-          phoneNumber: x.phone_number || '',
+          phone: x.phone_number || '',
           dhsAddress: x.dhs_address || '',
           status: x.status,
           actions: actionButtons(x.id || -1, x),
