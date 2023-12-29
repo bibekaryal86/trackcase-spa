@@ -3,6 +3,8 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const DotenvPlugin = require('dotenv-webpack')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = (env) => {
   return {
@@ -32,6 +34,10 @@ module.exports = (env) => {
             filename: 'images/[hash][ext][query]',
           },
         },
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader'],
+        },
       ],
     },
     resolve: {
@@ -57,12 +63,27 @@ module.exports = (env) => {
           minifyURLs: true,
         },
       }),
+      new ForkTsCheckerWebpackPlugin({
+        async: false,
+        typescript: {
+          diagnosticOptions: {
+            semantic: true,
+            syntactic: true,
+          },
+          mode: 'write-references',
+        },
+      }),
+      new ESLintPlugin({
+        extensions: ['js', 'ts', 'tsx'],
+        failOnWarning: true,
+        failOnError: true,
+      }),
       new CleanWebpackPlugin(),
       new DotenvPlugin({
-        path: './variables.env.prod',
+        path: './variables.env',
       }),
       new webpack.EnvironmentPlugin({
-        BASE_URL: env.base_url || 'https://www.prod-url.com',
+        BASE_URL: env.base_url || 'https://authenv-service.appspot.com/',
       }),
     ],
   }

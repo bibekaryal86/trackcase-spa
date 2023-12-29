@@ -1,30 +1,36 @@
-import React from 'react'
-import styled from 'styled-components'
+import { Grid } from '@mui/material'
+import Box from '@mui/material/Box'
+
 import AppRoutes from './AppRoutes'
+import Footer from './Footer'
+import Header from './Header'
+import SideNav from './SideNav'
+import { isLoggedIn } from '../utils/app.utils'
 
-const BodyWrapper = styled.div.attrs({
-  className: 'body-wrapper',
-})`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 5px;
-`
+interface BodyProps {
+  isDarkMode: boolean
+  darkModeCallback: () => void
+  isOpenDrawer: boolean
+  openDrawerCallback: () => void
+  userLogoutCallback: () => void
+}
 
-export const BodyContent = styled.div.attrs({
-  className: 'body-content',
-})`
-  width: 100%;
-  display: inline-block;
-`
-
-const Body = (): React.ReactElement => {
+const Body = (props: BodyProps) => {
   return (
-    <BodyWrapper>
-      <BodyContent>
-        <AppRoutes />
-      </BodyContent>
-    </BodyWrapper>
+    <div>
+      <Header {...props} />
+      <Box sx={{ display: 'flex' }}>
+        {isLoggedIn() && <SideNav {...props} />}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sx={{ m: 2, p: 2 }}>
+            <AppRoutes />
+          </Grid>
+          <Grid item xs={12} sx={{ m: 2, p: 2 }}>
+            <Footer />
+          </Grid>
+        </Grid>
+      </Box>
+    </div>
   )
 }
 

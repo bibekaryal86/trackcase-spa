@@ -1,4 +1,6 @@
+.git
 .github
 .idea
 build
+gcp
 node_modules

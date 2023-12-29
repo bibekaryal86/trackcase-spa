@@ -1,162 +1,112 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import styled from 'styled-components'
-import { UserDetails } from '../types/login.data.types'
-import { AuthContext } from '../context/AuthContext'
-import { protectedRoutes } from './AppRoutes'
+import { AccountCircleRounded, LogoutRounded } from '@mui/icons-material'
+import MenuIcon from '@mui/icons-material/Menu'
+import { useMediaQuery } from '@mui/material'
+import MuiAppBar from '@mui/material/AppBar'
+import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar/AppBar'
+import FormGroup from '@mui/material/FormGroup'
+import IconButton from '@mui/material/IconButton'
+import Stack from '@mui/material/Stack'
+import { styled } from '@mui/material/styles'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import { useNavigate } from 'react-router-dom'
 
-const StyledHeader = styled.header.attrs({
-  className: 'styled-header',
-})`
-  position: relative;
-  z-index: 1;
-  top: 0;
-`
+import Link from './Link'
+import Switch from './Switch'
+import { DRAWER_WIDTH } from '../../constants'
+import { isLoggedIn } from '../utils/app.utils'
 
-const StyledNav = styled.nav.attrs({
-  className: 'styled-nav',
-})<StyledNavProps>`
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  color: whitesmoke;
+const drawerWidth = DRAWER_WIDTH
 
-  font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
-  background: ${(props) => (props.background ? props.background : 'mediumseagreen')};
-  justify-content: ${(props) => (props.justifycontent ? props.justifycontent : 'center')};
-
-  @media (max-width: 786px) {
-    flex-direction: column;
-  }
-`
-
-const StyledNavLink = styled(NavLink)<StyledNavProps>`
-  margin: ${(props) => (props.margin ? props.margin : '5px 5px 5px 5px')};
-  padding: ${(props) => (props.padding ? props.padding : '5px 5px 5px 5px')};
-  color: whitesmoke;
-  font-weight: normal;
-  &.active {
-    font-weight: bold;
-  }
-  &:hover {
-    transform: scale(1.05);
-  }
-`
-
-const StyledNavLinkDropdown = styled(StyledNavLink)`
-  margin: 0px;
-  background: mediumseagreen;
-  display: block;
-  text-align: left;
-  &:hover {
-    background-color: darkseagreen;
-  }
-`
-
-const StyledNavDropdownMenuContent = styled.div.attrs({
-  className: 'styled-nav-dropdown-menu-content',
-})`
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-`
-
-const StyledNavDropdownMenu = styled.div.attrs({
-  className: 'styled-nav-dropdown-menu',
-})`
-  display: inline-block;
-  &:hover ${StyledNavDropdownMenuContent} {
-    display: block;
-  }
-`
-
-const StyledNavLinkButton = styled(StyledNavLink)<StyledNavProps>`
-  padding: 2px 5px 2px 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: 1px solid whitesmoke;
-`
-
-// use all lowercase because of console error
-// use string instead of boolean because of console error
-interface StyledNavProps {
-  margin?: string
-  padding?: string
-  justifycontent?: string
-  background?: string
-  fontWeight?: string
+interface HeaderProps {
+  isDarkMode: boolean
+  darkModeCallback: () => void
+  isOpenDrawer: boolean
+  openDrawerCallback: () => void
+  userLogoutCallback: () => void
 }
 
-const getDisplayName = (userDetails: UserDetails): string =>
-  userDetails ? userDetails.firstName + ' ' + userDetails.lastName : ''
-
-const Header = (): React.ReactElement => {
-  const [isLoggedIn, setLoggedIn] = useState(false)
-  const [displayName, setDisplayName] = useState('')
-  const authContext = useContext(AuthContext)
-
-  useEffect(() => {
-    const userDetails = authContext.auth?.userDetails
-    setDisplayName(getDisplayName(userDetails))
-    setLoggedIn(authContext.auth?.isLoggedIn)
-  }, [authContext.auth])
-
-  return (
-    <StyledHeader>
-      <HeaderLinks displayName={displayName} />
-      <Navigation isLoggedIn={isLoggedIn} />
-    </StyledHeader>
-  )
+interface AppBarProps extends MuiAppBarProps {
+  open: boolean
 }
 
-const HeaderLinks = ({ displayName = '' }): React.ReactElement => {
-  return (
-    <StyledNav justifycontent={displayName.trim() ? 'space-between' : ''} background="seagreen" fontWeight="bold">
-      React SPA Skeleton
-      {displayName.trim() ? (
-        <>
-          <div>
-            {displayName} |
-            <StyledNavLinkButton to="/logout" margin="0px 5px 0px 5px">
-              Sign Out
-            </StyledNavLinkButton>
-          </div>
-        </>
-      ) : (
-        <></>
-      )}
-    </StyledNav>
-  )
-}
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})<AppBarProps>(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(['width', 'margin'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: isLoggedIn() ? drawerWidth : 0,
+    width: `calc(100% - ${isLoggedIn() ? drawerWidth : 0}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}))
 
-const Navigation = ({ isLoggedIn = false }): React.ReactElement => {
+const Header = (props: HeaderProps) => {
+  // navigate to user account page
+  const navigate = useNavigate()
+  const navigateToPage = (path: string) => {
+    navigate(path, {
+      replace: true,
+    })
+  }
+
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
   return (
-    <StyledNav justifycontent="center">
-      {protectedRoutes.map((route) =>
-        route.display ? (
-          route.submenus ? (
-            <StyledNavDropdownMenu key={route.path}>
-              <StyledNavLink to={route.path}>{route.display}</StyledNavLink>
-              {isLoggedIn && (
-                <StyledNavDropdownMenuContent>
-                  {route.submenus.map((subroute) => (
-                    <StyledNavLinkDropdown key={subroute.path} to={subroute.path}>
-                      {subroute.display}
-                    </StyledNavLinkDropdown>
-                  ))}
-                </StyledNavDropdownMenuContent>
-              )}
-            </StyledNavDropdownMenu>
-          ) : (
-            <StyledNavLink key={route.path} to={route.path}>
-              {route.display}
-            </StyledNavLink>
-          )
-        ) : null,
-      )}
-    </StyledNav>
+    <AppBar position="sticky" open={props.isOpenDrawer} sx={{ boxShadow: 'none' }}>
+      <Toolbar
+        sx={{
+          pr: '24px', // keep right padding when drawer closed
+        }}
+      >
+        {isLoggedIn() && (
+          <IconButton
+            color="inherit"
+            onClick={props.openDrawerCallback}
+            edge="start"
+            sx={{
+              marginRight: 5,
+              ...(props.isOpenDrawer && { display: 'none' }),
+            }}
+            disabled={isSmallScreen}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+
+        <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+          <Link text="TrackCase Service" color="inherit" navigateToPage="/home" />
+        </Typography>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Tooltip title={props.isDarkMode ? 'Dark Mode ON' : 'Dark Mode'}>
+            <FormGroup>
+              <Switch isChecked={!props.isDarkMode} onChangeCallback={props.darkModeCallback} />
+            </FormGroup>
+          </Tooltip>
+          {isLoggedIn() && (
+            <div>
+              <Tooltip title="Account Settings">
+                <IconButton color="inherit" onClick={() => navigateToPage('/account')}>
+                  <AccountCircleRounded />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Sign Out">
+                <IconButton color="inherit" onClick={props.userLogoutCallback}>
+                  <LogoutRounded />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )}
+        </Stack>
+      </Toolbar>
+    </AppBar>
   )
 }
 

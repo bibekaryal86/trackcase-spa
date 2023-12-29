@@ -1,30 +1,21 @@
-import React, { useContext, useEffect } from 'react'
+import React from 'react'
+import { connect } from 'react-redux'
 import { Navigate } from 'react-router-dom'
-import { AuthContext } from '../context/AuthContext'
-import { DefaultUserDetails } from '../types/login.data.types'
+
+import { userLogout } from '../actions/logout.action'
 
 interface LogoutProps {
   userLogout: () => void
 }
 
 const Logout = (props: LogoutProps): React.ReactElement => {
-  // also update context when log out
-  const authContext = useContext(AuthContext)
-  const { userLogout } = props
-
-  useEffect(() => {
-    userLogout()
-
-    const auth = {
-      isLoggedIn: false,
-      token: '',
-      userDetails: DefaultUserDetails,
-    }
-
-    authContext.login(auth)
-  }, [authContext, userLogout])
+  props.userLogout()
 
   return <Navigate to="/" />
 }
 
-export default Logout
+const mapDispatchToProps = {
+  userLogout: () => userLogout(),
+}
+
+export default connect(null, mapDispatchToProps)(Logout)
