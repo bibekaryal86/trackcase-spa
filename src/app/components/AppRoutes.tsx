@@ -68,22 +68,6 @@ export const protectedRoutes: RoutesType[] = [
     ],
   },
   {
-    path: '/clients',
-    display: 'Clients',
-    element: <Clients />,
-    icon: <GroupsIcon />,
-  },
-  {
-    path: '/client',
-    element: <Client />,
-    subroutes: [
-      {
-        path: ':id',
-        element: <Client />,
-      },
-    ],
-  },
-  {
     path: '/cash_collections',
     display: 'Collections',
     element: <CashCollections />,
@@ -148,18 +132,18 @@ export const protectedRoutes: RoutesType[] = [
     ],
   },
   {
-    path: '/courts',
-    display: 'Courts',
-    element: <Courts />,
-    icon: <AccountBalanceIcon />,
+    path: '/clients',
+    display: 'Clients',
+    element: <Clients />,
+    icon: <GroupsIcon />,
   },
   {
-    path: '/court',
-    element: <Court />,
+    path: '/client',
+    element: <Client />,
     subroutes: [
       {
         path: ':id',
-        element: <Court />,
+        element: <Client />,
       },
     ],
   },
@@ -176,6 +160,22 @@ export const protectedRoutes: RoutesType[] = [
       {
         path: ':id',
         element: <Judge />,
+      },
+    ],
+  },
+  {
+    path: '/courts',
+    display: 'Courts',
+    element: <Courts />,
+    icon: <AccountBalanceIcon />,
+  },
+  {
+    path: '/court',
+    element: <Court />,
+    subroutes: [
+      {
+        path: ':id',
+        element: <Court />,
       },
     ],
   },

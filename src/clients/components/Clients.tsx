@@ -72,8 +72,8 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   useEffect(() => {
     if ((clientsList.length === 0 || judgesList.length === 0) && !isFetchRunDone.current) {
-      getClients()
-      getJudges()
+      clientsList.length === 0 && getClients()
+      judgesList.length === 0 && getJudges()
       isFetchRunDone.current = true
     }
   }, [clientsList.length, judgesList.length, getClients, getJudges])
@@ -85,12 +85,12 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   }, [isCloseModal])
 
   useEffect(() => {
-    if (Object.keys(statusList).length === 0) {
+    if (statusList.client.all.length === 0) {
       getStatusesList()
     } else {
       setClientStatusList(statusList.client.all)
     }
-  }, [statusList, getStatusesList])
+  }, [statusList.client.all, getStatusesList])
 
   useEffect(() => {
     return () => {

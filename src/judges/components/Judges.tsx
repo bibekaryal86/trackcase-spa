@@ -86,8 +86,8 @@ const Judges = (props: JudgesProps): React.ReactElement => {
         getCourts()
       }
     } else if ((judgesList.length === 0 || courtsList.length === 0) && !isFetchRunDone.current) {
-      getJudges()
-      getCourts()
+      judgesList.length === 0 && getJudges()
+      courtsList.length === 0 && getCourts()
       isFetchRunDone.current = true
     }
   }, [courtId, courtsList.length, getCourt, getCourts, getJudges, judgesList.length, selectedCourt])
