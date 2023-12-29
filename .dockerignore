@@ -2,9 +2,8 @@
 .github
 .idea
 build
+gcp
 node_modules
 .dockerignore
 .gitignore
-amplify.yml
-Dockerfile
 README.md

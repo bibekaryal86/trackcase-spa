@@ -1,29 +1,32 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { DisplayCardWrapperRow, DisplayCardWrapperBody } from '../../styles'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 
-const Home = (): React.ReactElement => {
+import { getStatusesList, testDatabase } from '../../app'
+
+const mapDispatchToProps = {
+  getStatuses: () => getStatusesList(),
+}
+
+interface HomeProps {
+  getStatuses: () => void
+}
+
+const Home = (props: HomeProps): React.ReactElement => {
+  const { getStatuses } = props
+  useEffect(() => {
+    // This code will run when the component mounts (page loads)
+    testDatabase()
+    getStatuses()
+    // Provide an empty dependency array to run the effect only on mount
+  }, [getStatuses])
+
   const homePageText = () => (
     <>
-      <DisplayCardWrapperBody>
-        <h5>Find something to display in Summary</h5>
-      </DisplayCardWrapperBody>
-      <DisplayCardWrapperBody>
-        <DisplayCardWrapperRow borderBtm>
-          <h6>
-            Go to some page, <Link to="/some_page">click here</Link>
-          </h6>
-        </DisplayCardWrapperRow>
-        <DisplayCardWrapperRow>
-          <h6>
-            Go to another page, <Link to="/another_page">click here</Link>
-          </h6>
-        </DisplayCardWrapperRow>
-      </DisplayCardWrapperBody>
+      <h5>This is the Home Page!</h5>
     </>
   )
 
   return <>{homePageText()}</>
 }
 
-export default Home
+export default connect(null, mapDispatchToProps)(Home)

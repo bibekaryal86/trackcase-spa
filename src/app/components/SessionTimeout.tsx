@@ -1,21 +1,20 @@
-import { Fragment, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
-import { LocalStorage } from '../../common'
-import { AuthContext } from '../context/AuthContext'
-import { DefaultUserDetails } from '../types/login.data.types'
+import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react'
+import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { MSG_KEY_SESSION_INVALID } from '../../constants'
 
-interface LogoutProps {
+import { INVALID_SESSION } from '../../constants'
+import { userLogout } from '../actions/logout.action'
+import { LocalStorage } from '../utils/storage.utils'
+
+interface SessionTimeoutProps {
   userLogout: () => void
 }
 
-const SessionTimeout = (props: LogoutProps) => {
+const SessionTimeout = (props: SessionTimeoutProps) => {
   // log out when inactive
   const { userLogout } = props
   // redirect to home page when log out
   const navigate = useNavigate()
-  // also update context when log out
-  const authContext = useContext(AuthContext)
 
   const events = useMemo(() => ['keypress', 'mousemove', 'click'], [])
   const warningInactiveInterval = useRef(0)
@@ -23,22 +22,17 @@ const SessionTimeout = (props: LogoutProps) => {
 
   const navigateToHome = useCallback(
     (msg: string) => {
-      console.log(msg)
+      console.log('SessionTimeout: ', msg)
       clearInterval(warningInactiveInterval.current)
       clearTimeout(startTimerInterval.current)
       userLogout()
-      authContext.login({
-        isLoggedIn: false,
-        token: '',
-        userDetails: DefaultUserDetails,
-      })
 
       navigate('/', {
         replace: true,
-        state: { message: MSG_KEY_SESSION_INVALID },
+        state: { message: INVALID_SESSION },
       })
     },
-    [authContext, navigate, userLogout],
+    [navigate, userLogout],
   )
 
   const warningInactive = useCallback(() => {
@@ -49,7 +43,6 @@ const SessionTimeout = (props: LogoutProps) => {
       const currentDateTime = new Date()
 
       if (tokenExpiration && tokenExpDate <= currentDateTime) {
-        console.log('***', tokenExpDate, tokenExpiration, tokenExpDate <= currentDateTime, currentDateTime)
         navigateToHome('Token Expired, Redirecting to Home')
       }
     }, 1000)
@@ -98,4 +91,8 @@ const SessionTimeout = (props: LogoutProps) => {
   return <Fragment />
 }
 
-export default SessionTimeout
+const mapDispatchToProps = {
+  userLogout: () => userLogout(),
+}
+
+export default connect(null, mapDispatchToProps)(SessionTimeout)

@@ -1,24 +1,21 @@
+import Typography from '@mui/material/Typography'
 import React from 'react'
-import styled from 'styled-components'
 
-export const StyledFooter = styled.footer.attrs({
-  className: 'styled-footer',
-})`
-  margin: 100px;
-  font-size: smaller;
-  color: grey;
-  text-align: center;
-  bottom: 0;
-`
+import Link from './Link'
 
 const BUILD_NUMBER = process.env.BUILD_NUMBER
 const CURRENT_YEAR = new Date().getFullYear()
 
 const Footer = (): React.ReactElement => {
   return (
-    <StyledFooter>
-      Copyright (c). {CURRENT_YEAR}. All rights reserved. <br /> build {BUILD_NUMBER}
-    </StyledFooter>
+    <div>
+      <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 23, mb: 2 }}>
+        {'Copyright © '}
+        <Link text={' Bibek Aryal '} href="https://www.bibekaryal.com/" target="_blank" />
+        <br />
+        {'build '} {BUILD_NUMBER} {CURRENT_YEAR}
+      </Typography>
+    </div>
   )
 }
 

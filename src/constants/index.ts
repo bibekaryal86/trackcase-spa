@@ -1,37 +1,109 @@
-export const INPUT_REGEX_PATTERN = /^[A-Za-z0-9]+$/
+export const REGEX_LOGIN_INPUT_PATTERN = /^[A-Za-z0-9]+$/
+export const REGEX_DATE_FORMAT = new RegExp('[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}')
+export const REGEX_CURRENCY_FORMAT = new RegExp('^\\$|\\-\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{1,2})?$')
+
+export const DRAWER_WIDTH: number = 240
+
+export const ACTION_ADD = 'add'
+export const ACTION_UPDATE = 'update'
+export const ACTION_DELETE = 'delete'
+
+export const BUTTON_ADD = 'Add'
+export const BUTTON_UPDATE = 'Update'
+export const BUTTON_DELETE = 'Delete'
+export const BUTTON_CANCEL = 'Cancel'
+export const BUTTON_RESET = 'Reset'
+export const BUTTON_CLOSE = 'Close'
 
 export const ALERT_TYPE_SUCCESS = 'success'
-export const ALERT_TYPE_FAILURE = 'failure'
+export const ALERT_TYPE_FAILURE = 'error'
 export const ALERT_TYPE_INFO = 'info'
-export const ALERT_TYPE_WARN = 'warn'
+export const ALERT_TYPE_WARNING = 'warning'
 
-export const checkBoxOptionsYesNo = [
+export const CHECK_BOX_OPTIONS_YES_NO = [
   { value: 'YES', text: 'YES' },
   { value: 'NO', text: 'NO' },
 ]
 
-export const TABLE_DISPLAY_ONLY_SEPARATOR = '_display'
-export const TABLE_EXPORT_ONLY_SEPARATOR = '_export'
-export const TABLE_SORT_DIRECTION_ASCENDING = 'ASC'
-export const TABLE_SORT_DIRECTION_DESCENDING = 'DESC'
-export const TABLE_SORTED_ASC_CODE = 8657
-export const TABLE_SORTED_DESC_CODE = 8659
-export const TABLE_SORTED_NONE_CODE = 8205
-export const TABLE_EXPORT_KEY_FOR_TITLE = 'title'
+// BROWSER STORAGE
+export const IS_DARK_MODE = 'isDarkMode'
+export const IS_OPEN_DRAWER = 'isOpenDrawer'
+export const FORCE_LOGOUT = 'forceLogout'
 
-export const DATE_FORMAT_MATCHER_REGEX = new RegExp('[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}')
-export const CURRENCY_FORMAT_MATCHER_REGEX = new RegExp('^\\$|\\-\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{1,2})?$')
+// ALERT MESSAGES
+export const SOMETHING_WENT_WRONG = 'Something Went Wrong! Please Try Again!!'
+export const INVALID_SIGNIN = 'Invalid Input! Please Try Again!!'
+export const FAIL_SIGNIN = 'Invalid Username and/or Password! Please Try Again!!'
+export const SIGNIN_FIRST = 'Please Sign In First!'
+export const INVALID_SESSION = 'Session Invalidated Due To Inactivity/Expiry! Please Sign In Again to Continue!!'
 
-export const MSG_KEY_SOMETHING_WENT_WRONG = 'GENERIC_ERROR'
-export const MSG_KEY_INVALID_SIGNIN = 'INVALID_SIGNIN'
-export const MSG_KEY_FAIL_SIGNIN = 'FAIL_SIGNIN'
-export const MSG_KEY_SIGNIN_FIRST = 'SIGNIN_FIRST'
-export const MSG_KEY_SESSION_INVALID = 'INVALID_SESSION'
+export const CREATE_SUCCESS = (what: string) => `Add ${what} Success!`
+export const UPDATE_SUCCESS = (what: string) => `Edit ${what} Success!`
+export const DELETE_SUCCESS = (what: string) => `Delete ${what} Success!`
 
-export const ALERT_MESSAGES = new Map([
-  [MSG_KEY_SOMETHING_WENT_WRONG, 'Something Went Wrong! Please Try Again!!!'],
-  [MSG_KEY_INVALID_SIGNIN, 'Invalid Input! Please Try Again!!!'],
-  [MSG_KEY_FAIL_SIGNIN, 'Invalid Username and/or Password! Please Try Again!!!'],
-  [MSG_KEY_SIGNIN_FIRST, 'Please Sign In First!!!'],
-  [MSG_KEY_SESSION_INVALID, 'Session Invalidated Due to Inactivity/Expiry! Please Sign In Again to Continue!!!'],
-])
+// NOTE OBJECT TYPES
+export const NOTE_OBJECT_TYPES = Object.freeze({
+  COURT: 'court',
+  JUDGE: 'judge',
+  CLIENT: 'client',
+  COURT_CASE: 'court_case',
+  HEARING_CALENDAR: 'hearing_calendar',
+  TASK_CALENDAR: 'task_calendar',
+  FORM: 'form',
+  CASE_COLLECTION: 'case_collection',
+  CASH_COLLECTION: 'cash_collection',
+})
+
+// STATES
+export const STATES_LIST = [
+  { name: 'Alabama', abbreviation: 'AL' },
+  { name: 'Alaska', abbreviation: 'AK' },
+  { name: 'Arizona', abbreviation: 'AZ' },
+  { name: 'Arkansas', abbreviation: 'AR' },
+  { name: 'California', abbreviation: 'CA' },
+  { name: 'Colorado', abbreviation: 'CO' },
+  { name: 'Connecticut', abbreviation: 'CT' },
+  { name: 'Delaware', abbreviation: 'DE' },
+  { name: 'Florida', abbreviation: 'FL' },
+  { name: 'Georgia', abbreviation: 'GA' },
+  { name: 'Hawaii', abbreviation: 'HI' },
+  { name: 'Idaho', abbreviation: 'ID' },
+  { name: 'Illinois', abbreviation: 'IL' },
+  { name: 'Indiana', abbreviation: 'IN' },
+  { name: 'Iowa', abbreviation: 'IA' },
+  { name: 'Kansas', abbreviation: 'KS' },
+  { name: 'Kentucky', abbreviation: 'KY' },
+  { name: 'Louisiana', abbreviation: 'LA' },
+  { name: 'Maine', abbreviation: 'ME' },
+  { name: 'Maryland', abbreviation: 'MD' },
+  { name: 'Massachusetts', abbreviation: 'MA' },
+  { name: 'Michigan', abbreviation: 'MI' },
+  { name: 'Minnesota', abbreviation: 'MN' },
+  { name: 'Mississippi', abbreviation: 'MS' },
+  { name: 'Missouri', abbreviation: 'MO' },
+  { name: 'Montana', abbreviation: 'MT' },
+  { name: 'Nebraska', abbreviation: 'NE' },
+  { name: 'Nevada', abbreviation: 'NV' },
+  { name: 'New Hampshire', abbreviation: 'NH' },
+  { name: 'New Jersey', abbreviation: 'NJ' },
+  { name: 'New Mexico', abbreviation: 'NM' },
+  { name: 'New York', abbreviation: 'NY' },
+  { name: 'North Carolina', abbreviation: 'NC' },
+  { name: 'North Dakota', abbreviation: 'ND' },
+  { name: 'Ohio', abbreviation: 'OH' },
+  { name: 'Oklahoma', abbreviation: 'OK' },
+  { name: 'Oregon', abbreviation: 'OR' },
+  { name: 'Pennsylvania', abbreviation: 'PA' },
+  { name: 'Rhode Island', abbreviation: 'RI' },
+  { name: 'South Carolina', abbreviation: 'SC' },
+  { name: 'South Dakota', abbreviation: 'SD' },
+  { name: 'Tennessee', abbreviation: 'TN' },
+  { name: 'Texas', abbreviation: 'TX' },
+  { name: 'Utah', abbreviation: 'UT' },
+  { name: 'Vermont', abbreviation: 'VT' },
+  { name: 'Virginia', abbreviation: 'VA' },
+  { name: 'Washington', abbreviation: 'WA' },
+  { name: 'West Virginia', abbreviation: 'WV' },
+  { name: 'Wisconsin', abbreviation: 'WI' },
+  { name: 'Wyoming', abbreviation: 'WY' },
+]

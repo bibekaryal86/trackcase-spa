@@ -1,13 +1,16 @@
-import { MSG_KEY_FAIL_SIGNIN, MSG_KEY_SOMETHING_WENT_WRONG } from '../../constants'
-import { Async, FetchOptions, getEndpoint } from '../../common'
-import { DefaultLoginResponse, LoginResponse } from '../types/login.data.types'
+import { FAIL_SIGNIN, SOMETHING_WENT_WRONG } from '../../constants'
+import { DefaultLoginResponse, LoginResponse } from '../types/app.data.types'
+import { getEndpoint, getErrMsg } from '../utils/app.utils'
+import { Async, FetchOptions } from '../utils/fetch.utils'
 
 export const userLogin = async (username: string, password: string): Promise<LoginResponse> => {
   try {
-    const loginEndpoint = getEndpoint(process.env.LOGIN_ENDPOINT as string)
+    const loginEndpoint = getEndpoint(process.env.LOGIN_ENDPOINT as string, false)
     const options: Partial<FetchOptions> = {
       method: 'POST',
       noAuth: true,
+      withBasicAuth: true,
+      isIncludeUsernameHeader: false,
       requestBody: {
         username,
         password,
@@ -20,10 +23,14 @@ export const userLogin = async (username: string, password: string): Promise<Log
       return loginResponse
     } else {
       console.log('Login Action Failed: ', loginResponse)
-      return { ...DefaultLoginResponse, errMsg: MSG_KEY_FAIL_SIGNIN }
+      if (loginResponse?.detail) {
+        return { ...DefaultLoginResponse, errMsg: getErrMsg(loginResponse.detail) }
+      } else {
+        return { ...DefaultLoginResponse, errMsg: FAIL_SIGNIN }
+      }
     }
   } catch (error) {
     console.log('Login Action Error: ', error)
-    return { ...DefaultLoginResponse, errMsg: MSG_KEY_SOMETHING_WENT_WRONG }
+    return { ...DefaultLoginResponse, errMsg: SOMETHING_WENT_WRONG }
   }
 }

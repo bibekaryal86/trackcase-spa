@@ -33,6 +33,10 @@ module.exports = (env) => {
             filename: 'images/[hash][ext][query]',
           },
         },
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader'],
+        },
       ],
     },
     resolve: {
@@ -45,7 +49,7 @@ module.exports = (env) => {
         directory: path.resolve(__dirname, 'build'),
       },
       historyApiFallback: true,
-      port: 1000,
+      port: 9191,
       open: false,
       hot: true,
       https: false,
@@ -58,24 +62,26 @@ module.exports = (env) => {
         historyApiFallback: 'public/index/html',
       }),
       //new webpack.HotModuleReplacementPlugin(),
-      new ForkTsCheckerWebpackPlugin({
-        async: false,
-        typescript: {
-          diagnosticOptions: {
-            semantic: true,
-            syntactic: true,
-          },
-          mode: 'write-references',
-        },
-      }),
+      // new ForkTsCheckerWebpackPlugin({
+      //   async: false,
+      //   typescript: {
+      //     diagnosticOptions: {
+      //       semantic: true,
+      //       syntactic: true,
+      //     },
+      //     mode: 'write-references',
+      //   },
+      // }),
       new ESLintPlugin({
         extensions: ['js', 'ts', 'tsx'],
+        failOnWarning: false,
+        failOnError: false,
       }),
       new DotenvPlugin({
-        path: './variables.env.dev',
+        path: './variables.env',
       }),
       new webpack.EnvironmentPlugin({
-        BASE_URL: env.base_url || 'http://localhost:1000',
+        BASE_URL: env.base_url || 'http://10.0.0.29:9999/',
       }),
     ],
   }

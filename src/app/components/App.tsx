@@ -1,79 +1,90 @@
-import React, { useCallback, useEffect, useReducer } from 'react'
+import CssBaseline from '@mui/material/CssBaseline'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { AllGlobalStyles } from '../../styles'
-import Header from './Header'
-import { Alert, LocalStorage, resetSpinner, setSpinner, Spinner } from '../../common'
-import Body from './Body'
-import Footer from './Footer'
-import { AuthContext, AuthState, DefaultAuthState } from '../context/AuthContext'
-import { UserDetails } from '../types/login.data.types'
-import authReducer from '../reducers/auth.reducer'
-import SessionTimeoutContainer from './SessionTimeoutContainer'
+import { useNavigate } from 'react-router-dom'
 
-const AppRender = ({ components }: { components: React.ReactElement[] }) => {
-  return (
-    <>
-      {components.map((component: React.ReactElement) => (
-        <div key={component.key} className="row">
-          <div className="twelve columns">{component}</div>
-        </div>
-      ))}
-    </>
-  )
+import Alerts from './Alerts'
+import Body from './Body'
+import SessionTimeout from './SessionTimeout'
+import Spinner from './Spinner'
+import { IS_DARK_MODE, IS_OPEN_DRAWER } from '../../constants'
+import { userLogout } from '../actions/logout.action'
+import { SessionStorage } from '../utils/storage.utils'
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+})
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+})
+
+type AppProps = {
+  userLogout: () => void
 }
 
-function App(): React.ReactElement {
-  const [auth, setAuth] = useReducer(authReducer, DefaultAuthState)
+function App(props: AppProps): React.ReactElement {
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
-  // Set Auth Context from Local Storage on Page Reload
-  const checkLogin = useCallback((auth: AuthState): AuthState => {
-    setAuth({ authState: auth })
-    return auth
+  const openDrawerCallback = () => {
+    setIsOpenDrawer((prevState) => !prevState)
+    SessionStorage.setItem(IS_OPEN_DRAWER, String(!isOpenDrawer))
+  }
+  const darkModeCallback = () => {
+    setIsDarkMode((prevState) => !prevState)
+    SessionStorage.setItem(IS_DARK_MODE, String(!isDarkMode))
+  }
+
+  // redirect to sign in page when log out
+  const navigate = useNavigate()
+  const userLogoutCallback = () => {
+    props.userLogout()
+    navigate('/', {
+      replace: true,
+    })
+  }
+
+  // when page is reloaded, set drawer and dark mode
+  useEffect(() => {
+    const isOpenDrawerSession = SessionStorage.getItem(IS_OPEN_DRAWER) as string
+    const isDarkModeSession = SessionStorage.getItem(IS_DARK_MODE) as string
+
+    if (isOpenDrawerSession) {
+      setIsOpenDrawer(isOpenDrawerSession === 'true')
+    }
+
+    if (isDarkModeSession) {
+      setIsDarkMode(isDarkModeSession === 'true')
+    }
   }, [])
 
-  useEffect(() => {
-    const token = LocalStorage.getItem('token') as string
-    const userDetails = LocalStorage.getItem('userDetails') as UserDetails
-    const isLoggedIn = !!token
-    const authState = {
-      isLoggedIn,
-      token,
-      userDetails,
-    }
-    checkLogin(authState)
-  }, [checkLogin])
-
   const theApp = () => (
-    <div>
-      <SessionTimeoutContainer />
-      <AllGlobalStyles />
-      <AuthContext.Provider
-        value={{
-          auth,
-          login: checkLogin,
-        }}
-      >
-        <div className="container">
-          <AppRender
-            components={[
-              <Header key="app-header-key" />,
-              <Alert key="app-alert-key" />,
-              <Spinner key="app-spinner-key" size="20" />,
-              <Body key="app-body-key" />,
-              <Footer key="app-footer-key" />,
-            ]}
-          />
-        </div>
-      </AuthContext.Provider>
-    </div>
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <CssBaseline />
+      <SessionTimeout />
+      <Spinner />
+      <Alerts />
+      <Body
+        isDarkMode={isDarkMode}
+        darkModeCallback={darkModeCallback}
+        isOpenDrawer={isOpenDrawer}
+        openDrawerCallback={openDrawerCallback}
+        userLogoutCallback={userLogoutCallback}
+      />
+    </ThemeProvider>
   )
 
   return <>{theApp()}</>
 }
 
 const mapDispatchToProps = {
-  setSpinner: () => setSpinner(),
-  resetSpinner: () => resetSpinner(),
+  userLogout: () => userLogout(),
 }
 
 export default connect(null, mapDispatchToProps)(App)

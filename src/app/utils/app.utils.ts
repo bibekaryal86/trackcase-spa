@@ -1,0 +1,122 @@
+import React from 'react'
+
+import { LocalStorage } from './storage.utils'
+import { REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { GlobalDispatch } from '../store/redux'
+import { AuthState, ErrorDetail, NoteSchema, UserDetails } from '../types/app.data.types'
+
+export const unmountPage = (type: string) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    dispatch({
+      type: type,
+    })
+  }
+}
+
+export const clearMessages = (type: string) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    dispatch({
+      type: type,
+    })
+  }
+}
+
+export const validateLoginInput = (username: string, password: string): boolean =>
+  !!(
+    username &&
+    password &&
+    username.length > 6 &&
+    password.length > 6 &&
+    username.length < 21 &&
+    password.length < 21 &&
+    REGEX_LOGIN_INPUT_PATTERN.test(username) &&
+    REGEX_LOGIN_INPUT_PATTERN.test(password)
+  )
+
+export const isLoggedIn = (): AuthState | undefined => {
+  const token = LocalStorage.getItem('token') as string
+  const userDetails = LocalStorage.getItem('userDetails') as UserDetails
+  const isLoggedIn = !!token
+  if (isLoggedIn) {
+    return {
+      isLoggedIn,
+      token,
+      userDetails,
+    }
+  }
+  return undefined
+}
+
+export const getEndpoint = (endpoint: string, isIncludeTrailingSlash: boolean = true): string => {
+  const baseUrl = process.env.BASE_URL as string
+  const baseUrlClean = baseUrl.replaceAll('"', '').trim()
+  if (isIncludeTrailingSlash && !endpoint.endsWith('/')) {
+    return baseUrlClean.concat(endpoint).concat('/')
+  }
+  return baseUrlClean.concat(endpoint)
+}
+
+export const getErrMsg = (errorDetail: ErrorDetail | string): string => {
+  if (typeof errorDetail === 'string') {
+    return errorDetail
+  } else if (errorDetail.error) {
+    return errorDetail.error
+  } else {
+    return JSON.stringify(errorDetail)
+  }
+}
+
+export const getStartOfTheMonth = (): string => {
+  const year = new Date().getFullYear()
+  let month = (new Date().getMonth() + 1).toString()
+  if (month.length == 1) {
+    month = '0' + month
+  }
+  return year + '-' + month + '-01'
+}
+
+export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-01'
+
+export const getFullAddress = (streetAddress: string, city: string, state: string, zipCode: string) =>
+  `${streetAddress}, ${city}, ${state} ${zipCode}`
+
+export const validateAddress = (
+  streetAddress: string | undefined,
+  city: string | undefined,
+  state: string | undefined,
+  zipCode: string | undefined,
+) =>
+  streetAddress &&
+  city &&
+  state &&
+  zipCode &&
+  streetAddress.trim() &&
+  city.trim() &&
+  state.trim() &&
+  zipCode.trim() &&
+  zipCode.trim().length === 5
+
+export const isNumericOnly = (input: string, is_allow_period: boolean = false): boolean =>
+  is_allow_period ? /^\d*\.?\d*$/.test(input) : /^\d*$/.test(input)
+
+export const convertDateToLocaleString = (date?: Date | string) => {
+  if (date) {
+    if (typeof date === 'string') {
+      date = new Date(date)
+    }
+    const yyyy = date.getUTCFullYear()
+    const MM = String(date.getUTCMonth() + 1).padStart(2, '0')
+    const dd = String(date.getUTCDate()).padStart(2, '0')
+    const HH = String(date.getUTCHours()).padStart(2, '0')
+    const mm = String(date.getUTCMinutes()).padStart(2, '0')
+    const ss = String(date.getUTCSeconds()).padStart(2, '0')
+    return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`
+  }
+  return ''
+}
+
+export const convertNotesToNotesList = <T>(notesInput: T[], noteObjectId: number): NoteSchema[] => {
+  const notes: NoteSchema[] = JSON.parse(JSON.stringify(notesInput))
+  notes.forEach((note: NoteSchema) => (note.note_object_id = noteObjectId))
+  return notes
+}

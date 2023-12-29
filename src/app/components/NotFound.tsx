@@ -1,12 +1,17 @@
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import React from 'react'
-import { Link } from 'react-router-dom'
 
-const NotFound = (): React.ReactElement => (
-  <>
-    <h1>Oops! Page Not Found!</h1>
-    <p>The Requested Page is Under Construction and Not Available</p>
-    <Link to="/home">Click Here</Link> to Visit the Home Page!
-  </>
-)
+import Link from './Link'
+
+const NotFound = (): React.ReactElement => {
+  return (
+    <Box display="block">
+      <Typography variant="h4">Oops! Page Not Found!!!</Typography>
+      <Typography variant="subtitle2">The Requested Page is Under Construction and Not Available!!</Typography>
+      <Link text="Home!" navigateToPage="/home" />
+    </Box>
+  )
+}
 
 export default NotFound
