@@ -95,12 +95,12 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   }, [props.selectedJudge])
 
   useEffect(() => {
-    if (Object.keys(statusList).length === 0) {
+    if (statusList.judge.all.length === 0) {
       getStatusesList()
     } else {
       setJudgeStatusList(statusList.judge.all)
     }
-  }, [statusList, getStatusesList])
+  }, [statusList.judge.all, getStatusesList])
 
   useEffect(() => {
     return () => {
