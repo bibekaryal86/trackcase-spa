@@ -38,7 +38,6 @@ const mapStateToProps = ({ clients, judges, statuses }: GlobalState) => {
 
 const mapDispatchToProps = {
   getClient: (clientId: number) => getClient(clientId),
-  getJudges: () => getJudges(),
   editClient: (clientId: number, client: ClientSchema) => editClient(clientId, client),
   unmountPage: () => unmountPage(CLIENTS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
@@ -46,20 +45,21 @@ const mapDispatchToProps = {
   editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
     editNote(noteObjectType, noteObjectId, note, noteId),
   deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
+  getJudges: () => getJudges(),
 }
 
 interface ClientProps {
   selectedClient: ClientSchema
   getClient: (clientId: number) => void
   editClient: (id: number, client: ClientSchema) => void
-  judgesList: JudgeSchema[]
-  getJudges: () => void
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
   addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
   editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
   deleteNote: (noteObjectType: string, noteId: number) => void
+  judgesList: JudgeSchema[]
+  getJudges: () => void
 }
 
 const Client = (props: ClientProps): React.ReactElement => {
@@ -154,7 +154,9 @@ const Client = (props: ClientProps): React.ReactElement => {
 
   const historyContent = () => {
     const judgeMap = new Map(judgesList.map((judge) => [judge.id, judge]))
-    const historyClients = selectedClient.history_clients ? JSON.parse(JSON.stringify(selectedClient.history_clients)) : []
+    const historyClients = selectedClient.history_clients
+      ? JSON.parse(JSON.stringify(selectedClient.history_clients))
+      : []
     historyClients.forEach((x: HistoryClientSchema) => {
       const matchingJudge = judgeMap.get(x.judge_id)
       if (matchingJudge) {

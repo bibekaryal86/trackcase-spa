@@ -27,9 +27,9 @@ const mapStateToProps = ({ judges, courts, statuses }: GlobalState) => {
   return {
     isCloseModal: judges.isCloseModal,
     judgesList: judges.judges,
+    statusList: statuses.statuses,
     courtsList: courts.courts,
     selectedCourt: courts.selectedCourt,
-    statusList: statuses.statuses,
   }
 }
 
@@ -39,9 +39,9 @@ const mapDispatchToProps = {
   editJudge: (id: number, judge: JudgeSchema) => editJudge(id, judge),
   deleteJudge: (id: number) => deleteJudge(id),
   unmountPage: () => unmountPage(JUDGES_UNMOUNT),
-  getCourts: () => getCourts(),
-  getCourt: (court_id: number) => getCourt(court_id),
   getStatusesList: () => getStatusesList(),
+  getCourts: () => getCourts(),
+  getCourt: (courtId: number) => getCourt(courtId),
 }
 
 interface JudgesProps {
@@ -52,13 +52,13 @@ interface JudgesProps {
   editJudge: (id: number, judge: JudgeSchema) => void
   deleteJudge: (id: number) => void
   unmountPage: () => void
-  courtsList: CourtSchema[]
-  getCourts: () => void
-  getCourt: (court_id: number) => void
-  courtId?: string
-  selectedCourt?: CourtSchema
   statusList: StatusSchema<string>
   getStatusesList: () => void
+  courtsList: CourtSchema[]
+  getCourts: () => void
+  courtId?: string
+  selectedCourt?: CourtSchema
+  getCourt: (courtId: number) => void
 }
 
 const Judges = (props: JudgesProps): React.ReactElement => {
@@ -67,8 +67,8 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const { judgesList, courtsList, getJudges, getCourts } = props
   const { unmountPage } = props
   const { isCloseModal } = props
-  const { courtId, selectedCourt, getCourt } = props
   const { statusList, getStatusesList } = props
+  const { courtId, selectedCourt, getCourt } = props
 
   const [modal, setModal] = useState('')
   const [selectedId, setSelectedId] = useState<number>(-1)
@@ -90,7 +90,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       courtsList.length === 0 && getCourts()
       isFetchRunDone.current = true
     }
-  }, [courtId, courtsList.length, getCourt, getCourts, getJudges, judgesList.length, selectedCourt])
+  }, [courtId, selectedCourt, getCourt, courtsList.length, getCourts, judgesList.length, getJudges])
 
   useEffect(() => {
     if (isCloseModal) {
@@ -145,10 +145,10 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const judgeForm = () => (
     <JudgeForm
       selectedJudge={selectedJudge}
-      courtsList={courtsList}
       setSelectedJudge={setSelectedJudge}
       judgeStatusList={judgeStatusList}
       isShowOneJudge={false}
+      courtsList={courtsList}
     />
   )
 
@@ -228,11 +228,11 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       isHistoryView={false}
       judgesList={!(courtId && selectedCourt) ? judgesList : selectedCourt.judges || []}
       historyJudgesList={[]}
-      selectedCourt={selectedCourt}
       setModal={setModal}
       setSelectedId={setSelectedId}
       setSelectedJudge={setSelectedJudge}
       setSelectedJudgeForReset={setSelectedJudgeForReset}
+      selectedCourt={selectedCourt}
     />
   )
 

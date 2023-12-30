@@ -17,7 +17,7 @@ import {
   BUTTON_RESET,
   BUTTON_UPDATE,
 } from '../../constants'
-import { getJudges, JudgeSchema } from '../../judges'
+import { getJudge, getJudges, JudgeSchema } from '../../judges'
 import { addClient, deleteClient, editClient, getClients } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
 import { ClientSchema, DefaultClientSchema } from '../types/clients.data.types'
@@ -29,6 +29,7 @@ const mapStateToProps = ({ clients, judges, statuses }: GlobalState) => {
     clientsList: clients.clients,
     statusList: statuses.statuses,
     judgesList: judges.judges,
+    selectedJudge: judges.selectedJudge,
   }
 }
 
@@ -40,12 +41,12 @@ const mapDispatchToProps = {
   unmountPage: () => unmountPage(CLIENTS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
   getJudges: () => getJudges(),
+  getJudge: (judgeId: number) => getJudge(judgeId),
 }
 
 interface ClientsProps {
   isCloseModal: boolean
   clientsList: ClientSchema[]
-  judgesList: JudgeSchema[]
   getClients: () => void
   addClient: (client: ClientSchema) => void
   editClient: (id: number, client: ClientSchema) => void
@@ -53,7 +54,11 @@ interface ClientsProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
+  judgesList: JudgeSchema[]
   getJudges: () => void
+  judgeId?: string
+  selectedJudge?: JudgeSchema
+  getJudge: (judgeId: number) => void
 }
 
 const Clients = (props: ClientsProps): React.ReactElement => {
@@ -63,6 +68,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const { unmountPage } = props
   const { isCloseModal } = props
   const { statusList, getStatusesList } = props
+  const { judgeId, selectedJudge, getJudge } = props
 
   const [modal, setModal] = useState('')
   const [selectedId, setSelectedId] = useState<number>(-1)
@@ -71,12 +77,20 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const [clientStatusList, setClientStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if ((clientsList.length === 0 || judgesList.length === 0) && !isFetchRunDone.current) {
+    if (judgeId) {
+      setSelectedClient({ ...DefaultClientSchema, judge_id: Number(judgeId) })
+      if (!selectedJudge) {
+        getJudge(Number(judgeId))
+      }
+      if (judgesList.length === 0) {
+        getJudges()
+      }
+    } else if ((clientsList.length === 0 || judgesList.length === 0) && !isFetchRunDone.current) {
       clientsList.length === 0 && getClients()
       judgesList.length === 0 && getJudges()
       isFetchRunDone.current = true
     }
-  }, [clientsList.length, judgesList.length, getClients, getJudges])
+  }, [judgeId, selectedJudge, getJudge, judgesList.length, getJudges, clientsList.length, getClients])
 
   useEffect(() => {
     if (isCloseModal) {
@@ -209,16 +223,22 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const clientsTable = () => (
     <ClientTable
       isHistoryView={false}
-      clientsList={clientsList}
+      clientsList={!(judgeId && selectedJudge) ? clientsList : selectedJudge?.clients || []}
       historyClientsList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}
       setSelectedClient={setSelectedClient}
       setSelectedClientForReset={setSelectedClientForReset}
+      selectedJudge={selectedJudge}
     />
   )
 
-  return (
+  return judgeId ? (
+    <>
+      {clientsTable()}
+      {modal && showModal()}
+    </>
+  ) : (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>

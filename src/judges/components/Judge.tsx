@@ -21,6 +21,7 @@ import {
   StatusSchema,
   unmountPage,
 } from '../../app'
+import { Clients } from '../../clients'
 import { BUTTON_CLOSE, NOTE_OBJECT_TYPES } from '../../constants'
 import { CourtSchema, getCourts } from '../../courts'
 import { editJudge, getJudge } from '../actions/judges.action'
@@ -38,7 +39,6 @@ const mapStateToProps = ({ judges, courts, statuses }: GlobalState) => {
 
 const mapDispatchToProps = {
   getJudge: (judgeId: number) => getJudge(judgeId),
-  getCourts: () => getCourts(),
   editJudge: (judgeId: number, judge: JudgeSchema) => editJudge(judgeId, judge),
   unmountPage: () => unmountPage(JUDGES_UNMOUNT),
   getStatusesList: () => getStatusesList(),
@@ -46,20 +46,21 @@ const mapDispatchToProps = {
   editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
     editNote(noteObjectType, noteObjectId, note, noteId),
   deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
+  getCourts: () => getCourts(),
 }
 
 interface JudgeProps {
   selectedJudge: JudgeSchema
-  courtsList: CourtSchema[]
   getJudge: (judgeId: number) => void
   editJudge: (judgeId: number, judge: JudgeSchema) => void
-  getCourts: () => void
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
   addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
   editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
   deleteNote: (noteObjectType: string, noteId: number) => void
+  courtsList: CourtSchema[]
+  getCourts: () => void
 }
 
 const Judge = (props: JudgeProps): React.ReactElement => {
@@ -238,6 +239,12 @@ const Judge = (props: JudgeProps): React.ReactElement => {
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {judgeForm()}
               {judgeButtons()}
+            </Grid>
+            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Typography component="h1" variant="h6" color="primary">
+                Clients Assigned to Judge:
+              </Typography>
+              <Clients judgeId={id} />
             </Grid>
             {isShowHistory && historyModal()}
             {isShowNotes && notesModal()}
