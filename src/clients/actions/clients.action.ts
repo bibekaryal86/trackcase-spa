@@ -205,14 +205,14 @@ const clientsComplete = () => ({
 const getRequestBody = (client: ClientSchema) => {
   return {
     name: client.name,
-    a_number: client.a_number ? client.a_number : null,
+    a_number: client.a_number,
     email: client.email,
-    judge_id: client.judge_id ? client.judge_id : null,
+    judge_id: client.judge_id,
     street_address: client.street_address,
     city: client.city,
     state: client.state,
     zip_code: client.zip_code,
-    phone_number: client.phone_number || 0,
+    phone_number: client.phone_number,
     status: client.status,
     comments: client.comments,
   }

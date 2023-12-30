@@ -31,7 +31,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       name="judge-name"
       margin="normal"
       inputProps={{ maxLength: 99 }}
-      value={selectedJudge.name}
+      value={selectedJudge.name || ''}
       onChange={(e) => handleJudgeFormOnChange('name', e.target.value, selectedJudge, setSelectedJudge)}
       error={selectedJudge.name.trim() === ''}
     />
@@ -45,7 +45,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       id="judge-webex"
       margin="normal"
       inputProps={{ maxLength: 99 }}
-      value={selectedJudge.webex}
+      value={selectedJudge.webex || ''}
       onChange={(e) => handleJudgeFormOnChange('webex', e.target.value, selectedJudge, setSelectedJudge)}
     />
   )
