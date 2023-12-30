@@ -45,6 +45,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       label="A Number"
       id="client-a-number"
       margin="normal"
+      sx={{ minWidth: 200, maxWidth: 200 }}
       inputProps={{ maxLength: 9 }}
       value={selectedClient.a_number || ''}
       onChange={(e) => handleClientFormOnChange('aNumber', e.target.value, selectedClient, setSelectedClient)}
@@ -218,8 +219,8 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
         {clientANumber()}
         {clientJudgesList()}
         {clientStatus()}
+        {clientComments()}
       </div>
-      {clientComments()}
     </div>
   ) : (
     <div>

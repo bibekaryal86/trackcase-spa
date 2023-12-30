@@ -155,10 +155,10 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   const historyContent = () => {
     const courtMap = new Map(courtsList.map((court) => [court.id, court]))
     const historyJudges = selectedJudge.history_judges ? JSON.parse(JSON.stringify(selectedJudge.history_judges)) : []
-    historyJudges.forEach((judge: HistoryJudgeSchema) => {
-      const matchingCourt = courtMap.get(judge.court_id)
+    historyJudges.forEach((x: HistoryJudgeSchema) => {
+      const matchingCourt = courtMap.get(x.court_id)
       if (matchingCourt) {
-        judge.court = matchingCourt
+        x.court = matchingCourt
       }
     })
     return <JudgeTable isHistoryView={true} judgesList={[]} historyJudgesList={historyJudges} />
