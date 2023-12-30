@@ -84,12 +84,12 @@ const Court = (props: CourtProps): React.ReactElement => {
   }, [props.selectedCourt])
 
   useEffect(() => {
-    if (Object.keys(statusList).length === 0) {
+    if (statusList.court.all.length === 0) {
       getStatusesList()
     } else {
       setCourtStatusList(statusList.court.all)
     }
-  }, [statusList, getStatusesList])
+  }, [statusList.court.all, getStatusesList])
 
   useEffect(() => {
     return () => {

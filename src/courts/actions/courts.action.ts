@@ -209,7 +209,7 @@ const getRequestBody = (court: CourtSchema) => {
     city: court.city,
     state: court.state,
     zip_code: court.zip_code,
-    phone_number: court.phone_number || 0,
+    phone_number: court.phone_number,
     dhs_address: court.dhs_address,
     status: court.status,
     comments: court.comments,

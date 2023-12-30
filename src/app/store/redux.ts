@@ -5,6 +5,7 @@ import { applyMiddleware, combineReducers, legacy_createStore as createStore } f
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant'
 import thunk from 'redux-thunk'
 
+import { clients, ClientsState } from '../../clients'
 import { courts, CourtsState } from '../../courts'
 import { judges, JudgesState } from '../../judges'
 import {
@@ -43,6 +44,7 @@ export interface GlobalState {
   taskTypes: TaskTypeState
   courts: CourtsState
   judges: JudgesState
+  clients: ClientsState
 }
 
 export interface GlobalDispatch {
@@ -61,6 +63,7 @@ const appReducers = combineReducers({
   taskTypes,
   courts,
   judges,
+  clients,
 })
 
 const rootReducer = (state: any, action: any) => {

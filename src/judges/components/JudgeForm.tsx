@@ -31,7 +31,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       name="judge-name"
       margin="normal"
       inputProps={{ maxLength: 99 }}
-      value={selectedJudge.name}
+      value={selectedJudge.name || ''}
       onChange={(e) => handleJudgeFormOnChange('name', e.target.value, selectedJudge, setSelectedJudge)}
       error={selectedJudge.name.trim() === ''}
     />
@@ -45,7 +45,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       id="judge-webex"
       margin="normal"
       inputProps={{ maxLength: 99 }}
-      value={selectedJudge.webex}
+      value={selectedJudge.webex || ''}
       onChange={(e) => handleJudgeFormOnChange('webex', e.target.value, selectedJudge, setSelectedJudge)}
     />
   )
@@ -59,9 +59,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
         value={selectedJudge.court_id <= 0 ? '' : selectedJudge.court_id}
         onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge)}
       >
-        {courtsList.map((ct) => (
-          <MenuItem key={ct.id} value={ct.id}>
-            {ct.name}
+        {courtsList.map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {x.name}
           </MenuItem>
         ))}
       </Select>
@@ -69,7 +69,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   )
   const judgeStatus = () => (
     <FormControl sx={{ minWidth: 120, mt: '16px', mb: '8px' }} required error={!selectedJudge.status}>
-      <InputLabel>Status</InputLabel>
+      <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
       <Select
         labelId="judge-select-status"
         id="judge-select-status-id"

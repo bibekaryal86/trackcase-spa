@@ -45,6 +45,7 @@ import {
   isNumericOnly,
   unmountPage,
   validateAddress,
+  validateEmailAddress,
 } from './utils/app.utils'
 import { Async, FetchOptions, FetchResponse } from './utils/fetch.utils'
 import { resetSpinner, setSpinner } from './utils/spinner.utils'
@@ -94,4 +95,5 @@ export {
   unmountPage,
   validateAddress,
   isNumericOnly,
+  validateEmailAddress,
 }

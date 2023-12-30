@@ -70,7 +70,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
       getCourts()
       isFetchRunDone.current = true
     }
-  }, [courtsList, getCourts])
+  }, [courtsList.length, getCourts])
 
   useEffect(() => {
     if (isCloseModal) {
@@ -79,12 +79,12 @@ const Courts = (props: CourtsProps): React.ReactElement => {
   }, [isCloseModal])
 
   useEffect(() => {
-    if (Object.keys(statusList).length === 0) {
+    if (statusList.court.all.length === 0) {
       getStatusesList()
     } else {
       setCourtStatusList(statusList.court.all)
     }
-  }, [statusList, getStatusesList])
+  }, [statusList.court.all, getStatusesList])
 
   useEffect(() => {
     return () => {

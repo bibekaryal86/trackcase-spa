@@ -30,7 +30,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       name="court-name"
       margin="normal"
       inputProps={{ maxLength: 99 }}
-      value={selectedCourt.name}
+      value={selectedCourt.name || ''}
       onChange={(e) => handleCourtFormOnChange('name', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.name)}
     />
@@ -44,8 +44,8 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       label="Street Address"
       id="court-street-address"
       margin="normal"
-      inputProps={{ maxLength: 999 }}
-      value={selectedCourt.street_address}
+      inputProps={{ maxLength: 99 }}
+      value={selectedCourt.street_address || ''}
       onChange={(e) => handleCourtFormOnChange('streetAddress', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.street_address)}
     />
@@ -60,7 +60,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       margin="normal"
       sx={{ minWidth: 200 }}
       inputProps={{ maxLength: 10 }}
-      value={selectedCourt.phone_number}
+      value={selectedCourt.phone_number || ''}
       onChange={(e) => handleCourtFormOnChange('phoneNumber', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.phone_number, false, true)}
     />
@@ -74,8 +74,8 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       label="City"
       id="court-city"
       margin="normal"
-      inputProps={{ maxLength: 999 }}
-      value={selectedCourt.city}
+      inputProps={{ maxLength: 99 }}
+      value={selectedCourt.city || ''}
       onChange={(e) => handleCourtFormOnChange('city', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.city)}
     />
@@ -86,7 +86,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       required
       error={isCourtFormFieldError(selectedCourt.state)}
     >
-      <InputLabel>State</InputLabel>
+      <InputLabel sx={{ left: '-0.9em' }}>State</InputLabel>
       <Select
         labelId="court-select-state"
         id="court-select-state-id"
@@ -111,7 +111,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       id="court-zip-code"
       margin="normal"
       inputProps={{ maxLength: 5 }}
-      value={selectedCourt.zip_code}
+      value={selectedCourt.zip_code || ''}
       onChange={(e) => handleCourtFormOnChange('zipCode', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.zip_code, true)}
     />
@@ -124,8 +124,8 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       label="DHS Address"
       id="court-dhs-address"
       margin="normal"
-      inputProps={{ maxLength: 999 }}
-      value={selectedCourt.dhs_address}
+      inputProps={{ maxLength: 199 }}
+      value={selectedCourt.dhs_address || ''}
       onChange={(e) => handleCourtFormOnChange('dhsAddress', e.target.value, selectedCourt, setSelectedCourt)}
     />
   )
@@ -135,7 +135,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       required
       error={isCourtFormFieldError(selectedCourt.status)}
     >
-      <InputLabel>Status</InputLabel>
+      <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
       <Select
         labelId="court-select-status"
         id="court-select-status-id"
