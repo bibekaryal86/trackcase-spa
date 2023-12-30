@@ -77,26 +77,36 @@ export const getStartOfTheMonth = (): string => {
 
 export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-01'
 
-export const getFullAddress = (streetAddress: string, city: string, state: string, zipCode: string) =>
-  `${streetAddress}, ${city}, ${state} ${zipCode}`
+export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
+  streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
 
 export const validateAddress = (
   streetAddress: string | undefined,
   city: string | undefined,
   state: string | undefined,
   zipCode: string | undefined,
-) =>
-  streetAddress &&
-  city &&
-  state &&
-  zipCode &&
-  streetAddress.trim() &&
-  city.trim() &&
-  state.trim() &&
-  zipCode.trim() &&
-  zipCode.trim().length === 5
+  isCheckAll: boolean,
+): boolean => {
+  if (isCheckAll) {
+    return !!(
+      streetAddress &&
+      city &&
+      state &&
+      zipCode &&
+      streetAddress.trim() &&
+      city.trim() &&
+      state.trim() &&
+      zipCode.trim() &&
+      zipCode.trim().length === 5
+    )
+  } else {
+    const allEmpty = !streetAddress && !city && !state && !zipCode
+    const allFilled = streetAddress && city && state && zipCode
+    return !!(allEmpty || allFilled)
+  }
+}
 
-export const validateEmailAddress = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]{2,3}$/.test(email)
+export const validateEmailAddress = (email: string): boolean => !!email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,3}$/.test(email)
 
 export const isNumericOnly = (input: string, is_allow_period: boolean = false): boolean =>
   is_allow_period ? /^\d*\.?\d*$/.test(input) : /^\d*$/.test(input)

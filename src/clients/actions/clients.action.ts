@@ -207,7 +207,7 @@ const getRequestBody = (client: ClientSchema) => {
     name: client.name,
     a_number: client.a_number,
     email: client.email,
-    judge_id: client.judge_id,
+    judge_id: client.judge_id ? client.judge_id : null,
     street_address: client.street_address,
     city: client.city,
     state: client.state,

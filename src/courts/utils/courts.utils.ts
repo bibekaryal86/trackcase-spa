@@ -11,7 +11,7 @@ export const isCourtFormFieldError = (
 export const validateCourt = (court: CourtSchema) =>
   court.name.trim() &&
   court.status.trim() &&
-  validateAddress(court.street_address, court.city, court.state, court.zip_code)
+  validateAddress(court.street_address, court.city, court.state, court.zip_code, true)
 
 export const isAreTwoCourtsSame = (one: CourtSchema, two: CourtSchema) =>
   one &&

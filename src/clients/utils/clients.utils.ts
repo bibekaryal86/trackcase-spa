@@ -1,14 +1,13 @@
 import { isNumericOnly, validateAddress, validateEmailAddress } from '../../app'
 import { ClientSchema } from '../types/clients.data.types'
 
-export const validateClient = (client: ClientSchema) =>
-  client.name.trim() &&
-  client.status.trim() &&
-  client.email.trim() &&
-  client.phone_number &&
-  client.phone_number.trim() &&
-  (client.street_address || client.city || client.state || client.zip_code) &&
-  validateAddress(client.street_address, client.city, client.state, client.zip_code)
+export const validateClient = (client: ClientSchema) => {
+  const nameValid = !!client.name.trim()
+  const phoneValid = !!client.phone_number?.trim()
+  const emailValid = !!client.email.trim() && validateEmailAddress(client.email)
+  const addressValid = validateAddress(client.street_address, client.city, client.state, client.zip_code, false)
+  return nameValid && phoneValid && emailValid && addressValid
+}
 
 export const isAreTwoClientsSame = (one: ClientSchema, two: ClientSchema) =>
   one &&

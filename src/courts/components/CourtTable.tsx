@@ -105,7 +105,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
       tableData = Array.from(historyCourtsList, (x) => {
         return {
           name: `${x.name}, ${x.state}`,
-          address: getFullAddress(x.street_address || '', x.city || '', x.state || '', x.zip_code || ''),
+          address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
           phone: x.phone_number || '',
           dhsAddress: x.dhs_address || '',
           status: x.status || '',
@@ -117,7 +117,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
       tableData = Array.from(courtsList, (x) => {
         return {
           name: linkToCourt(x),
-          address: getFullAddress(x.street_address || '', x.city || '', x.state || '', x.zip_code || ''),
+          address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
           phone: x.phone_number || '',
           dhsAddress: x.dhs_address || '',
           status: x.status,

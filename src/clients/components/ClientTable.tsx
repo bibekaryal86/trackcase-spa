@@ -120,12 +120,12 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
         return {
           name: x.name || '',
           aNumber: x.a_number || '',
-          judge: x.judge?.name || '',
           email: x.email || '',
           phone: x.phone_number || '',
-          address: getFullAddress(x.street_address || '', x.city || '', x.state || '', x.zip_code || ''),
+          address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
           status: x.status || '',
-          user: x.user_name,
+          judge: x.judge?.name || '',
+          user_name: x.user_name,
           date: convertDateToLocaleString(x.created),
         }
       })
@@ -134,11 +134,11 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
         return {
           name: linkToClients(x),
           aNumber: x.a_number || '',
-          judge: selectedJudge?.name ? selectedJudge.name || '' : x.judge ? linkToJudge(x.judge) : '',
           email: x.email || '',
           phone: x.phone_number || '',
-          address: getFullAddress(x.street_address || '', x.city || '', x.state || '', x.zip_code || ''),
+          address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
           status: x.status,
+          judge: selectedJudge?.name ? selectedJudge.name || '' : x.judge ? linkToJudge(x.judge) : '',
           actions: actionButtons(x.id || -1, x),
         }
       })
