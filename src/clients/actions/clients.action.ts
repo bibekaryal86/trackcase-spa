@@ -205,7 +205,7 @@ const clientsComplete = () => ({
 const getRequestBody = (client: ClientSchema) => {
   return {
     name: client.name,
-    a_number: client.a_number,
+    a_number: client.a_number ? client.a_number : null,
     email: client.email,
     judge_id: client.judge_id ? client.judge_id : null,
     street_address: client.street_address,
