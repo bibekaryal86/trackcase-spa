@@ -40,6 +40,7 @@ import {
   getErrMsg,
   getFullAddress,
   getNumber,
+  getNumericOnly,
   getStartOfTheMonth,
   getStartOfTheYear,
   isLoggedIn,
@@ -98,4 +99,5 @@ export {
   isNumericOnly,
   validateEmailAddress,
   getNumber,
+  getNumericOnly,
 }

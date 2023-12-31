@@ -13,6 +13,7 @@ import {
   convertNotesToNotesList,
   deleteNote,
   editNote,
+  getNumber,
   getStatusesList,
   GlobalState,
   Link,
@@ -78,7 +79,7 @@ const Client = (props: ClientProps): React.ReactElement => {
 
   useEffect(() => {
     if (id) {
-      getClient(Number(id))
+      getClient(getNumber(id))
     }
     // add selectedClient.id to dependency array for note/history
   }, [id, getClient, selectedClient.id])
@@ -137,7 +138,7 @@ const Client = (props: ClientProps): React.ReactElement => {
 
   const updateAction = () => {
     if (validateClient(selectedClient)) {
-      editClient(Number(id), selectedClient)
+      editClient(getNumber(id), selectedClient)
     }
   }
 

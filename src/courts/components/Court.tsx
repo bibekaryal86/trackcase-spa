@@ -13,6 +13,7 @@ import {
   convertNotesToNotesList,
   deleteNote,
   editNote,
+  getNumber,
   getStatusesList,
   GlobalState,
   Link,
@@ -73,7 +74,7 @@ const Court = (props: CourtProps): React.ReactElement => {
 
   useEffect(() => {
     if (id) {
-      getCourt(Number(id))
+      getCourt(getNumber(id))
     }
     // add selectedCourt.id to dependency array for note/history
   }, [id, getCourt, selectedCourt.id])
@@ -126,7 +127,7 @@ const Court = (props: CourtProps): React.ReactElement => {
 
   const updateAction = () => {
     if (validateCourt(selectedCourt)) {
-      editCourt(Number(id), selectedCourt)
+      editCourt(getNumber(id), selectedCourt)
     }
   }
 

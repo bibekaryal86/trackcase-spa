@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import JudgeForm from './JudgeForm'
 import JudgeTable from './JudgeTable'
-import { getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
+import { getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -79,9 +79,9 @@ const Judges = (props: JudgesProps): React.ReactElement => {
 
   useEffect(() => {
     if (courtId) {
-      setSelectedJudge({ ...DefaultJudgeSchema, court_id: Number(courtId) })
+      setSelectedJudge({ ...DefaultJudgeSchema, court_id: getNumber(courtId) })
       if (!selectedCourt) {
-        getCourt(Number(courtId))
+        getCourt(getNumber(courtId))
       }
       if (courtsList.length === 0) {
         getCourts()
@@ -97,8 +97,8 @@ const Judges = (props: JudgesProps): React.ReactElement => {
     if (isCloseModal) {
       setModal('')
       setSelectedId(ID_DEFAULT)
-      setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
-      setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
+      setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
+      setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
     }
   }, [isCloseModal, courtId])
 
@@ -134,8 +134,8 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
-    setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
+    setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
+    setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
   }
 
   const resetButtonCallback = (action: string) => {

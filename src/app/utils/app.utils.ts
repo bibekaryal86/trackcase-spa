@@ -80,7 +80,7 @@ export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-0
 export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
   streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
 
-export const getNumber = (number: number | undefined) => (number ? Number(number) : -4)
+export const getNumber = (number: number | string | undefined) => (number ? Number(number) : -4)
 
 export const validateAddress = (
   streetAddress: string | undefined,
@@ -112,6 +112,8 @@ export const validateEmailAddress = (email: string): boolean => !!email && /^[^\
 
 export const isNumericOnly = (input: string, is_allow_period: boolean = false): boolean =>
   is_allow_period ? /^\d*\.?\d*$/.test(input) : /^\d*$/.test(input)
+
+export const getNumericOnly = (input: string, limit: number) => input.replace(/\D/g, '').slice(0, limit)
 
 export const convertDateToLocaleString = (date?: Date | string) => {
   if (date) {

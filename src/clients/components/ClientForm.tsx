@@ -46,7 +46,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       id="client-a-number"
       margin="normal"
       sx={{ minWidth: 200, maxWidth: 200 }}
-      inputProps={{ maxLength: 9 }}
+      inputProps={{ maxLength: 15 }}
       value={selectedClient.a_number || ''}
       onChange={(e) => handleClientFormOnChange('aNumber', e.target.value, selectedClient, setSelectedClient)}
     />
@@ -75,7 +75,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       id="client-phone-number"
       margin="normal"
       sx={{ minWidth: 200 }}
-      inputProps={{ maxLength: 10 }}
+      inputProps={{ maxLength: 15 }}
       value={selectedClient.phone_number || ''}
       onChange={(e) => handleClientFormOnChange('phoneNumber', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('phoneNumber', selectedClient.phone_number, selectedClient)}

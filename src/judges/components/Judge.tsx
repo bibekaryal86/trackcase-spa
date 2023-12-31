@@ -13,6 +13,7 @@ import {
   convertNotesToNotesList,
   deleteNote,
   editNote,
+  getNumber,
   getStatusesList,
   GlobalState,
   Link,
@@ -79,7 +80,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
 
   useEffect(() => {
     if (id) {
-      getJudge(Number(id))
+      getJudge(getNumber(id))
     }
     // add selectedJudge.id to dependency array for note/history
   }, [id, getJudge, selectedJudge.id])
@@ -138,7 +139,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
 
   const updateAction = () => {
     if (validateJudge(selectedJudge)) {
-      editJudge(Number(id), selectedJudge)
+      editJudge(getNumber(id), selectedJudge)
     }
   }
 

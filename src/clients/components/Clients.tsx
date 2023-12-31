@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import ClientForm from './ClientForm'
 import ClientTable from './ClientTable'
-import { getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
+import { getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -79,9 +79,9 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   useEffect(() => {
     if (judgeId) {
-      setSelectedClient({ ...DefaultClientSchema, judge_id: Number(judgeId) })
+      setSelectedClient({ ...DefaultClientSchema, judge_id: getNumber(judgeId) })
       if (!selectedJudge) {
-        getJudge(Number(judgeId))
+        getJudge(getNumber(judgeId))
       }
       if (judgesList.length === 0) {
         getJudges()
