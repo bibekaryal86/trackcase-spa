@@ -13,6 +13,7 @@ import {
   convertNotesToNotesList,
   deleteNote,
   editNote,
+  getNumber,
   getStatusesList,
   GlobalState,
   Link,
@@ -21,7 +22,7 @@ import {
   StatusSchema,
   unmountPage,
 } from '../../app'
-import { BUTTON_CLOSE, NOTE_OBJECT_TYPES } from '../../constants'
+import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
 import { getJudges, JudgeSchema } from '../../judges'
 import { editClient, getClient } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
@@ -78,7 +79,7 @@ const Client = (props: ClientProps): React.ReactElement => {
 
   useEffect(() => {
     if (id) {
-      getClient(Number(id))
+      getClient(getNumber(id))
     }
     // add selectedClient.id to dependency array for note/history
   }, [id, getClient, selectedClient.id])
@@ -137,15 +138,15 @@ const Client = (props: ClientProps): React.ReactElement => {
 
   const updateAction = () => {
     if (validateClient(selectedClient)) {
-      editClient(Number(id), selectedClient)
+      editClient(getNumber(id), selectedClient)
     }
   }
 
   const notesContent = () => (
     <Notes
       noteObjectType={NOTE_OBJECT_TYPES.CLIENT}
-      noteObjectId={selectedClient.id || -1}
-      notesList={convertNotesToNotesList(selectedClient.note_clients || [], selectedClient.id || -1)}
+      noteObjectId={selectedClient.id || ID_DEFAULT}
+      notesList={convertNotesToNotesList(selectedClient.note_clients || [], selectedClient.id || ID_LIST)}
       addNote={props.addNote}
       editNote={props.editNote}
       deleteNote={props.deleteNote}

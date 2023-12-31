@@ -1,3 +1,4 @@
+import { getNumber } from '../../app'
 import { JudgeSchema } from '../types/judges.data.types'
 
 export const validateJudge = (judge: JudgeSchema) => judge.name.trim() && judge.court_id > 0 && judge.status.trim()
@@ -33,7 +34,7 @@ export const handleJudgeFormOnChange = (
   if (name === 'courtId') {
     updatedJudge = {
       ...selectedJudge,
-      court_id: Number(value),
+      court_id: getNumber(value),
     }
   }
   if (name === 'status') {

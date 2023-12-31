@@ -13,6 +13,7 @@ import {
   convertNotesToNotesList,
   deleteNote,
   editNote,
+  getNumber,
   getStatusesList,
   GlobalState,
   Link,
@@ -21,7 +22,7 @@ import {
   StatusSchema,
   unmountPage,
 } from '../../app'
-import { BUTTON_CLOSE, NOTE_OBJECT_TYPES } from '../../constants'
+import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
 import { Judges } from '../../judges'
 import { editCourt, getCourt } from '../actions/courts.action'
 import { COURTS_UNMOUNT } from '../types/courts.action.types'
@@ -73,7 +74,7 @@ const Court = (props: CourtProps): React.ReactElement => {
 
   useEffect(() => {
     if (id) {
-      getCourt(Number(id))
+      getCourt(getNumber(id))
     }
     // add selectedCourt.id to dependency array for note/history
   }, [id, getCourt, selectedCourt.id])
@@ -126,15 +127,15 @@ const Court = (props: CourtProps): React.ReactElement => {
 
   const updateAction = () => {
     if (validateCourt(selectedCourt)) {
-      editCourt(Number(id), selectedCourt)
+      editCourt(getNumber(id), selectedCourt)
     }
   }
 
   const notesContent = () => (
     <Notes
       noteObjectType={NOTE_OBJECT_TYPES.COURT}
-      noteObjectId={selectedCourt.id || -1}
-      notesList={convertNotesToNotesList(selectedCourt.note_courts || [], selectedCourt.id || -1)}
+      noteObjectId={selectedCourt.id || ID_DEFAULT}
+      notesList={convertNotesToNotesList(selectedCourt.note_courts || [], selectedCourt.id || ID_LIST)}
       addNote={props.addNote}
       editNote={props.editNote}
       deleteNote={props.deleteNote}

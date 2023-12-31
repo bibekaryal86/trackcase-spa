@@ -2,7 +2,14 @@ import Button from '@mui/material/Button'
 import React from 'react'
 
 import { convertDateToLocaleString, getFullAddress, Link, Table, TableData, TableHeaderData } from '../../app'
-import { ACTION_ADD, ACTION_DELETE, ACTION_UPDATE, BUTTON_DELETE, BUTTON_UPDATE } from '../../constants'
+import {
+  ACTION_ADD,
+  ACTION_DELETE,
+  ACTION_UPDATE,
+  BUTTON_DELETE,
+  BUTTON_UPDATE,
+  ID_ACTION_BUTTON,
+} from '../../constants'
 import { JudgeSchema } from '../../judges'
 import { ClientSchema, HistoryClientSchema } from '../types/clients.data.types'
 
@@ -139,7 +146,7 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
           address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
           status: x.status,
           judge: selectedJudge?.name ? selectedJudge.name || '' : x.judge ? linkToJudge(x.judge) : '',
-          actions: actionButtons(x.id || -1, x),
+          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })
     }

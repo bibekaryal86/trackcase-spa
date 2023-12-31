@@ -39,6 +39,8 @@ import {
   getEndpoint,
   getErrMsg,
   getFullAddress,
+  getNumber,
+  getNumericOnly,
   getStartOfTheMonth,
   getStartOfTheYear,
   isLoggedIn,
@@ -96,4 +98,6 @@ export {
   validateAddress,
   isNumericOnly,
   validateEmailAddress,
+  getNumber,
+  getNumericOnly,
 }

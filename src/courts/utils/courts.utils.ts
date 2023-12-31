@@ -1,4 +1,4 @@
-import { isNumericOnly, validateAddress } from '../../app'
+import { getNumericOnly, isNumericOnly, validateAddress } from '../../app'
 import { CourtSchema } from '../types/courts.data.types'
 
 export const isCourtFormFieldError = (
@@ -67,7 +67,7 @@ export const handleCourtFormOnChange = (
     case 'phoneNumber':
       updatedCourt = {
         ...selectedCourt,
-        phone_number: isNumericOnly(value) ? value : selectedCourt.phone_number,
+        phone_number: getNumericOnly(value, 10),
       }
       break
     case 'dhsAddress':

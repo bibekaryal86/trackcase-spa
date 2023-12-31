@@ -59,7 +59,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       id="court-phone-number"
       margin="normal"
       sx={{ minWidth: 200 }}
-      inputProps={{ maxLength: 10 }}
+      inputProps={{ maxLength: 15 }}
       value={selectedCourt.phone_number || ''}
       onChange={(e) => handleCourtFormOnChange('phoneNumber', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.phone_number, false, true)}

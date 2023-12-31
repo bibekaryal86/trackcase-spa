@@ -16,6 +16,7 @@ import {
   BUTTON_DELETE,
   BUTTON_RESET,
   BUTTON_UPDATE,
+  ID_DEFAULT,
 } from '../../constants'
 import { addCourt, deleteCourt, editCourt, getCourts } from '../actions/courts.action'
 import { COURTS_UNMOUNT } from '../types/courts.action.types'
@@ -60,7 +61,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
   const { statusList, getStatusesList } = props
 
   const [modal, setModal] = useState('')
-  const [selectedId, setSelectedId] = useState<number>(-1)
+  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedCourt, setSelectedCourt] = useState<CourtSchema>(DefaultCourtSchema)
   const [selectedCourtForReset, setSelectedCourtForReset] = useState<CourtSchema>(DefaultCourtSchema)
   const [courtStatusList, setCourtStatusList] = useState<string[]>([])
@@ -109,7 +110,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
 
   const secondaryButtonCallback = () => {
     setModal('')
-    setSelectedId(-1)
+    setSelectedId(ID_DEFAULT)
     setSelectedCourt(DefaultCourtSchema)
     setSelectedCourtForReset(DefaultCourtSchema)
   }

@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField'
 import React, { useState } from 'react'
 
 import { convertDateToLocaleString, Modal, NoteSchema, Table, TableData, TableHeaderData } from '../../app'
-import { BUTTON_CANCEL, BUTTON_DELETE } from '../../constants'
+import { BUTTON_CANCEL, BUTTON_DELETE, ID_ACTION_BUTTON, ID_DEFAULT } from '../../constants'
 
 interface NoteProps {
   noteObjectType: string
@@ -21,7 +21,7 @@ const Notes = (props: NoteProps): React.ReactElement => {
 
   const [note, setNote] = useState('')
   const [noteInit, setNoteInit] = useState('')
-  const [noteId, setNoteId] = useState(-1)
+  const [noteId, setNoteId] = useState(ID_DEFAULT)
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false)
 
   const notesTableHeaderData: TableHeaderData[] = [
@@ -43,12 +43,12 @@ const Notes = (props: NoteProps): React.ReactElement => {
   const deletePrimaryButtonCallback = () => {
     props.deleteNote(noteObjectType, noteId)
     setIsShowDeleteModal(false)
-    setNoteId(-1)
+    setNoteId(ID_DEFAULT)
     setNote('')
   }
 
   const deleteSecondaryButtonCallback = () => {
-    setNoteId(-1)
+    setNoteId(ID_DEFAULT)
     setIsShowDeleteModal(false)
   }
 
@@ -95,7 +95,7 @@ const Notes = (props: NoteProps): React.ReactElement => {
       modified: convertDateToLocaleString(x.modified),
       user_name: x.user_name,
       note: x.note,
-      actions: actionButtons(x.id || -1, x.note),
+      actions: actionButtons(x.id || ID_ACTION_BUTTON, x.note),
     }
   })
 
@@ -150,7 +150,7 @@ const Notes = (props: NoteProps): React.ReactElement => {
           disabled={note === ''}
           onClick={() => {
             setNote('')
-            setNoteId(-1)
+            setNoteId(ID_DEFAULT)
           }}
         >
           Cancel

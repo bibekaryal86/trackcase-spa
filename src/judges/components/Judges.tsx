@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import JudgeForm from './JudgeForm'
 import JudgeTable from './JudgeTable'
-import { getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
+import { getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -16,6 +16,7 @@ import {
   BUTTON_DELETE,
   BUTTON_RESET,
   BUTTON_UPDATE,
+  ID_DEFAULT,
 } from '../../constants'
 import { CourtSchema, getCourt, getCourts } from '../../courts'
 import { addJudge, deleteJudge, editJudge, getJudges } from '../actions/judges.action'
@@ -71,16 +72,16 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const { courtId, selectedCourt, getCourt } = props
 
   const [modal, setModal] = useState('')
-  const [selectedId, setSelectedId] = useState<number>(-1)
+  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedJudge, setSelectedJudge] = useState<JudgeSchema>(DefaultJudgeSchema)
   const [selectedJudgeForReset, setSelectedJudgeForReset] = useState<JudgeSchema>(DefaultJudgeSchema)
   const [judgeStatusList, setJudgeStatusList] = useState<string[]>([])
 
   useEffect(() => {
     if (courtId) {
-      setSelectedJudge({ ...DefaultJudgeSchema, court_id: Number(courtId) })
+      setSelectedJudge({ ...DefaultJudgeSchema, court_id: getNumber(courtId) })
       if (!selectedCourt) {
-        getCourt(Number(courtId))
+        getCourt(getNumber(courtId))
       }
       if (courtsList.length === 0) {
         getCourts()
@@ -95,9 +96,9 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   useEffect(() => {
     if (isCloseModal) {
       setModal('')
-      setSelectedId(-1)
-      setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
-      setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
+      setSelectedId(ID_DEFAULT)
+      setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
+      setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
     }
   }, [isCloseModal, courtId])
 
@@ -132,9 +133,9 @@ const Judges = (props: JudgesProps): React.ReactElement => {
 
   const secondaryButtonCallback = () => {
     setModal('')
-    setSelectedId(-1)
-    setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
-    setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
+    setSelectedId(ID_DEFAULT)
+    setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
+    setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
   }
 
   const resetButtonCallback = (action: string) => {

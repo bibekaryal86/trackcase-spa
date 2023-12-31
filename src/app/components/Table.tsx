@@ -61,13 +61,29 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }))
 
+function getProperty<T>(value: T, property: keyof T): string {
+  const propertyValue = value[property] as unknown
+
+  if (isValidElement(propertyValue) && propertyValue.props) {
+    const propsWithText = propertyValue.props as { text?: string }
+    return String(propsWithText.text || '')
+  }
+
+  return String(propertyValue || '')
+}
+
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
+  const aProperty = getProperty(a, orderBy)
+  const bProperty = getProperty(b, orderBy)
+  const comparisonResult = bProperty.localeCompare(aProperty)
+
+  if (comparisonResult < 0) {
     return -1
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (comparisonResult > 0) {
     return 1
   }
+
   return 0
 }
 
