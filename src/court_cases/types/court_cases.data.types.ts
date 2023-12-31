@@ -1,6 +1,7 @@
 import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { CaseCollectionSchema, CashCollectionSchema } from '../../cash_collections'
 import { ClientSchema } from '../../clients'
+import { ID_DEFAULT } from '../../constants'
 import { FormSchema } from '../../forms'
 import { HearingCalendarSchema } from '../../hearing_calendars'
 import { CaseTypeSchema } from '../../ref_types'
@@ -42,5 +43,28 @@ export interface HistoryCourtCaseSchema extends BaseModelSchema {
   client_id?: number
   // orm_mode
   case_type?: CaseTypeSchema
-  client?: ClientSchema
+  client?: CourtCaseSchema
+}
+
+export interface CourtCasesState {
+  isCloseModal: boolean
+  courtCases: CourtCaseSchema[]
+  selectedCourtCase: CourtCaseSchema
+}
+
+export interface CourtCasesAction extends CourtCasesState {
+  type: string
+}
+
+export const DefaultCourtCaseSchema: CourtCaseSchema = {
+  case_type_id: ID_DEFAULT,
+  client_id: ID_DEFAULT,
+  status: '',
+  comments: '',
+}
+
+export const DefaultCourtCaseState: CourtCasesState = {
+  isCloseModal: true,
+  courtCases: [],
+  selectedCourtCase: DefaultCourtCaseSchema,
 }

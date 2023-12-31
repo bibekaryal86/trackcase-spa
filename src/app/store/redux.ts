@@ -6,6 +6,7 @@ import reduxImmutableStateInvariant from 'redux-immutable-state-invariant'
 import thunk from 'redux-thunk'
 
 import { clients, ClientsState } from '../../clients'
+import { court_cases, CourtCasesState } from '../../court_cases'
 import { courts, CourtsState } from '../../courts'
 import { judges, JudgesState } from '../../judges'
 import {
@@ -45,6 +46,7 @@ export interface GlobalState {
   courts: CourtsState
   judges: JudgesState
   clients: ClientsState
+  court_cases: CourtCasesState
 }
 
 export interface GlobalDispatch {
@@ -64,6 +66,7 @@ const appReducers = combineReducers({
   courts,
   judges,
   clients,
+  court_cases,
 })
 
 const rootReducer = (state: any, action: any) => {

@@ -52,8 +52,10 @@ export interface JudgesAction extends JudgesState {
 export const DefaultJudgeSchema: JudgeSchema = {
   name: '',
   webex: '',
-  status: '',
+
   court_id: ID_DEFAULT,
+  status: '',
+  comments: '',
 }
 
 export const DefaultJudgeState: JudgesState = {

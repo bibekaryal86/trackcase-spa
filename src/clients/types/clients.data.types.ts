@@ -1,4 +1,5 @@
 import { AddressBaseSchema, BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { ID_DEFAULT } from '../../constants'
 import { CourtCaseSchema } from '../../court_cases'
 import { JudgeSchema } from '../../judges'
 
@@ -53,15 +54,15 @@ export interface ClientsAction extends ClientsState {
 export const DefaultClientSchema: ClientSchema = {
   name: '',
   a_number: '',
-  status: '',
-  comments: '',
   street_address: '',
   city: '',
   state: '',
   zip_code: '',
   phone_number: '',
   email: '',
-  judge_id: 0,
+  judge_id: ID_DEFAULT,
+  status: '',
+  comments: '',
 }
 
 export const DefaultClientState: ClientsState = {
