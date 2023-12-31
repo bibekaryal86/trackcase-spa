@@ -16,6 +16,7 @@ import {
   BUTTON_DELETE,
   BUTTON_RESET,
   BUTTON_UPDATE,
+  ID_DEFAULT,
 } from '../../constants'
 import { CourtSchema, getCourt, getCourts } from '../../courts'
 import { addJudge, deleteJudge, editJudge, getJudges } from '../actions/judges.action'
@@ -71,7 +72,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const { courtId, selectedCourt, getCourt } = props
 
   const [modal, setModal] = useState('')
-  const [selectedId, setSelectedId] = useState<number>(-1)
+  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedJudge, setSelectedJudge] = useState<JudgeSchema>(DefaultJudgeSchema)
   const [selectedJudgeForReset, setSelectedJudgeForReset] = useState<JudgeSchema>(DefaultJudgeSchema)
   const [judgeStatusList, setJudgeStatusList] = useState<string[]>([])
@@ -95,7 +96,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   useEffect(() => {
     if (isCloseModal) {
       setModal('')
-      setSelectedId(-1)
+      setSelectedId(ID_DEFAULT)
       setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
       setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
     }
@@ -132,7 +133,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
 
   const secondaryButtonCallback = () => {
     setModal('')
-    setSelectedId(-1)
+    setSelectedId(ID_DEFAULT)
     setSelectedJudge(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
     setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: Number(courtId) } : DefaultJudgeSchema)
   }

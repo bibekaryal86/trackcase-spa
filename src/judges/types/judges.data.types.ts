@@ -1,5 +1,6 @@
 import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { ClientSchema } from '../../clients'
+import { ID_DEFAULT } from '../../constants'
 import { CourtSchema } from '../../courts'
 
 export interface JudgeSchema extends StatusBaseSchema, BaseModelSchema {
@@ -52,7 +53,7 @@ export const DefaultJudgeSchema: JudgeSchema = {
   name: '',
   webex: '',
   status: '',
-  court_id: -1,
+  court_id: ID_DEFAULT,
 }
 
 export const DefaultJudgeState: JudgesState = {

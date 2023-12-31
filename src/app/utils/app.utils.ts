@@ -80,6 +80,8 @@ export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-0
 export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
   streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
 
+export const getNumber = (number: number | undefined) => (number ? Number(number) : -4)
+
 export const validateAddress = (
   streetAddress: string | undefined,
   city: string | undefined,

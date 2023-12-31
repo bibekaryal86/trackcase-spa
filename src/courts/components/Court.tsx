@@ -21,7 +21,7 @@ import {
   StatusSchema,
   unmountPage,
 } from '../../app'
-import { BUTTON_CLOSE, NOTE_OBJECT_TYPES } from '../../constants'
+import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
 import { Judges } from '../../judges'
 import { editCourt, getCourt } from '../actions/courts.action'
 import { COURTS_UNMOUNT } from '../types/courts.action.types'
@@ -133,8 +133,8 @@ const Court = (props: CourtProps): React.ReactElement => {
   const notesContent = () => (
     <Notes
       noteObjectType={NOTE_OBJECT_TYPES.COURT}
-      noteObjectId={selectedCourt.id || -1}
-      notesList={convertNotesToNotesList(selectedCourt.note_courts || [], selectedCourt.id || -1)}
+      noteObjectId={selectedCourt.id || ID_DEFAULT}
+      notesList={convertNotesToNotesList(selectedCourt.note_courts || [], selectedCourt.id || ID_LIST)}
       addNote={props.addNote}
       editNote={props.editNote}
       deleteNote={props.deleteNote}

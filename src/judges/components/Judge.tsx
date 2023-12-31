@@ -22,7 +22,7 @@ import {
   unmountPage,
 } from '../../app'
 import { Clients } from '../../clients'
-import { BUTTON_CLOSE, NOTE_OBJECT_TYPES } from '../../constants'
+import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
 import { CourtSchema, getCourts } from '../../courts'
 import { editJudge, getJudge } from '../actions/judges.action'
 import { JUDGES_UNMOUNT } from '../types/judges.action.types'
@@ -145,8 +145,8 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   const notesContent = () => (
     <Notes
       noteObjectType={NOTE_OBJECT_TYPES.JUDGE}
-      noteObjectId={selectedJudge.id || -1}
-      notesList={convertNotesToNotesList(selectedJudge.note_judges || [], selectedJudge.id || -1)}
+      noteObjectId={selectedJudge.id || ID_DEFAULT}
+      notesList={convertNotesToNotesList(selectedJudge.note_judges || [], selectedJudge.id || ID_LIST)}
       addNote={props.addNote}
       editNote={props.editNote}
       deleteNote={props.deleteNote}

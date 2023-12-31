@@ -20,6 +20,10 @@ export const ALERT_TYPE_FAILURE = 'error'
 export const ALERT_TYPE_INFO = 'info'
 export const ALERT_TYPE_WARNING = 'warning'
 
+export const ID_DEFAULT = -1
+export const ID_ACTION_BUTTON = -2
+export const ID_LIST = -3
+
 export const CHECK_BOX_OPTIONS_YES_NO = [
   { value: 'YES', text: 'YES' },
   { value: 'NO', text: 'NO' },

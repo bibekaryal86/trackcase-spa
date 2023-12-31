@@ -16,6 +16,8 @@ import {
   BUTTON_DELETE,
   BUTTON_RESET,
   BUTTON_UPDATE,
+  ID_ACTION_BUTTON,
+  ID_DEFAULT,
 } from '../../constants'
 import {
   CaseTypeSchema,
@@ -50,7 +52,7 @@ const RefTypes = (props: RefTypesProps): React.ReactElement => {
   const { isCloseModal } = props
 
   const [modal, setModal] = useState('')
-  const [selectedId, setSelectedId] = useState<number>(-1)
+  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedName, setSelectedName] = useState('')
   const [selectedDesc, setSelectedDesc] = useState('')
   const [selectedNameForReset, setSelectedNameForReset] = useState('')
@@ -126,7 +128,7 @@ const RefTypes = (props: RefTypesProps): React.ReactElement => {
 
   const secondaryButtonCallback = () => {
     setModal('')
-    setSelectedId(-1)
+    setSelectedId(ID_DEFAULT)
     setSelectedName('')
     setSelectedDesc('')
     setSelectedNameForReset('')
@@ -253,7 +255,7 @@ const RefTypes = (props: RefTypesProps): React.ReactElement => {
     return {
       name: x.name,
       description: x.description,
-      actions: actionButtons(x.id || -1, x.name, x.description),
+      actions: actionButtons(x.id || ID_ACTION_BUTTON, x.name, x.description),
     }
   })
 

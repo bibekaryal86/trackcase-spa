@@ -16,6 +16,7 @@ import {
   BUTTON_DELETE,
   BUTTON_RESET,
   BUTTON_UPDATE,
+  ID_DEFAULT,
 } from '../../constants'
 import { getJudge, getJudges, JudgeSchema } from '../../judges'
 import { addClient, deleteClient, editClient, getClients } from '../actions/clients.action'
@@ -71,7 +72,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const { judgeId, selectedJudge, getJudge } = props
 
   const [modal, setModal] = useState('')
-  const [selectedId, setSelectedId] = useState<number>(-1)
+  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedClient, setSelectedClient] = useState<ClientSchema>(DefaultClientSchema)
   const [selectedClientForReset, setSelectedClientForReset] = useState<ClientSchema>(DefaultClientSchema)
   const [clientStatusList, setClientStatusList] = useState<string[]>([])
@@ -129,7 +130,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   const secondaryButtonCallback = () => {
     setModal('')
-    setSelectedId(-1)
+    setSelectedId(ID_DEFAULT)
     setSelectedClient(DefaultClientSchema)
     setSelectedClientForReset(DefaultClientSchema)
   }
