@@ -17,11 +17,11 @@ interface JudgeTableProps {
   isHistoryView: boolean
   judgesList: JudgeSchema[]
   historyJudgesList: HistoryJudgeSchema[]
-  selectedCourt?: CourtSchema
   setModal?: (action: string) => void
   setSelectedId?: (id: number) => void
   setSelectedJudge?: (judge: JudgeSchema) => void
   setSelectedJudgeForReset?: (judge: JudgeSchema) => void
+  selectedCourt?: CourtSchema
 }
 
 const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
@@ -58,7 +58,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
           isDisableSorting: true,
         },
         {
-          id: 'created',
+          id: 'date',
           label: 'Date (UTC)',
           isDisableSorting: true,
         },

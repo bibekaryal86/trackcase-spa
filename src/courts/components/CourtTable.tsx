@@ -62,7 +62,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
           isDisableSorting: true,
         },
         {
-          id: 'created',
+          id: 'date',
           label: 'Date (UTC)',
           isDisableSorting: true,
         },

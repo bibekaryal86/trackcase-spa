@@ -17,11 +17,11 @@ interface ClientTableProps {
   isHistoryView: boolean
   clientsList: ClientSchema[]
   historyClientsList: HistoryClientSchema[]
-  selectedJudge?: JudgeSchema
   setModal?: (action: string) => void
   setSelectedId?: (id: number) => void
   setSelectedClient?: (client: ClientSchema) => void
   setSelectedClientForReset?: (client: ClientSchema) => void
+  selectedJudge?: JudgeSchema
 }
 
 const ClientTable = (props: ClientTableProps): React.ReactElement => {
@@ -74,7 +74,7 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
           isDisableSorting: true,
         },
         {
-          id: 'created',
+          id: 'date',
           label: 'Date (UTC)',
           isDisableSorting: true,
         },
