@@ -1,13 +1,6 @@
 import { getNumericOnly, isNumericOnly, validateAddress } from '../../app'
 import { CourtSchema } from '../types/courts.data.types'
 
-export const isCourtFormFieldError = (
-  value: string | null | undefined,
-  is_zip: boolean = false,
-  is_phone: boolean = false,
-): boolean =>
-  !value || (is_zip ? value.trim().length !== 5 : is_phone ? value.trim().length != 10 : value.trim() === '')
-
 export const validateCourt = (court: CourtSchema) =>
   court.name.trim() &&
   court.status.trim() &&
@@ -25,6 +18,13 @@ export const isAreTwoCourtsSame = (one: CourtSchema, two: CourtSchema) =>
   one.state === two.state &&
   one.zip_code === two.zip_code &&
   one.phone_number === two.phone_number
+
+export const isCourtFormFieldError = (
+  value: string | null | undefined,
+  is_zip: boolean = false,
+  is_phone: boolean = false,
+): boolean =>
+  !value || (is_zip ? value.trim().length !== 5 : is_phone ? value.trim().length != 10 : value.trim() === '')
 
 export const handleCourtFormOnChange = (
   name: string,

@@ -43,7 +43,7 @@ export interface HistoryCourtCaseSchema extends BaseModelSchema {
   client_id?: number
   // orm_mode
   case_type?: CaseTypeSchema
-  client?: CourtCaseSchema
+  client?: ClientSchema
 }
 
 export interface CourtCasesState {
