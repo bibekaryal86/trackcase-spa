@@ -53,7 +53,7 @@ export const getCourtCases = (isForceFetch: boolean = false) => {
 
     try {
       let courtCasesResponse: CourtCaseResponse
-      const courtCasesInStore: CourtCaseSchema[] = getStore().court_cases.courtCases
+      const courtCasesInStore: CourtCaseSchema[] = getStore().court_cases.court_cases
 
       if (isForceFetch || courtCasesInStore.length === 0) {
         const urlPath = getEndpoint(process.env.COURT_CASES_RETRIEVE_ENDPOINT as string)
@@ -216,7 +216,7 @@ const setSelectedCourtCaseFromStore = (
   dispatch: React.Dispatch<GlobalDispatch>,
   courtCaseId: number,
 ) => {
-  const courtCasesInStore: CourtCaseSchema[] = store.court_cases.courtCases
+  const courtCasesInStore: CourtCaseSchema[] = store.court_cases.court_cases
   const courtCaseInStore: CourtCaseSchema | undefined = courtCasesInStore.find(
     (courtCase) => courtCase.id === courtCaseId,
   )

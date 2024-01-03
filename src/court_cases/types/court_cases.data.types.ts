@@ -48,7 +48,7 @@ export interface HistoryCourtCaseSchema extends BaseModelSchema {
 
 export interface CourtCasesState {
   isCloseModal: boolean
-  courtCases: CourtCaseSchema[]
+  court_cases: CourtCaseSchema[]
   selectedCourtCase: CourtCaseSchema
 }
 
@@ -65,6 +65,6 @@ export const DefaultCourtCaseSchema: CourtCaseSchema = {
 
 export const DefaultCourtCaseState: CourtCasesState = {
   isCloseModal: true,
-  courtCases: [],
+  court_cases: [],
   selectedCourtCase: DefaultCourtCaseSchema,
 }

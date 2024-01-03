@@ -24,7 +24,7 @@ import { JUDGES_UNMOUNT } from '../types/judges.action.types'
 import { DefaultJudgeSchema, JudgeSchema } from '../types/judges.data.types'
 import { isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
 
-const mapStateToProps = ({ judges, courts, statuses }: GlobalState) => {
+const mapStateToProps = ({ judges, statuses, courts }: GlobalState) => {
   return {
     isCloseModal: judges.isCloseModal,
     judgesList: judges.judges,

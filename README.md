@@ -10,3 +10,8 @@
   * no issues in adding/updating/deleting after 1st row added
 
 * Court Case -> There's no name, so clientName + courtCaseTypeName
+
+--> also needs update in trackcase_service
+  --> convert snake_case to camelCase for schemas so that request/response are in camelCase
+    --> at least response, we can leave response as is
+      --> but test to make sure if `convert.py` works as is now

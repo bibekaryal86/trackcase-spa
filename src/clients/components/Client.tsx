@@ -29,7 +29,7 @@ import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
 import { ClientSchema, DefaultClientSchema, HistoryClientSchema } from '../types/clients.data.types'
 import { isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
 
-const mapStateToProps = ({ clients, judges, statuses }: GlobalState) => {
+const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
   return {
     selectedClient: clients.selectedClient,
     statusList: statuses.statuses,

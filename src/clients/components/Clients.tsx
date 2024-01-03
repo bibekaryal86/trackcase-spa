@@ -24,7 +24,7 @@ import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
 import { ClientSchema, DefaultClientSchema } from '../types/clients.data.types'
 import { isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
 
-const mapStateToProps = ({ clients, judges, statuses }: GlobalState) => {
+const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
   return {
     isCloseModal: clients.isCloseModal,
     clientsList: clients.clients,

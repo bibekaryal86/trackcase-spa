@@ -2,6 +2,7 @@ import Button from '@mui/material/Button'
 import React from 'react'
 
 import { convertDateToLocaleString, Link, Table, TableData, TableHeaderData } from '../../app'
+import { ClientSchema } from '../../clients'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -20,10 +21,11 @@ interface CourtCaseTableProps {
   setSelectedId?: (id: number) => void
   setSelectedCourtCase?: (courtCase: CourtCaseSchema) => void
   setSelectedCourtCaseForReset?: (courtCase: CourtCaseSchema) => void
+  selectedClient?: ClientSchema
 }
 
 const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
-  const { isHistoryView, courtCasesList, historyCourtCasesList } = props
+  const { isHistoryView, courtCasesList, historyCourtCasesList, selectedClient } = props
   const { setModal, setSelectedId, setSelectedCourtCase, setSelectedCourtCaseForReset } = props
 
   const courtCasesTableHeaderData = (): TableHeaderData[] => {
@@ -114,7 +116,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
         }
       })
     } else {
-      tableData = Array.from(courtCasesList, (x) => {
+      tableData = Array.from(selectedClient ? selectedClient.court_cases || [] : courtCasesList, (x) => {
         return {
           clientCaseType: linkToCourtCases(x),
           status: x.status || '',
