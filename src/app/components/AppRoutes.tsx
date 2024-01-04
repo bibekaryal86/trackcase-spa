@@ -52,22 +52,6 @@ export const protectedRoutes: RoutesType[] = [
     element: <Home />,
   },
   {
-    path: '/court_cases',
-    display: 'Cases',
-    element: <CourtCases />,
-    icon: <WorkIcon />,
-  },
-  {
-    path: '/court_case',
-    element: <CourtCase />,
-    subroutes: [
-      {
-        path: ':id',
-        element: <CourtCase />,
-      },
-    ],
-  },
-  {
     path: '/cash_collections',
     display: 'Collections',
     element: <CashCollections />,
@@ -128,6 +112,22 @@ export const protectedRoutes: RoutesType[] = [
       {
         path: ':id',
         element: <Form />,
+      },
+    ],
+  },
+  {
+    path: '/court_cases',
+    display: 'Cases',
+    element: <CourtCases />,
+    icon: <WorkIcon />,
+  },
+  {
+    path: '/court_case',
+    element: <CourtCase />,
+    subroutes: [
+      {
+        path: ':id',
+        element: <CourtCase />,
       },
     ],
   },

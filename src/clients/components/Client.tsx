@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -23,13 +23,14 @@ import {
   unmountPage,
 } from '../../app'
 import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
+import { CourtCases } from '../../court_cases'
 import { getJudges, JudgeSchema } from '../../judges'
 import { editClient, getClient } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
 import { ClientSchema, DefaultClientSchema, HistoryClientSchema } from '../types/clients.data.types'
 import { isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
 
-const mapStateToProps = ({ clients, judges, statuses }: GlobalState) => {
+const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
   return {
     selectedClient: clients.selectedClient,
     statusList: statuses.statuses,
@@ -64,6 +65,8 @@ interface ClientProps {
 }
 
 const Client = (props: ClientProps): React.ReactElement => {
+  // prevent infinite fetch if api returns empty
+  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
   const { getClient, editClient } = props
@@ -85,23 +88,23 @@ const Client = (props: ClientProps): React.ReactElement => {
   }, [id, getClient, selectedClient.id])
 
   useEffect(() => {
-    if (judgesList.length === 0) {
-      getJudges()
+    if (!isFetchRunDone.current) {
+      statusList.court_case.all.length === 0 && getStatusesList()
+      judgesList.length === 0 && getJudges()
     }
-  }, [judgesList, getJudges])
+    isFetchRunDone.current = true
+  }, [statusList.court_case.all, getStatusesList, judgesList.length, getJudges])
+
+  useEffect(() => {
+    if (statusList.court.all.length > 0) {
+      setClientStatusList(statusList.court.all)
+    }
+  }, [statusList.court.all])
 
   useEffect(() => {
     setSelectedClient(props.selectedClient)
     setSelectedClientForReset(props.selectedClient)
   }, [props.selectedClient])
-
-  useEffect(() => {
-    if (statusList.client.all.length === 0) {
-      getStatusesList()
-    } else {
-      setClientStatusList(statusList.client.all)
-    }
-  }, [statusList.client.all, getStatusesList])
 
   useEffect(() => {
     return () => {
@@ -241,6 +244,12 @@ const Client = (props: ClientProps): React.ReactElement => {
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {clientForm()}
               {clientButtons()}
+            </Grid>
+            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Typography component="h1" variant="h6" color="primary">
+                Court Cases Assigned to Client:
+              </Typography>
+              <CourtCases clientId={id} />
             </Grid>
             {isShowHistory && historyModal()}
             {isShowNotes && notesModal()}

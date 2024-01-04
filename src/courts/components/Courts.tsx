@@ -67,25 +67,24 @@ const Courts = (props: CourtsProps): React.ReactElement => {
   const [courtStatusList, setCourtStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (courtsList.length === 0 && !isFetchRunDone.current) {
-      getCourts()
-      isFetchRunDone.current = true
+    if (!isFetchRunDone.current) {
+      courtsList.length === 0 && getCourts()
+      statusList.court.all.length === 0 && getStatusesList()
     }
-  }, [courtsList.length, getCourts])
+    isFetchRunDone.current = true
+  }, [courtsList.length, getCourts, statusList.court.all, getStatusesList])
+
+  useEffect(() => {
+    if (statusList.court.all.length > 0) {
+      setCourtStatusList(statusList.court.all)
+    }
+  }, [statusList.court.all])
 
   useEffect(() => {
     if (isCloseModal) {
       secondaryButtonCallback()
     }
   }, [isCloseModal])
-
-  useEffect(() => {
-    if (statusList.court.all.length === 0) {
-      getStatusesList()
-    } else {
-      setCourtStatusList(statusList.court.all)
-    }
-  }, [statusList.court.all, getStatusesList])
 
   useEffect(() => {
     return () => {

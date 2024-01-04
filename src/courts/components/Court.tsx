@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -60,6 +60,8 @@ interface CourtProps {
 }
 
 const Court = (props: CourtProps): React.ReactElement => {
+  // prevent infinite fetch if api returns empty
+  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
   const { getCourt, editCourt } = props
@@ -80,17 +82,22 @@ const Court = (props: CourtProps): React.ReactElement => {
   }, [id, getCourt, selectedCourt.id])
 
   useEffect(() => {
+    if (!isFetchRunDone.current) {
+      statusList.court.all.length === 0 && getStatusesList()
+    }
+    isFetchRunDone.current = true
+  }, [statusList.court.all, getStatusesList])
+
+  useEffect(() => {
+    if (statusList.court.all.length > 0) {
+      setCourtStatusList(statusList.court.all)
+    }
+  }, [statusList.court.all])
+
+  useEffect(() => {
     setSelectedCourt(props.selectedCourt)
     setSelectedCourtForReset(props.selectedCourt)
   }, [props.selectedCourt])
-
-  useEffect(() => {
-    if (statusList.court.all.length === 0) {
-      getStatusesList()
-    } else {
-      setCourtStatusList(statusList.court.all)
-    }
-  }, [statusList.court.all, getStatusesList])
 
   useEffect(() => {
     return () => {

@@ -24,6 +24,32 @@ export const isAreTwoClientsSame = (one: ClientSchema, two: ClientSchema) =>
   one.zip_code === two.zip_code &&
   one.phone_number === two.phone_number
 
+export const isClientFormFieldError = (name: string, value: string | undefined, selectedClient: ClientSchema) => {
+  switch (name) {
+    case 'name':
+    case 'aNumber':
+    case 'status':
+      return !value || value.trim() === ''
+    case 'phoneNumber':
+      return !value || value.trim().length !== 10
+    case 'email':
+      return !value || !validateEmailAddress(value.trim())
+    case 'streetAddress':
+    case 'city':
+    case 'state':
+    case 'zipCode':
+      if (value) {
+        return !(
+          selectedClient.street_address &&
+          selectedClient.city &&
+          selectedClient.state &&
+          selectedClient.zip_code
+        )
+      }
+  }
+  return false
+}
+
 export const handleClientFormOnChange = (
   name: string,
   value: string,
@@ -100,33 +126,4 @@ export const handleClientFormOnChange = (
       break
   }
   setSelectedClient(updatedClient)
-}
-
-export const isClientFormFieldError = (name: string, value: string | undefined, selectedClient: ClientSchema) => {
-  switch (name) {
-    case 'name':
-    case 'aNumber':
-    case 'status':
-    case 'comments':
-      return !value || value.trim() === ''
-    case 'phoneNumber':
-      return !value || value.trim().length !== 10
-    case 'email':
-      return !value || !validateEmailAddress(value.trim())
-    case 'judgeId':
-      return !value || getNumber(value) <= 0
-    case 'streetAddress':
-    case 'city':
-    case 'state':
-    case 'zipCode':
-      if (value) {
-        return !(
-          selectedClient.street_address &&
-          selectedClient.city &&
-          selectedClient.state &&
-          selectedClient.zip_code
-        )
-      }
-  }
-  return false
 }
