@@ -23,6 +23,7 @@ import {
   unmountPage,
 } from '../../app'
 import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
+import { CourtCases } from '../../court_cases'
 import { getJudges, JudgeSchema } from '../../judges'
 import { editClient, getClient } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
@@ -241,6 +242,12 @@ const Client = (props: ClientProps): React.ReactElement => {
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {clientForm()}
               {clientButtons()}
+            </Grid>
+            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Typography component="h1" variant="h6" color="primary">
+                Court Cases Assigned to Client:
+              </Typography>
+              <CourtCases clientId={id} />
             </Grid>
             {isShowHistory && historyModal()}
             {isShowNotes && notesModal()}

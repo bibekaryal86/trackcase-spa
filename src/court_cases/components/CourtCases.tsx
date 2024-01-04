@@ -239,10 +239,28 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
     </Typography>
   )
 
+  const getCourtCasesList = () => {
+    const clientsMap = new Map(clientsList.map((client) => [client.id, client]))
+    const caseTypesMap = new Map(caseTypesList.map((caseType) => [caseType.id, caseType]))
+    const courtCasesToList = clientId && selectedClient ? selectedClient.court_cases || [] : courtCasesList
+    const theCourtCases = JSON.parse(JSON.stringify(courtCasesToList))
+    theCourtCases.forEach((x: CourtCaseSchema) => {
+      const matchingCaseType = caseTypesMap.get(x.case_type_id)
+      if (matchingCaseType) {
+        x.case_type = matchingCaseType
+      }
+      const matchingClient = clientsMap.get(x.client_id)
+      if (matchingClient) {
+        x.client = matchingClient
+      }
+    })
+    return theCourtCases
+  }
+
   const courtCasesTable = () => (
     <CourtCaseTable
       isHistoryView={false}
-      courtCasesList={clientId && selectedClient ? selectedClient.court_cases || [] : courtCasesList}
+      courtCasesList={getCourtCasesList()}
       historyCourtCasesList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}

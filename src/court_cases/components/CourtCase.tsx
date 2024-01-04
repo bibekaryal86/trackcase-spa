@@ -123,7 +123,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
     const prevPage = searchQueryParams.get('prevPage') || ''
     return (
       <Box sx={{ display: 'flex' }}>
-        <Link text="View All CourtCases" navigateToPage="/courtCases/" color="primary" />
+        <Link text="View All CourtCases" navigateToPage="/court_cases/" color="primary" />
         {backToPage && (
           <Box sx={{ ml: 2 }}>
             <Link text={`Back to ${prevPage}`} navigateToPage={backToPage} color="primary" />
