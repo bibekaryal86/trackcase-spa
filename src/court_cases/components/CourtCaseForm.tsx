@@ -112,7 +112,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
 
   return isShowOneCourtCase ? (
     <div>
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
         {courtCaseType()}
         {courtCaseClient()}
         {courtCaseStatus()}
@@ -120,7 +120,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       {courtCaseComments()}
     </div>
   ) : (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
       {courtCaseType()}
       {courtCaseClient()}
       {courtCaseStatus()}

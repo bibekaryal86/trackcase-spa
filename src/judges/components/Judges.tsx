@@ -83,15 +83,23 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       if (!selectedCourt) {
         getCourt(getNumber(courtId))
       }
-      if (courtsList.length === 0) {
-        getCourts()
-      }
-    } else if ((judgesList.length === 0 || courtsList.length === 0) && !isFetchRunDone.current) {
-      judgesList.length === 0 && getJudges()
-      courtsList.length === 0 && getCourts()
-      isFetchRunDone.current = true
     }
   }, [courtId, selectedCourt, getCourt, courtsList.length, getCourts, judgesList.length, getJudges])
+
+  useEffect(() => {
+    if (!isFetchRunDone.current) {
+      judgesList.length === 0 && getJudges()
+      courtsList.length === 0 && getCourts()
+      statusList.court_case.all.length === 0 && getStatusesList()
+    }
+    isFetchRunDone.current = true
+  }, [judgesList.length, getJudges, statusList.court_case.all, getStatusesList, courtsList.length, getCourts])
+
+  useEffect(() => {
+    if (statusList.judge.all.length > 0) {
+      setJudgeStatusList(statusList.judge.all)
+    }
+  }, [statusList.judge.all])
 
   useEffect(() => {
     if (isCloseModal) {
@@ -101,14 +109,6 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       setSelectedJudgeForReset(courtId ? { ...DefaultJudgeSchema, court_id: getNumber(courtId) } : DefaultJudgeSchema)
     }
   }, [isCloseModal, courtId])
-
-  useEffect(() => {
-    if (statusList.judge.all.length === 0) {
-      getStatusesList()
-    } else {
-      setJudgeStatusList(statusList.judge.all)
-    }
-  }, [statusList.judge.all, getStatusesList])
 
   useEffect(() => {
     return () => {

@@ -90,21 +90,19 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       if (!selectedClient) {
         getClient(getNumber(clientId))
       }
-      if (clientsList.length === 0) {
-        getClients()
-      }
-    } else if ((courtCasesList.length === 0 || clientsList.length === 0) && !isFetchRunDone.current) {
-      courtCasesList.length === 0 && getCourtCases()
-      clientsList.length === 0 && getClients()
-      isFetchRunDone.current = true
     }
-  }, [clientId, selectedClient, getClient, clientsList.length, getClients, courtCasesList.length, getCourtCases])
+  }, [clientId, selectedClient, getClient])
 
   useEffect(() => {
-    if (caseTypesList.length === 0) {
-      getCaseTypes()
+    if (!isFetchRunDone.current) {
+      courtCasesList.length === 0 && getCourtCases()
+      clientsList.length === 0 && getClients()
+      caseTypesList.length === 0 && getCaseTypes()
+      statusList.court_case.all.length === 0 && getStatusesList()
     }
-  }, [caseTypesList.length, getCaseTypes])
+    isFetchRunDone.current = true
+  }, [courtCasesList.length, getCourtCases, statusList.court_case.all, getStatusesList, caseTypesList.length, getCaseTypes, clientsList.length, getClients])
+
 
   useEffect(() => {
     if (isCloseModal) {
@@ -113,12 +111,10 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   }, [isCloseModal])
 
   useEffect(() => {
-    if (statusList.court_case.all.length === 0) {
-      getStatusesList()
-    } else {
+    if (statusList.court_case.all.length > 0) {
       setCourtCaseStatusList(statusList.court_case.all)
     }
-  }, [statusList.court_case.all, getStatusesList])
+  }, [statusList.court_case.all])
 
   useEffect(() => {
     return () => {
@@ -238,7 +234,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   const courtCasesTable = () => (
     <CourtCaseTable
       isHistoryView={false}
-      courtCasesList={!(clientId && selectedClient) ? courtCasesList : selectedClient?.court_cases || []}
+      courtCasesList={clientId && selectedClient ? selectedClient.court_cases || [] : courtCasesList}
       historyCourtCasesList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}
