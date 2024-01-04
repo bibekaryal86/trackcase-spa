@@ -101,8 +101,16 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       statusList.court_case.all.length === 0 && getStatusesList()
     }
     isFetchRunDone.current = true
-  }, [courtCasesList.length, getCourtCases, statusList.court_case.all, getStatusesList, caseTypesList.length, getCaseTypes, clientsList.length, getClients])
-
+  }, [
+    courtCasesList.length,
+    getCourtCases,
+    statusList.court_case.all,
+    getStatusesList,
+    caseTypesList.length,
+    getCaseTypes,
+    clientsList.length,
+    getClients,
+  ])
 
   useEffect(() => {
     if (isCloseModal) {
