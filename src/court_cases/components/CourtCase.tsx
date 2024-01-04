@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -70,6 +70,8 @@ interface CourtCaseProps {
 }
 
 const CourtCase = (props: CourtCaseProps): React.ReactElement => {
+  // prevent infinite fetch if api returns empty
+  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
   const { getCourtCase, editCourtCase } = props
@@ -91,21 +93,19 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   }, [id, getCourtCase, selectedCourtCase.id])
 
   useEffect(() => {
-    if (caseTypesList.length === 0) {
-      getCaseTypes()
+    if (!isFetchRunDone.current) {
+      statusList.court_case.all.length === 0 && getStatusesList()
+      caseTypesList.length === 0 && getCaseTypes()
+      clientsList.length === 0 && getClients()
     }
-    if (clientsList.length === 0) {
-      getClients()
-    }
-  }, [caseTypesList, getCaseTypes, clientsList, getClients])
+    isFetchRunDone.current = true
+  }, [statusList.court_case.all, getStatusesList, caseTypesList.length, getCaseTypes, clientsList.length, getClients])
 
   useEffect(() => {
-    if (statusList.court_case.all.length === 0) {
-      getStatusesList()
-    } else {
+    if (statusList.court_case.all.length > 0) {
       setCourtCaseStatusList(statusList.court_case.all)
     }
-  }, [statusList.court_case.all, getStatusesList])
+  }, [statusList.court_case.all])
 
   useEffect(() => {
     setSelectedCourtCase(props.selectedCourtCase)
@@ -221,7 +221,9 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
         >
           Cancel
         </Button>
-        <Button onClick={() => setIsShowNotes(true)}>View CourtCase Notes [{selectedCourtCase.note_court_cases?.length}]</Button>
+        <Button onClick={() => setIsShowNotes(true)}>
+          View CourtCase Notes [{selectedCourtCase.note_court_cases?.length}]
+        </Button>
         <Button onClick={() => setIsShowHistory(true)}>
           View CourtCase Update History [{selectedCourtCase.history_court_cases?.length}]
         </Button>

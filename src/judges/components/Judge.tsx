@@ -2,7 +2,7 @@ import { Grid } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -65,6 +65,8 @@ interface JudgeProps {
 }
 
 const Judge = (props: JudgeProps): React.ReactElement => {
+  // prevent infinite fetch if api returns empty
+  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
   const { getJudge, editJudge } = props
@@ -86,23 +88,23 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   }, [id, getJudge, selectedJudge.id])
 
   useEffect(() => {
-    if (courtsList.length === 0) {
-      getCourts()
+    if (!isFetchRunDone.current) {
+      statusList.court_case.all.length === 0 && getStatusesList()
+      courtsList.length === 0 && getCourts()
     }
-  }, [courtsList, getCourts])
+    isFetchRunDone.current = true
+  }, [statusList.court_case.all, getStatusesList, courtsList.length, getCourts])
+
+  useEffect(() => {
+    if (statusList.judge.all.length > 0) {
+      setJudgeStatusList(statusList.judge.all)
+    }
+  }, [statusList.judge.all])
 
   useEffect(() => {
     setSelectedJudge(props.selectedJudge)
     setSelectedJudgeForReset(props.selectedJudge)
   }, [props.selectedJudge])
-
-  useEffect(() => {
-    if (statusList.judge.all.length === 0) {
-      getStatusesList()
-    } else {
-      setJudgeStatusList(statusList.judge.all)
-    }
-  }, [statusList.judge.all, getStatusesList])
 
   useEffect(() => {
     return () => {

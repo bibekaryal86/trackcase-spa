@@ -113,16 +113,16 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   ])
 
   useEffect(() => {
-    if (isCloseModal) {
-      secondaryButtonCallback()
-    }
-  }, [isCloseModal])
-
-  useEffect(() => {
     if (statusList.court_case.all.length > 0) {
       setCourtCaseStatusList(statusList.court_case.all)
     }
   }, [statusList.court_case.all])
+
+  useEffect(() => {
+    if (isCloseModal) {
+      secondaryButtonCallback()
+    }
+  }, [isCloseModal])
 
   useEffect(() => {
     return () => {

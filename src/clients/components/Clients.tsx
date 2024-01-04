@@ -96,16 +96,16 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   }, [clientsList.length, getClients, statusList.court_case.all, getStatusesList, judgesList.length, getJudges])
 
   useEffect(() => {
-    if (isCloseModal) {
-      secondaryButtonCallback()
-    }
-  }, [isCloseModal])
-
-  useEffect(() => {
     if (statusList.client.all.length > 0) {
       setClientStatusList(statusList.client.all)
     }
   }, [statusList.client.all])
+
+  useEffect(() => {
+    if (isCloseModal) {
+      secondaryButtonCallback()
+    }
+  }, [isCloseModal])
 
   useEffect(() => {
     return () => {

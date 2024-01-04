@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -65,6 +65,8 @@ interface ClientProps {
 }
 
 const Client = (props: ClientProps): React.ReactElement => {
+  // prevent infinite fetch if api returns empty
+  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
   const { getClient, editClient } = props
@@ -86,23 +88,23 @@ const Client = (props: ClientProps): React.ReactElement => {
   }, [id, getClient, selectedClient.id])
 
   useEffect(() => {
-    if (judgesList.length === 0) {
-      getJudges()
+    if (!isFetchRunDone.current) {
+      statusList.court_case.all.length === 0 && getStatusesList()
+      judgesList.length === 0 && getJudges()
     }
-  }, [judgesList, getJudges])
+    isFetchRunDone.current = true
+  }, [statusList.court_case.all, getStatusesList, judgesList.length, getJudges])
+
+  useEffect(() => {
+    if (statusList.court.all.length > 0) {
+      setClientStatusList(statusList.court.all)
+    }
+  }, [statusList.court.all])
 
   useEffect(() => {
     setSelectedClient(props.selectedClient)
     setSelectedClientForReset(props.selectedClient)
   }, [props.selectedClient])
-
-  useEffect(() => {
-    if (statusList.client.all.length === 0) {
-      getStatusesList()
-    } else {
-      setClientStatusList(statusList.client.all)
-    }
-  }, [statusList.client.all, getStatusesList])
 
   useEffect(() => {
     return () => {
