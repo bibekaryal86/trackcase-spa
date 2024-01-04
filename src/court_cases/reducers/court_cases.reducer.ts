@@ -29,14 +29,14 @@ export default function court_cases(state = DefaultCourtCaseState, action: Court
       return {
         ...state,
         isCloseModal: true,
-        courtCases: action.courtCases,
+        court_cases: action.court_cases,
       }
     case COURT_CASE_CREATE_SUCCESS:
     case COURT_CASE_UPDATE_SUCCESS:
     case COURT_CASE_DELETE_SUCCESS:
       return {
         isCloseModal: true,
-        courtCases: [], // so that it will fetch
+        court_cases: [], // so that it will fetch
         selectedCourtCase: DefaultCourtCaseSchema, // so that it will fetch
       }
     case SET_SELECTED_COURT_CASE:

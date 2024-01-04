@@ -25,7 +25,7 @@ interface CourtCaseTableProps {
 }
 
 const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
-  const { isHistoryView, courtCasesList, historyCourtCasesList, selectedClient } = props
+  const { isHistoryView, courtCasesList, historyCourtCasesList } = props
   const { setModal, setSelectedId, setSelectedCourtCase, setSelectedCourtCaseForReset } = props
 
   const courtCasesTableHeaderData = (): TableHeaderData[] => {
@@ -116,7 +116,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
         }
       })
     } else {
-      tableData = Array.from(selectedClient ? selectedClient.court_cases || [] : courtCasesList, (x) => {
+      tableData = Array.from(courtCasesList, (x) => {
         return {
           clientCaseType: linkToCourtCases(x),
           status: x.status || '',

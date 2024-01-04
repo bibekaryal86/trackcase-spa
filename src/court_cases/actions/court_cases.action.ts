@@ -123,7 +123,7 @@ export const editCourtCase = (id: number, court_cases: CourtCaseSchema) => {
       const urlPath = getEndpoint(process.env.COURT_CASE_UPDATE_ENDPOINT as string)
       const options: Partial<FetchOptions> = {
         method: 'PUT',
-        pathParams: { court_cases_id: id },
+        pathParams: { court_case_id: id },
         requestBody: getRequestBody(court_cases),
       }
 
@@ -151,7 +151,7 @@ export const deleteCourtCase = (id: number) => {
       const urlPath = getEndpoint(process.env.COURT_CASE_DELETE_ENDPOINT as string)
       const options: Partial<FetchOptions> = {
         method: 'DELETE',
-        pathParams: { court_cases_id: id },
+        pathParams: { court_case_id: id },
       }
 
       const courtCaseResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
