@@ -91,7 +91,7 @@ export const getCourtCase = (court_casesId: number) => {
       const urlPath = getEndpoint(process.env.COURT_CASE_RETRIEVE_ENDPOINT as string)
       const options: Partial<FetchOptions> = {
         method: 'GET',
-        pathParams: { court_cases_id: court_casesId },
+        pathParams: { court_case_id: court_casesId },
         extraParams: {
           isIncludeExtra: true,
           isIncludeHistory: true,

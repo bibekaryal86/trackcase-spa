@@ -109,7 +109,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
       tableData = Array.from(historyCourtCasesList, (x) => {
         return {
           clientCaseType:
-            x.case_type && x.client ? `${x.client}, ${x.case_type.name}` : `${x.client_id}, ${x.case_type_id}`,
+            x.case_type && x.client ? `${x.client.name}, ${x.case_type.name}` : `${x.client_id}, ${x.case_type_id}`,
           status: x.status || '',
           user_name: x.user_name,
           date: convertDateToLocaleString(x.created),
