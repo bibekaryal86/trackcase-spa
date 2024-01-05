@@ -3,12 +3,12 @@ import { JudgeSchema } from '../../judges'
 
 export interface CourtSchema extends AddressBaseSchema, StatusBaseSchema, BaseModelSchema {
   name: string
-  dhs_address?: string
+  dhsAddress?: string
   // orm_mode
   judges?: JudgeSchema[]
   // notes and history
-  note_courts?: NoteCourtSchema[]
-  history_courts?: HistoryCourtSchema[]
+  noteCourts?: NoteCourtSchema[]
+  historyCourts?: HistoryCourtSchema[]
 }
 
 export interface CourtResponse extends ResponseBase {
@@ -16,19 +16,19 @@ export interface CourtResponse extends ResponseBase {
 }
 
 export interface NoteCourtSchema extends NoteBaseSchema, BaseModelSchema {
-  court_id: number
+  courtId: number
   // orm mode
   court?: CourtSchema
 }
 
 export interface HistoryCourtSchema extends AddressBaseSchema, BaseModelSchema {
-  user_name: string
-  court_id: number
+  userName: string
+  courtId: number
   // from court schema, need everything optional here so can't extend
   status?: string
   comments?: string
   name?: string
-  dhs_address?: string
+  dhsAddress?: string
   // orm mode
   court?: CourtSchema
 }
@@ -47,12 +47,12 @@ export const DefaultCourtSchema: CourtSchema = {
   name: '',
   status: '',
   comments: '',
-  street_address: '',
+  streetAddress: '',
   city: '',
   state: '',
-  zip_code: '',
-  phone_number: '',
-  dhs_address: '',
+  zipCode: '',
+  phoneNumber: '',
+  dhsAddress: '',
 }
 
 export const DefaultCourtState: CourtsState = {

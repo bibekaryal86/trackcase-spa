@@ -3,9 +3,9 @@ import { ClientSchema } from '../types/clients.data.types'
 
 export const validateClient = (client: ClientSchema) => {
   const nameValid = !!client.name.trim()
-  const phoneValid = !!client.phone_number?.trim()
+  const phoneValid = !!client.phoneNumber?.trim()
   const emailValid = !!client.email.trim() && validateEmailAddress(client.email)
-  const addressValid = validateAddress(client.street_address, client.city, client.state, client.zip_code, false)
+  const addressValid = validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)
   return nameValid && phoneValid && emailValid && addressValid
 }
 
@@ -13,16 +13,16 @@ export const isAreTwoClientsSame = (one: ClientSchema, two: ClientSchema) =>
   one &&
   two &&
   one.name === two.name &&
-  one.a_number === two.a_number &&
+  one.aNumber === two.aNumber &&
   one.email === two.email &&
-  one.judge_id === two.judge_id &&
+  one.judgeId === two.judgeId &&
   one.status === two.status &&
   one.comments === two.comments &&
-  one.street_address === two.street_address &&
+  one.streetAddress === two.streetAddress &&
   one.city === two.city &&
   one.state === two.state &&
-  one.zip_code === two.zip_code &&
-  one.phone_number === two.phone_number
+  one.zipCode === two.zipCode &&
+  one.phoneNumber === two.phoneNumber
 
 export const isClientFormFieldError = (name: string, value: string | undefined, selectedClient: ClientSchema) => {
   switch (name) {
@@ -39,12 +39,7 @@ export const isClientFormFieldError = (name: string, value: string | undefined, 
     case 'state':
     case 'zipCode':
       if (value) {
-        return !(
-          selectedClient.street_address &&
-          selectedClient.city &&
-          selectedClient.state &&
-          selectedClient.zip_code
-        )
+        return !(selectedClient.streetAddress && selectedClient.city && selectedClient.state && selectedClient.zipCode)
       }
   }
   return false
@@ -67,7 +62,7 @@ export const handleClientFormOnChange = (
     case 'aNumber':
       updatedClient = {
         ...selectedClient,
-        a_number: getNumericOnly(value, 9),
+        aNumber: getNumericOnly(value, 9),
       }
       break
     case 'email':
@@ -79,7 +74,7 @@ export const handleClientFormOnChange = (
     case 'judgeId':
       updatedClient = {
         ...selectedClient,
-        judge_id: getNumber(value),
+        judgeId: getNumber(value),
       }
       break
     case 'status':
@@ -97,7 +92,7 @@ export const handleClientFormOnChange = (
     case 'streetAddress':
       updatedClient = {
         ...selectedClient,
-        street_address: value,
+        streetAddress: value,
       }
       break
     case 'city':
@@ -115,13 +110,13 @@ export const handleClientFormOnChange = (
     case 'zipCode':
       updatedClient = {
         ...selectedClient,
-        zip_code: isNumericOnly(value) ? value : selectedClient.zip_code,
+        zipCode: isNumericOnly(value) ? value : selectedClient.zipCode,
       }
       break
     case 'phoneNumber':
       updatedClient = {
         ...selectedClient,
-        phone_number: getNumericOnly(value, 10),
+        phoneNumber: getNumericOnly(value, 10),
       }
       break
   }

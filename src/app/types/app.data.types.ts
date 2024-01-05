@@ -132,15 +132,15 @@ export interface StatusBaseSchema {
 }
 
 export interface AddressBaseSchema {
-  street_address?: string
+  streetAddress?: string
   city?: string
   state?: string
-  zip_code?: string
-  phone_number?: string
+  zipCode?: string
+  phoneNumber?: string
 }
 
 export interface ResponseBase {
-  delete_count?: number
+  deleteCount?: number
   detail?: ErrorDetail
 }
 
@@ -150,12 +150,12 @@ export interface ErrorSuccessSchema {
 }
 
 export interface NoteBaseSchema {
-  user_name: string
+  userName: string
   note: string
 }
 
 export interface NoteSchema extends NoteBaseSchema, BaseModelSchema {
-  note_object_id: number
+  noteObjectId: number
 }
 
 export interface NoteResponse extends ResponseBase {

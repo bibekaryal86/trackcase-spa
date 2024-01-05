@@ -142,7 +142,7 @@ const Court = (props: CourtProps): React.ReactElement => {
     <Notes
       noteObjectType={NOTE_OBJECT_TYPES.COURT}
       noteObjectId={selectedCourt.id || ID_DEFAULT}
-      notesList={convertNotesToNotesList(selectedCourt.note_courts || [], selectedCourt.id || ID_LIST)}
+      notesList={convertNotesToNotesList(selectedCourt.noteCourts || [], selectedCourt.id || ID_LIST)}
       addNote={props.addNote}
       editNote={props.editNote}
       deleteNote={props.deleteNote}
@@ -150,7 +150,7 @@ const Court = (props: CourtProps): React.ReactElement => {
   )
 
   const historyContent = () => (
-    <CourtTable isHistoryView={true} courtsList={[]} historyCourtsList={selectedCourt.history_courts || []} />
+    <CourtTable isHistoryView={true} courtsList={[]} historyCourtsList={selectedCourt.historyCourts || []} />
   )
 
   const notesModal = () => {
@@ -193,9 +193,9 @@ const Court = (props: CourtProps): React.ReactElement => {
         >
           Cancel
         </Button>
-        <Button onClick={() => setIsShowNotes(true)}>View Court Notes [{selectedCourt.note_courts?.length}]</Button>
+        <Button onClick={() => setIsShowNotes(true)}>View Court Notes [{selectedCourt.noteCourts?.length}]</Button>
         <Button onClick={() => setIsShowHistory(true)}>
-          View Court Update History [{selectedCourt.history_courts?.length}]
+          View Court Update History [{selectedCourt.historyCourts?.length}]
         </Button>
       </>
     )

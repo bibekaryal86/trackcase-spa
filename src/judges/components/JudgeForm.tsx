@@ -50,13 +50,13 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     />
   )
   const judgeCourtsList = () => (
-    <FormControl sx={{ minWidth: 425, mt: '16px', mb: '8px' }} required error={selectedJudge.court_id <= 0}>
+    <FormControl sx={{ minWidth: 425, mt: '16px', mb: '8px' }} required error={selectedJudge.courtId <= 0}>
       <InputLabel sx={{ left: '-0.9em' }}>Court</InputLabel>
       <Select
         labelId="judge-select-court"
         id="judge-select-court-id"
         variant="standard"
-        value={selectedJudge.court_id <= 0 ? '' : selectedJudge.court_id}
+        value={selectedJudge.courtId <= 0 ? '' : selectedJudge.courtId}
         onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge)}
       >
         {courtsList.map((x) => (

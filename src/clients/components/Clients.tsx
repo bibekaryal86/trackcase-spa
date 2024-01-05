@@ -79,7 +79,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   useEffect(() => {
     if (judgeId) {
-      setSelectedClient({ ...DefaultClientSchema, judge_id: getNumber(judgeId) })
+      setSelectedClient({ ...DefaultClientSchema, judgeId: getNumber(judgeId) })
       if (!selectedJudge) {
         getJudge(getNumber(judgeId))
       }

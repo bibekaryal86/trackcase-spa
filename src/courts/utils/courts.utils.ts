@@ -4,20 +4,20 @@ import { CourtSchema } from '../types/courts.data.types'
 export const validateCourt = (court: CourtSchema) =>
   court.name.trim() &&
   court.status.trim() &&
-  validateAddress(court.street_address, court.city, court.state, court.zip_code, true)
+  validateAddress(court.streetAddress, court.city, court.state, court.zipCode, true)
 
 export const isAreTwoCourtsSame = (one: CourtSchema, two: CourtSchema) =>
   one &&
   two &&
   one.name === two.name &&
-  one.dhs_address === two.dhs_address &&
+  one.dhsAddress === two.dhsAddress &&
   one.status === two.status &&
   one.comments === two.comments &&
-  one.street_address === two.street_address &&
+  one.streetAddress === two.streetAddress &&
   one.city === two.city &&
   one.state === two.state &&
-  one.zip_code === two.zip_code &&
-  one.phone_number === two.phone_number
+  one.zipCode === two.zipCode &&
+  one.phoneNumber === two.phoneNumber
 
 export const isCourtFormFieldError = (
   value: string | null | undefined,
@@ -43,7 +43,7 @@ export const handleCourtFormOnChange = (
     case 'streetAddress':
       updatedCourt = {
         ...selectedCourt,
-        street_address: value,
+        streetAddress: value,
       }
       break
     case 'city':
@@ -61,19 +61,19 @@ export const handleCourtFormOnChange = (
     case 'zipCode':
       updatedCourt = {
         ...selectedCourt,
-        zip_code: isNumericOnly(value) ? value : selectedCourt.zip_code,
+        zipCode: isNumericOnly(value) ? value : selectedCourt.zipCode,
       }
       break
     case 'phoneNumber':
       updatedCourt = {
         ...selectedCourt,
-        phone_number: getNumericOnly(value, 10),
+        phoneNumber: getNumericOnly(value, 10),
       }
       break
     case 'dhsAddress':
       updatedCourt = {
         ...selectedCourt,
-        dhs_address: value,
+        dhsAddress: value,
       }
       break
     case 'status':

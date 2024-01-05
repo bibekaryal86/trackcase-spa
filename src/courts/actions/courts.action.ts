@@ -205,12 +205,12 @@ const courtsComplete = () => ({
 const getRequestBody = (court: CourtSchema) => {
   return {
     name: court.name,
-    street_address: court.street_address,
+    street_address: court.streetAddress,
     city: court.city,
     state: court.state,
-    zip_code: court.zip_code,
-    phone_number: court.phone_number,
-    dhs_address: court.dhs_address,
+    zip_code: court.zipCode,
+    phone_number: court.phoneNumber,
+    dhs_address: court.dhsAddress,
     status: court.status,
     comments: court.comments,
   }

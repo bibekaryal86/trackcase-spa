@@ -206,7 +206,7 @@ const getRequestBody = (judge: JudgeSchema) => {
   return {
     name: judge.name,
     webex: judge.webex,
-    court_id: judge.court_id,
+    court_id: judge.courtId,
     status: judge.status,
     comments: judge.comments,
   }

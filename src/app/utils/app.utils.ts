@@ -133,6 +133,6 @@ export const convertDateToLocaleString = (date?: Date | string) => {
 
 export const convertNotesToNotesList = <T>(notesInput: T[], noteObjectId: number): NoteSchema[] => {
   const notes: NoteSchema[] = JSON.parse(JSON.stringify(notesInput))
-  notes.forEach((note: NoteSchema) => (note.note_object_id = noteObjectId))
+  notes.forEach((note: NoteSchema) => (note.noteObjectId = noteObjectId))
   return notes
 }

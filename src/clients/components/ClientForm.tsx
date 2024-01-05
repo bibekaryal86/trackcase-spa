@@ -47,7 +47,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       margin="normal"
       sx={{ minWidth: 200, maxWidth: 200 }}
       inputProps={{ maxLength: 15 }}
-      value={selectedClient.a_number || ''}
+      value={selectedClient.aNumber || ''}
       onChange={(e) => handleClientFormOnChange('aNumber', e.target.value, selectedClient, setSelectedClient)}
     />
   )
@@ -76,9 +76,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       margin="normal"
       sx={{ minWidth: 200 }}
       inputProps={{ maxLength: 15 }}
-      value={selectedClient.phone_number || ''}
+      value={selectedClient.phoneNumber || ''}
       onChange={(e) => handleClientFormOnChange('phoneNumber', e.target.value, selectedClient, setSelectedClient)}
-      error={isClientFormFieldError('phoneNumber', selectedClient.phone_number, selectedClient)}
+      error={isClientFormFieldError('phoneNumber', selectedClient.phoneNumber, selectedClient)}
     />
   )
   const clientStreetAddress = () => (
@@ -90,9 +90,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       id="client-street-address"
       margin="normal"
       inputProps={{ maxLength: 99 }}
-      value={selectedClient.street_address || ''}
+      value={selectedClient.streetAddress || ''}
       onChange={(e) => handleClientFormOnChange('streetAddress', e.target.value, selectedClient, setSelectedClient)}
-      error={isClientFormFieldError('streetAddress', selectedClient.street_address, selectedClient)}
+      error={isClientFormFieldError('streetAddress', selectedClient.streetAddress, selectedClient)}
     />
   )
 
@@ -139,9 +139,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       id="client-zip-code"
       margin="normal"
       inputProps={{ maxLength: 5 }}
-      value={selectedClient.zip_code || ''}
+      value={selectedClient.zipCode || ''}
       onChange={(e) => handleClientFormOnChange('zipCode', e.target.value, selectedClient, setSelectedClient)}
-      error={isClientFormFieldError('zipCode', selectedClient.zip_code, selectedClient)}
+      error={isClientFormFieldError('zipCode', selectedClient.zipCode, selectedClient)}
     />
   )
   const clientStatus = () => (
@@ -188,7 +188,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
         labelId="client-select-judge"
         id="client-select-judge-id"
         variant="standard"
-        value={!selectedClient.judge_id || selectedClient.judge_id <= 0 ? '' : selectedClient.judge_id}
+        value={!selectedClient.judgeId || selectedClient.judgeId <= 0 ? '' : selectedClient.judgeId}
         onChange={(e) =>
           handleClientFormOnChange('judgeId', e.target.value.toString(), selectedClient, setSelectedClient)
         }
