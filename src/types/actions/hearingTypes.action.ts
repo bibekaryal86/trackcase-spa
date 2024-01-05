@@ -146,7 +146,7 @@ const hearingTypesRequest = (type: string) => ({
   type: type,
 })
 
-const hearingTypesSuccess = (type: string, success: string, hearing_types: HearingTypeSchema[]) => {
+const hearingTypesSuccess = (type: string, success: string, hearingTypes: HearingTypeSchema[]) => {
   if (success) {
     return {
       type: type,
@@ -155,7 +155,7 @@ const hearingTypesSuccess = (type: string, success: string, hearing_types: Heari
   } else {
     return {
       type: type,
-      hearing_types: hearing_types,
+      hearingTypes: hearingTypes,
     }
   }
 }

@@ -146,7 +146,7 @@ const taskTypesRequest = (type: string) => ({
   type: type,
 })
 
-const taskTypesSuccess = (type: string, success: string, task_types: TaskTypeSchema[]) => {
+const taskTypesSuccess = (type: string, success: string, taskTypes: TaskTypeSchema[]) => {
   if (success) {
     return {
       type: type,
@@ -155,7 +155,7 @@ const taskTypesSuccess = (type: string, success: string, task_types: TaskTypeSch
   } else {
     return {
       type: type,
-      task_types: task_types,
+      taskTypes: taskTypes,
     }
   }
 }

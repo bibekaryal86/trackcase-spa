@@ -146,7 +146,7 @@ const caseTypesRequest = (type: string) => ({
   type: type,
 })
 
-const caseTypesSuccess = (type: string, success: string, case_types: CaseTypeSchema[]) => {
+const caseTypesSuccess = (type: string, success: string, caseTypes: CaseTypeSchema[]) => {
   if (success) {
     return {
       type: type,
@@ -155,7 +155,7 @@ const caseTypesSuccess = (type: string, success: string, case_types: CaseTypeSch
   } else {
     return {
       type: type,
-      case_types: case_types,
+      caseTypes: caseTypes,
     }
   }
 }

@@ -146,7 +146,7 @@ const formTypesRequest = (type: string) => ({
   type: type,
 })
 
-const formTypesSuccess = (type: string, success: string, form_types: FormTypeSchema[]) => {
+const formTypesSuccess = (type: string, success: string, formTypes: FormTypeSchema[]) => {
   if (success) {
     return {
       type: type,
@@ -155,7 +155,7 @@ const formTypesSuccess = (type: string, success: string, form_types: FormTypeSch
   } else {
     return {
       type: type,
-      form_types: form_types,
+      formTypes: formTypes,
     }
   }
 }

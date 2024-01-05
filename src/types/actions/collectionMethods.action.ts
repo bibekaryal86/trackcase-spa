@@ -156,7 +156,7 @@ const collectionMethodsRequest = (type: string) => ({
   type: type,
 })
 
-const collectionMethodsSuccess = (type: string, success: string, collection_methods: CollectionMethodSchema[]) => {
+const collectionMethodsSuccess = (type: string, success: string, collectionMethods: CollectionMethodSchema[]) => {
   if (success) {
     return {
       type: type,
@@ -165,7 +165,7 @@ const collectionMethodsSuccess = (type: string, success: string, collection_meth
   } else {
     return {
       type: type,
-      collection_methods: collection_methods,
+      collectionMethods: collectionMethods,
     }
   }
 }

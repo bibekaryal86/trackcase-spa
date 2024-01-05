@@ -82,7 +82,7 @@ export const getCourtCases = (isForceFetch: boolean = false) => {
   }
 }
 
-export const getCourtCase = (court_casesId: number) => {
+export const getCourtCase = (courtCaseId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(courtCasesRequest(COURT_CASES_RETRIEVE_REQUEST))
 
@@ -91,7 +91,7 @@ export const getCourtCase = (court_casesId: number) => {
       const urlPath = getEndpoint(process.env.COURT_CASE_RETRIEVE_ENDPOINT as string)
       const options: Partial<FetchOptions> = {
         method: 'GET',
-        pathParams: { court_case_id: court_casesId },
+        pathParams: { court_case_id: courtCaseId },
         extraParams: {
           isIncludeExtra: true,
           isIncludeHistory: true,
@@ -101,21 +101,21 @@ export const getCourtCase = (court_casesId: number) => {
       const courtCaseResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
       if (courtCaseResponse.detail) {
         dispatch(courtCasesFailure(COURT_CASES_RETRIEVE_FAILURE, getErrMsg(courtCaseResponse.detail)))
-        setSelectedCourtCaseFromStore(getStore(), dispatch, court_casesId)
+        setSelectedCourtCaseFromStore(getStore(), dispatch, courtCaseId)
       } else {
         dispatch(courtCaseSelect(courtCaseResponse.courtCases[0]))
       }
     } catch (error) {
       console.log('Get CourtCase Error: ', error)
       dispatch(courtCasesFailure(COURT_CASES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
-      setSelectedCourtCaseFromStore(getStore(), dispatch, court_casesId)
+      setSelectedCourtCaseFromStore(getStore(), dispatch, courtCaseId)
     } finally {
       dispatch(courtCasesComplete())
     }
   }
 }
 
-export const editCourtCase = (id: number, court_cases: CourtCaseSchema) => {
+export const editCourtCase = (id: number, courtCase: CourtCaseSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     dispatch(courtCasesRequest(COURT_CASE_UPDATE_REQUEST))
 
@@ -124,7 +124,7 @@ export const editCourtCase = (id: number, court_cases: CourtCaseSchema) => {
       const options: Partial<FetchOptions> = {
         method: 'PUT',
         pathParams: { court_case_id: id },
-        requestBody: getRequestBody(court_cases),
+        requestBody: getRequestBody(courtCase),
       }
 
       const courtCaseResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
@@ -174,7 +174,7 @@ const courtCasesRequest = (type: string) => ({
   type: type,
 })
 
-const courtCasesSuccess = (type: string, success: string, court_cases: CourtCaseSchema[]) => {
+const courtCasesSuccess = (type: string, success: string, courtCases: CourtCaseSchema[]) => {
   if (success) {
     return {
       type: type,
@@ -183,7 +183,7 @@ const courtCasesSuccess = (type: string, success: string, court_cases: CourtCase
   } else {
     return {
       type: type,
-      court_cases: court_cases,
+      courtCases: courtCases,
     }
   }
 }
@@ -202,12 +202,12 @@ const courtCasesComplete = () => ({
   type: COURT_CASES_COMPLETE,
 })
 
-const getRequestBody = (court_case: CourtCaseSchema) => {
+const getRequestBody = (courtCase: CourtCaseSchema) => {
   return {
-    case_type_id: court_case.caseTypeId,
-    client_id: court_case.clientId,
-    status: court_case.status,
-    comments: court_case.comments,
+    case_type_id: courtCase.caseTypeId,
+    client_id: courtCase.clientId,
+    status: courtCase.status,
+    comments: courtCase.comments,
   }
 }
 
