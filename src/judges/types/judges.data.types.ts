@@ -6,13 +6,13 @@ import { CourtSchema } from '../../courts'
 export interface JudgeSchema extends StatusBaseSchema, BaseModelSchema {
   name: string
   webex?: string
-  court_id: number
+  courtId: number
   // orm_mode
   court?: CourtSchema
   clients?: ClientSchema[]
   // notes and history
-  note_judges?: NoteJudgeSchema[]
-  history_judges?: HistoryJudgeSchema[]
+  noteJudges?: NoteJudgeSchema[]
+  historyJudges?: HistoryJudgeSchema[]
 }
 
 export interface JudgeResponse extends ResponseBase {
@@ -20,18 +20,18 @@ export interface JudgeResponse extends ResponseBase {
 }
 
 export interface NoteJudgeSchema extends NoteBaseSchema, BaseModelSchema {
-  judge_id: number
+  judgeId: number
   // orm_mode
   judge?: JudgeSchema
 }
 
 export interface HistoryJudgeSchema extends BaseModelSchema {
-  user_name: string
-  judge_id: number
+  userName: string
+  judgeId: number
   // from judge schema, need everything optional here so can't extend
   name?: string
   webex?: string
-  court_id?: number
+  courtId?: number
   status?: string
   comments?: string
   // orm_mode
@@ -53,7 +53,7 @@ export const DefaultJudgeSchema: JudgeSchema = {
   name: '',
   webex: '',
 
-  court_id: ID_DEFAULT,
+  courtId: ID_DEFAULT,
   status: '',
   comments: '',
 }

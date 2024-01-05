@@ -45,9 +45,9 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       id="court-street-address"
       margin="normal"
       inputProps={{ maxLength: 99 }}
-      value={selectedCourt.street_address || ''}
+      value={selectedCourt.streetAddress || ''}
       onChange={(e) => handleCourtFormOnChange('streetAddress', e.target.value, selectedCourt, setSelectedCourt)}
-      error={isCourtFormFieldError(selectedCourt.street_address)}
+      error={isCourtFormFieldError(selectedCourt.streetAddress)}
     />
   )
   const courtPhoneNumber = () => (
@@ -60,9 +60,9 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       margin="normal"
       sx={{ minWidth: 200 }}
       inputProps={{ maxLength: 15 }}
-      value={selectedCourt.phone_number || ''}
+      value={selectedCourt.phoneNumber || ''}
       onChange={(e) => handleCourtFormOnChange('phoneNumber', e.target.value, selectedCourt, setSelectedCourt)}
-      error={isCourtFormFieldError(selectedCourt.phone_number, false, true)}
+      error={isCourtFormFieldError(selectedCourt.phoneNumber, false, true)}
     />
   )
   const courtCity = () => (
@@ -111,9 +111,9 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       id="court-zip-code"
       margin="normal"
       inputProps={{ maxLength: 5 }}
-      value={selectedCourt.zip_code || ''}
+      value={selectedCourt.zipCode || ''}
       onChange={(e) => handleCourtFormOnChange('zipCode', e.target.value, selectedCourt, setSelectedCourt)}
-      error={isCourtFormFieldError(selectedCourt.zip_code, true)}
+      error={isCourtFormFieldError(selectedCourt.zipCode, true)}
     />
   )
   const courtDhsAddress = () => (
@@ -125,7 +125,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       id="court-dhs-address"
       margin="normal"
       inputProps={{ maxLength: 199 }}
-      value={selectedCourt.dhs_address || ''}
+      value={selectedCourt.dhsAddress || ''}
       onChange={(e) => handleCourtFormOnChange('dhsAddress', e.target.value, selectedCourt, setSelectedCourt)}
     />
   )

@@ -22,8 +22,8 @@ import {
   StatusSchema,
   unmountPage,
 } from '../../app'
+import { CourtCases } from '../../cases'
 import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
-import { CourtCases } from '../../court_cases'
 import { getJudges, JudgeSchema } from '../../judges'
 import { editClient, getClient } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
@@ -149,7 +149,7 @@ const Client = (props: ClientProps): React.ReactElement => {
     <Notes
       noteObjectType={NOTE_OBJECT_TYPES.CLIENT}
       noteObjectId={selectedClient.id || ID_DEFAULT}
-      notesList={convertNotesToNotesList(selectedClient.note_clients || [], selectedClient.id || ID_LIST)}
+      notesList={convertNotesToNotesList(selectedClient.noteClients || [], selectedClient.id || ID_LIST)}
       addNote={props.addNote}
       editNote={props.editNote}
       deleteNote={props.deleteNote}
@@ -158,11 +158,11 @@ const Client = (props: ClientProps): React.ReactElement => {
 
   const historyContent = () => {
     const judgeMap = new Map(judgesList.map((judge) => [judge.id, judge]))
-    const historyClients = selectedClient.history_clients
-      ? JSON.parse(JSON.stringify(selectedClient.history_clients))
+    const historyClients = selectedClient.historyClients
+      ? JSON.parse(JSON.stringify(selectedClient.historyClients))
       : []
     historyClients.forEach((x: HistoryClientSchema) => {
-      const matchingJudge = judgeMap.get(x.judge_id)
+      const matchingJudge = judgeMap.get(x.judgeId)
       if (matchingJudge) {
         x.judge = matchingJudge
       }
@@ -210,9 +210,9 @@ const Client = (props: ClientProps): React.ReactElement => {
         >
           Cancel
         </Button>
-        <Button onClick={() => setIsShowNotes(true)}>View Client Notes [{selectedClient.note_clients?.length}]</Button>
+        <Button onClick={() => setIsShowNotes(true)}>View Client Notes [{selectedClient.noteClients?.length}]</Button>
         <Button onClick={() => setIsShowHistory(true)}>
-          View Client Update History [{selectedClient.history_clients?.length}]
+          View Client Update History [{selectedClient.historyClients?.length}]
         </Button>
       </>
     )

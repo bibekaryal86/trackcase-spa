@@ -149,7 +149,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
     <Notes
       noteObjectType={NOTE_OBJECT_TYPES.JUDGE}
       noteObjectId={selectedJudge.id || ID_DEFAULT}
-      notesList={convertNotesToNotesList(selectedJudge.note_judges || [], selectedJudge.id || ID_LIST)}
+      notesList={convertNotesToNotesList(selectedJudge.noteJudges || [], selectedJudge.id || ID_LIST)}
       addNote={props.addNote}
       editNote={props.editNote}
       deleteNote={props.deleteNote}
@@ -158,9 +158,9 @@ const Judge = (props: JudgeProps): React.ReactElement => {
 
   const historyContent = () => {
     const courtMap = new Map(courtsList.map((court) => [court.id, court]))
-    const historyJudges = selectedJudge.history_judges ? JSON.parse(JSON.stringify(selectedJudge.history_judges)) : []
+    const historyJudges = selectedJudge.historyJudges ? JSON.parse(JSON.stringify(selectedJudge.historyJudges)) : []
     historyJudges.forEach((x: HistoryJudgeSchema) => {
-      const matchingCourt = courtMap.get(x.court_id)
+      const matchingCourt = courtMap.get(x.courtId)
       if (matchingCourt) {
         x.court = matchingCourt
       }
@@ -208,9 +208,9 @@ const Judge = (props: JudgeProps): React.ReactElement => {
         >
           Cancel
         </Button>
-        <Button onClick={() => setIsShowNotes(true)}>View Judge Notes [{selectedJudge.note_judges?.length}]</Button>
+        <Button onClick={() => setIsShowNotes(true)}>View Judge Notes [{selectedJudge.noteJudges?.length}]</Button>
         <Button onClick={() => setIsShowHistory(true)}>
-          View Judge Update History [{selectedJudge.history_judges?.length}]
+          View Judge Update History [{selectedJudge.historyJudges?.length}]
         </Button>
       </>
     )

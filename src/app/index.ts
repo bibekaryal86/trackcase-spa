@@ -2,7 +2,7 @@
 import { userLogout } from './actions/logout.action'
 import { addNote, deleteNote, editNote } from './actions/notes.action'
 import { getStatusesList } from './actions/statuses.action'
-import { testDatabase } from './actions/test_database.action'
+import { testDatabase } from './actions/testDatabase.action'
 // components
 import Link from './components/Link'
 import Modal from './components/Modal'

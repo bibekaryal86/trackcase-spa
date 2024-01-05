@@ -1,19 +1,19 @@
 import { AddressBaseSchema, BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
-import { CourtCaseSchema } from '../../court_cases'
 import { JudgeSchema } from '../../judges'
 
 export interface ClientSchema extends AddressBaseSchema, StatusBaseSchema, BaseModelSchema {
   name: string
-  a_number?: string
+  aNumber?: string
   email: string
-  judge_id?: number
+  judgeId?: number
   // orm_mode
   judge?: JudgeSchema
-  court_cases?: CourtCaseSchema[]
+  courtCases?: CourtCaseSchema[]
   // notes and history
-  note_clients?: NoteClientSchema[]
-  history_clients?: HistoryClientSchema[]
+  noteClients?: NoteClientSchema[]
+  historyClients?: HistoryClientSchema[]
 }
 
 export interface ClientResponse extends ResponseBase {
@@ -21,21 +21,21 @@ export interface ClientResponse extends ResponseBase {
 }
 
 export interface NoteClientSchema extends NoteBaseSchema, BaseModelSchema {
-  client_id: number
+  clientId: number
   // orm_mode
   client?: ClientSchema
 }
 
 export interface HistoryClientSchema extends AddressBaseSchema, BaseModelSchema {
-  user_name: string
-  case_collection_id: number
+  userName: string
+  caseCollectionId: number
   // from client schema, need everything optional here so can't extend
   status?: string
   comments?: string
   name?: string
-  a_number?: string
+  aNumber?: string
   email?: string
-  judge_id?: number
+  judgeId?: number
   // orm_mode
   client?: ClientSchema
   judge?: JudgeSchema
@@ -53,14 +53,14 @@ export interface ClientsAction extends ClientsState {
 
 export const DefaultClientSchema: ClientSchema = {
   name: '',
-  a_number: '',
-  street_address: '',
+  aNumber: '',
+  streetAddress: '',
   city: '',
   state: '',
-  zip_code: '',
-  phone_number: '',
+  zipCode: '',
+  phoneNumber: '',
   email: '',
-  judge_id: ID_DEFAULT,
+  judgeId: ID_DEFAULT,
   status: '',
   comments: '',
 }

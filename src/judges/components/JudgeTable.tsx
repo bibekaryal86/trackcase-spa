@@ -118,7 +118,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
           court: x.court?.name || '',
           status: x.status || '',
           webex: x.webex || '',
-          user: x.user_name,
+          user: x.userName,
           date: convertDateToLocaleString(x.created),
         }
       })

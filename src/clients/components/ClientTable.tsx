@@ -126,13 +126,13 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
       tableData = Array.from(historyClientsList, (x) => {
         return {
           name: x.name || '',
-          aNumber: x.a_number || '',
+          aNumber: x.aNumber || '',
           email: x.email || '',
-          phone: x.phone_number || '',
-          address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
+          phone: x.phoneNumber || '',
+          address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
           status: x.status || '',
           judge: x.judge?.name || '',
-          user_name: x.user_name,
+          user_name: x.userName,
           date: convertDateToLocaleString(x.created),
         }
       })
@@ -140,10 +140,10 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
       tableData = Array.from(clientsList, (x) => {
         return {
           name: linkToClients(x),
-          aNumber: x.a_number || '',
+          aNumber: x.aNumber || '',
           email: x.email || '',
-          phone: x.phone_number || '',
-          address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
+          phone: x.phoneNumber || '',
+          address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
           status: x.status,
           judge: selectedJudge?.name ? selectedJudge.name || '' : x.judge ? linkToJudge(x.judge) : '',
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),

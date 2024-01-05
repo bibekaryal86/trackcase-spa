@@ -112,11 +112,11 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
       tableData = Array.from(historyCourtsList, (x) => {
         return {
           name: `${x.name}, ${x.state}`,
-          address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
-          phone: x.phone_number || '',
-          dhsAddress: x.dhs_address || '',
+          address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
+          phone: x.phoneNumber || '',
+          dhsAddress: x.dhsAddress || '',
           status: x.status || '',
-          user: x.user_name,
+          user: x.userName,
           date: convertDateToLocaleString(x.created),
         }
       })
@@ -124,9 +124,9 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
       tableData = Array.from(courtsList, (x) => {
         return {
           name: linkToCourt(x),
-          address: getFullAddress(x.street_address, x.city, x.state, x.zip_code),
-          phone: x.phone_number || '',
-          dhsAddress: x.dhs_address || '',
+          address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
+          phone: x.phoneNumber || '',
+          dhsAddress: x.dhsAddress || '',
           status: x.status,
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }

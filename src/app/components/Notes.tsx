@@ -93,7 +93,7 @@ const Notes = (props: NoteProps): React.ReactElement => {
   const notesTableData: TableData[] = Array.from(notesList, (x) => {
     return {
       modified: convertDateToLocaleString(x.modified),
-      user_name: x.user_name,
+      user_name: x.userName,
       note: x.note,
       actions: actionButtons(x.id || ID_ACTION_BUTTON, x.note),
     }

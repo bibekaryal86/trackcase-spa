@@ -17,16 +17,15 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Login from './Login'
 import Logout from './Logout'
 import NotFound from './NotFound'
-import { CashCollection, CashCollections } from '../../cash_collections'
+import { HearingCalendar, HearingCalendars, TaskCalendar, TaskCalendars } from '../../calendars'
+import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
-import { CourtCase, CourtCases } from '../../court_cases'
+import { CashCollection, CashCollections } from '../../collections'
 import { Court, Courts } from '../../courts'
 import { Form, Forms } from '../../forms'
-import { HearingCalendar, HearingCalendars } from '../../hearing_calendars'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
-import { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes } from '../../ref_types'
-import { TaskCalendar, TaskCalendars } from '../../task_calendars'
+import { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes } from '../../types'
 import { RoutesType } from '../types/app.data.types'
 import { isLoggedIn } from '../utils/app.utils'
 
@@ -52,7 +51,7 @@ export const protectedRoutes: RoutesType[] = [
     element: <Home />,
   },
   {
-    path: '/cash_collections',
+    path: '/collections',
     display: 'Collections',
     element: <CashCollections />,
     icon: <CurrencyExchangeIcon />,
@@ -68,7 +67,7 @@ export const protectedRoutes: RoutesType[] = [
     ],
   },
   {
-    path: '/hearing_calendars',
+    path: '/calendars',
     display: 'Hearing Calendars',
     element: <HearingCalendars />,
     icon: <TodayIcon />,
@@ -116,7 +115,7 @@ export const protectedRoutes: RoutesType[] = [
     ],
   },
   {
-    path: '/court_cases',
+    path: '/cases',
     display: 'Cases',
     element: <CourtCases />,
     icon: <WorkIcon />,
