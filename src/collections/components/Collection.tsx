@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CashCollection = (): React.ReactElement => {
+const Collection = (): React.ReactElement => {
   const pageText = () => (
     <>
       <h5>This is the CashCollection!</h5>
@@ -10,4 +10,4 @@ const CashCollection = (): React.ReactElement => {
   return <>{pageText()}</>
 }
 
-export default CashCollection
+export default Collection

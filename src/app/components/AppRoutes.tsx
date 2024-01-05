@@ -20,7 +20,7 @@ import NotFound from './NotFound'
 import { HearingCalendar, HearingCalendars, TaskCalendar, TaskCalendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
-import { CashCollection, CashCollections } from '../../collections'
+import { Collection, Collections } from '../../collections'
 import { Court, Courts } from '../../courts'
 import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
@@ -53,21 +53,21 @@ export const protectedRoutes: RoutesType[] = [
   {
     path: '/collections',
     display: 'Collections',
-    element: <CashCollections />,
+    element: <Collections />,
     icon: <CurrencyExchangeIcon />,
   },
   {
-    path: '/cash_collection',
-    element: <CashCollection />,
+    path: '/collection',
+    element: <Collection />,
     subroutes: [
       {
         path: ':id',
-        element: <CashCollection />,
+        element: <Collection />,
       },
     ],
   },
   {
-    path: '/calendars',
+    path: '/hearing_calendars',
     display: 'Hearing Calendars',
     element: <HearingCalendars />,
     icon: <TodayIcon />,
@@ -115,7 +115,7 @@ export const protectedRoutes: RoutesType[] = [
     ],
   },
   {
-    path: '/cases',
+    path: '/court_cases',
     display: 'Cases',
     element: <CourtCases />,
     icon: <WorkIcon />,

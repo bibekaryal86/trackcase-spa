@@ -129,11 +129,11 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
   }
 
   const addButton = () =>
-    isHistoryView ? undefined : <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New CourtCase</Button>
+    isHistoryView ? undefined : <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Case</Button>
 
   return (
     <Table
-      componentName="CourtCase"
+      componentName="Case"
       headerData={courtCasesTableHeaderData()}
       tableData={courtCasesTableData()}
       addModelComponent={addButton()}

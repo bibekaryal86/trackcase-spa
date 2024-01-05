@@ -235,7 +235,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
 
   const courtCasesPageTitle = () => (
     <Typography component="h1" variant="h6" color="primary" gutterBottom>
-      CourtCases
+      Cases
     </Typography>
   )
 

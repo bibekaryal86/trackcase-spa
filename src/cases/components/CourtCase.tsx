@@ -123,7 +123,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
     const prevPage = searchQueryParams.get('prevPage') || ''
     return (
       <Box sx={{ display: 'flex' }}>
-        <Link text="View All CourtCases" navigateToPage="/court_cases/" color="primary" />
+        <Link text="View All Cases" navigateToPage="/court_cases/" color="primary" />
         {backToPage && (
           <Box sx={{ ml: 2 }}>
             <Link text={`Back to ${prevPage}`} navigateToPage={backToPage} color="primary" />
@@ -135,13 +135,13 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
 
   const courtCasePageTitle = () => (
     <Typography component="h1" variant="h6" color="primary">
-      {id ? `CourtCase: ${selectedCourtCase.client?.name}, ${selectedCourtCase.caseType?.name}` : 'CourtCase'}
+      {id ? `Case: ${selectedCourtCase.client?.name}, ${selectedCourtCase.caseType?.name}` : 'Case'}
     </Typography>
   )
 
   const noCourtCase = () => (
     <Typography component="h1" variant="h6" color="error" gutterBottom>
-      CourtCase not selected! Nothing to display! Go to All CourtCases and select one!!!
+      Case not selected! Nothing to display! Go to All Cases and select one!!!
     </Typography>
   )
 
@@ -187,7 +187,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
         isOpen={true}
         setIsOpen={() => setIsShowNotes(false)}
         maxWidth="sm"
-        title="CourtCase Notes"
+        title="Case Notes"
         primaryButtonText={BUTTON_CLOSE}
         primaryButtonCallback={() => setIsShowNotes(false)}
         content={notesContent()}
@@ -201,7 +201,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
         isOpen={true}
         setIsOpen={() => setIsShowHistory(false)}
         maxWidth="lg"
-        title="CourtCase Update History"
+        title="Case Update History"
         primaryButtonText={BUTTON_CLOSE}
         primaryButtonCallback={() => setIsShowHistory(false)}
         content={historyContent()}
