@@ -1,4 +1,6 @@
+import { useMediaQuery } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
@@ -19,17 +21,17 @@ interface ClientFormProps {
 }
 
 const ClientForm = (props: ClientFormProps): React.ReactElement => {
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList } = props
 
   const clientName = () => (
     <TextField
       required
-      autoFocus
+      autoFocus={!isShowOneClient}
       fullWidth
-      variant="standard"
-      id="client-name"
       label="Name"
-      name="client-name"
+      variant="standard"
+      id="client-name-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedClient.name || ''}
@@ -37,28 +39,31 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       error={isClientFormFieldError('name', selectedClient.name, selectedClient)}
     />
   )
+
   const clientANumber = () => (
     <TextField
+      required={false}
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="client-a-number"
       label="A Number"
-      id="client-a-number"
+      variant="standard"
+      id="client-a-number-id"
       margin="normal"
-      sx={{ minWidth: 200, maxWidth: 200 }}
       inputProps={{ maxLength: 15 }}
       value={selectedClient.aNumber || ''}
       onChange={(e) => handleClientFormOnChange('aNumber', e.target.value, selectedClient, setSelectedClient)}
+      error={false}
     />
   )
+
   const clientEmail = () => (
     <TextField
       required
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="client-email"
       label="Email"
-      id="client-email"
+      variant="standard"
+      id="client-email-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedClient.email || ''}
@@ -66,28 +71,31 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       error={isClientFormFieldError('email', selectedClient.email, selectedClient)}
     />
   )
+
   const clientPhoneNumber = () => (
     <TextField
       required
-      variant="standard"
-      name="client-phone-number"
+      autoFocus={false}
+      fullWidth
       label="Phone"
-      id="client-phone-number"
+      variant="standard"
+      id="client-phone-number-id"
       margin="normal"
-      sx={{ minWidth: 200 }}
       inputProps={{ maxLength: 15 }}
       value={selectedClient.phoneNumber || ''}
       onChange={(e) => handleClientFormOnChange('phoneNumber', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('phoneNumber', selectedClient.phoneNumber, selectedClient)}
     />
   )
+
   const clientStreetAddress = () => (
     <TextField
+      required={false}
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="client-street-address"
       label="Street Address"
-      id="client-street-address"
+      variant="standard"
+      id="client-street-address-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedClient.streetAddress || ''}
@@ -98,11 +106,12 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientCity = () => (
     <TextField
-      sx={{ minWidth: 200 }}
-      variant="standard"
-      name="client-city"
+      required={false}
+      autoFocus={false}
+      fullWidth
       label="City"
-      id="client-city"
+      variant="standard"
+      id="client-city-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedClient.city || ''}
@@ -110,15 +119,16 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       error={isClientFormFieldError('city', selectedClient.city, selectedClient)}
     />
   )
+
   const clientState = () => (
     <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
+      sx={{ width: '100%', mt: '16px', mb: '8px' }}
       error={isClientFormFieldError('state', selectedClient.state, selectedClient)}
     >
       <InputLabel sx={{ left: '-0.9em' }}>State</InputLabel>
       <Select
         labelId="client-select-state"
-        id="client-select-state-id"
+        id="client-state-id"
         variant="standard"
         value={selectedClient.state || ''}
         onChange={(e) => handleClientFormOnChange('state', e.target.value, selectedClient, setSelectedClient)}
@@ -131,12 +141,15 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
+
   const clientZipCode = () => (
     <TextField
-      variant="standard"
-      name="client-zip-code"
+      required={false}
+      autoFocus={false}
+      fullWidth
       label="Zip Code"
-      id="client-zip-code"
+      variant="standard"
+      id="client-zip-code-id"
       margin="normal"
       inputProps={{ maxLength: 5 }}
       value={selectedClient.zipCode || ''}
@@ -144,16 +157,17 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       error={isClientFormFieldError('zipCode', selectedClient.zipCode, selectedClient)}
     />
   )
+
   const clientStatus = () => (
     <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
+      sx={{ width: '100%', mt: '16px', mb: '8px' }}
       required
       error={isClientFormFieldError('status', selectedClient.status, selectedClient)}
     >
       <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
       <Select
         labelId="client-select-status"
-        id="client-select-status-id"
+        id="client-status-id"
         variant="standard"
         value={selectedClient.status || ''}
         onChange={(e) => handleClientFormOnChange('status', e.target.value, selectedClient, setSelectedClient)}
@@ -166,23 +180,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
-  const clientComments = () => (
-    <TextField
-      sx={{ mt: '16px', mb: '8px' }}
-      id="client-comments"
-      name="client-comments"
-      label="Client Comments"
-      variant="standard"
-      fullWidth
-      multiline
-      maxRows={4}
-      inputProps={{ maxLength: 8888 }}
-      value={selectedClient.comments || ''}
-      onChange={(e) => handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient)}
-    />
-  )
+
   const clientJudgesList = () => (
-    <FormControl sx={{ minWidth: 425, mt: '16px', mb: '8px' }}>
+    <FormControl sx={{ width: '100%', mt: '16px', mb: '8px' }}>
       <InputLabel sx={{ left: '-0.9em' }}>Judge</InputLabel>
       <Select
         labelId="client-select-judge"
@@ -202,48 +202,69 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     </FormControl>
   )
 
-  return isShowOneClient ? (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientName()}
-        {clientPhoneNumber()}
-        {clientEmail()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientStreetAddress()}
-        {clientCity()}
-        {clientState()}
-        {clientZipCode()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientANumber()}
-        {clientJudgesList()}
-        {clientStatus()}
-        {clientComments()}
-      </div>
-    </div>
-  ) : (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientName()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientPhoneNumber()}
-        {clientEmail()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientStreetAddress()}
-        {clientCity()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientState()}
-        {clientZipCode()}
-        {clientANumber()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {clientJudgesList()}
-        {clientStatus()}
-      </div>
+  const clientComments = () => (
+    <TextField
+      required={false}
+      autoFocus={false}
+      fullWidth
+      label="Client Comments"
+      variant="standard"
+      id="client-comments-id"
+      inputProps={{ maxLength: 8888 }}
+      value={selectedClient.comments || ''}
+      onChange={(e) => handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient)}
+      error={false}
+      sx={{ mt: '16px', mb: '8px' }}
+      multiline={true}
+      maxRows={4}
+    />
+  )
+
+  return (
+    <div style={{ width: isSmallScreen || !isShowOneClient ? '100%' : '50%' }}>
+      <Grid
+        container
+        direction="row"
+        justifyContent={isShowOneClient ? 'flex-start' : 'flex-end'}
+        alignItems="center"
+        spacing={isSmallScreen ? 1 : 2}
+      >
+        <Grid item xs={12}>
+          {clientName()}
+        </Grid>
+        <Grid item xs={6}>
+          {clientANumber()}
+        </Grid>
+        <Grid item xs={6}>
+          {clientPhoneNumber()}
+        </Grid>
+        <Grid item xs={12}>
+          {clientEmail()}
+        </Grid>
+        <Grid item xs={8}>
+          {clientStreetAddress()}
+        </Grid>
+        <Grid item xs={4}>
+          {clientCity()}
+        </Grid>
+        <Grid item xs={6}>
+          {clientState()}
+        </Grid>
+        <Grid item xs={6}>
+          {clientZipCode()}
+        </Grid>
+        <Grid item xs={12}>
+          {clientJudgesList()}
+        </Grid>
+        <Grid item xs={6}>
+          {clientStatus()}
+        </Grid>
+        {isShowOneClient && (
+          <Grid item xs={12}>
+            {clientComments()}
+          </Grid>
+        )}
+      </Grid>
     </div>
   )
 }

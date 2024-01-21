@@ -28,10 +28,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       required
       autoFocus={!isShowOneJudge}
       fullWidth
-      variant="standard"
-      id="judge-name"
       label="Name"
-      name="judge-name"
+      variant="standard"
+      id="judge-name-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedJudge.name || ''}
@@ -39,25 +38,29 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       error={selectedJudge.name.trim() === ''}
     />
   )
+
   const judgeWebex = () => (
     <TextField
+      required={false}
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="judge-webex"
       label="Webex"
-      id="judge-webex"
+      variant="standard"
+      id="judge-webex-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedJudge.webex || ''}
       onChange={(e) => handleJudgeFormOnChange('webex', e.target.value, selectedJudge, setSelectedJudge)}
+      error={false}
     />
   )
+
   const judgeCourtsList = () => (
     <FormControl sx={{ width: '100%', mt: '16px', mb: '8px' }} required error={selectedJudge.courtId <= 0}>
       <InputLabel sx={{ left: '-0.9em' }}>Court</InputLabel>
       <Select
         labelId="judge-select-court"
-        id="judge-select-court-id"
+        id="judge-court-id"
         variant="standard"
         value={selectedJudge.courtId <= 0 ? '' : selectedJudge.courtId}
         onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge)}
@@ -70,12 +73,13 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
+
   const judgeStatus = () => (
     <FormControl sx={{ width: '100%', mt: '16px', mb: '8px' }} required error={!selectedJudge.status}>
       <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
       <Select
         labelId="judge-select-status"
-        id="judge-select-status-id"
+        id="judge-status-id"
         variant="standard"
         value={selectedJudge.status || ''}
         onChange={(e) => handleJudgeFormOnChange('status', e.target.value, selectedJudge, setSelectedJudge)}
@@ -88,25 +92,34 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
+
   const judgeComments = () => (
     <TextField
-      sx={{ mt: '16px', mb: '8px' }}
-      id="judge-comments"
-      name="judge-comments"
+      required={false}
+      autoFocus={false}
+      fullWidth
       label="Judge Comments"
       variant="standard"
-      fullWidth
-      multiline
-      maxRows={4}
+      id="judge-comments-id"
       inputProps={{ maxLength: 8888 }}
       value={selectedJudge.comments || ''}
       onChange={(e) => handleJudgeFormOnChange('comments', e.target.value, selectedJudge, setSelectedJudge)}
+      error={false}
+      sx={{ mt: '16px', mb: '8px' }}
+      multiline={true}
+      maxRows={4}
     />
   )
 
   return (
     <div style={{ width: isSmallScreen || !isShowOneJudge ? '100%' : '50%' }}>
-      <Grid container direction="row" justifyContent={isShowOneJudge ? "flex-start": "flex-end"} alignItems="center" spacing={2}>
+      <Grid
+        container
+        direction="row"
+        justifyContent={isShowOneJudge ? 'flex-start' : 'flex-end'}
+        alignItems="center"
+        spacing={isSmallScreen ? 1 : 2}
+      >
         <Grid item xs={12}>
           {judgeName()}
         </Grid>

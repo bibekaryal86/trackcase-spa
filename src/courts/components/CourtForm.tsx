@@ -27,10 +27,9 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       required
       autoFocus={!isShowOneCourt}
       fullWidth
-      variant="standard"
-      id="court-name"
       label="Name"
-      name="court-name"
+      variant="standard"
+      id="court-name-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedCourt.name || ''}
@@ -38,14 +37,15 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       error={isCourtFormFieldError(selectedCourt.name)}
     />
   )
+
   const courtStreetAddress = () => (
     <TextField
       required
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="court-street-address"
       label="Street Address"
-      id="court-street-address"
+      variant="standard"
+      id="court-street-address-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedCourt.streetAddress || ''}
@@ -53,14 +53,15 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       error={isCourtFormFieldError(selectedCourt.streetAddress)}
     />
   )
+
   const courtCity = () => (
     <TextField
       required
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="court-city"
       label="City"
-      id="court-city"
+      variant="standard"
+      id="court-city-id"
       margin="normal"
       inputProps={{ maxLength: 99 }}
       value={selectedCourt.city || ''}
@@ -68,6 +69,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       error={isCourtFormFieldError(selectedCourt.city)}
     />
   )
+
   const courtState = () => (
     <FormControl
       sx={{ width: '100%', mt: '16px', mb: '8px' }}
@@ -77,7 +79,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       <InputLabel sx={{ left: '-0.9em' }}>State</InputLabel>
       <Select
         labelId="court-select-state"
-        id="court-select-state-id"
+        id="court-state-id"
         variant="standard"
         value={selectedCourt.state || ''}
         onChange={(e) => handleCourtFormOnChange('state', e.target.value, selectedCourt, setSelectedCourt)}
@@ -90,14 +92,15 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
+
   const courtZipCode = () => (
     <TextField
       required
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="court-zip-code"
       label="Zip Code"
-      id="court-zip-code"
+      variant="standard"
+      id="court-zip-code-id"
       margin="normal"
       inputProps={{ maxLength: 5 }}
       value={selectedCourt.zipCode || ''}
@@ -105,14 +108,15 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       error={isCourtFormFieldError(selectedCourt.zipCode, true)}
     />
   )
+
   const courtPhoneNumber = () => (
     <TextField
       required
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="court-phone-number"
       label="Phone"
-      id="court-phone-number"
+      variant="standard"
+      id="court-phone-number-id"
       margin="normal"
       inputProps={{ maxLength: 15 }}
       value={selectedCourt.phoneNumber || ''}
@@ -120,19 +124,23 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       error={isCourtFormFieldError(selectedCourt.phoneNumber, false, true)}
     />
   )
+
   const courtDhsAddress = () => (
     <TextField
+      required={false}
+      autoFocus={false}
       fullWidth
-      variant="standard"
-      name="court-dhs-address"
       label="DHS Address"
-      id="court-dhs-address"
+      variant="standard"
+      id="court-dhs-address-id"
       margin="normal"
       inputProps={{ maxLength: 199 }}
       value={selectedCourt.dhsAddress || ''}
       onChange={(e) => handleCourtFormOnChange('dhsAddress', e.target.value, selectedCourt, setSelectedCourt)}
+      error={false}
     />
   )
+
   const courtStatus = () => (
     <FormControl
       sx={{ width: '100%', mt: '16px', mb: '8px' }}
@@ -142,7 +150,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
       <Select
         labelId="court-select-status"
-        id="court-select-status-id"
+        id="court-status-id"
         variant="standard"
         value={selectedCourt.status || ''}
         onChange={(e) => handleCourtFormOnChange('status', e.target.value, selectedCourt, setSelectedCourt)}
@@ -155,25 +163,28 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
+
   const courtComments = () => (
     <TextField
-      sx={{ mt: '16px', mb: '8px' }}
-      id="court-comments"
-      name="court-comments"
+      required={false}
+      autoFocus={false}
+      fullWidth
       label="Court Comments"
       variant="standard"
-      fullWidth
-      multiline
-      maxRows={4}
+      id="court-comments-id"
       inputProps={{ maxLength: 8888 }}
       value={selectedCourt.comments || ''}
       onChange={(e) => handleCourtFormOnChange('comments', e.target.value, selectedCourt, setSelectedCourt)}
+      error={false}
+      sx={{ mt: '16px', mb: '8px' }}
+      multiline={true}
+      maxRows={4}
     />
   )
 
   return (
     <div style={{ width: isSmallScreen || !isShowOneCourt ? '100%' : '50%' }}>
-      <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={2}>
+      <Grid container direction="row" justifyContent="center" alignItems="center" spacing={isSmallScreen ? 1 : 2}>
         <Grid item xs={12}>
           {courtName()}
         </Grid>

@@ -1,4 +1,6 @@
+import { useMediaQuery } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
@@ -21,12 +23,13 @@ interface CourtCaseFormProps {
 }
 
 const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { selectedCourtCase, setSelectedCourtCase, courtCaseStatusList, isShowOneCourtCase } = props
   const { caseTypesList, clientsList } = props
 
   const courtCaseType = () => (
     <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
+      sx={{ width: '100%', mt: '16px', mb: '8px' }}
       required
       error={isCourtCaseFormFieldError('caseTypeId', selectedCourtCase.caseTypeId)}
     >
@@ -48,9 +51,10 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
+
   const courtCaseClient = () => (
     <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
+      sx={{ width: '100%', mt: '16px', mb: '8px' }}
       required
       error={isCourtCaseFormFieldError('clientId', selectedCourtCase.clientId)}
     >
@@ -72,9 +76,10 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
+
   const courtCaseStatus = () => (
     <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
+      sx={{ width: '100%', mt: '16px', mb: '8px' }}
       required
       error={isCourtCaseFormFieldError('status', selectedCourtCase.status)}
     >
@@ -94,36 +99,49 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       </Select>
     </FormControl>
   )
+
   const courtCaseComments = () => (
     <TextField
-      sx={{ mt: '16px', mb: '8px' }}
-      id="court-case-comments"
-      name="court-case-comments"
+      required={false}
+      autoFocus={false}
+      fullWidth
       label="Court Case Comments"
       variant="standard"
-      fullWidth
-      multiline
-      maxRows={4}
+      id="court-case-comments-id"
       inputProps={{ maxLength: 8888 }}
       value={selectedCourtCase.comments || ''}
       onChange={(e) => handleCourtCaseFormOnChange('comments', e.target.value, selectedCourtCase, setSelectedCourtCase)}
+      error={false}
+      sx={{ mt: '16px', mb: '8px' }}
+      multiline={true}
+      maxRows={4}
     />
   )
 
-  return isShowOneCourtCase ? (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {courtCaseType()}
-        {courtCaseClient()}
-        {courtCaseStatus()}
-      </div>
-      {courtCaseComments()}
-    </div>
-  ) : (
-    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-      {courtCaseType()}
-      {courtCaseClient()}
-      {courtCaseStatus()}
+  return (
+    <div style={{ width: isSmallScreen || !isShowOneCourtCase ? '100%' : '25%' }}>
+      <Grid
+        container
+        direction="row"
+        justifyContent={isShowOneCourtCase ? 'flex-start' : 'flex-end'}
+        alignItems="center"
+        spacing={isSmallScreen ? 1 : 2}
+      >
+        <Grid item xs={12}>
+          {courtCaseType()}
+        </Grid>
+        <Grid item xs={12}>
+          {courtCaseClient()}
+        </Grid>
+        <Grid item xs={6}>
+          {courtCaseStatus()}
+        </Grid>
+        {isShowOneCourtCase && (
+          <Grid item xs={12}>
+            {courtCaseComments()}
+          </Grid>
+        )}
+      </Grid>
     </div>
   )
 }
