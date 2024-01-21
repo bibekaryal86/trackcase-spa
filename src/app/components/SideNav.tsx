@@ -110,7 +110,7 @@ const SideNav = (props: SideNavProps) => {
   }, [pathname])
 
   return (
-    <div>
+    <div id="app-sidenav-id">
       <Drawer variant="permanent" open={props.isOpenDrawer}>
         <DrawerHeader>
           <IconButton onClick={props.openDrawerCallback} color="inherit">
