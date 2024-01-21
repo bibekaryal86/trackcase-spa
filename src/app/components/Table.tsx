@@ -177,6 +177,7 @@ const tablePagination = (
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void,
   denseComponent: React.JSX.Element | null,
   exportComponent: React.JSX.Element | null,
+  isSmallScreen: boolean,
 ) => (
   <div
     style={{
@@ -189,6 +190,7 @@ const tablePagination = (
     {exportComponent}
     {denseComponent}
     <TablePagination
+      labelRowsPerPage={isSmallScreen ? '' : 'Rows per page'}
       rowsPerPageOptions={rowsPerPageOptions}
       component="div"
       count={count}
@@ -349,6 +351,7 @@ const Table = (props: TableProps) => {
             handleChangeRowsPerPage,
             denseComponent(isSmallScreen),
             exportComponent(),
+            isSmallScreen,
           )}
     </div>
   )
