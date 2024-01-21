@@ -1,4 +1,4 @@
-import { Table as MuiTable } from '@mui/material'
+import { Table as MuiTable, useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -175,7 +175,7 @@ const tablePagination = (
   page: number,
   handleChangePage: (_event: unknown, newPage: number) => void,
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  denseComponent: React.JSX.Element,
+  denseComponent: React.JSX.Element | null,
   exportComponent: React.JSX.Element | null,
 ) => (
   <div
@@ -274,12 +274,13 @@ const Table = (props: TableProps) => {
     [order, orderBy, page, rowsPerPage, tableData],
   )
 
-  const denseComponent = () => (
-    <FormControlLabel
-      control={<Switch isChecked={dense || false} onChangeCallback={handleChangeDense} />}
-      label="Dense"
-    />
-  )
+  const denseComponent = (isSmallScreen: boolean) =>
+    isSmallScreen ? null : (
+      <FormControlLabel
+        control={<Switch isChecked={dense || false} onChangeCallback={handleChangeDense} />}
+        label="Dense"
+      />
+    )
 
   const exportComponent = () =>
     props.isExportToCsv && props.tableData && props.tableData.length > 0 ? (
@@ -291,13 +292,14 @@ const Table = (props: TableProps) => {
       </CSVLink>
     ) : null
 
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
   return (
     <div>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: '1.5em' }}>
         {props.addModelComponent}
       </div>
       <TableContainer sx={{ display: 'flex', borderTop: '1px solid rgba(224, 224, 224, 1)' }}>
-        <MuiTable stickyHeader sx={{ tableLayout: props.tableLayout || '' }} size={dense ? 'small' : 'medium'}>
+        <MuiTable stickyHeader sx={{ tableLayout: props.tableLayout || '' }} size={dense || isSmallScreen ? 'small' : 'medium'}>
           <TableHeader
             headerData={props.headerData}
             order={order}
@@ -345,7 +347,7 @@ const Table = (props: TableProps) => {
             page,
             handleChangePage,
             handleChangeRowsPerPage,
-            denseComponent(),
+            denseComponent(isSmallScreen),
             exportComponent(),
           )}
     </div>
