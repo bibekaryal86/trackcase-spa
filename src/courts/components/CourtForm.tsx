@@ -70,7 +70,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   )
   const courtState = () => (
     <FormControl
-      sx={{ minWidth: 75, width: '100%', mt: '16px', mb: '8px' }}
+      sx={{ width: '100%', mt: '16px', mb: '8px' }}
       required
       error={isCourtFormFieldError(selectedCourt.state)}
     >
