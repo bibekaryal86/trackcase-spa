@@ -1,4 +1,6 @@
+import { useMediaQuery } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
@@ -18,12 +20,13 @@ interface JudgeFormProps {
 }
 
 const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { selectedJudge, courtsList, setSelectedJudge, judgeStatusList, isShowOneJudge } = props
 
   const judgeName = () => (
     <TextField
       required
-      autoFocus
+      autoFocus={!isShowOneJudge}
       fullWidth
       variant="standard"
       id="judge-name"
@@ -50,7 +53,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     />
   )
   const judgeCourtsList = () => (
-    <FormControl sx={{ minWidth: 425, mt: '16px', mb: '8px' }} required error={selectedJudge.courtId <= 0}>
+    <FormControl sx={{ width: '100%', mt: '16px', mb: '8px' }} required error={selectedJudge.courtId <= 0}>
       <InputLabel sx={{ left: '-0.9em' }}>Court</InputLabel>
       <Select
         labelId="judge-select-court"
@@ -68,7 +71,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     </FormControl>
   )
   const judgeStatus = () => (
-    <FormControl sx={{ minWidth: 120, mt: '16px', mb: '8px' }} required error={!selectedJudge.status}>
+    <FormControl sx={{ width: '100%', mt: '16px', mb: '8px' }} required error={!selectedJudge.status}>
       <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
       <Select
         labelId="judge-select-status"
@@ -101,26 +104,27 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     />
   )
 
-  return isShowOneJudge ? (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {judgeName()}
-        {judgeWebex()}
-        {judgeCourtsList()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {judgeStatus()}
-        {judgeComments()}
-      </div>
-    </div>
-  ) : (
-    <div>
-      {judgeName()}
-      {judgeWebex()}
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '1em' }}>
-        {judgeCourtsList()}
-        {judgeStatus()}
-      </div>
+  return (
+    <div style={{ width: isSmallScreen || !isShowOneJudge ? '100%' : '50%' }}>
+      <Grid container direction="row" justifyContent={isShowOneJudge ? "flex-start": "flex-end"} alignItems="center" spacing={2}>
+        <Grid item xs={12}>
+          {judgeName()}
+        </Grid>
+        <Grid item xs={12}>
+          {judgeCourtsList()}
+        </Grid>
+        <Grid item xs={12}>
+          {judgeWebex()}
+        </Grid>
+        <Grid item xs={4}>
+          {judgeStatus()}
+        </Grid>
+        {isShowOneJudge && (
+          <Grid item xs={12}>
+            {judgeComments()}
+          </Grid>
+        )}
+      </Grid>
     </div>
   )
 }
