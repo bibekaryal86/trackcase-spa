@@ -1,4 +1,6 @@
+import { useMediaQuery } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
@@ -18,11 +20,12 @@ interface CourtFormProps {
 
 const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const { selectedCourt, setSelectedCourt, courtStatusList, isShowOneCourt } = props
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
 
   const courtName = () => (
     <TextField
       required
-      autoFocus
+      autoFocus={!isShowOneCourt}
       fullWidth
       variant="standard"
       id="court-name"
@@ -50,25 +53,10 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       error={isCourtFormFieldError(selectedCourt.streetAddress)}
     />
   )
-  const courtPhoneNumber = () => (
-    <TextField
-      required
-      variant="standard"
-      name="court-phone-number"
-      label="Phone"
-      id="court-phone-number"
-      margin="normal"
-      sx={{ minWidth: 200 }}
-      inputProps={{ maxLength: 15 }}
-      value={selectedCourt.phoneNumber || ''}
-      onChange={(e) => handleCourtFormOnChange('phoneNumber', e.target.value, selectedCourt, setSelectedCourt)}
-      error={isCourtFormFieldError(selectedCourt.phoneNumber, false, true)}
-    />
-  )
   const courtCity = () => (
     <TextField
       required
-      sx={{ minWidth: 200 }}
+      fullWidth
       variant="standard"
       name="court-city"
       label="City"
@@ -82,7 +70,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   )
   const courtState = () => (
     <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
+      sx={{ minWidth: 75, width: '100%', mt: '16px', mb: '8px' }}
       required
       error={isCourtFormFieldError(selectedCourt.state)}
     >
@@ -105,6 +93,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const courtZipCode = () => (
     <TextField
       required
+      fullWidth
       variant="standard"
       name="court-zip-code"
       label="Zip Code"
@@ -114,6 +103,21 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       value={selectedCourt.zipCode || ''}
       onChange={(e) => handleCourtFormOnChange('zipCode', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.zipCode, true)}
+    />
+  )
+  const courtPhoneNumber = () => (
+    <TextField
+      required
+      fullWidth
+      variant="standard"
+      name="court-phone-number"
+      label="Phone"
+      id="court-phone-number"
+      margin="normal"
+      inputProps={{ maxLength: 15 }}
+      value={selectedCourt.phoneNumber || ''}
+      onChange={(e) => handleCourtFormOnChange('phoneNumber', e.target.value, selectedCourt, setSelectedCourt)}
+      error={isCourtFormFieldError(selectedCourt.phoneNumber, false, true)}
     />
   )
   const courtDhsAddress = () => (
@@ -131,7 +135,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   )
   const courtStatus = () => (
     <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
+      sx={{ width: '100%', mt: '16px', mb: '8px' }}
       required
       error={isCourtFormFieldError(selectedCourt.status)}
     >
@@ -167,40 +171,39 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     />
   )
 
-  return isShowOneCourt ? (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {courtName()}
-        {courtStreetAddress()}
-        {courtPhoneNumber()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {courtCity()}
-        {courtState()}
-        {courtZipCode()}
-        {courtDhsAddress()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {courtStatus()}
-        {courtComments()}
-      </div>
-    </div>
-  ) : (
-    <div>
-      {courtName()}
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {courtStreetAddress()}
-        {courtPhoneNumber()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {courtCity()}
-        {courtState()}
-        {courtZipCode()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-        {courtDhsAddress()}
-        {courtStatus()}
-      </div>
+  return (
+    <div style={{ width: isSmallScreen || !isShowOneCourt ? '100%' : '50%' }}>
+      <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={2}>
+        <Grid item xs={12}>
+          {courtName()}
+        </Grid>
+        <Grid item xs={8}>
+          {courtStreetAddress()}
+        </Grid>
+        <Grid item xs={4}>
+          {courtCity()}
+        </Grid>
+        <Grid item xs={6}>
+          {courtState()}
+        </Grid>
+        <Grid item xs={6}>
+          {courtZipCode()}
+        </Grid>
+        <Grid item xs={6}>
+          {courtPhoneNumber()}
+        </Grid>
+        <Grid item xs={6}>
+          {courtStatus()}
+        </Grid>
+        <Grid item xs={12}>
+          {courtDhsAddress()}
+        </Grid>
+        {isShowOneCourt && (
+          <Grid item xs={12}>
+            {courtComments()}
+          </Grid>
+        )}
+      </Grid>
     </div>
   )
 }
