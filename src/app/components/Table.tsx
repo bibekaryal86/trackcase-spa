@@ -241,12 +241,21 @@ const TableHeader = (props: TableHeaderProps) => {
 const Table = (props: TableProps) => {
   const { tableData } = props
   const rowsPerPageOptions = [5, 10, 15, 20]
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
 
   const [order, setOrder] = useState<TableOrder>(props.defaultOrder || 'asc')
   const [orderBy, setOrderBy] = useState<keyof TableData>(props.defaultOrderBy || '')
   const [page, setPage] = useState(0)
   const [dense, setDense] = useState(props.defaultDense)
   const [rowsPerPage, setRowsPerPage] = useState(props.defaultRowsPerPage || 20)
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0
+
+  const visibleRows = useMemo(
+    () => tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy)),
+    [order, orderBy, page, rowsPerPage, tableData],
+  )
 
   const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof TableData) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -268,14 +277,6 @@ const Table = (props: TableProps) => {
     setDense(event?.target.checked)
   }
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0
-
-  const visibleRows = useMemo(
-    () => tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy)),
-    [order, orderBy, page, rowsPerPage, tableData],
-  )
-
   const denseComponent = (isSmallScreen: boolean) =>
     isSmallScreen ? null : (
       <FormControlLabel
@@ -294,14 +295,17 @@ const Table = (props: TableProps) => {
       </CSVLink>
     ) : null
 
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
   return (
     <div>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: '1.5em' }}>
         {props.addModelComponent}
       </div>
       <TableContainer sx={{ display: 'flex', borderTop: '1px solid rgba(224, 224, 224, 1)' }}>
-        <MuiTable stickyHeader sx={{ tableLayout: props.tableLayout || '' }} size={dense || isSmallScreen ? 'small' : 'medium'}>
+        <MuiTable
+          stickyHeader
+          sx={{ tableLayout: props.tableLayout || '' }}
+          size={dense || isSmallScreen ? 'small' : 'medium'}
+        >
           <TableHeader
             headerData={props.headerData}
             order={order}
