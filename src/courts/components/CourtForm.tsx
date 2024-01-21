@@ -19,8 +19,8 @@ interface CourtFormProps {
 }
 
 const CourtForm = (props: CourtFormProps): React.ReactElement => {
-  const { selectedCourt, setSelectedCourt, courtStatusList, isShowOneCourt } = props
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const { selectedCourt, setSelectedCourt, courtStatusList, isShowOneCourt } = props
 
   const courtName = () => (
     <TextField
