@@ -44,7 +44,7 @@ interface FormSelectFieldProps {
   inputLabelSx?: object
   inputLabel: string
   variant?: TextFieldVariants
-  value: number
+  value: number | string
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
   selectOptions: unknown[]
   menuItems: React.ReactNode[]
@@ -177,7 +177,7 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
         labelId={convertLabelToId(component, inputLabel)}
         id={convertLabelToId(component, inputLabel)}
         variant={variant}
-        value={value}
+        value={value.toString()}
         onChange={onChange}
       >
         {menuItems}
