@@ -4,10 +4,9 @@ import Grid from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
 import React from 'react'
 
-import { STATES_LIST } from '../../constants'
+import { FormCommentsField, FormSelectState, FormSelectStatus, FormTextField } from '../../app'
 import { JudgeSchema } from '../../judges'
 import { ClientSchema } from '../types/clients.data.types'
 import { handleClientFormOnChange, isClientFormFieldError } from '../utils/clients.utils'
@@ -25,15 +24,10 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList } = props
 
   const clientName = () => (
-    <TextField
-      required
-      autoFocus={!isShowOneClient}
-      fullWidth
+    <FormTextField
+      component="client"
       label="Name"
-      variant="standard"
-      id="client-name-id"
-      margin="normal"
-      inputProps={{ maxLength: 99 }}
+      autoFocus={!isShowOneClient}
       value={selectedClient.name || ''}
       onChange={(e) => handleClientFormOnChange('name', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('name', selectedClient.name, selectedClient)}
@@ -41,31 +35,19 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientANumber = () => (
-    <TextField
-      required={false}
-      autoFocus={false}
-      fullWidth
+    <FormTextField
+      component="client"
       label="A Number"
-      variant="standard"
-      id="client-a-number-id"
-      margin="normal"
-      inputProps={{ maxLength: 15 }}
+      required={false}
       value={selectedClient.aNumber || ''}
       onChange={(e) => handleClientFormOnChange('aNumber', e.target.value, selectedClient, setSelectedClient)}
-      error={false}
     />
   )
 
   const clientEmail = () => (
-    <TextField
-      required
-      autoFocus={false}
-      fullWidth
+    <FormTextField
+      component="client"
       label="Email"
-      variant="standard"
-      id="client-email-id"
-      margin="normal"
-      inputProps={{ maxLength: 99 }}
       value={selectedClient.email || ''}
       onChange={(e) => handleClientFormOnChange('email', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('email', selectedClient.email, selectedClient)}
@@ -73,15 +55,10 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientPhoneNumber = () => (
-    <TextField
-      required
-      autoFocus={false}
-      fullWidth
+    <FormTextField
+      component="client"
       label="Phone"
-      variant="standard"
-      id="client-phone-number-id"
-      margin="normal"
-      inputProps={{ maxLength: 15 }}
+      maxLength={15}
       value={selectedClient.phoneNumber || ''}
       onChange={(e) => handleClientFormOnChange('phoneNumber', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('phoneNumber', selectedClient.phoneNumber, selectedClient)}
@@ -89,15 +66,10 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientStreetAddress = () => (
-    <TextField
-      required={false}
-      autoFocus={false}
-      fullWidth
+    <FormTextField
+      component="client"
       label="Street Address"
-      variant="standard"
-      id="client-street-address-id"
-      margin="normal"
-      inputProps={{ maxLength: 99 }}
+      required={false}
       value={selectedClient.streetAddress || ''}
       onChange={(e) => handleClientFormOnChange('streetAddress', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('streetAddress', selectedClient.streetAddress, selectedClient)}
@@ -105,15 +77,10 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientCity = () => (
-    <TextField
-      required={false}
-      autoFocus={false}
-      fullWidth
+    <FormTextField
+      component="client"
       label="City"
-      variant="standard"
-      id="client-city-id"
-      margin="normal"
-      inputProps={{ maxLength: 99 }}
+      required={false}
       value={selectedClient.city || ''}
       onChange={(e) => handleClientFormOnChange('city', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('city', selectedClient.city, selectedClient)}
@@ -121,37 +88,21 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientState = () => (
-    <FormControl
-      sx={{ width: '100%', mt: '16px', mb: '8px' }}
+    <FormSelectState
+      component="client"
+      inputLabel="State"
+      value={selectedClient.state || ''}
+      onChange={(e) => handleClientFormOnChange('state', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('state', selectedClient.state, selectedClient)}
-    >
-      <InputLabel sx={{ left: '-0.9em' }}>State</InputLabel>
-      <Select
-        labelId="client-select-state"
-        id="client-state-id"
-        variant="standard"
-        value={selectedClient.state || ''}
-        onChange={(e) => handleClientFormOnChange('state', e.target.value, selectedClient, setSelectedClient)}
-      >
-        {STATES_LIST.map((state) => (
-          <MenuItem key={state.abbreviation} value={state.abbreviation}>
-            {state.abbreviation}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    />
   )
 
   const clientZipCode = () => (
-    <TextField
-      required={false}
-      autoFocus={false}
-      fullWidth
+    <FormTextField
+      component="client"
       label="Zip Code"
-      variant="standard"
-      id="client-zip-code-id"
-      margin="normal"
-      inputProps={{ maxLength: 5 }}
+      required={false}
+      maxLength={5}
       value={selectedClient.zipCode || ''}
       onChange={(e) => handleClientFormOnChange('zipCode', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('zipCode', selectedClient.zipCode, selectedClient)}
@@ -159,26 +110,13 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientStatus = () => (
-    <FormControl
-      sx={{ width: '100%', mt: '16px', mb: '8px' }}
-      required
+    <FormSelectStatus
+      component="client"
+      value={selectedClient.status || ''}
+      onChange={(e) => handleClientFormOnChange('status', e.target.value, selectedClient, setSelectedClient)}
+      statusList={clientStatusList}
       error={isClientFormFieldError('status', selectedClient.status, selectedClient)}
-    >
-      <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
-      <Select
-        labelId="client-select-status"
-        id="client-status-id"
-        variant="standard"
-        value={selectedClient.status || ''}
-        onChange={(e) => handleClientFormOnChange('status', e.target.value, selectedClient, setSelectedClient)}
-      >
-        {clientStatusList.map((status) => (
-          <MenuItem key={status} value={status}>
-            {status}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    />
   )
 
   const clientJudgesList = () => (
@@ -203,20 +141,10 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientComments = () => (
-    <TextField
-      required={false}
-      autoFocus={false}
-      fullWidth
-      label="Client Comments"
-      variant="standard"
-      id="client-comments-id"
-      inputProps={{ maxLength: 8888 }}
+    <FormCommentsField
+      component="client"
       value={selectedClient.comments || ''}
       onChange={(e) => handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient)}
-      error={false}
-      sx={{ mt: '16px', mb: '8px' }}
-      multiline={true}
-      maxRows={4}
     />
   )
 

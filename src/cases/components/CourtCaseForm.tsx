@@ -4,9 +4,9 @@ import Grid from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
 import React from 'react'
 
+import { FormCommentsField } from '../../app'
 import { ClientSchema } from '../../clients'
 import { ID_DEFAULT } from '../../constants'
 import { CaseTypeSchema } from '../../types'
@@ -101,20 +101,10 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
   )
 
   const courtCaseComments = () => (
-    <TextField
-      required={false}
-      autoFocus={false}
-      fullWidth
-      label="Court Case Comments"
-      variant="standard"
-      id="court-case-comments-id"
-      inputProps={{ maxLength: 8888 }}
+    <FormCommentsField
+      component="court-case"
       value={selectedCourtCase.comments || ''}
       onChange={(e) => handleCourtCaseFormOnChange('comments', e.target.value, selectedCourtCase, setSelectedCourtCase)}
-      error={false}
-      sx={{ mt: '16px', mb: '8px' }}
-      multiline={true}
-      maxRows={4}
     />
   )
 
