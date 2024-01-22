@@ -44,7 +44,7 @@ interface FormSelectFieldProps {
   inputLabelSx?: object
   inputLabel: string
   variant?: TextFieldVariants
-  value: string
+  value: number
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
   selectOptions: unknown[]
   menuItems: React.ReactNode[]
@@ -92,7 +92,7 @@ interface FormCommentFieldProps {
   maxRows?: number
 }
 
-export const FormWrapper: React.FC<FormWrapperProps> = ({
+export const GridFormWrapper: React.FC<FormWrapperProps> = ({
   isSmallScreen = false,
   isShowOne = false,
   flexDirection = 'row',
@@ -106,7 +106,7 @@ export const FormWrapper: React.FC<FormWrapperProps> = ({
       <Grid
         container
         direction={flexDirection}
-        justifyContent={justifyContent ? justifyContent : isShowOne ? 'flex-start' : 'flex-end'}
+        justifyContent={justifyContent}
         alignItems={alignItems}
         spacing={spacing ? spacing : isSmallScreen ? 1 : 2}
       >
@@ -224,7 +224,7 @@ export const FormSelectStatus: React.FC<StatusSelectProps> = ({
   component,
   required = true,
   error = false,
-  inputLabel= 'Status',
+  inputLabel = 'Status',
   value,
   onChange,
   statusList,

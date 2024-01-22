@@ -1,12 +1,16 @@
 import { useMediaQuery } from '@mui/material'
-import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Grid'
-import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
 import React from 'react'
 
-import { FormCommentsField, FormSelectState, FormSelectStatus, FormTextField } from '../../app'
+import {
+  FormCommentsField,
+  FormSelectField,
+  FormSelectState,
+  FormSelectStatus,
+  FormTextField,
+  GridFormWrapper,
+} from '../../app'
 import { JudgeSchema } from '../../judges'
 import { ClientSchema } from '../types/clients.data.types'
 import { handleClientFormOnChange, isClientFormFieldError } from '../utils/clients.utils'
@@ -119,25 +123,24 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     />
   )
 
+  const judgesListForSelect = () =>
+    judgesList.map((x) => (
+      <MenuItem key={x.id} value={x.id}>
+        {x.name}
+      </MenuItem>
+    ))
+
   const clientJudgesList = () => (
-    <FormControl sx={{ width: '100%', mt: '16px', mb: '8px' }}>
-      <InputLabel sx={{ left: '-0.9em' }}>Judge</InputLabel>
-      <Select
-        labelId="client-select-judge"
-        id="client-select-judge-id"
-        variant="standard"
-        value={!selectedClient.judgeId || selectedClient.judgeId <= 0 ? '' : selectedClient.judgeId}
-        onChange={(e) =>
-          handleClientFormOnChange('judgeId', e.target.value.toString(), selectedClient, setSelectedClient)
-        }
-      >
-        {judgesList.map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {x.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <FormSelectField
+      component="client"
+      inputLabel="Judge"
+      value={!selectedClient.judgeId || selectedClient.judgeId <= 0 ? '' : selectedClient.judgeId}
+      onChange={(e) =>
+        handleClientFormOnChange('judgeId', e.target.value.toString(), selectedClient, setSelectedClient)
+      }
+      selectOptions={judgesList}
+      menuItems={judgesListForSelect()}
+    />
   )
 
   const clientComments = () => (
@@ -149,51 +152,47 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   return (
-    <div style={{ width: isSmallScreen || !isShowOneClient ? '100%' : '50%' }}>
-      <Grid
-        container
-        direction="row"
-        justifyContent={isShowOneClient ? 'flex-start' : 'flex-end'}
-        alignItems="center"
-        spacing={isSmallScreen ? 1 : 2}
-      >
-        <Grid item xs={12}>
-          {clientName()}
-        </Grid>
-        <Grid item xs={6}>
-          {clientANumber()}
-        </Grid>
-        <Grid item xs={6}>
-          {clientPhoneNumber()}
-        </Grid>
-        <Grid item xs={12}>
-          {clientEmail()}
-        </Grid>
-        <Grid item xs={8}>
-          {clientStreetAddress()}
-        </Grid>
-        <Grid item xs={4}>
-          {clientCity()}
-        </Grid>
-        <Grid item xs={6}>
-          {clientState()}
-        </Grid>
-        <Grid item xs={6}>
-          {clientZipCode()}
-        </Grid>
-        <Grid item xs={12}>
-          {clientJudgesList()}
-        </Grid>
-        <Grid item xs={6}>
-          {clientStatus()}
-        </Grid>
-        {isShowOneClient && (
-          <Grid item xs={12}>
-            {clientComments()}
-          </Grid>
-        )}
+    <GridFormWrapper
+      isSmallScreen={isSmallScreen}
+      isShowOne={isShowOneClient}
+      justifyContent={isShowOneClient ? 'flex-start' : 'flex-end'}
+    >
+      <Grid item xs={12}>
+        {clientName()}
       </Grid>
-    </div>
+      <Grid item xs={6}>
+        {clientANumber()}
+      </Grid>
+      <Grid item xs={6}>
+        {clientPhoneNumber()}
+      </Grid>
+      <Grid item xs={12}>
+        {clientEmail()}
+      </Grid>
+      <Grid item xs={8}>
+        {clientStreetAddress()}
+      </Grid>
+      <Grid item xs={4}>
+        {clientCity()}
+      </Grid>
+      <Grid item xs={6}>
+        {clientState()}
+      </Grid>
+      <Grid item xs={6}>
+        {clientZipCode()}
+      </Grid>
+      <Grid item xs={12}>
+        {clientJudgesList()}
+      </Grid>
+      <Grid item xs={6}>
+        {clientStatus()}
+      </Grid>
+      {isShowOneClient && (
+        <Grid item xs={12}>
+          {clientComments()}
+        </Grid>
+      )}
+    </GridFormWrapper>
   )
 }
 

@@ -9,3 +9,5 @@
   * no issues in adding/updating/deleting after 1st row added
 
 * table sort might not be working as expected
+
+* create common component for select

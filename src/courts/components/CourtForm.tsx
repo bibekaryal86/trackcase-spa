@@ -2,7 +2,7 @@ import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
-import { FormCommentsField, FormSelectState, FormSelectStatus, FormTextField, FormWrapper } from '../../app'
+import { FormCommentsField, FormSelectState, FormSelectStatus, FormTextField, GridFormWrapper } from '../../app'
 import { CourtSchema } from '../types/courts.data.types'
 import { handleCourtFormOnChange, isCourtFormFieldError } from '../utils/courts.utils'
 
@@ -111,7 +111,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   )
 
   return (
-    <FormWrapper isSmallScreen={isSmallScreen} isShowOne={isShowOneCourt}>
+    <GridFormWrapper isSmallScreen={isSmallScreen} isShowOne={isShowOneCourt}>
       <Grid item xs={12}>
         {courtName()}
       </Grid>
@@ -141,7 +141,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
           {courtComments()}
         </Grid>
       )}
-    </FormWrapper>
+    </GridFormWrapper>
   )
 }
 

@@ -6,10 +6,11 @@ import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
   FormCommentsField,
+  FormSelectField,
   FormSelectState,
   FormSelectStatus,
   FormTextField,
-  FormWrapper,
+  GridFormWrapper,
 } from './components/FormComponents'
 import Link from './components/Link'
 import Modal from './components/Modal'
@@ -67,8 +68,9 @@ export { getStatusesList }
 export { addNote, editNote, deleteNote }
 export { convertNotesToNotesList }
 export {
-  FormWrapper,
+  GridFormWrapper,
   FormTextField,
+  FormSelectField,
   FormSelectState,
   FormSelectStatus,
   FormCommentsField,
