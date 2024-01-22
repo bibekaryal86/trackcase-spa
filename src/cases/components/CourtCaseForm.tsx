@@ -1,10 +1,9 @@
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
+import { useMediaQuery } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
 import React from 'react'
 
+import { FormCommentsField, FormSelectField, FormSelectStatus, GridFormWrapper } from '../../app'
 import { ClientSchema } from '../../clients'
 import { ID_DEFAULT } from '../../constants'
 import { CaseTypeSchema } from '../../types'
@@ -21,110 +20,91 @@ interface CourtCaseFormProps {
 }
 
 const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { selectedCourtCase, setSelectedCourtCase, courtCaseStatusList, isShowOneCourtCase } = props
   const { caseTypesList, clientsList } = props
 
+  const caseTypesListForSelect = () =>
+    caseTypesList.map((x) => (
+      <MenuItem key={x.id} value={x.id}>
+        {x.name}
+      </MenuItem>
+    ))
+
+  const clientsListForSelect = () =>
+    clientsList.map((x) => (
+      <MenuItem key={x.id} value={x.id}>
+        {x.name}
+      </MenuItem>
+    ))
+
   const courtCaseType = () => (
-    <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
-      required
+    <FormSelectField
+      component="court-case"
+      inputLabel="Case Type"
+      required={true}
+      value={selectedCourtCase.caseTypeId || ID_DEFAULT}
+      onChange={(e) =>
+        handleCourtCaseFormOnChange('caseTypeId', e.target.value, selectedCourtCase, setSelectedCourtCase)
+      }
       error={isCourtCaseFormFieldError('caseTypeId', selectedCourtCase.caseTypeId)}
-    >
-      <InputLabel sx={{ left: '-0.9em' }}>Case Type</InputLabel>
-      <Select
-        labelId="court-case-select-type"
-        id="court-case-select-type-id"
-        variant="standard"
-        value={selectedCourtCase.caseTypeId || ID_DEFAULT}
-        onChange={(e) =>
-          handleCourtCaseFormOnChange('caseTypeId', e.target.value, selectedCourtCase, setSelectedCourtCase)
-        }
-      >
-        {caseTypesList.map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {x.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+      selectOptions={caseTypesList}
+      menuItems={caseTypesListForSelect()}
+    />
   )
+
   const courtCaseClient = () => (
-    <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
-      required
+    <FormSelectField
+      component="court-case"
+      inputLabel="Client"
+      required={true}
+      value={selectedCourtCase.clientId || ID_DEFAULT}
+      onChange={(e) => handleCourtCaseFormOnChange('clientId', e.target.value, selectedCourtCase, setSelectedCourtCase)}
       error={isCourtCaseFormFieldError('clientId', selectedCourtCase.clientId)}
-    >
-      <InputLabel sx={{ left: '-0.9em' }}>Client</InputLabel>
-      <Select
-        labelId="court-case-select-client"
-        id="court-case-select-client-id"
-        variant="standard"
-        value={selectedCourtCase.clientId || ID_DEFAULT}
-        onChange={(e) =>
-          handleCourtCaseFormOnChange('clientId', e.target.value, selectedCourtCase, setSelectedCourtCase)
-        }
-      >
-        {clientsList.map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {x.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+      selectOptions={clientsList}
+      menuItems={clientsListForSelect()}
+    />
   )
+
   const courtCaseStatus = () => (
-    <FormControl
-      sx={{ minWidth: 120, mt: '16px', mb: '8px' }}
-      required
+    <FormSelectStatus
+      component="court-case"
+      value={selectedCourtCase.status || ''}
+      onChange={(e) => handleCourtCaseFormOnChange('status', e.target.value, selectedCourtCase, setSelectedCourtCase)}
+      statusList={courtCaseStatusList}
       error={isCourtCaseFormFieldError('status', selectedCourtCase.status)}
-    >
-      <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
-      <Select
-        labelId="court-case-select-status"
-        id="court-case-select-status-id"
-        variant="standard"
-        value={selectedCourtCase.status || ''}
-        onChange={(e) => handleCourtCaseFormOnChange('status', e.target.value, selectedCourtCase, setSelectedCourtCase)}
-      >
-        {courtCaseStatusList.map((status) => (
-          <MenuItem key={status} value={status}>
-            {status}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    />
   )
+
   const courtCaseComments = () => (
-    <TextField
-      sx={{ mt: '16px', mb: '8px' }}
-      id="court-case-comments"
-      name="court-case-comments"
-      label="Court Case Comments"
-      variant="standard"
-      fullWidth
-      multiline
-      maxRows={4}
-      inputProps={{ maxLength: 8888 }}
+    <FormCommentsField
+      component="court-case"
       value={selectedCourtCase.comments || ''}
       onChange={(e) => handleCourtCaseFormOnChange('comments', e.target.value, selectedCourtCase, setSelectedCourtCase)}
     />
   )
 
-  return isShowOneCourtCase ? (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
+  return (
+    <GridFormWrapper
+      isSmallScreen={isSmallScreen}
+      isShowOne={isShowOneCourtCase}
+      justifyContent={isShowOneCourtCase ? 'flex-start' : 'flex-end'}
+    >
+      <Grid item xs={12}>
         {courtCaseType()}
+      </Grid>
+      <Grid item xs={12}>
         {courtCaseClient()}
+      </Grid>
+      <Grid item xs={6}>
         {courtCaseStatus()}
-      </div>
-      {courtCaseComments()}
-    </div>
-  ) : (
-    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
-      {courtCaseType()}
-      {courtCaseClient()}
-      {courtCaseStatus()}
-    </div>
+      </Grid>
+      {isShowOneCourtCase && (
+        <Grid item xs={12}>
+          {courtCaseComments()}
+        </Grid>
+      )}
+    </GridFormWrapper>
   )
 }
 

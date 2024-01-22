@@ -40,14 +40,14 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
         isDisableSorting: isHistoryView,
       },
       {
-        id: 'status',
-        label: 'Status',
-        isDisableSorting: isHistoryView,
-      },
-      {
         id: 'webex',
         label: 'Webex Address',
         isDisableSorting: true,
+      },
+      {
+        id: 'status',
+        label: 'Status',
+        isDisableSorting: isHistoryView,
       },
     ]
     if (isHistoryView) {
@@ -116,8 +116,8 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
         return {
           name: x.name || '',
           court: x.court?.name || '',
-          status: x.status || '',
           webex: x.webex || '',
+          status: x.status || '',
           user: x.userName,
           date: convertDateToLocaleString(x.created),
         }
@@ -127,8 +127,8 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
         return {
           name: linkToJudges(x),
           court: selectedCourt?.name ? selectedCourt.name || '' : x.court ? linkToCourt(x.court) : '',
-          status: x.status,
           webex: x.webex ? linkToWebex(x.webex) : '',
+          status: x.status || '',
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })

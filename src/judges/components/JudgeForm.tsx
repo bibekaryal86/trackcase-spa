@@ -1,10 +1,9 @@
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
+import { useMediaQuery } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
 import React from 'react'
 
+import { FormCommentsField, FormSelectField, FormSelectStatus, FormTextField, GridFormWrapper } from '../../app'
 import { CourtSchema } from '../../courts'
 import { JudgeSchema } from '../types/judges.data.types'
 import { handleJudgeFormOnChange } from '../utils/judges.utils'
@@ -18,110 +17,90 @@ interface JudgeFormProps {
 }
 
 const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { selectedJudge, courtsList, setSelectedJudge, judgeStatusList, isShowOneJudge } = props
 
   const judgeName = () => (
-    <TextField
-      required
-      autoFocus
-      fullWidth
-      variant="standard"
-      id="judge-name"
+    <FormTextField
+      component="judge"
       label="Name"
-      name="judge-name"
-      margin="normal"
-      inputProps={{ maxLength: 99 }}
+      autoFocus={!isShowOneJudge}
       value={selectedJudge.name || ''}
       onChange={(e) => handleJudgeFormOnChange('name', e.target.value, selectedJudge, setSelectedJudge)}
       error={selectedJudge.name.trim() === ''}
     />
   )
+
   const judgeWebex = () => (
-    <TextField
-      fullWidth
-      variant="standard"
-      name="judge-webex"
+    <FormTextField
+      component="judge"
       label="Webex"
-      id="judge-webex"
-      margin="normal"
-      inputProps={{ maxLength: 99 }}
+      required={false}
       value={selectedJudge.webex || ''}
       onChange={(e) => handleJudgeFormOnChange('webex', e.target.value, selectedJudge, setSelectedJudge)}
     />
   )
+
+  const courtsListForSelect = () =>
+    courtsList.map((x) => (
+      <MenuItem key={x.id} value={x.id}>
+        {x.name}
+      </MenuItem>
+    ))
+
   const judgeCourtsList = () => (
-    <FormControl sx={{ minWidth: 425, mt: '16px', mb: '8px' }} required error={selectedJudge.courtId <= 0}>
-      <InputLabel sx={{ left: '-0.9em' }}>Court</InputLabel>
-      <Select
-        labelId="judge-select-court"
-        id="judge-select-court-id"
-        variant="standard"
-        value={selectedJudge.courtId <= 0 ? '' : selectedJudge.courtId}
-        onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge)}
-      >
-        {courtsList.map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {x.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <FormSelectField
+      component="judge"
+      inputLabel="Court"
+      value={selectedJudge.courtId <= 0 ? -1 : selectedJudge.courtId}
+      onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge)}
+      selectOptions={courtsList}
+      menuItems={courtsListForSelect()}
+    />
   )
+
   const judgeStatus = () => (
-    <FormControl sx={{ minWidth: 120, mt: '16px', mb: '8px' }} required error={!selectedJudge.status}>
-      <InputLabel sx={{ left: '-0.9em' }}>Status</InputLabel>
-      <Select
-        labelId="judge-select-status"
-        id="judge-select-status-id"
-        variant="standard"
-        value={selectedJudge.status || ''}
-        onChange={(e) => handleJudgeFormOnChange('status', e.target.value, selectedJudge, setSelectedJudge)}
-      >
-        {judgeStatusList.map((status) => (
-          <MenuItem key={status} value={status}>
-            {status}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <FormSelectStatus
+      component="judge"
+      value={selectedJudge.status || ''}
+      onChange={(e) => handleJudgeFormOnChange('status', e.target.value, selectedJudge, setSelectedJudge)}
+      statusList={judgeStatusList}
+      error={!selectedJudge.status}
+    />
   )
+
   const judgeComments = () => (
-    <TextField
-      sx={{ mt: '16px', mb: '8px' }}
-      id="judge-comments"
-      name="judge-comments"
-      label="Judge Comments"
-      variant="standard"
-      fullWidth
-      multiline
-      maxRows={4}
-      inputProps={{ maxLength: 8888 }}
+    <FormCommentsField
+      component="judge"
       value={selectedJudge.comments || ''}
       onChange={(e) => handleJudgeFormOnChange('comments', e.target.value, selectedJudge, setSelectedJudge)}
     />
   )
 
-  return isShowOneJudge ? (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
+  return (
+    <GridFormWrapper
+      isSmallScreen={isSmallScreen}
+      isShowOne={isShowOneJudge}
+      justifyContent={isShowOneJudge ? 'flex-start' : 'flex-end'}
+    >
+      <Grid item xs={12}>
         {judgeName()}
+      </Grid>
+      <Grid item xs={12}>
+        {judgeCourtsList()}
+      </Grid>
+      <Grid item xs={12}>
         {judgeWebex()}
-        {judgeCourtsList()}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1em' }}>
+      </Grid>
+      <Grid item xs={4}>
         {judgeStatus()}
-        {judgeComments()}
-      </div>
-    </div>
-  ) : (
-    <div>
-      {judgeName()}
-      {judgeWebex()}
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '1em' }}>
-        {judgeCourtsList()}
-        {judgeStatus()}
-      </div>
-    </div>
+      </Grid>
+      {isShowOneJudge && (
+        <Grid item xs={12}>
+          {judgeComments()}
+        </Grid>
+      )}
+    </GridFormWrapper>
   )
 }
 

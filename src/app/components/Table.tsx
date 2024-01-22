@@ -1,4 +1,4 @@
-import { Table as MuiTable } from '@mui/material'
+import { Table as MuiTable, useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -175,8 +175,9 @@ const tablePagination = (
   page: number,
   handleChangePage: (_event: unknown, newPage: number) => void,
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  denseComponent: React.JSX.Element,
+  denseComponent: React.JSX.Element | null,
   exportComponent: React.JSX.Element | null,
+  isSmallScreen: boolean,
 ) => (
   <div
     style={{
@@ -189,6 +190,7 @@ const tablePagination = (
     {exportComponent}
     {denseComponent}
     <TablePagination
+      labelRowsPerPage={isSmallScreen ? '' : 'Rows per page'}
       rowsPerPageOptions={rowsPerPageOptions}
       component="div"
       count={count}
@@ -239,12 +241,21 @@ const TableHeader = (props: TableHeaderProps) => {
 const Table = (props: TableProps) => {
   const { tableData } = props
   const rowsPerPageOptions = [5, 10, 15, 20]
+  const isSmallScreen = useMediaQuery('(max-width: 600px)')
 
   const [order, setOrder] = useState<TableOrder>(props.defaultOrder || 'asc')
   const [orderBy, setOrderBy] = useState<keyof TableData>(props.defaultOrderBy || '')
   const [page, setPage] = useState(0)
   const [dense, setDense] = useState(props.defaultDense)
   const [rowsPerPage, setRowsPerPage] = useState(props.defaultRowsPerPage || 20)
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0
+
+  const visibleRows = useMemo(
+    () => tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy)),
+    [order, orderBy, page, rowsPerPage, tableData],
+  )
 
   const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof TableData) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -266,20 +277,13 @@ const Table = (props: TableProps) => {
     setDense(event?.target.checked)
   }
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0
-
-  const visibleRows = useMemo(
-    () => tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy)),
-    [order, orderBy, page, rowsPerPage, tableData],
-  )
-
-  const denseComponent = () => (
-    <FormControlLabel
-      control={<Switch isChecked={dense || false} onChangeCallback={handleChangeDense} />}
-      label="Dense"
-    />
-  )
+  const denseComponent = (isSmallScreen: boolean) =>
+    isSmallScreen ? null : (
+      <FormControlLabel
+        control={<Switch isChecked={dense || false} onChangeCallback={handleChangeDense} />}
+        label="Dense"
+      />
+    )
 
   const exportComponent = () =>
     props.isExportToCsv && props.tableData && props.tableData.length > 0 ? (
@@ -297,7 +301,11 @@ const Table = (props: TableProps) => {
         {props.addModelComponent}
       </div>
       <TableContainer sx={{ display: 'flex', borderTop: '1px solid rgba(224, 224, 224, 1)' }}>
-        <MuiTable stickyHeader sx={{ tableLayout: props.tableLayout || '' }} size={dense ? 'small' : 'medium'}>
+        <MuiTable
+          stickyHeader
+          sx={{ tableLayout: props.tableLayout || '' }}
+          size={dense || isSmallScreen ? 'small' : 'medium'}
+        >
           <TableHeader
             headerData={props.headerData}
             order={order}
@@ -345,8 +353,9 @@ const Table = (props: TableProps) => {
             page,
             handleChangePage,
             handleChangeRowsPerPage,
-            denseComponent(),
+            denseComponent(isSmallScreen),
             exportComponent(),
+            isSmallScreen,
           )}
     </div>
   )

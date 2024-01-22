@@ -4,6 +4,14 @@ import { addNote, deleteNote, editNote } from './actions/notes.action'
 import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
+import {
+  FormCommentsField,
+  FormSelectField,
+  FormSelectState,
+  FormSelectStatus,
+  FormTextField,
+  GridFormWrapper,
+} from './components/FormComponents'
 import Link from './components/Link'
 import Modal from './components/Modal'
 import Notes from './components/Notes'
@@ -59,7 +67,19 @@ export { userLogout }
 export { getStatusesList }
 export { addNote, editNote, deleteNote }
 export { convertNotesToNotesList }
-export { Link, Modal, Notes, Switch, Table }
+export {
+  GridFormWrapper,
+  FormTextField,
+  FormSelectField,
+  FormSelectState,
+  FormSelectStatus,
+  FormCommentsField,
+  Link,
+  Modal,
+  Notes,
+  Switch,
+  Table,
+}
 export { SET_ALERT, RESET_ALERT, SET_SPINNER, RESET_SPINNER }
 export type { GlobalState, GlobalDispatch }
 export type {

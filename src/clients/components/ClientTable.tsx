@@ -56,13 +56,13 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
         isDisableSorting: true,
       },
       {
-        id: 'status',
-        label: 'Status',
+        id: 'judge',
+        label: 'Judge',
         isDisableSorting: isHistoryView,
       },
       {
-        id: 'judge',
-        label: 'Judge',
+        id: 'status',
+        label: 'Status',
         isDisableSorting: isHistoryView,
       },
     ]
@@ -130,8 +130,8 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
           email: x.email || '',
           phone: x.phoneNumber || '',
           address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-          status: x.status || '',
           judge: x.judge?.name || '',
+          status: x.status || '',
           user_name: x.userName,
           date: convertDateToLocaleString(x.created),
         }
@@ -144,8 +144,8 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
           email: x.email || '',
           phone: x.phoneNumber || '',
           address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-          status: x.status,
           judge: selectedJudge?.name ? selectedJudge.name || '' : x.judge ? linkToJudge(x.judge) : '',
+          status: x.status || '',
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })

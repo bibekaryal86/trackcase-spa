@@ -60,53 +60,55 @@ const Header = (props: HeaderProps) => {
 
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
   return (
-    <AppBar position="sticky" open={props.isOpenDrawer} sx={{ boxShadow: 'none' }}>
-      <Toolbar
-        sx={{
-          pr: '24px', // keep right padding when drawer closed
-        }}
-      >
-        {isLoggedIn() && (
-          <IconButton
-            color="inherit"
-            onClick={props.openDrawerCallback}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(props.isOpenDrawer && { display: 'none' }),
-            }}
-            disabled={isSmallScreen}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
-
-        <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-          <Link text="TrackCase Service" color="inherit" navigateToPage="/home" />
-        </Typography>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Tooltip title={props.isDarkMode ? 'Dark Mode ON' : 'Dark Mode'}>
-            <FormGroup>
-              <Switch isChecked={!props.isDarkMode} onChangeCallback={props.darkModeCallback} />
-            </FormGroup>
-          </Tooltip>
+    <div id="app-header-id">
+      <AppBar position="sticky" open={props.isOpenDrawer} sx={{ boxShadow: 'none' }}>
+        <Toolbar
+          sx={{
+            pr: '24px', // keep right padding when drawer closed
+          }}
+        >
           {isLoggedIn() && (
-            <div>
-              <Tooltip title="Account Settings">
-                <IconButton color="inherit" onClick={() => navigateToPage('/account')}>
-                  <AccountCircleRounded />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Sign Out">
-                <IconButton color="inherit" onClick={props.userLogoutCallback}>
-                  <LogoutRounded />
-                </IconButton>
-              </Tooltip>
-            </div>
+            <IconButton
+              color="inherit"
+              onClick={props.openDrawerCallback}
+              edge="start"
+              sx={{
+                marginRight: 5,
+                ...(props.isOpenDrawer && { display: 'none' }),
+              }}
+              disabled={isSmallScreen}
+            >
+              <MenuIcon />
+            </IconButton>
           )}
-        </Stack>
-      </Toolbar>
-    </AppBar>
+
+          <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+            <Link text="TrackCase Service" color="inherit" navigateToPage="/home" />
+          </Typography>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Tooltip title={props.isDarkMode ? 'Dark Mode ON' : 'Dark Mode'}>
+              <FormGroup>
+                <Switch isChecked={!props.isDarkMode} onChangeCallback={props.darkModeCallback} />
+              </FormGroup>
+            </Tooltip>
+            {isLoggedIn() && (
+              <div>
+                <Tooltip title="Account Settings">
+                  <IconButton color="inherit" onClick={() => navigateToPage('/account')}>
+                    <AccountCircleRounded />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Sign Out">
+                  <IconButton color="inherit" onClick={props.userLogoutCallback}>
+                    <LogoutRounded />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            )}
+          </Stack>
+        </Toolbar>
+      </AppBar>
+    </div>
   )
 }
 

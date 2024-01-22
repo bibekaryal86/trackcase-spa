@@ -109,7 +109,7 @@ const Login = (props: LoginProps): React.ReactElement => {
             <Grid item xs>
               <Link text="Forgot Password?" navigateToPage="/forgot-password" />
             </Grid>
-            <Grid item>
+            <Grid item xs>
               <Link text="Don't Have an Account? Sign Up!" navigateToPage="/sign-up" />
             </Grid>
           </Grid>
