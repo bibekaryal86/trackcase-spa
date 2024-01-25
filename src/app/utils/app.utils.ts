@@ -82,6 +82,8 @@ export const getFullAddress = (streetAddress?: string, city?: string, state?: st
 
 export const getNumber = (number: number | string | undefined) => (number ? Number(number) : -4)
 
+export const getDate = (date: Date | string | undefined) => (date ? new Date(date) : undefined)
+
 export const validateAddress = (
   streetAddress: string | undefined,
   city: string | undefined,

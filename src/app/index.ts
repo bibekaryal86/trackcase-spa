@@ -44,6 +44,7 @@ import {
   clearMessages,
   convertDateToLocaleString,
   convertNotesToNotesList,
+  getDate,
   getEndpoint,
   getErrMsg,
   getFullAddress,
@@ -66,7 +67,6 @@ export { testDatabase }
 export { userLogout }
 export { getStatusesList }
 export { addNote, editNote, deleteNote }
-export { convertNotesToNotesList }
 export {
   GridFormWrapper,
   FormTextField,
@@ -108,16 +108,18 @@ export { setSpinner, resetSpinner }
 export {
   clearMessages,
   convertDateToLocaleString,
-  isLoggedIn,
+  convertNotesToNotesList,
+  getDate,
   getEndpoint,
   getErrMsg,
   getFullAddress,
-  getStartOfTheYear,
-  getStartOfTheMonth,
-  unmountPage,
-  validateAddress,
-  isNumericOnly,
-  validateEmailAddress,
   getNumber,
   getNumericOnly,
+  getStartOfTheMonth,
+  getStartOfTheYear,
+  isLoggedIn,
+  isNumericOnly,
+  unmountPage,
+  validateAddress,
+  validateEmailAddress,
 }

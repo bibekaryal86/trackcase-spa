@@ -2,6 +2,7 @@ import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from 
 import { TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CaseCollectionSchema, CashCollectionSchema } from '../../collections'
+import { ID_DEFAULT } from '../../constants'
 import { FormTypeSchema } from '../../types'
 
 export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
@@ -51,4 +52,33 @@ export interface HistoryFormSchema extends BaseModelSchema {
   formType?: FormTypeSchema
   taskCalendar?: TaskCalendarSchema
   courtCase?: CourtCaseSchema
+}
+
+export interface FormsState {
+  isCloseModal: boolean
+  forms: FormSchema[]
+  selectedForm: FormSchema
+}
+
+export interface FormsAction extends FormsState {
+  type: string
+}
+
+export const DefaultFormSchema: FormSchema = {
+  formTypeId: ID_DEFAULT,
+  courtCaseId: ID_DEFAULT,
+  submitDate: undefined,
+  receiptDate: undefined,
+  rfeDate: undefined,
+  rfeSubmitDate: undefined,
+  decisionDate: undefined,
+  taskCalendarId: ID_DEFAULT,
+  status: '',
+  comments: '',
+}
+
+export const DefaultFormState: FormsState = {
+  isCloseModal: true,
+  forms: [],
+  selectedForm: DefaultFormSchema,
 }
