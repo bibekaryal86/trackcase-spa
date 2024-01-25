@@ -53,7 +53,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     if (isHistoryView) {
       tableHeaderData.push(
         {
-          id: 'user_name',
+          id: 'user',
           label: 'User',
           isDisableSorting: true,
         },
@@ -73,17 +73,6 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     }
     return tableHeaderData
   }
-
-  const linkToWebex = (webex: string) => <Link text={webex} href={webex} target="_blank" />
-
-  const linkToCourt = (court: CourtSchema) => (
-    <Link
-      text={`${court.name}, ${court.state}`}
-      navigateToPage={`/court/${court.id}?backTo=${window.location.pathname}&prevPage=Judges`}
-    />
-  )
-
-  const linkToJudges = (judge: JudgeSchema) => <Link text={judge.name} navigateToPage={`/judge/${judge.id}`} />
 
   const actionButtons = (id: number, judge: JudgeSchema) => (
     <>
@@ -109,15 +98,40 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     </>
   )
 
+  const linkToWebex = (webex: string) => <Link text={webex} href={webex} target="_blank" />
+
+  const linkToCourt = (court: CourtSchema) => (
+    <Link
+      text={`${court.name}, ${court.state}`}
+      navigateToPage={`/court/${court.id}?backTo=${window.location.pathname}&prevPage=Judges`}
+    />
+  )
+
+  const linkToJudge = (judge: JudgeSchema | HistoryJudgeSchema) => (
+    <Link text={judge.name || ''} navigateToPage={`/judge/${judge.id}`} />
+  )
+
+  const judgesTableDataCommon = (x: JudgeSchema | HistoryJudgeSchema) => {
+    return {
+      name: isHistoryView ? x.name || '' : linkToJudge(x),
+      court: isHistoryView
+        ? x.court?.name || ''
+        : selectedCourt?.name
+        ? selectedCourt.name || ''
+        : x.court
+        ? linkToCourt(x.court)
+        : '',
+      webex: isHistoryView ? x.webex || '' : x.webex ? linkToWebex(x.webex) : '',
+      status: x.status || '',
+    }
+  }
+
   const judgesTableData = (): TableData[] => {
     let tableData: TableData[]
     if (isHistoryView) {
       tableData = Array.from(historyJudgesList, (x) => {
         return {
-          name: x.name || '',
-          court: x.court?.name || '',
-          webex: x.webex || '',
-          status: x.status || '',
+          ...judgesTableDataCommon(x),
           user: x.userName,
           date: convertDateToLocaleString(x.created),
         }
@@ -125,10 +139,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     } else {
       tableData = Array.from(judgesList, (x) => {
         return {
-          name: linkToJudges(x),
-          court: selectedCourt?.name ? selectedCourt.name || '' : x.court ? linkToCourt(x.court) : '',
-          webex: x.webex ? linkToWebex(x.webex) : '',
-          status: x.status || '',
+          ...judgesTableDataCommon(x),
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })

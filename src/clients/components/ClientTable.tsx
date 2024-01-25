@@ -69,7 +69,7 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     if (isHistoryView) {
       tableHeaderData.push(
         {
-          id: 'user_name',
+          id: 'user',
           label: 'User',
           isDisableSorting: true,
         },
@@ -89,12 +89,6 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     }
     return tableHeaderData
   }
-
-  const linkToJudge = (judge: JudgeSchema) => (
-    <Link text={judge.name} navigateToPage={`/judge/${judge.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
-  )
-
-  const linkToClients = (client: ClientSchema) => <Link text={client.name} navigateToPage={`/client/${client.id}`} />
 
   const actionButtons = (id: number, client: ClientSchema) => (
     <>
@@ -120,32 +114,46 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     </>
   )
 
+  const linkToJudge = (judge: JudgeSchema) => (
+    <Link text={judge.name} navigateToPage={`/judge/${judge.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
+  )
+
+  const linkToClient = (client: ClientSchema | HistoryClientSchema) => (
+    <Link text={client.name || ''} navigateToPage={`/client/${client.id}`} />
+  )
+
+  const clientsTableDataCommon = (x: ClientSchema | HistoryClientSchema) => {
+    return {
+      name: isHistoryView ? x.name || '' : linkToClient(x),
+      aNumber: x.aNumber || '',
+      email: x.email || '',
+      phone: x.phoneNumber || '',
+      address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
+      judge: isHistoryView
+        ? x.judge?.name || ''
+        : selectedJudge?.name
+        ? selectedJudge.name || ''
+        : x.judge
+        ? linkToJudge(x.judge)
+        : '',
+      status: x.status || '',
+    }
+  }
+
   const clientsTableData = (): TableData[] => {
     let tableData: TableData[]
     if (isHistoryView) {
       tableData = Array.from(historyClientsList, (x) => {
         return {
-          name: x.name || '',
-          aNumber: x.aNumber || '',
-          email: x.email || '',
-          phone: x.phoneNumber || '',
-          address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-          judge: x.judge?.name || '',
-          status: x.status || '',
-          user_name: x.userName,
+          ...clientsTableDataCommon(x),
+          user: x.userName,
           date: convertDateToLocaleString(x.created),
         }
       })
     } else {
       tableData = Array.from(clientsList, (x) => {
         return {
-          name: linkToClients(x),
-          aNumber: x.aNumber || '',
-          email: x.email || '',
-          phone: x.phoneNumber || '',
-          address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-          judge: selectedJudge?.name ? selectedJudge.name || '' : x.judge ? linkToJudge(x.judge) : '',
-          status: x.status || '',
+          ...clientsTableDataCommon(x),
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })

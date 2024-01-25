@@ -44,7 +44,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     if (isHistoryView) {
       tableHeaderData.push(
         {
-          id: 'user_name',
+          id: 'user',
           label: 'User',
           isDisableSorting: true,
         },
@@ -72,13 +72,6 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     return tableHeaderData
   }
 
-  const linkToCourtCases = (courtCase: CourtCaseSchema) => (
-    <Link
-      text={`${courtCase.client?.name}, ${courtCase.caseType?.name}`}
-      navigateToPage={`/court_case/${courtCase.id}`}
-    />
-  )
-
   const actionButtons = (id: number, courtCase: CourtCaseSchema) => (
     <>
       <Button
@@ -103,23 +96,38 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     </>
   )
 
+  const linkToCourtCase = (courtCase: CourtCaseSchema | HistoryCourtCaseSchema) => (
+    <Link
+      text={`${courtCase.client?.name}, ${courtCase.caseType?.name}`}
+      navigateToPage={`/court_case/${courtCase.id}`}
+    />
+  )
+
+  const courtCasesTableDataCommon = (x: CourtCaseSchema | HistoryCourtCaseSchema) => {
+    return {
+      clientCaseType: isHistoryView
+        ? x.caseType && x.client
+          ? `${x.client.name}, ${x.caseType.name}`
+          : `${x.clientId}, ${x.caseTypeId}`
+        : linkToCourtCase(x),
+      status: x.status || '',
+    }
+  }
+
   const courtCasesTableData = (): TableData[] => {
     let tableData: TableData[]
     if (isHistoryView) {
       tableData = Array.from(historyCourtCasesList, (x) => {
         return {
-          clientCaseType:
-            x.caseType && x.client ? `${x.client.name}, ${x.caseType.name}` : `${x.clientId}, ${x.caseTypeId}`,
-          status: x.status || '',
-          user_name: x.userName,
+          ...courtCasesTableDataCommon(x),
+          user: x.userName,
           date: convertDateToLocaleString(x.created),
         }
       })
     } else {
       tableData = Array.from(courtCasesList, (x) => {
         return {
-          clientCaseType: linkToCourtCases(x),
-          status: x.status || '',
+          ...courtCasesTableDataCommon(x),
           created: convertDateToLocaleString(x.created),
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }

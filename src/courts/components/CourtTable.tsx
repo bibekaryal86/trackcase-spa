@@ -57,7 +57,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
     if (isHistoryView) {
       tableHeaderData.push(
         {
-          id: 'user_name',
+          id: 'user',
           label: 'User',
           isDisableSorting: true,
         },
@@ -77,10 +77,6 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
     }
     return tableHeaderData
   }
-
-  const linkToCourt = (court: CourtSchema) => (
-    <Link text={`${court.name}, ${court.state}`} navigateToPage={`/court/${court.id}`} />
-  )
 
   const actionButtons = (id: number, court: CourtSchema) => (
     <>
@@ -106,16 +102,26 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
     </>
   )
 
+  const linkToCourt = (court: CourtSchema | HistoryCourtSchema) => (
+    <Link text={`${court.name}, ${court.state}`} navigateToPage={`/court/${court.id}`} />
+  )
+
+  const courtsTableDataCommon = (x: CourtSchema | HistoryCourtSchema) => {
+    return {
+      name: isHistoryView ? `${x.name}, ${x.state}` : linkToCourt(x),
+      address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
+      phone: x.phoneNumber || '',
+      dhsAddress: x.dhsAddress || '',
+      status: x.status || '',
+    }
+  }
+
   const courtsTableData = (): TableData[] => {
     let tableData: TableData[]
     if (isHistoryView) {
       tableData = Array.from(historyCourtsList, (x) => {
         return {
-          name: `${x.name}, ${x.state}`,
-          address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-          phone: x.phoneNumber || '',
-          dhsAddress: x.dhsAddress || '',
-          status: x.status || '',
+          ...courtsTableDataCommon(x),
           user: x.userName,
           date: convertDateToLocaleString(x.created),
         }
@@ -123,11 +129,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
     } else {
       tableData = Array.from(courtsList, (x) => {
         return {
-          name: linkToCourt(x),
-          address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-          phone: x.phoneNumber || '',
-          dhsAddress: x.dhsAddress || '',
-          status: x.status,
+          ...courtsTableDataCommon(x),
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })
