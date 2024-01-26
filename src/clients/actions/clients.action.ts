@@ -82,33 +82,39 @@ export const getClients = (isForceFetch: boolean = false) => {
   }
 }
 
+export const getOneClient = async (clientId: number) => {
+  try {
+    const urlPath = getEndpoint(process.env.CLIENT_RETRIEVE_ENDPOINT as string)
+    const options: Partial<FetchOptions> = {
+      method: 'GET',
+      pathParams: { client_id: clientId },
+      extraParams: {
+        isIncludeExtra: true,
+        isIncludeHistory: true,
+      },
+    }
+
+    return Async.fetch(urlPath, options)
+  } catch (error) {
+    console.log('Get OneClient Error: ', error)
+    const errorResponse: ClientResponse = { clients: [], detail: { error: error as string } }
+    return Promise.resolve(errorResponse)
+  }
+}
+
 export const getClient = (clientId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(clientsRequest(CLIENTS_RETRIEVE_REQUEST))
 
     // call api, if it fails fallback to store
     try {
-      const urlPath = getEndpoint(process.env.CLIENT_RETRIEVE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'GET',
-        pathParams: { client_id: clientId },
-        extraParams: {
-          isIncludeExtra: true,
-          isIncludeHistory: true,
-        },
-      }
-
-      const clientResponse = (await Async.fetch(urlPath, options)) as ClientResponse
+      const clientResponse = (await getOneClient(clientId)) as ClientResponse
       if (clientResponse.detail) {
         dispatch(clientsFailure(CLIENTS_RETRIEVE_FAILURE, getErrMsg(clientResponse.detail)))
         setSelectedClientFromStore(getStore(), dispatch, clientId)
       } else {
         dispatch(clientSelect(clientResponse.clients[0]))
       }
-    } catch (error) {
-      console.log('Get Client Error: ', error)
-      dispatch(clientsFailure(CLIENTS_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
-      setSelectedClientFromStore(getStore(), dispatch, clientId)
     } finally {
       dispatch(clientsComplete())
     }

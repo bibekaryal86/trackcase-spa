@@ -1,5 +1,5 @@
 // actions
-import { getForm, getForms } from './actions/forms.action'
+import { getForm, getForms, getOneForm } from './actions/forms.action'
 // components
 import Form from './components/Form'
 import Forms from './components/Forms'
@@ -15,7 +15,7 @@ import {
   NoteFormSchema,
 } from './types/forms.data.types'
 
-export { getForm, getForms }
+export { getForm, getForms, getOneForm }
 export { Form, Forms }
 export { forms }
 export type { FormSchema, FormResponse, HistoryFormSchema, NoteFormSchema, FormsState, FormsAction }

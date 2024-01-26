@@ -11,7 +11,6 @@
 
 * table sort might not be working as expected
 
-* when adding a form, do not allow adding to inactive clients or closed cases
 * same for task calendar and hearing calendar
 * collections should be allowed if there are pending amount
 
@@ -19,3 +18,10 @@
 
 * when go to a client, show the cases, forms, collections etc, all in one, like campaign report
   * possibly utilize tabs?
+
+FORMS TO-DO:
+* add forms table to clients page and court cases page
+* from the FormForm do not allow adding to closed court cases
+* FormForm date elements
+* validate forms in forms util
+

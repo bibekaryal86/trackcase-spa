@@ -1,5 +1,5 @@
 // actions
-import { getCourt, getCourts } from './actions/courts.action'
+import { getCourt, getCourts, getOneCourt } from './actions/courts.action'
 // components
 import Court from './components/Court'
 import Courts from './components/Courts'
@@ -16,7 +16,7 @@ import {
   NoteCourtSchema,
 } from './types/courts.data.types'
 
-export { getCourt, getCourts }
+export { getCourt, getCourts, getOneCourt }
 export { Court, Courts }
 export { courts }
 export { DefaultCourtState }

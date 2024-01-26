@@ -1,5 +1,5 @@
 // actions
-import { getJudge, getJudges } from './actions/judges.action'
+import { getJudge, getJudges, getOneJudge } from './actions/judges.action'
 // components
 import Judge from './components/Judge'
 import Judges from './components/Judges'
@@ -16,7 +16,7 @@ import {
   NoteJudgeSchema,
 } from './types/judges.data.types'
 
-export { getJudge, getJudges }
+export { getJudge, getJudges, getOneJudge }
 export { Judge, Judges }
 export { judges }
 export type {

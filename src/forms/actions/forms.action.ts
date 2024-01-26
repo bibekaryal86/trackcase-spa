@@ -82,33 +82,39 @@ export const getForms = (isForceFetch: boolean = false) => {
   }
 }
 
+export const getOneForm = (formId: number) => {
+  try {
+    const urlPath = getEndpoint(process.env.FORM_RETRIEVE_ENDPOINT as string)
+    const options: Partial<FetchOptions> = {
+      method: 'GET',
+      pathParams: { form_id: formId },
+      extraParams: {
+        isIncludeExtra: true,
+        isIncludeHistory: true,
+      },
+    }
+
+    return Async.fetch(urlPath, options)
+  } catch (error) {
+    console.log('Get OneForm Error: ', error)
+    const errorResponse: FormResponse = { forms: [], detail: { error: error as string } }
+    return Promise.resolve(errorResponse)
+  }
+}
+
 export const getForm = (formId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(formsRequest(FORMS_RETRIEVE_REQUEST))
 
     // call api, if it fails fallback to store
     try {
-      const urlPath = getEndpoint(process.env.FORM_RETRIEVE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'GET',
-        pathParams: { form_id: formId },
-        extraParams: {
-          isIncludeExtra: true,
-          isIncludeHistory: true,
-        },
-      }
-
-      const formResponse = (await Async.fetch(urlPath, options)) as FormResponse
+      const formResponse = (await getOneForm(formId)) as FormResponse
       if (formResponse.detail) {
         dispatch(formsFailure(FORMS_RETRIEVE_FAILURE, getErrMsg(formResponse.detail)))
         setSelectedFormFromStore(getStore(), dispatch, formId)
       } else {
         dispatch(formSelect(formResponse.forms[0]))
       }
-    } catch (error) {
-      console.log('Get Form Error: ', error)
-      dispatch(formsFailure(FORMS_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
-      setSelectedFormFromStore(getStore(), dispatch, formId)
     } finally {
       dispatch(formsComplete())
     }

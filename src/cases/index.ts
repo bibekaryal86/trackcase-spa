@@ -1,5 +1,5 @@
 // actions
-import { getCourtCase, getCourtCases } from './actions/courtCases.action'
+import { getCourtCase, getCourtCases, getOneCourtCase } from './actions/courtCases.action'
 // components
 import CourtCase from './components/CourtCase'
 import CourtCases from './components/CourtCases'
@@ -15,7 +15,7 @@ import {
   NoteCourtCaseSchema,
 } from './types/courtCases.data.types'
 
-export { getCourtCase, getCourtCases }
+export { getCourtCase, getCourtCases, getOneCourtCase }
 export { CourtCase, CourtCases }
 export { courtCases }
 export type {
