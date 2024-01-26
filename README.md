@@ -20,7 +20,6 @@
   * possibly utilize tabs?
 
 FORMS TO-DO:
-* add forms table to clients page and court cases page
 * from the FormForm do not allow adding to closed court cases
 * FormForm date elements
 * validate forms in forms util

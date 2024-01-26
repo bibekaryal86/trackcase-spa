@@ -24,6 +24,7 @@ import {
 } from '../../app'
 import { ClientSchema, getClients } from '../../clients'
 import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
+import { Forms } from '../../forms'
 import { CaseTypeSchema } from '../../types'
 import { getCaseTypes } from '../../types/actions/caseTypes.action'
 import { editCourtCase, getCourtCase } from '../actions/courtCases.action'
@@ -258,6 +259,12 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {courtCaseForm()}
               {courtCaseButtons()}
+            </Grid>
+            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Typography component="h1" variant="h6" color="primary">
+                Forms in Case:
+              </Typography>
+              <Forms courtCaseId={id} />
             </Grid>
             {isShowHistory && historyModal()}
             {isShowNotes && notesModal()}

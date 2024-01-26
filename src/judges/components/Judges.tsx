@@ -78,15 +78,6 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const [judgeStatusList, setJudgeStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (courtId) {
-      setSelectedJudge({ ...DefaultJudgeSchema, courtId: getNumber(courtId) })
-      if (!selectedCourt) {
-        getCourt(getNumber(courtId))
-      }
-    }
-  }, [courtId, selectedCourt, getCourt, courtsList.length, getCourts, judgesList.length, getJudges])
-
-  useEffect(() => {
     if (!isFetchRunDone.current) {
       judgesList.length === 0 && getJudges()
       courtsList.length === 0 && getCourts()
@@ -100,6 +91,16 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       setJudgeStatusList(statusList.judge.all)
     }
   }, [statusList.judge.all])
+
+  useEffect(() => {
+    if (courtId) {
+      setSelectedJudge({ ...DefaultJudgeSchema, courtId: getNumber(courtId) })
+      if (!selectedCourt) {
+        getCourt(getNumber(courtId))
+      }
+    }
+  }, [courtId, selectedCourt, getCourt])
+
 
   useEffect(() => {
     if (isCloseModal) {

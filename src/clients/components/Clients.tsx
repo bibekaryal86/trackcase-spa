@@ -78,15 +78,6 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const [clientStatusList, setClientStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (judgeId) {
-      setSelectedClient({ ...DefaultClientSchema, judgeId: getNumber(judgeId) })
-      if (!selectedJudge) {
-        getJudge(getNumber(judgeId))
-      }
-    }
-  }, [judgeId, selectedJudge, getJudge])
-
-  useEffect(() => {
     if (!isFetchRunDone.current) {
       clientsList.length === 0 && getClients()
       judgesList.length === 0 && getJudges()
@@ -100,6 +91,15 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       setClientStatusList(statusList.client.all)
     }
   }, [statusList.client.all])
+
+  useEffect(() => {
+    if (judgeId) {
+      setSelectedClient({ ...DefaultClientSchema, judgeId: getNumber(judgeId) })
+      if (!selectedJudge) {
+        getJudge(getNumber(judgeId))
+      }
+    }
+  }, [judgeId, selectedJudge, getJudge])
 
   useEffect(() => {
     if (isCloseModal) {

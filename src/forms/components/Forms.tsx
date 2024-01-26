@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 
 import FormForm from './FormForm'
 import FormTable from './FormTable'
-import { getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
-import { CourtCaseSchema, getCourtCases } from '../../cases'
+import { getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
+import { CourtCaseSchema, getCourtCase, getCourtCases } from '../../cases'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -33,6 +33,7 @@ const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState
     statusList: statuses.statuses,
     formTypesList: formTypes.formTypes,
     courtCasesList: courtCases.courtCases,
+    selectedCourtCase: courtCases.selectedCourtCase,
   }
 }
 
@@ -45,6 +46,7 @@ const mapDispatchToProps = {
   getStatusesList: () => getStatusesList(),
   getFormTypesList: () => getFormTypes(),
   getCourtCasesList: () => getCourtCases(),
+  getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId)
 }
 
 interface FormsProps {
@@ -61,6 +63,9 @@ interface FormsProps {
   getFormTypesList: () => void
   courtCasesList: CourtCaseSchema[]
   getCourtCasesList: () => void
+  courtCaseId?: string
+  selectedCourtCase?: CourtCaseSchema
+  getCourtCase: (courtCaseId: number) => void
 }
 
 const Forms = (props: FormsProps): React.ReactElement => {
@@ -71,12 +76,22 @@ const Forms = (props: FormsProps): React.ReactElement => {
   const { isCloseModal } = props
   const { statusList, getStatusesList } = props
   const { formTypesList, getFormTypesList, courtCasesList, getCourtCasesList } = props
+  const { courtCaseId, selectedCourtCase, getCourtCase } = props
 
   const [modal, setModal] = useState('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedForm, setSelectedForm] = useState<FormSchema>(DefaultFormSchema)
   const [selectedFormForReset, setSelectedFormForReset] = useState<FormSchema>(DefaultFormSchema)
   const [formStatusList, setFormStatusList] = useState<string[]>([])
+
+  useEffect(() => {
+    if (courtCaseId) {
+      setSelectedForm({ ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) })
+      if (!selectedCourtCase) {
+        getCourtCase(getNumber(courtCaseId))
+      }
+    }
+  }, [courtCaseId, getCourtCase, selectedCourtCase])
 
   useEffect(() => {
     if (!isFetchRunDone.current) {

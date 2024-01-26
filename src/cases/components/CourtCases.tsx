@@ -85,15 +85,6 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   const [courtCaseStatusList, setCourtCaseStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (clientId) {
-      setSelectedCourtCase({ ...DefaultCourtCaseSchema, clientId: getNumber(clientId) })
-      if (!selectedClient) {
-        getClient(getNumber(clientId))
-      }
-    }
-  }, [clientId, selectedClient, getClient])
-
-  useEffect(() => {
     if (!isFetchRunDone.current) {
       courtCasesList.length === 0 && getCourtCases()
       clientsList.length === 0 && getClients()
@@ -117,6 +108,15 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       setCourtCaseStatusList(statusList.court_case.all)
     }
   }, [statusList.court_case.all])
+
+  useEffect(() => {
+    if (clientId) {
+      setSelectedCourtCase({ ...DefaultCourtCaseSchema, clientId: getNumber(clientId) })
+      if (!selectedClient) {
+        getClient(getNumber(clientId))
+      }
+    }
+  }, [clientId, selectedClient, getClient])
 
   useEffect(() => {
     if (isCloseModal) {

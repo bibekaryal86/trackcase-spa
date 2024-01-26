@@ -129,7 +129,7 @@ export const editForm = (id: number, form: FormSchema) => {
       const urlPath = getEndpoint(process.env.FORM_UPDATE_ENDPOINT as string)
       const options: Partial<FetchOptions> = {
         method: 'PUT',
-        pathParams: { court_case_id: id },
+        pathParams: { form_id: id },
         requestBody: getRequestBody(form),
       }
 
@@ -157,7 +157,7 @@ export const deleteForm = (id: number) => {
       const urlPath = getEndpoint(process.env.FORM_DELETE_ENDPOINT as string)
       const options: Partial<FetchOptions> = {
         method: 'DELETE',
-        pathParams: { court_case_id: id },
+        pathParams: { form_id: id },
       }
 
       const formResponse = (await Async.fetch(urlPath, options)) as FormResponse
