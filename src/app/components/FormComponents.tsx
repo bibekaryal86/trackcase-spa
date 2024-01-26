@@ -193,7 +193,7 @@ const getStateItems = () =>
     </MenuItem>
   ))
 
-export const FormSelectState: React.FC<StateSelectProps> = ({
+export const FormSelectStateField: React.FC<StateSelectProps> = ({
   component,
   required = false,
   error = false,
@@ -220,7 +220,7 @@ const getStatusItems = (statusList: string[]) =>
     </MenuItem>
   ))
 
-export const FormSelectStatus: React.FC<StatusSelectProps> = ({
+export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
   component,
   required = true,
   error = false,

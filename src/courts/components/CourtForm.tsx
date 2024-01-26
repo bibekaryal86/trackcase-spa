@@ -2,7 +2,13 @@ import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
-import { FormCommentsField, FormSelectState, FormSelectStatus, FormTextField, GridFormWrapper } from '../../app'
+import {
+  FormCommentsField,
+  FormSelectStateField,
+  FormSelectStatusField,
+  FormTextField,
+  GridFormWrapper,
+} from '../../app'
 import { CourtSchema } from '../types/courts.data.types'
 import { handleCourtFormOnChange, isCourtFormFieldError } from '../utils/courts.utils'
 
@@ -49,7 +55,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   )
 
   const courtState = () => (
-    <FormSelectState
+    <FormSelectStateField
       component="court"
       inputLabel="State"
       value={selectedCourt.state || ''}
@@ -93,7 +99,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   )
 
   const courtStatus = () => (
-    <FormSelectStatus
+    <FormSelectStatusField
       component="court"
       value={selectedCourt.status || ''}
       onChange={(e) => handleCourtFormOnChange('status', e.target.value, selectedCourt, setSelectedCourt)}

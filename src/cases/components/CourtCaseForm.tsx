@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import { FormCommentsField, FormSelectField, FormSelectStatus, GridFormWrapper } from '../../app'
+import { FormCommentsField, FormSelectField, FormSelectStatusField, GridFormWrapper } from '../../app'
 import { ClientSchema } from '../../clients'
 import { ID_DEFAULT } from '../../constants'
 import { CaseTypeSchema } from '../../types'
@@ -67,7 +67,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
   )
 
   const courtCaseStatus = () => (
-    <FormSelectStatus
+    <FormSelectStatusField
       component="court-case"
       value={selectedCourtCase.status || ''}
       onChange={(e) => handleCourtCaseFormOnChange('status', e.target.value, selectedCourtCase, setSelectedCourtCase)}

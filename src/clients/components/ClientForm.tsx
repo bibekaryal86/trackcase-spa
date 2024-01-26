@@ -6,8 +6,8 @@ import React from 'react'
 import {
   FormCommentsField,
   FormSelectField,
-  FormSelectState,
-  FormSelectStatus,
+  FormSelectStateField,
+  FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
 } from '../../app'
@@ -92,7 +92,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientState = () => (
-    <FormSelectState
+    <FormSelectStateField
       component="client"
       inputLabel="State"
       value={selectedClient.state || ''}
@@ -114,7 +114,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   )
 
   const clientStatus = () => (
-    <FormSelectStatus
+    <FormSelectStatusField
       component="client"
       value={selectedClient.status || ''}
       onChange={(e) => handleClientFormOnChange('status', e.target.value, selectedClient, setSelectedClient)}

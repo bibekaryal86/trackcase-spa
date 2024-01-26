@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import { FormCommentsField, FormSelectField, FormSelectStatus, FormTextField, GridFormWrapper } from '../../app'
+import { FormCommentsField, FormSelectField, FormSelectStatusField, FormTextField, GridFormWrapper } from '../../app'
 import { CourtSchema } from '../../courts'
 import { JudgeSchema } from '../types/judges.data.types'
 import { handleJudgeFormOnChange } from '../utils/judges.utils'
@@ -60,7 +60,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   )
 
   const judgeStatus = () => (
-    <FormSelectStatus
+    <FormSelectStatusField
       component="judge"
       value={selectedJudge.status || ''}
       onChange={(e) => handleJudgeFormOnChange('status', e.target.value, selectedJudge, setSelectedJudge)}

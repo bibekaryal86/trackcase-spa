@@ -7,8 +7,8 @@ import { testDatabase } from './actions/testDatabase.action'
 import {
   FormCommentsField,
   FormSelectField,
-  FormSelectState,
-  FormSelectStatus,
+  FormSelectStateField,
+  FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
 } from './components/FormComponents'
@@ -71,8 +71,8 @@ export {
   GridFormWrapper,
   FormTextField,
   FormSelectField,
-  FormSelectState,
-  FormSelectStatus,
+  FormSelectStateField,
+  FormSelectStatusField,
   FormCommentsField,
   Link,
   Modal,
