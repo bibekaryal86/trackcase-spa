@@ -4,7 +4,7 @@ import { getForm, getForms, getOneForm } from './actions/forms.action'
 import Form from './components/Form'
 import Forms from './components/Forms'
 // reducers
-import forms from './reducers/forms'
+import forms from './reducers/forms.reducer'
 // types
 import {
   FormResponse,
