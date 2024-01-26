@@ -29,8 +29,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientName = () => (
     <FormTextField
-      component="client"
-      label="Name"
+      componentLabel="Client--Name"
       autoFocus={!isShowOneClient}
       value={selectedClient.name || ''}
       onChange={(e) => handleClientFormOnChange('name', e.target.value, selectedClient, setSelectedClient)}
@@ -40,8 +39,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientANumber = () => (
     <FormTextField
-      component="client"
-      label="A Number"
+      componentLabel="Client--A Number"
       required={false}
       value={selectedClient.aNumber || ''}
       onChange={(e) => handleClientFormOnChange('aNumber', e.target.value, selectedClient, setSelectedClient)}
@@ -50,8 +48,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientEmail = () => (
     <FormTextField
-      component="client"
-      label="Email"
+      componentLabel="Client--Email"
       value={selectedClient.email || ''}
       onChange={(e) => handleClientFormOnChange('email', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('email', selectedClient.email, selectedClient)}
@@ -60,8 +57,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientPhoneNumber = () => (
     <FormTextField
-      component="client"
-      label="Phone"
+      componentLabel="Client--Phone"
       maxLength={15}
       value={selectedClient.phoneNumber || ''}
       onChange={(e) => handleClientFormOnChange('phoneNumber', e.target.value, selectedClient, setSelectedClient)}
@@ -71,8 +67,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientStreetAddress = () => (
     <FormTextField
-      component="client"
-      label="Street Address"
+      componentLabel="Client--Street Address"
       required={false}
       value={selectedClient.streetAddress || ''}
       onChange={(e) => handleClientFormOnChange('streetAddress', e.target.value, selectedClient, setSelectedClient)}
@@ -82,8 +77,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientCity = () => (
     <FormTextField
-      component="client"
-      label="City"
+      componentLabel="Client--City"
       required={false}
       value={selectedClient.city || ''}
       onChange={(e) => handleClientFormOnChange('city', e.target.value, selectedClient, setSelectedClient)}
@@ -93,8 +87,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientState = () => (
     <FormSelectStateField
-      component="client"
-      inputLabel="State"
+      componentLabel="Client--State"
       value={selectedClient.state || ''}
       onChange={(e) => handleClientFormOnChange('state', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('state', selectedClient.state, selectedClient)}
@@ -103,8 +96,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientZipCode = () => (
     <FormTextField
-      component="client"
-      label="Zip Code"
+      componentLabel="Client--Zip Code"
       required={false}
       maxLength={5}
       value={selectedClient.zipCode || ''}
@@ -115,7 +107,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientStatus = () => (
     <FormSelectStatusField
-      component="client"
+      componentLabel="Client--Status"
       value={selectedClient.status || ''}
       onChange={(e) => handleClientFormOnChange('status', e.target.value, selectedClient, setSelectedClient)}
       statusList={clientStatusList}
@@ -132,8 +124,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientJudgesList = () => (
     <FormSelectField
-      component="client"
-      inputLabel="Judge"
+      componentLabel="Client--Judge"
       value={!selectedClient.judgeId || selectedClient.judgeId <= 0 ? '' : selectedClient.judgeId}
       onChange={(e) =>
         handleClientFormOnChange('judgeId', e.target.value.toString(), selectedClient, setSelectedClient)
@@ -145,7 +136,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientComments = () => (
     <FormCommentsField
-      component="client"
+      componentLabel="Client--Comments"
       value={selectedClient.comments || ''}
       onChange={(e) => handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient)}
     />

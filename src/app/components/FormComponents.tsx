@@ -20,8 +20,7 @@ interface FormWrapperProps {
 }
 
 interface FormTextFieldProps {
-  component: string
-  label: string
+  componentLabel: string
   required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
@@ -37,12 +36,11 @@ interface FormTextFieldProps {
 }
 
 interface FormSelectFieldProps {
-  component: string
+  componentLabel: string
   required?: boolean
   formControlSx?: object
   error?: boolean
   inputLabelSx?: object
-  inputLabel: string
   variant?: TextFieldVariants
   value: number | string
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
@@ -51,24 +49,22 @@ interface FormSelectFieldProps {
 }
 
 interface StateSelectProps {
-  component: string
+  componentLabel: string
   required?: boolean
   formControlSx?: object
   error?: boolean
   inputLabelSx?: object
-  inputLabel: string
   variant?: TextFieldVariants
   value: string
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 }
 
 interface StatusSelectProps {
-  component: string
+  componentLabel: string
   required?: boolean
   formControlSx?: object
   error?: boolean
   inputLabelSx?: object
-  inputLabel?: string
   variant?: TextFieldVariants
   value: string
   statusList: string[]
@@ -76,8 +72,7 @@ interface StatusSelectProps {
 }
 
 interface FormCommentFieldProps {
-  component: string
-  label?: string
+  componentLabel: string
   required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
@@ -116,14 +111,16 @@ export const GridFormWrapper: React.FC<FormWrapperProps> = ({
   )
 }
 
-const convertLabelToId = (component: string, label: string) => {
-  const lowerCaseLabel = label.toLowerCase().replace(/\s/g, '-')
-  return component + '-' + lowerCaseLabel + '-id'
+const getComponentLabelAndId = (componentLabel: string) => {
+  const componentAndLabel = componentLabel.split('--')
+  const component = componentAndLabel[0].trim()
+  const label = componentAndLabel[1].trim()
+  const id = component.toLowerCase().replace(/\s/g, '-') + '-' + label.toLowerCase().replace(/\s/g, '-') + '-id'
+  return { label: label, id: id }
 }
 
 export const FormTextField: React.FC<FormTextFieldProps> = ({
-  component,
-  label,
+  componentLabel,
   required = true,
   fullWidth = true,
   autoFocus = false,
@@ -137,6 +134,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   multiline = false,
   maxRows = 4,
 }) => {
+  const { label, id } = getComponentLabelAndId(componentLabel)
   return (
     <TextField
       required={required}
@@ -145,7 +143,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       label={label}
       variant={variant}
       margin={margin}
-      id={convertLabelToId(component, label)}
+      id={id}
       inputProps={{ maxLength: maxLength }}
       value={value}
       onChange={onChange}
@@ -159,27 +157,21 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
 }
 
 export const FormSelectField: React.FC<FormSelectFieldProps> = ({
-  component,
+  componentLabel,
   required = false,
   formControlSx = { width: '100%', mt: '16px', mb: '8px' },
   error = false,
   inputLabelSx = { left: '-0.9em' },
-  inputLabel,
   variant = 'standard',
   value,
   onChange,
   menuItems,
 }) => {
+  const { label, id } = getComponentLabelAndId(componentLabel)
   return (
     <FormControl sx={formControlSx} required={required} error={error}>
-      <InputLabel sx={inputLabelSx}>{inputLabel}</InputLabel>
-      <Select
-        labelId={convertLabelToId(component, inputLabel)}
-        id={convertLabelToId(component, inputLabel)}
-        variant={variant}
-        value={value.toString()}
-        onChange={onChange}
-      >
+      <InputLabel sx={inputLabelSx}>{label}</InputLabel>
+      <Select labelId={id} id={id} variant={variant} value={value.toString()} onChange={onChange}>
         {menuItems}
       </Select>
     </FormControl>
@@ -194,16 +186,14 @@ const getStateItems = () =>
   ))
 
 export const FormSelectStateField: React.FC<StateSelectProps> = ({
-  component,
+  componentLabel,
   required = false,
   error = false,
-  inputLabel,
   value,
   onChange,
 }) => (
   <FormSelectField
-    component={component}
-    inputLabel={inputLabel}
+    componentLabel={componentLabel}
     value={value}
     onChange={onChange}
     selectOptions={STATES_LIST}
@@ -221,17 +211,15 @@ const getStatusItems = (statusList: string[]) =>
   ))
 
 export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
-  component,
+  componentLabel,
   required = true,
   error = false,
-  inputLabel = 'Status',
   value,
   onChange,
   statusList,
 }) => (
   <FormSelectField
-    component={component}
-    inputLabel={inputLabel}
+    componentLabel={componentLabel}
     value={value}
     onChange={onChange}
     selectOptions={statusList}
@@ -242,8 +230,7 @@ export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
 )
 
 export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
-  component,
-  label = 'Comments',
+  componentLabel,
   required = false,
   fullWidth = true,
   autoFocus = false,
@@ -258,8 +245,7 @@ export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
 }) => {
   return (
     <FormTextField
-      component={component}
-      label={label}
+      componentLabel={componentLabel}
       required={required}
       fullWidth={fullWidth}
       autoFocus={autoFocus}

@@ -136,6 +136,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
       rfeSubmit: convertDateToLocaleString(x.rfeSubmitDate),
       decision: convertDateToLocaleString(x.decisionDate),
       task: x.taskCalendar?.taskType?.name || '',
+      status: x.status || '',
     }
   }
 
