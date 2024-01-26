@@ -100,15 +100,15 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
 
   const linkToWebex = (webex: string) => <Link text={webex} href={webex} target="_blank" />
 
-  const linkToCourt = (court: CourtSchema) => (
+  const linkToCourt = (x: CourtSchema) => (
     <Link
-      text={`${court.name}, ${court.state}`}
-      navigateToPage={`/court/${court.id}?backTo=${window.location.pathname}&prevPage=Judges`}
+      text={`${x.name}, ${x.state}`}
+      navigateToPage={`/court/${x.id}?backTo=${window.location.pathname}&prevPage=Judges`}
     />
   )
 
-  const linkToJudge = (judge: JudgeSchema | HistoryJudgeSchema) => (
-    <Link text={judge.name || ''} navigateToPage={`/judge/${judge.id}`} />
+  const linkToJudge = (x: JudgeSchema | HistoryJudgeSchema) => (
+    <Link text={x.name || ''} navigateToPage={`/judge/${x.id}`} />
   )
 
   const judgesTableDataCommon = (x: JudgeSchema | HistoryJudgeSchema) => {

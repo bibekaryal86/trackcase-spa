@@ -114,12 +114,12 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToJudge = (judge: JudgeSchema) => (
-    <Link text={judge.name} navigateToPage={`/judge/${judge.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
+  const linkToJudge = (x: JudgeSchema) => (
+    <Link text={x.name} navigateToPage={`/judge/${x.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
   )
 
-  const linkToClient = (client: ClientSchema | HistoryClientSchema) => (
-    <Link text={client.name || ''} navigateToPage={`/client/${client.id}`} />
+  const linkToClient = (x: ClientSchema | HistoryClientSchema) => (
+    <Link text={x.name || ''} navigateToPage={`/client/${x.id}`} />
   )
 
   const clientsTableDataCommon = (x: ClientSchema | HistoryClientSchema) => {

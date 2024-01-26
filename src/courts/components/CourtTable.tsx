@@ -102,8 +102,8 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToCourt = (court: CourtSchema | HistoryCourtSchema) => (
-    <Link text={`${court.name}, ${court.state}`} navigateToPage={`/court/${court.id}`} />
+  const linkToCourt = (x: CourtSchema | HistoryCourtSchema) => (
+    <Link text={`${x.name}, ${x.state}`} navigateToPage={`/court/${x.id}`} />
   )
 
   const courtsTableDataCommon = (x: CourtSchema | HistoryCourtSchema) => {

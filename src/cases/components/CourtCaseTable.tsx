@@ -96,10 +96,10 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToCourtCase = (courtCase: CourtCaseSchema | HistoryCourtCaseSchema) => (
+  const linkToCourtCase = (x: CourtCaseSchema | HistoryCourtCaseSchema) => (
     <Link
-      text={`${courtCase.client?.name}, ${courtCase.caseType?.name}`}
-      navigateToPage={`/court_case/${courtCase.id}`}
+      text={`${x.client?.name}, ${x.caseType?.name}`}
+      navigateToPage={`/court_case/${x.id}`}
     />
   )
 
