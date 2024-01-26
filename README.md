@@ -14,3 +14,5 @@
 * when adding a form, do not allow adding to inactive clients or closed cases
 * same for task calendar and hearing calendar
 * collections should be allowed if there are pending amount
+
+* test getCourtCases works of not by directly calling api

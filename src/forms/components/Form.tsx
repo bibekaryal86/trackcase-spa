@@ -22,16 +22,21 @@ import {
   StatusSchema,
   unmountPage,
 } from '../../app'
+import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
+import { FormTypeSchema } from '../../types'
+import { getFormTypes } from '../../types/actions/formTypes'
 import { editForm, getForm } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
 import { isAreTwoFormsSame, validateForm } from '../utils/forms.utils'
 
-const mapStateToProps = ({ forms, statuses }: GlobalState) => {
+const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
   return {
     selectedForm: forms.selectedForm,
     statusList: statuses.statuses,
+    formTypesList: formTypes.formTypes,
+    courtCasesList: courtCases.courtCases,
   }
 }
 
@@ -44,6 +49,8 @@ const mapDispatchToProps = {
   editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
     editNote(noteObjectType, noteObjectId, note, noteId),
   deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
+  getFormTypesList: () => getFormTypes(),
+  getCourtCasesList: () => getCourtCases(),
 }
 
 interface FormProps {
@@ -56,6 +63,10 @@ interface FormProps {
   addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
   editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
   deleteNote: (noteObjectType: string, noteId: number) => void
+  formTypesList: FormTypeSchema[]
+  getFormTypesList: () => void
+  courtCasesList: CourtCaseSchema[]
+  getCourtCasesList: () => void
 }
 
 const Form = (props: FormProps): React.ReactElement => {
@@ -66,6 +77,7 @@ const Form = (props: FormProps): React.ReactElement => {
   const { getForm, editForm } = props
   const { statusList, getStatusesList } = props
   const { unmountPage } = props
+  const { formTypesList, getFormTypesList, courtCasesList, getCourtCasesList } = props
 
   const [selectedForm, setSelectedForm] = useState<FormSchema>(DefaultFormSchema)
   const [selectedFormForReset, setSelectedFormForReset] = useState<FormSchema>(DefaultFormSchema)
@@ -83,9 +95,18 @@ const Form = (props: FormProps): React.ReactElement => {
   useEffect(() => {
     if (!isFetchRunDone.current) {
       statusList.form.all.length === 0 && getStatusesList()
+      formTypesList.length === 0 && getFormTypesList()
+      courtCasesList.length === 0 && getCourtCasesList()
     }
     isFetchRunDone.current = true
-  }, [statusList.form.all, getStatusesList])
+  }, [
+    statusList.form.all,
+    getStatusesList,
+    formTypesList.length,
+    getFormTypesList,
+    courtCasesList.length,
+    getCourtCasesList,
+  ])
 
   useEffect(() => {
     if (statusList.form.all.length > 0) {
@@ -119,11 +140,16 @@ const Form = (props: FormProps): React.ReactElement => {
     )
   }
 
-  const formPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary">
-      {id ? `Form: ${selectedForm.courtCase?.client?.name}, ${selectedForm?.formType?.name}` : 'Form'}
-    </Typography>
-  )
+  const formPageTitle = () => {
+    const courtCase = courtCasesList.find((x) => x.id === selectedForm.courtCaseId)
+    return (
+      <Typography component="h1" variant="h6" color="primary">
+        {id
+          ? `Form: ${selectedForm?.formType?.name}, ${courtCase?.client?.name}, ${courtCase?.caseType?.name}`
+          : 'Form'}
+      </Typography>
+    )
+  }
 
   const noForm = () => (
     <Typography component="h1" variant="h6" color="error" gutterBottom>
@@ -149,7 +175,12 @@ const Form = (props: FormProps): React.ReactElement => {
   )
 
   const historyContent = () => (
-    <FormTable isHistoryView={true} formsList={[]} historyFormsList={selectedForm.historyForms || []} />
+    <FormTable
+      isHistoryView={true}
+      formsList={[]}
+      historyFormsList={selectedForm.historyForms || []}
+      courtCasesList={courtCasesList}
+    />
   )
 
   const notesModal = () => {
@@ -206,6 +237,8 @@ const Form = (props: FormProps): React.ReactElement => {
       setSelectedForm={setSelectedForm}
       formStatusList={formStatusList}
       isShowOneForm={true}
+      formTypesList={formTypesList}
+      courtCasesList={courtCasesList}
     />
   )
 

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { LocalStorage } from './storage.utils'
-import { REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { ID_NUMBER, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
 import { AuthState, ErrorDetail, NoteSchema, UserDetails } from '../types/app.data.types'
 
@@ -80,7 +80,7 @@ export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-0
 export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
   streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
 
-export const getNumber = (number: number | string | undefined) => (number ? Number(number) : -4)
+export const getNumber = (number: number | string | undefined) => (number ? Number(number) : ID_NUMBER)
 
 export const getDate = (date: Date | string | undefined) => (date ? new Date(date) : undefined)
 

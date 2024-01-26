@@ -2,6 +2,7 @@ import Button from '@mui/material/Button'
 import React from 'react'
 
 import { convertDateToLocaleString, Link, Table, TableData, TableHeaderData } from '../../app'
+import { CourtCaseSchema } from '../../cases'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -9,6 +10,7 @@ import {
   BUTTON_DELETE,
   BUTTON_UPDATE,
   ID_ACTION_BUTTON,
+  ID_DEFAULT,
 } from '../../constants'
 import { FormSchema, HistoryFormSchema } from '../types/forms.data.types'
 
@@ -20,22 +22,23 @@ interface FormTableProps {
   setSelectedId?: (id: number) => void
   setSelectedForm?: (form: FormSchema) => void
   setSelectedFormForReset?: (form: FormSchema) => void
+  courtCasesList: CourtCaseSchema[]
 }
 
 const FormTable = (props: FormTableProps): React.ReactElement => {
-  const { isHistoryView, formsList, historyFormsList } = props
+  const { isHistoryView, formsList, historyFormsList, courtCasesList } = props
   const { setModal, setSelectedId, setSelectedForm, setSelectedFormForReset } = props
 
   const formsTableHeaderData = (): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = [
       {
-        id: 'client',
-        label: 'Client',
+        id: 'clientCase',
+        label: 'Client Case',
         isDisableSorting: isHistoryView,
       },
       {
-        id: 'case',
-        label: 'Case',
+        id: 'type',
+        label: 'Type',
         isDisableSorting: isHistoryView,
       },
       {
@@ -122,14 +125,21 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToForm = (form: FormSchema | HistoryFormSchema) => (
-    <Link text={`${form.courtCase?.client?.name}, ${form?.formType?.name}`} navigateToPage={`/form/${form.id}`} />
+  const linkToForm = (clientName: string, caseTypeName: string, formId: number) => (
+    <Link text={`${clientName}, ${caseTypeName}`} navigateToPage={`/form/${formId}`} />
   )
+
+  const getClientCase = (x: FormSchema | HistoryFormSchema) => {
+    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+    return isHistoryView
+      ? `${courtCase?.client?.name}, ${courtCase?.caseType?.name}`
+      : linkToForm(courtCase?.client?.name || 'Client', courtCase?.caseType?.name || 'Type', x.id || ID_DEFAULT)
+  }
 
   const formsTableDataCommon = (x: FormSchema | HistoryFormSchema) => {
     return {
-      client: (x as FormSchema) ? linkToForm(x) : `${x.courtCase?.client?.name}, ${x?.formType?.name}`,
-      case: x.courtCase?.caseType?.name || '',
+      clientCase: getClientCase(x),
+      type: x.formType?.name || '',
       submit: convertDateToLocaleString(x.submitDate),
       receipt: convertDateToLocaleString(x.receiptDate),
       rfe: convertDateToLocaleString(x.rfeDate),

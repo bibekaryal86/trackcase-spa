@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import FormForm from './FormForm'
 import FormTable from './FormTable'
 import { getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
+import { CourtCaseSchema, getCourtCases } from '../../cases'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -18,16 +19,20 @@ import {
   BUTTON_UPDATE,
   ID_DEFAULT,
 } from '../../constants'
+import { FormTypeSchema } from '../../types'
+import { getFormTypes } from '../../types/actions/formTypes'
 import { addForm, deleteForm, editForm, getForms } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
 import { isAreTwoFormsSame, validateForm } from '../utils/forms.utils'
 
-const mapStateToProps = ({ forms, statuses }: GlobalState) => {
+const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
   return {
     isCloseModal: forms.isCloseModal,
     formsList: forms.forms,
     statusList: statuses.statuses,
+    formTypesList: formTypes.formTypes,
+    courtCasesList: courtCases.courtCases,
   }
 }
 
@@ -38,6 +43,8 @@ const mapDispatchToProps = {
   deleteForm: (id: number) => deleteForm(id),
   unmountPage: () => unmountPage(FORMS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
+  getFormTypesList: () => getFormTypes(),
+  getCourtCasesList: () => getCourtCases(),
 }
 
 interface FormsProps {
@@ -50,6 +57,10 @@ interface FormsProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
+  formTypesList: FormTypeSchema[]
+  getFormTypesList: () => void
+  courtCasesList: CourtCaseSchema[]
+  getCourtCasesList: () => void
 }
 
 const Forms = (props: FormsProps): React.ReactElement => {
@@ -59,6 +70,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
   const { unmountPage } = props
   const { isCloseModal } = props
   const { statusList, getStatusesList } = props
+  const { formTypesList, getFormTypesList, courtCasesList, getCourtCasesList } = props
 
   const [modal, setModal] = useState('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
@@ -70,9 +82,20 @@ const Forms = (props: FormsProps): React.ReactElement => {
     if (!isFetchRunDone.current) {
       formsList.length === 0 && getForms()
       statusList.form.all.length === 0 && getStatusesList()
+      formTypesList.length === 0 && getFormTypesList()
+      courtCasesList.length === 0 && getCourtCasesList()
     }
     isFetchRunDone.current = true
-  }, [formsList.length, getForms, statusList.form.all, getStatusesList])
+  }, [
+    formsList.length,
+    getForms,
+    statusList.form.all,
+    getStatusesList,
+    formTypesList.length,
+    getFormTypesList,
+    courtCasesList.length,
+    getCourtCasesList,
+  ])
 
   useEffect(() => {
     if (statusList.form.all.length > 0) {
@@ -125,6 +148,8 @@ const Forms = (props: FormsProps): React.ReactElement => {
       setSelectedForm={setSelectedForm}
       formStatusList={formStatusList}
       isShowOneForm={false}
+      formTypesList={formTypesList}
+      courtCasesList={courtCasesList}
     />
   )
 
@@ -208,6 +233,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
       setSelectedId={setSelectedId}
       setSelectedForm={setSelectedForm}
       setSelectedFormForReset={setSelectedFormForReset}
+      courtCasesList={courtCasesList}
     />
   )
 

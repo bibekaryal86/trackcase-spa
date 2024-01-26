@@ -40,6 +40,7 @@ import {
 } from './types/app.data.types'
 // utils
 import { resetAlert, setAlert } from './utils/alerts.utils'
+import { useStateData } from './utils/app.hooks'
 import {
   clearMessages,
   convertDateToLocaleString,
@@ -104,6 +105,7 @@ export type {
 export { Async }
 export { LocalStorage, SessionStorage }
 export { setAlert, resetAlert }
+export { useStateData }
 export { setSpinner, resetSpinner }
 export {
   clearMessages,

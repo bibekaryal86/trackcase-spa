@@ -23,6 +23,7 @@ export const ALERT_TYPE_WARNING = 'warning'
 export const ID_DEFAULT = -1
 export const ID_ACTION_BUTTON = -2
 export const ID_LIST = -3
+export const ID_NUMBER = -4
 
 export const CHECK_BOX_OPTIONS_YES_NO = [
   { value: 'YES', text: 'YES' },

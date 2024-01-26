@@ -97,10 +97,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
   )
 
   const linkToCourtCase = (x: CourtCaseSchema | HistoryCourtCaseSchema) => (
-    <Link
-      text={`${x.client?.name}, ${x.caseType?.name}`}
-      navigateToPage={`/court_case/${x.id}`}
-    />
+    <Link text={`${x.client?.name}, ${x.caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
   )
 
   const courtCasesTableDataCommon = (x: CourtCaseSchema | HistoryCourtCaseSchema) => {
