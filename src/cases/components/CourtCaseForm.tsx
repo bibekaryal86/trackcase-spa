@@ -47,7 +47,6 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
         handleCourtCaseFormOnChange('caseTypeId', e.target.value, selectedCourtCase, setSelectedCourtCase)
       }
       error={isCourtCaseFormFieldError('caseTypeId', selectedCourtCase.caseTypeId)}
-      selectOptions={caseTypesList}
       menuItems={caseTypesListForSelect()}
     />
   )
@@ -59,7 +58,6 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       value={selectedCourtCase.clientId || ID_DEFAULT}
       onChange={(e) => handleCourtCaseFormOnChange('clientId', e.target.value, selectedCourtCase, setSelectedCourtCase)}
       error={isCourtCaseFormFieldError('clientId', selectedCourtCase.clientId)}
-      selectOptions={clientsList}
       menuItems={clientsListForSelect()}
     />
   )

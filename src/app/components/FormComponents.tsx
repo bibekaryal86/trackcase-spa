@@ -44,7 +44,6 @@ interface FormSelectFieldProps {
   variant?: TextFieldVariants
   value: number | string
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
-  selectOptions: unknown[]
   menuItems: React.ReactNode[]
 }
 
@@ -196,7 +195,6 @@ export const FormSelectStateField: React.FC<StateSelectProps> = ({
     componentLabel={componentLabel}
     value={value}
     onChange={onChange}
-    selectOptions={STATES_LIST}
     menuItems={getStateItems()}
     required={required}
     error={error}
@@ -222,7 +220,6 @@ export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
     componentLabel={componentLabel}
     value={value}
     onChange={onChange}
-    selectOptions={statusList}
     menuItems={getStatusItems(statusList)}
     required={required}
     error={error}

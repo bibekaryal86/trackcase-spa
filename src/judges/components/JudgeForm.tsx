@@ -51,7 +51,6 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       componentLabel="Judge--Court"
       value={selectedJudge.courtId <= 0 ? -1 : selectedJudge.courtId}
       onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge)}
-      selectOptions={courtsList}
       menuItems={courtsListForSelect()}
     />
   )

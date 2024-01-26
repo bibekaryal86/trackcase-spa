@@ -129,7 +129,6 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       onChange={(e) =>
         handleClientFormOnChange('judgeId', e.target.value.toString(), selectedClient, setSelectedClient)
       }
-      selectOptions={judgesList}
       menuItems={judgesListForSelect()}
     />
   )
