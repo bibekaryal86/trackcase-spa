@@ -16,3 +16,6 @@
 * collections should be allowed if there are pending amount
 
 * test getCourtCases works of not by directly calling api
+
+* when go to a client, show the cases, forms, collections etc, all in one, like campaign report
+  * possibly utilize tabs?
