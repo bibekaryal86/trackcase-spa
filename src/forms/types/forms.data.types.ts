@@ -47,6 +47,7 @@ export interface HistoryFormSchema extends BaseModelSchema {
   rfeSubmitDate?: Date
   decisionDate?: Date
   taskCalendarId?: number
+  status?: string
   // orm_mode
   form?: FormSchema
   formType?: FormTypeSchema
