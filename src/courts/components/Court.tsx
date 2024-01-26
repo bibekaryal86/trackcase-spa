@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -31,6 +31,7 @@ import { isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
 
 const mapStateToProps = ({ courts, statuses }: GlobalState) => {
   return {
+    isForceFetch: courts.isForceFetch,
     selectedCourt: courts.selectedCourt,
     statusList: statuses.statuses,
   }
@@ -48,6 +49,7 @@ const mapDispatchToProps = {
 }
 
 interface CourtProps {
+  isForceFetch: boolean
   selectedCourt: CourtSchema
   getCourt: (courtId: number) => void
   editCourt: (id: number, court: CourtSchema) => void
@@ -60,10 +62,9 @@ interface CourtProps {
 }
 
 const Court = (props: CourtProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
+  const { isForceFetch } = props
   const { getCourt, editCourt } = props
   const { statusList, getStatusesList } = props
   const { unmountPage } = props
@@ -82,11 +83,10 @@ const Court = (props: CourtProps): React.ReactElement => {
   }, [id, getCourt, selectedCourt.id])
 
   useEffect(() => {
-    if (!isFetchRunDone.current) {
+    if (isForceFetch) {
       statusList.court.all.length === 0 && getStatusesList()
     }
-    isFetchRunDone.current = true
-  }, [statusList.court.all, getStatusesList])
+  }, [isForceFetch, statusList.court.all, getStatusesList])
 
   useEffect(() => {
     if (statusList.court.all.length > 0) {

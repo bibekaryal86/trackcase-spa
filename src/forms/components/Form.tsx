@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -33,6 +33,7 @@ import { isAreTwoFormsSame, validateForm } from '../utils/forms.utils'
 
 const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
   return {
+    isForceFetch: forms.isForceFetch,
     selectedForm: forms.selectedForm,
     statusList: statuses.statuses,
     formTypesList: formTypes.formTypes,
@@ -54,6 +55,7 @@ const mapDispatchToProps = {
 }
 
 interface FormProps {
+  isForceFetch: boolean
   selectedForm: FormSchema
   getForm: (formId: number) => void
   editForm: (id: number, form: FormSchema) => void
@@ -70,10 +72,9 @@ interface FormProps {
 }
 
 const Form = (props: FormProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
+  const { isForceFetch } = props
   const { getForm, editForm } = props
   const { statusList, getStatusesList } = props
   const { unmountPage } = props
@@ -93,13 +94,13 @@ const Form = (props: FormProps): React.ReactElement => {
   }, [id, getForm, selectedForm.id])
 
   useEffect(() => {
-    if (!isFetchRunDone.current) {
+    if (isForceFetch) {
       statusList.form.all.length === 0 && getStatusesList()
       formTypesList.length === 0 && getFormTypesList()
       courtCasesList.length === 0 && getCourtCasesList()
     }
-    isFetchRunDone.current = true
   }, [
+    isForceFetch,
     statusList.form.all,
     getStatusesList,
     formTypesList.length,

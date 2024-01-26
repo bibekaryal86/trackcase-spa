@@ -28,6 +28,7 @@ export default function courtCases(state = DefaultCourtCaseState, action: CourtC
     case COURT_CASES_RETRIEVE_SUCCESS:
       return {
         ...state,
+        isForceFetch: false,
         isCloseModal: true,
         courtCases: action.courtCases,
       }
@@ -35,23 +36,27 @@ export default function courtCases(state = DefaultCourtCaseState, action: CourtC
     case COURT_CASE_UPDATE_SUCCESS:
     case COURT_CASE_DELETE_SUCCESS:
       return {
+        isForceFetch: true,
         isCloseModal: true,
-        courtCases: [], // so that it will fetch
-        selectedCourtCase: DefaultCourtCaseSchema, // so that it will fetch
+        courtCases: [],
+        selectedCourtCase: DefaultCourtCaseSchema,
       }
     case SET_SELECTED_COURT_CASE:
       return {
         ...state,
+        isForceFetch: false,
         selectedCourtCase: action.selectedCourtCase,
       }
     case COURT_CASE_NOTE_SUCCESS:
       return {
         ...state,
-        selectedCourtCase: DefaultCourtCaseSchema, // so that it will fetch
+        isForceFetch: true,
+        selectedCourtCase: DefaultCourtCaseSchema,
       }
     case COURT_CASES_UNMOUNT:
       return {
         ...state,
+        isForceFetch: true,
         selectedCourtCase: DefaultCourtCaseSchema,
       }
     default:

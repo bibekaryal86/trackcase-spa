@@ -4,7 +4,7 @@ import { getCourtCase, getCourtCases, getOneCourtCase } from './actions/courtCas
 import CourtCase from './components/CourtCase'
 import CourtCases from './components/CourtCases'
 // reducers
-import courtCases from './reducers/courtCases'
+import courtCases from './reducers/courtCases.reducer'
 // types
 import {
   CourtCaseResponse,

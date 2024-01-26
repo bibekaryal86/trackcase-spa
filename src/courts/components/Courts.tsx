@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 import CourtForm from './CourtForm'
@@ -25,6 +25,7 @@ import { isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
 
 const mapStateToProps = ({ courts, statuses }: GlobalState) => {
   return {
+    isForceFetch: courts.isForceFetch,
     isCloseModal: courts.isCloseModal,
     courtsList: courts.courts,
     statusList: statuses.statuses,
@@ -41,6 +42,7 @@ const mapDispatchToProps = {
 }
 
 interface CourtsProps {
+  isForceFetch: boolean
   isCloseModal: boolean
   courtsList: CourtSchema[]
   getCourts: () => void
@@ -53,11 +55,9 @@ interface CourtsProps {
 }
 
 const Courts = (props: CourtsProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
   const { courtsList, getCourts } = props
   const { unmountPage } = props
-  const { isCloseModal } = props
+  const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
 
   const [modal, setModal] = useState('')
@@ -67,12 +67,11 @@ const Courts = (props: CourtsProps): React.ReactElement => {
   const [courtStatusList, setCourtStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (!isFetchRunDone.current) {
+    if (isForceFetch) {
       courtsList.length === 0 && getCourts()
       statusList.court.all.length === 0 && getStatusesList()
     }
-    isFetchRunDone.current = true
-  }, [courtsList.length, getCourts, statusList.court.all, getStatusesList])
+  }, [isForceFetch, courtsList.length, getCourts, statusList.court.all, getStatusesList])
 
   useEffect(() => {
     if (statusList.court.all.length > 0) {
@@ -104,7 +103,6 @@ const Courts = (props: CourtsProps): React.ReactElement => {
         props.addCourt(selectedCourt)
       }
     }
-    isFetchRunDone.current = false
   }
 
   const secondaryButtonCallback = () => {

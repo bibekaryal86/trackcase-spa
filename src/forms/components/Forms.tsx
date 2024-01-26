@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 import FormForm from './FormForm'
@@ -28,6 +28,7 @@ import { isAreTwoFormsSame, validateForm } from '../utils/forms.utils'
 
 const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
   return {
+    isForceFetch: forms.isForceFetch,
     isCloseModal: forms.isCloseModal,
     formsList: forms.forms,
     statusList: statuses.statuses,
@@ -46,10 +47,11 @@ const mapDispatchToProps = {
   getStatusesList: () => getStatusesList(),
   getFormTypesList: () => getFormTypes(),
   getCourtCasesList: () => getCourtCases(),
-  getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId)
+  getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId),
 }
 
 interface FormsProps {
+  isForceFetch: boolean
   isCloseModal: boolean
   formsList: FormSchema[]
   getForms: () => void
@@ -69,11 +71,9 @@ interface FormsProps {
 }
 
 const Forms = (props: FormsProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
   const { formsList, getForms } = props
   const { unmountPage } = props
-  const { isCloseModal } = props
+  const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
   const { formTypesList, getFormTypesList, courtCasesList, getCourtCasesList } = props
   const { courtCaseId, selectedCourtCase, getCourtCase } = props
@@ -94,14 +94,14 @@ const Forms = (props: FormsProps): React.ReactElement => {
   }, [courtCaseId, getCourtCase, selectedCourtCase])
 
   useEffect(() => {
-    if (!isFetchRunDone.current) {
+    if (isForceFetch) {
       formsList.length === 0 && getForms()
       statusList.form.all.length === 0 && getStatusesList()
       formTypesList.length === 0 && getFormTypesList()
       courtCasesList.length === 0 && getCourtCasesList()
     }
-    isFetchRunDone.current = true
   }, [
+    isForceFetch,
     formsList.length,
     getForms,
     statusList.form.all,
@@ -142,7 +142,6 @@ const Forms = (props: FormsProps): React.ReactElement => {
         props.addForm(selectedForm)
       }
     }
-    isFetchRunDone.current = false
   }
 
   const secondaryButtonCallback = () => {
