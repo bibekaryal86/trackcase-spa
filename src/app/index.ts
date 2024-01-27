@@ -67,51 +67,46 @@ import { resetSpinner, setSpinner } from './utils/spinner.utils'
 import { LocalStorage, SessionStorage } from './utils/storage.utils'
 
 // EXPORTS
-export { testDatabase }
 export { userLogout }
-export { getStatusesList }
 export { addNote, editNote, deleteNote }
+export { getStatusesList }
+export { testDatabase }
 export {
-  GridFormWrapper,
+  FormCommentsField,
   FormDatePickerField,
-  FormTextField,
-  FormTextDateField,
   FormSelectField,
   FormSelectStateField,
   FormSelectStatusField,
-  FormCommentsField,
-  Link,
-  Modal,
-  Notes,
-  Switch,
-  Table,
+  FormTextDateField,
+  FormTextField,
+  GridFormWrapper,
 }
-export { SET_ALERT, RESET_ALERT, SET_SPINNER, RESET_SPINNER }
-export type { GlobalState, GlobalDispatch }
+export { Link }
+export { Modal }
+export { Notes }
+export { Switch}
+export {Table}
+export type { GlobalDispatch, GlobalState }
+export { RESET_ALERT, RESET_SPINNER, SET_ALERT, SET_SPINNER }
 export type {
-  UserDetails,
   AddressBaseSchema,
   BaseModelSchema,
+  ErrorSuccessSchema,
   NameDescBaseSchema,
+  NoteBaseSchema,
+  NoteResponse,
+  NoteSchema,
+  ResponseBase,
   StatusBaseSchema,
   StatusSchema,
-  ErrorSuccessSchema,
-  ResponseBase,
   TableData,
   TableHeaderData,
   TableOrder,
   TableRowsPerPage,
-  NoteBaseSchema,
-  NoteSchema,
-  NoteResponse,
-  FetchOptions,
-  FetchResponse,
+  UserDetails,
 }
-export { Async }
-export { LocalStorage, SessionStorage }
-export { setAlert, resetAlert }
+export { resetAlert, setAlert }
 export { useStateData }
-export { setSpinner, resetSpinner }
 export {
   clearMessages,
   convertDateToLocaleString,
@@ -131,3 +126,7 @@ export {
   validateAddress,
   validateEmailAddress,
 }
+export { Async }
+export type { FetchOptions, FetchResponse}
+export { resetSpinner, setSpinner }
+export { LocalStorage, SessionStorage }

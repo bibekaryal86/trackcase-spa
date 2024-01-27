@@ -5,12 +5,13 @@ import CourtCase from './components/CourtCase'
 import CourtCases from './components/CourtCases'
 // reducers
 import courtCases from './reducers/courtCases.reducer'
-// types
+// action types
 import {
   COURT_CASE_CREATE_SUCCESS,
   COURT_CASE_DELETE_SUCCESS,
   COURT_CASE_UPDATE_SUCCESS,
 } from './types/courtCases.action.types'
+// data types
 import {
   CourtCaseResponse,
   CourtCasesAction,
@@ -23,6 +24,7 @@ import {
 export { getCourtCase, getCourtCases, getOneCourtCase }
 export { CourtCase, CourtCases }
 export { courtCases }
+export { COURT_CASE_CREATE_SUCCESS, COURT_CASE_UPDATE_SUCCESS, COURT_CASE_DELETE_SUCCESS }
 export type {
   CourtCaseResponse,
   CourtCasesAction,
@@ -31,4 +33,3 @@ export type {
   HistoryCourtCaseSchema,
   NoteCourtCaseSchema,
 }
-export { COURT_CASE_CREATE_SUCCESS, COURT_CASE_UPDATE_SUCCESS, COURT_CASE_DELETE_SUCCESS }

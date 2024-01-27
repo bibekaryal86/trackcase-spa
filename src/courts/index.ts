@@ -5,13 +5,12 @@ import Court from './components/Court'
 import Courts from './components/Courts'
 // reducers
 import courts from './reducers/courts.reducer'
-// types
+// data types
 import {
   CourtResponse,
   CourtsAction,
   CourtSchema,
   CourtsState,
-  DefaultCourtState,
   HistoryCourtSchema,
   NoteCourtSchema,
 } from './types/courts.data.types'
@@ -19,5 +18,9 @@ import {
 export { getCourt, getCourts, getOneCourt }
 export { Court, Courts }
 export { courts }
-export { DefaultCourtState }
-export type { CourtsAction, CourtSchema, CourtResponse, CourtsState, NoteCourtSchema, HistoryCourtSchema }
+export type { CourtResponse,
+  CourtsAction,
+  CourtSchema,
+  CourtsState,
+  HistoryCourtSchema,
+  NoteCourtSchema }

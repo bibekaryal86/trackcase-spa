@@ -5,8 +5,9 @@ import Form from './components/Form'
 import Forms from './components/Forms'
 // reducers
 import forms from './reducers/forms.reducer'
-// types
+// action types
 import { FORM_CREATE_SUCCESS, FORM_DELETE_SUCCESS, FORM_UPDATE_SUCCESS } from './types/forms.action.types'
+// data types
 import {
   FormResponse,
   FormsAction,
@@ -19,5 +20,10 @@ import {
 export { getForm, getForms, getOneForm }
 export { Form, Forms }
 export { forms }
-export type { FormSchema, FormResponse, HistoryFormSchema, NoteFormSchema, FormsState, FormsAction }
 export { FORM_CREATE_SUCCESS, FORM_UPDATE_SUCCESS, FORM_DELETE_SUCCESS }
+export type { FormResponse,
+  FormsAction,
+  FormSchema,
+  FormsState,
+  HistoryFormSchema,
+  NoteFormSchema, }
