@@ -33,6 +33,10 @@ export const isFormFormFieldError = (name: string, value: string | number | unde
   return false
 }
 
+export const handleFormDateOnChange = (name: string, value: Date | null) => {
+  console.log(name, value)
+}
+
 export const handleFormFormOnChange = (
   name: string,
   value: string,

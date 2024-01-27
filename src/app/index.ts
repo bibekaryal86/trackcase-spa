@@ -6,6 +6,7 @@ import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
   FormCommentsField,
+  FormDatePickerField,
   FormSelectField,
   FormSelectStateField,
   FormSelectStatusField,
@@ -72,6 +73,7 @@ export { getStatusesList }
 export { addNote, editNote, deleteNote }
 export {
   GridFormWrapper,
+  FormDatePickerField,
   FormTextField,
   FormTextDateField,
   FormSelectField,

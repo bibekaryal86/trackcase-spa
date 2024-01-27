@@ -5,16 +5,16 @@ import React from 'react'
 
 import {
   FormCommentsField,
+  FormDatePickerField,
   FormSelectField,
   FormSelectStatusField,
-  FormTextDateField,
   GridFormWrapper,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
 import { FormTypeSchema } from '../../types'
 import { FormSchema } from '../types/forms.data.types'
-import { handleFormFormOnChange, isFormFormFieldError } from '../utils/forms.utils'
+import { handleFormDateOnChange, handleFormFormOnChange, isFormFormFieldError } from '../utils/forms.utils'
 
 interface FormFormProps {
   selectedForm: FormSchema
@@ -67,10 +67,10 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
   )
 
   const formSubmitDate = () => (
-    <FormTextDateField
+    <FormDatePickerField
       componentLabel="Form--Submit Date"
       value={selectedForm.submitDate}
-      onChange={(e) => handleFormFormOnChange('submitDate', e.target.value, selectedForm, setSelectedForm)}
+      onChange={(e) => handleFormDateOnChange('submitDate', e)}
     />
   )
 
