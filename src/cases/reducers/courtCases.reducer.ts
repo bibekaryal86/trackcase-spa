@@ -1,3 +1,4 @@
+import { FORM_CREATE_SUCCESS, FORM_DELETE_SUCCESS, FORM_UPDATE_SUCCESS } from '../../forms'
 import {
   COURT_CASE_CREATE_SUCCESS,
   COURT_CASE_DELETE_SUCCESS,
@@ -48,6 +49,9 @@ export default function courtCases(state = DefaultCourtCaseState, action: CourtC
         selectedCourtCase: action.selectedCourtCase,
       }
     case COURT_CASE_NOTE_SUCCESS:
+    case FORM_CREATE_SUCCESS:
+    case FORM_UPDATE_SUCCESS:
+    case FORM_DELETE_SUCCESS:
       return {
         ...state,
         isForceFetch: true,

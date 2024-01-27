@@ -19,6 +19,4 @@
 
 FORMS TO-DO:
 * FormForm date elements
-* validate formsReducer in formsReducer util
-
-*** CHECK courts.reducer.ts -> there are sections for judge success/fail, is similar needed elsewhere
+* validate form in forms util

@@ -6,6 +6,7 @@ import Clients from './components/Clients'
 // reducers
 import clients from './reducers/clients.reducer'
 // types
+import { CLIENT_CREATE_SUCCESS, CLIENT_DELETE_SUCCESS, CLIENT_UPDATE_SUCCESS } from './types/clients.action.types'
 import {
   ClientResponse,
   ClientsAction,
@@ -19,3 +20,4 @@ export { getClient, getClients, getOneClient }
 export { Client, Clients }
 export { clients }
 export type { ClientSchema, ClientResponse, NoteClientSchema, HistoryClientSchema, ClientsState, ClientsAction }
+export { CLIENT_CREATE_SUCCESS, CLIENT_UPDATE_SUCCESS, CLIENT_DELETE_SUCCESS }

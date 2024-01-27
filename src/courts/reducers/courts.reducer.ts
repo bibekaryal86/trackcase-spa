@@ -1,8 +1,4 @@
-import {
-  JUDGE_CREATE_SUCCESS,
-  JUDGE_DELETE_SUCCESS,
-  JUDGE_UPDATE_SUCCESS,
-} from '../../judges/types/judges.action.types'
+import { JUDGE_CREATE_SUCCESS, JUDGE_DELETE_SUCCESS, JUDGE_UPDATE_SUCCESS } from '../../judges'
 import {
   COURT_CREATE_SUCCESS,
   COURT_DELETE_SUCCESS,

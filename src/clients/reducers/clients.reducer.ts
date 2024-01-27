@@ -1,3 +1,4 @@
+import { COURT_CASE_CREATE_SUCCESS, COURT_CASE_DELETE_SUCCESS, COURT_CASE_UPDATE_SUCCESS } from '../../cases'
 import {
   CLIENT_CREATE_SUCCESS,
   CLIENT_DELETE_SUCCESS,
@@ -43,6 +44,9 @@ export default function clients(state = DefaultClientState, action: ClientsActio
         selectedClient: action.selectedClient,
       }
     case CLIENT_NOTE_SUCCESS:
+    case COURT_CASE_CREATE_SUCCESS:
+    case COURT_CASE_UPDATE_SUCCESS:
+    case COURT_CASE_DELETE_SUCCESS:
       return {
         ...state,
         isForceFetch: true,
