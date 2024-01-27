@@ -82,7 +82,23 @@ export const getFullAddress = (streetAddress?: string, city?: string, state?: st
 
 export const getNumber = (number: number | string | undefined) => (number ? Number(number) : ID_NUMBER)
 
-export const getDate = (date: Date | string | undefined) => (date ? new Date(date) : undefined)
+export const getDate = (str: string | undefined) => {
+  if (str) {
+    const [year, month, day] = str.split('-').map(Number)
+    return new Date(year, month - 1, day)
+  }
+  return undefined
+}
+
+export const getDateString = (date: Date | undefined) => {
+  if (date) {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+  return ''
+}
 
 export const validateAddress = (
   streetAddress: string | undefined,

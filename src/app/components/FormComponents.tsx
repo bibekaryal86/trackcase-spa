@@ -8,6 +8,7 @@ import TextField, { TextFieldVariants } from '@mui/material/TextField'
 import React, { ReactNode } from 'react'
 
 import { STATES_LIST } from '../../constants'
+import { getDateString } from '../utils/app.utils'
 
 interface FormWrapperProps {
   isSmallScreen?: boolean
@@ -33,6 +34,16 @@ interface FormTextFieldProps {
   sx?: object
   multiline?: boolean
   maxRows?: number
+  type?: string
+  InputLabelProps?: object
+}
+
+interface FormTextDateFieldProps {
+  componentLabel: string
+  required?: boolean
+  value: Date | undefined
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  error?: boolean
 }
 
 interface FormSelectFieldProps {
@@ -132,6 +143,8 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   sx = {},
   multiline = false,
   maxRows = 4,
+  type = 'text',
+  InputLabelProps = {},
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
   return (
@@ -148,9 +161,31 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       onChange={onChange}
       error={error}
       sx={sx}
+      type={type}
+      InputLabelProps={InputLabelProps}
       multiline={multiline}
       // Conditionally include maxRows only if multiline is true
       {...(multiline && { maxRows })}
+    />
+  )
+}
+
+export const FormTextDateField: React.FC<FormTextDateFieldProps> = ({
+  componentLabel,
+  required = false,
+  value,
+  onChange,
+  error = false,
+}) => {
+  return (
+    <FormTextField
+      componentLabel={componentLabel}
+      required={required}
+      value={getDateString(value)}
+      onChange={onChange}
+      type="date"
+      InputLabelProps={{ shrink: true }}
+      error={error}
     />
   )
 }

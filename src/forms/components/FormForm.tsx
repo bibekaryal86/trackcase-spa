@@ -3,7 +3,13 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import { FormCommentsField, FormSelectField, FormSelectStatusField, GridFormWrapper } from '../../app'
+import {
+  FormCommentsField,
+  FormSelectField,
+  FormSelectStatusField,
+  FormTextDateField,
+  GridFormWrapper,
+} from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
 import { FormTypeSchema } from '../../types'
@@ -60,6 +66,14 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     />
   )
 
+  const formSubmitDate = () => (
+    <FormTextDateField
+      componentLabel="Form--Submit Date"
+      value={selectedForm.submitDate}
+      onChange={(e) => handleFormFormOnChange('submitDate', e.target.value, selectedForm, setSelectedForm)}
+    />
+  )
+
   const formStatus = () => (
     <FormSelectStatusField
       componentLabel="Form--Status"
@@ -89,6 +103,9 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       </Grid>
       <Grid item xs={12}>
         {formCourtCase()}
+      </Grid>
+      <Grid item xs={6}>
+        {formSubmitDate()}
       </Grid>
       <Grid item xs={6}>
         {formStatus()}

@@ -9,6 +9,7 @@ import {
   FormSelectField,
   FormSelectStateField,
   FormSelectStatusField,
+  FormTextDateField,
   FormTextField,
   GridFormWrapper,
 } from './components/FormComponents'
@@ -46,6 +47,7 @@ import {
   convertDateToLocaleString,
   convertNotesToNotesList,
   getDate,
+  getDateString,
   getEndpoint,
   getErrMsg,
   getFullAddress,
@@ -71,6 +73,7 @@ export { addNote, editNote, deleteNote }
 export {
   GridFormWrapper,
   FormTextField,
+  FormTextDateField,
   FormSelectField,
   FormSelectStateField,
   FormSelectStatusField,
@@ -112,6 +115,7 @@ export {
   convertDateToLocaleString,
   convertNotesToNotesList,
   getDate,
+  getDateString,
   getEndpoint,
   getErrMsg,
   getFullAddress,
