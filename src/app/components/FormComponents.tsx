@@ -36,6 +36,7 @@ interface FormTextFieldProps {
   maxRows?: number
   type?: string
   InputLabelProps?: object
+  isReadOnly?: boolean
 }
 
 interface FormTextDateFieldProps {
@@ -145,6 +146,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   maxRows = 4,
   type = 'text',
   InputLabelProps = {},
+  isReadOnly = false,
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
   return (
@@ -164,6 +166,13 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       type={type}
       InputLabelProps={InputLabelProps}
       multiline={multiline}
+      onKeyDown={
+        isReadOnly
+          ? (e) => {
+              e.preventDefault()
+            }
+          : undefined
+      }
       // Conditionally include maxRows only if multiline is true
       {...(multiline && { maxRows })}
     />
@@ -186,6 +195,7 @@ export const FormTextDateField: React.FC<FormTextDateFieldProps> = ({
       type="date"
       InputLabelProps={{ shrink: true }}
       error={error}
+      isReadOnly={true}
     />
   )
 }
