@@ -130,10 +130,15 @@ export const convertDateToLocaleString = (date?: Dayjs, isIncludeTime: boolean =
     const yyyy = date.year()
     const MM = String(date.month() + 1).padStart(2, '0')
     const dd = String(date.date()).padStart(2, '0')
-    const HH = isIncludeTime ? String(date.hour()).padStart(2, '0'): ''
-    const mm = isIncludeTime ? String(date.minute()).padStart(2, '0'): ''
-    const ss = isIncludeTime ? String(date.second()).padStart(2, '0'): ''
-    return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`.trim()
+
+    if (isIncludeTime) {
+      const HH = String(date.hour()).padStart(2, '0')
+      const mm = String(date.minute()).padStart(2, '0')
+      const ss = String(date.second()).padStart(2, '0')
+      return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`
+    }
+
+    return `${yyyy}-${MM}-${dd}`
   }
   return ''
 }
