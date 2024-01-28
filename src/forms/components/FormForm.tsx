@@ -74,6 +74,38 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     />
   )
 
+  const formReceiptDate = () => (
+    <FormDatePickerField
+      componentLabel="Form--Receipt Date"
+      value={selectedForm.receiptDate}
+      onChange={(newValue) => handleFormDateOnChange('receiptDate', newValue, selectedForm, setSelectedForm )}
+    />
+  )
+
+  const formRfeDate = () => (
+    <FormDatePickerField
+      componentLabel="Form--RFE Date"
+      value={selectedForm.rfeDate}
+      onChange={(newValue) => handleFormDateOnChange('rfeDate', newValue, selectedForm, setSelectedForm )}
+    />
+  )
+
+  const formRfeSubmitDate = () => (
+    <FormDatePickerField
+      componentLabel="Form--RFE Submit Date"
+      value={selectedForm.rfeSubmitDate}
+      onChange={(newValue) => handleFormDateOnChange('rfeSubmitDate', newValue, selectedForm, setSelectedForm )}
+    />
+  )
+
+  const formDecisionDate = () => (
+    <FormDatePickerField
+      componentLabel="Form--Decision Date"
+      value={selectedForm.decisionDate}
+      onChange={(newValue) => handleFormDateOnChange('decisionDate', newValue, selectedForm, setSelectedForm )}
+    />
+  )
+
   const formStatus = () => (
     <FormSelectStatusField
       componentLabel="Form--Status"
@@ -98,14 +130,26 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       isShowOne={isShowOneForm}
       justifyContent={isShowOneForm ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={12}>
+      <Grid item xs={3}>
         {formType()}
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={9}>
         {formCourtCase()}
       </Grid>
       <Grid item xs={6}>
         {formSubmitDate()}
+      </Grid>
+      <Grid item xs={6}>
+        {formReceiptDate()}
+      </Grid>
+      <Grid item xs={6}>
+        {formRfeDate()}
+      </Grid>
+      <Grid item xs={6}>
+        {formRfeSubmitDate()}
+      </Grid>
+      <Grid item xs={6}>
+        {formDecisionDate()}
       </Grid>
       <Grid item xs={6}>
         {formStatus()}

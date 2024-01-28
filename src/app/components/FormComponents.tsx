@@ -7,7 +7,7 @@ import Select from '@mui/material/Select'
 import TextField, { TextFieldVariants } from '@mui/material/TextField'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
 import { STATES_LIST } from '../../constants'
@@ -308,7 +308,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
       <DatePicker
         name={id}
         label={label}
-        value={value === undefined ? null : value}
+        value={value === undefined ? null : dayjs(value)}
         onChange={onChange}
         disableFuture={disableFuture}
         disablePast={disablePast}
