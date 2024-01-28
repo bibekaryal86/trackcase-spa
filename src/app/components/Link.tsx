@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 interface LinkProps {
-  text: string
+  text: string | undefined
   navigateToPage?: string
   onClick?: () => void
   href?: string
@@ -36,7 +36,7 @@ const Link = (props: LinkProps) => {
       color={props.color ? props.color : 'primary'}
       underline={props.underline ? props.underline : 'hover'}
     >
-      {props.text}
+      {props.text || 'NO_LINK_TEXT'}
     </MuiLink>
   )
 }

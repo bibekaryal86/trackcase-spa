@@ -31,7 +31,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Client--Name"
       autoFocus={!isShowOneClient}
-      value={selectedClient.name || ''}
+      value={selectedClient.name}
       onChange={(e) => handleClientFormOnChange('name', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('name', selectedClient.name, selectedClient)}
     />
@@ -41,7 +41,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Client--A Number"
       required={false}
-      value={selectedClient.aNumber || ''}
+      value={selectedClient.aNumber}
       onChange={(e) => handleClientFormOnChange('aNumber', e.target.value, selectedClient, setSelectedClient)}
     />
   )
@@ -49,7 +49,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const clientEmail = () => (
     <FormTextField
       componentLabel="Client--Email"
-      value={selectedClient.email || ''}
+      value={selectedClient.email}
       onChange={(e) => handleClientFormOnChange('email', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('email', selectedClient.email, selectedClient)}
     />
@@ -59,7 +59,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Client--Phone"
       maxLength={15}
-      value={selectedClient.phoneNumber || ''}
+      value={selectedClient.phoneNumber}
       onChange={(e) => handleClientFormOnChange('phoneNumber', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('phoneNumber', selectedClient.phoneNumber, selectedClient)}
     />
@@ -69,7 +69,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Client--Street Address"
       required={false}
-      value={selectedClient.streetAddress || ''}
+      value={selectedClient.streetAddress}
       onChange={(e) => handleClientFormOnChange('streetAddress', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('streetAddress', selectedClient.streetAddress, selectedClient)}
     />
@@ -79,7 +79,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Client--City"
       required={false}
-      value={selectedClient.city || ''}
+      value={selectedClient.city}
       onChange={(e) => handleClientFormOnChange('city', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('city', selectedClient.city, selectedClient)}
     />
@@ -99,7 +99,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       componentLabel="Client--Zip Code"
       required={false}
       maxLength={5}
-      value={selectedClient.zipCode || ''}
+      value={selectedClient.zipCode}
       onChange={(e) => handleClientFormOnChange('zipCode', e.target.value, selectedClient, setSelectedClient)}
       error={isClientFormFieldError('zipCode', selectedClient.zipCode, selectedClient)}
     />
@@ -136,7 +136,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const clientComments = () => (
     <FormCommentsField
       componentLabel="Client--Comments"
-      value={selectedClient.comments || ''}
+      value={selectedClient.comments}
       onChange={(e) => handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient)}
     />
   )

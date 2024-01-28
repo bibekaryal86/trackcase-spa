@@ -24,7 +24,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Judge--Name"
       autoFocus={!isShowOneJudge}
-      value={selectedJudge.name || ''}
+      value={selectedJudge.name}
       onChange={(e) => handleJudgeFormOnChange('name', e.target.value, selectedJudge, setSelectedJudge)}
       error={selectedJudge.name.trim() === ''}
     />
@@ -34,7 +34,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Judge--Webex"
       required={false}
-      value={selectedJudge.webex || ''}
+      value={selectedJudge.webex}
       onChange={(e) => handleJudgeFormOnChange('webex', e.target.value, selectedJudge, setSelectedJudge)}
     />
   )
@@ -68,7 +68,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   const judgeComments = () => (
     <FormCommentsField
       componentLabel="Judge--Comments"
-      value={selectedJudge.comments || ''}
+      value={selectedJudge.comments}
       onChange={(e) => handleJudgeFormOnChange('comments', e.target.value, selectedJudge, setSelectedJudge)}
     />
   )

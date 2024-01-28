@@ -27,7 +27,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Court--Name"
       autoFocus={!isShowOneCourt}
-      value={selectedCourt.name || ''}
+      value={selectedCourt.name}
       onChange={(e) => handleCourtFormOnChange('name', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.name)}
     />
@@ -36,7 +36,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const courtStreetAddress = () => (
     <FormTextField
       componentLabel="Court--Street Address"
-      value={selectedCourt.streetAddress || ''}
+      value={selectedCourt.streetAddress}
       onChange={(e) => handleCourtFormOnChange('streetAddress', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.streetAddress)}
     />
@@ -45,7 +45,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const courtCity = () => (
     <FormTextField
       componentLabel="Court--City"
-      value={selectedCourt.city || ''}
+      value={selectedCourt.city}
       onChange={(e) => handleCourtFormOnChange('city', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.city)}
     />
@@ -65,7 +65,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Court--Zip Code"
       maxLength={5}
-      value={selectedCourt.zipCode || ''}
+      value={selectedCourt.zipCode}
       onChange={(e) => handleCourtFormOnChange('zipCode', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.zipCode, true)}
     />
@@ -75,7 +75,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="Court--Phone"
       maxLength={15}
-      value={selectedCourt.phoneNumber || ''}
+      value={selectedCourt.phoneNumber}
       onChange={(e) => handleCourtFormOnChange('phoneNumber', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.phoneNumber, false, true)}
     />
@@ -86,7 +86,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       componentLabel="Court--DHS Address"
       required={false}
       maxLength={199}
-      value={selectedCourt.dhsAddress || ''}
+      value={selectedCourt.dhsAddress}
       onChange={(e) => handleCourtFormOnChange('dhsAddress', e.target.value, selectedCourt, setSelectedCourt)}
     />
   )
@@ -104,7 +104,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const courtComments = () => (
     <FormCommentsField
       componentLabel="Court--Comments"
-      value={selectedCourt.comments || ''}
+      value={selectedCourt.comments}
       onChange={(e) => handleCourtFormOnChange('comments', e.target.value, selectedCourt, setSelectedCourt)}
     />
   )

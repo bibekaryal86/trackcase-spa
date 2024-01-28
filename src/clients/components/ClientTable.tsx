@@ -119,7 +119,7 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
   )
 
   const linkToClient = (x: ClientSchema | HistoryClientSchema) => (
-    <Link text={x.name || ''} navigateToPage={`/client/${x.id}`} />
+    <Link text={x.name} navigateToPage={`/client/${x.id}`} />
   )
 
   const clientsTableDataCommon = (x: ClientSchema | HistoryClientSchema) => {

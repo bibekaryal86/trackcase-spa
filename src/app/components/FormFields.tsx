@@ -30,7 +30,7 @@ interface FormTextFieldProps {
   variant?: TextFieldVariants
   margin?: 'dense' | 'normal' | 'none' | undefined
   maxLength?: number
-  value: string
+  value: string | undefined
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   error?: boolean
   sx?: object
@@ -49,7 +49,7 @@ interface FormCommentFieldProps {
   variant?: TextFieldVariants
   margin?: 'dense' | 'normal' | 'none' | undefined
   maxLength?: number
-  value: string
+  value: string | undefined
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   error?: boolean
   sx?: object
@@ -166,7 +166,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       margin={margin}
       id={id}
       inputProps={{ maxLength: maxLength }}
-      value={value}
+      value={value || ''}
       onChange={onChange}
       error={error}
       sx={sx}

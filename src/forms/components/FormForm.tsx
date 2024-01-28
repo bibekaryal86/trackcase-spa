@@ -9,6 +9,7 @@ import {
   FormDatePickerField,
   FormSelectField,
   FormSelectStatusField,
+  FormTextField,
   GridFormWrapper,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
@@ -87,6 +88,25 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     />
   )
 
+  const formReceiptNumber = () => (
+    <FormTextField
+      componentLabel="Form--Receipt Number"
+      required={false}
+      value={selectedForm.receiptNumber}
+      onChange={(e) => handleFormFormOnChange('receiptNumber', e.target.value, selectedForm, setSelectedForm)}
+    />
+  )
+
+  const formPriorityDate = () => (
+    <FormDatePickerField
+      componentLabel="Form--Priority Date"
+      value={selectedForm.priorityDate}
+      onChange={(newValue) => handleFormDateOnChange('priorityDate', newValue, selectedForm, setSelectedForm)}
+      minDate={dayjs().subtract(1, 'week')}
+      maxDate={dayjs().add(1, 'week')}
+    />
+  )
+
   const formRfeDate = () => (
     <FormDatePickerField
       componentLabel="Form--RFE Date"
@@ -130,7 +150,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
   const formComments = () => (
     <FormCommentsField
       componentLabel="Form--Comments"
-      value={selectedForm.comments || ''}
+      value={selectedForm.comments}
       onChange={(e) => handleFormFormOnChange('comments', e.target.value, selectedForm, setSelectedForm)}
     />
   )
@@ -141,17 +161,23 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       isShowOne={isShowOneForm}
       justifyContent={isShowOneForm ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={3}>
+      <Grid item xs={12}>
+        {formCourtCase()}
+      </Grid>
+      <Grid item xs={6}>
         {formType()}
       </Grid>
-      <Grid item xs={9}>
-        {formCourtCase()}
+      <Grid item xs={6}>
+        {formReceiptNumber()}
       </Grid>
       <Grid item xs={6}>
         {formSubmitDate()}
       </Grid>
       <Grid item xs={6}>
         {formReceiptDate()}
+      </Grid>
+      <Grid item xs={6}>
+        {formPriorityDate()}
       </Grid>
       <Grid item xs={6}>
         {formRfeDate()}

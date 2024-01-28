@@ -74,6 +74,12 @@ export const handleFormFormOnChange = (
         courtCaseId: getNumber(value),
       }
       break
+    case 'receiptNumber':
+      updatedForm = {
+        ...selectedForm,
+        receiptNumber: value,
+      }
+      break
     case 'taskCalendarId':
       updatedForm = {
         ...selectedForm,
