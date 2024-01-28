@@ -308,7 +308,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
       <DatePicker
         name={id}
         label={label}
-        value={value === undefined ? null : dayjs(value)}
+        value={value ? dayjs(value) : null}
         onChange={onChange}
         disableFuture={disableFuture}
         disablePast={disablePast}
@@ -319,6 +319,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
         slotProps={{
           textField: {
             helperText: format,
+            fullWidth: true,
           },
           field: { clearable: true },
         }}

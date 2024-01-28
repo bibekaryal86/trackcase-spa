@@ -1,6 +1,7 @@
 import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
+import dayjs from 'dayjs'
 import React from 'react'
 
 import {
@@ -70,7 +71,9 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormDatePickerField
       componentLabel="Form--Submit Date"
       value={selectedForm.submitDate}
-      onChange={(newValue) => handleFormDateOnChange('submitDate', newValue, selectedForm, setSelectedForm )}
+      onChange={(newValue) => handleFormDateOnChange('submitDate', newValue, selectedForm, setSelectedForm)}
+      minDate={dayjs().subtract(1, 'week')}
+      maxDate={dayjs().add(1, 'week')}
     />
   )
 
@@ -78,7 +81,9 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormDatePickerField
       componentLabel="Form--Receipt Date"
       value={selectedForm.receiptDate}
-      onChange={(newValue) => handleFormDateOnChange('receiptDate', newValue, selectedForm, setSelectedForm )}
+      onChange={(newValue) => handleFormDateOnChange('receiptDate', newValue, selectedForm, setSelectedForm)}
+      minDate={dayjs().subtract(1, 'week')}
+      maxDate={dayjs().add(1, 'week')}
     />
   )
 
@@ -86,7 +91,9 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormDatePickerField
       componentLabel="Form--RFE Date"
       value={selectedForm.rfeDate}
-      onChange={(newValue) => handleFormDateOnChange('rfeDate', newValue, selectedForm, setSelectedForm )}
+      onChange={(newValue) => handleFormDateOnChange('rfeDate', newValue, selectedForm, setSelectedForm)}
+      minDate={dayjs().subtract(1, 'week')}
+      maxDate={dayjs().add(1, 'week')}
     />
   )
 
@@ -94,7 +101,9 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormDatePickerField
       componentLabel="Form--RFE Submit Date"
       value={selectedForm.rfeSubmitDate}
-      onChange={(newValue) => handleFormDateOnChange('rfeSubmitDate', newValue, selectedForm, setSelectedForm )}
+      onChange={(newValue) => handleFormDateOnChange('rfeSubmitDate', newValue, selectedForm, setSelectedForm)}
+      minDate={dayjs().subtract(1, 'week')}
+      maxDate={dayjs().add(1, 'week')}
     />
   )
 
@@ -102,7 +111,9 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormDatePickerField
       componentLabel="Form--Decision Date"
       value={selectedForm.decisionDate}
-      onChange={(newValue) => handleFormDateOnChange('decisionDate', newValue, selectedForm, setSelectedForm )}
+      onChange={(newValue) => handleFormDateOnChange('decisionDate', newValue, selectedForm, setSelectedForm)}
+      minDate={dayjs().subtract(1, 'week')}
+      maxDate={dayjs().add(1, 'week')}
     />
   )
 
