@@ -14,10 +14,4 @@ export { getJudge, getJudges, getOneJudge }
 export { Judge, Judges }
 export { judges }
 export { JUDGE_CREATE_SUCCESS, JUDGE_DELETE_SUCCESS, JUDGE_UPDATE_SUCCESS }
-export type {
-  JudgeResponse,
-  JudgesAction,
-  JudgeSchema,
-  JudgesState,
-  NoteJudgeSchema,
-}
+export type { JudgeResponse, JudgesAction, JudgeSchema, JudgesState, NoteJudgeSchema }

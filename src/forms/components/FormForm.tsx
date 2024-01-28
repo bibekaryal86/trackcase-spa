@@ -70,7 +70,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormDatePickerField
       componentLabel="Form--Submit Date"
       value={selectedForm.submitDate}
-      onChange={(e) => handleFormDateOnChange('submitDate', e)}
+      onChange={(newValue) => handleFormDateOnChange('submitDate', newValue, selectedForm, setSelectedForm )}
     />
   )
 

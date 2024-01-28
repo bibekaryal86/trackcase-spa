@@ -1,3 +1,5 @@
+import { Dayjs } from 'dayjs'
+
 import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
@@ -8,11 +10,11 @@ import { FormTypeSchema } from '../../types'
 export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
   formTypeId: number
   courtCaseId: number
-  submitDate?: Date
-  receiptDate?: Date
-  rfeDate?: Date
-  rfeSubmitDate?: Date
-  decisionDate?: Date
+  submitDate?: Dayjs
+  receiptDate?: Dayjs
+  rfeDate?: Dayjs
+  rfeSubmitDate?: Dayjs
+  decisionDate?: Dayjs
   taskCalendarId?: number
   // orm_mode
   formType?: FormTypeSchema
@@ -41,11 +43,11 @@ export interface HistoryFormSchema extends BaseModelSchema {
   // from form schema, need everything optional here so can't extend
   formTypeId?: number
   courtCaseId?: number
-  submitDate?: Date
-  receiptDate?: Date
-  rfeDate?: Date
-  rfeSubmitDate?: Date
-  decisionDate?: Date
+  submitDate?: Dayjs
+  receiptDate?: Dayjs
+  rfeDate?: Dayjs
+  rfeSubmitDate?: Dayjs
+  decisionDate?: Dayjs
   taskCalendarId?: number
   status?: string
   // orm_mode

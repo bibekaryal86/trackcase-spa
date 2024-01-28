@@ -7,10 +7,10 @@ import Select from '@mui/material/Select'
 import TextField, { TextFieldVariants } from '@mui/material/TextField'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
 import { STATES_LIST } from '../../constants'
-import { getDateString } from '../utils/app.utils'
 
 interface FormWrapperProps {
   isSmallScreen?: boolean
@@ -39,14 +39,6 @@ interface FormTextFieldProps {
   type?: string
   InputLabelProps?: object
   isReadOnly?: boolean
-}
-
-interface FormTextDateFieldProps {
-  componentLabel: string
-  required?: boolean
-  value: Date | undefined
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  error?: boolean
 }
 
 interface FormCommentFieldProps {
@@ -102,15 +94,15 @@ interface StatusSelectProps {
 
 interface DatePickerProps {
   componentLabel: string
-  value: Date | undefined
-  onChange: (value: Date | null) => void
-  defaultValue?: Date
+  value: Dayjs | undefined
+  onChange: (value: Dayjs | null) => void
+  defaultValue?: Dayjs
   disableFuture?: boolean
   disablePast?: boolean
   disableOpenPicker?: boolean
   format?: string
-  maxDate?: Date
-  minDate?: Date
+  maxDate?: Dayjs
+  minDate?: Dayjs
 }
 
 export const GridFormWrapper: React.FC<FormWrapperProps> = ({
@@ -190,27 +182,6 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       }
       // Conditionally include maxRows only if multiline is true
       {...(multiline && { maxRows })}
-    />
-  )
-}
-
-export const FormTextDateField: React.FC<FormTextDateFieldProps> = ({
-  componentLabel,
-  required = false,
-  value,
-  onChange,
-  error = false,
-}) => {
-  return (
-    <FormTextField
-      componentLabel={componentLabel}
-      required={required}
-      value={getDateString(value)}
-      onChange={onChange}
-      type="date"
-      InputLabelProps={{ shrink: true }}
-      error={error}
-      isReadOnly={true}
     />
   )
 }
@@ -332,13 +303,12 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
 }) => {
   // TODO maxDate, minDate
   const { label, id } = getComponentLabelAndId(componentLabel)
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         name={id}
         label={label}
-        value={value}
+        value={value === undefined ? null : value}
         onChange={onChange}
         disableFuture={disableFuture}
         disablePast={disablePast}

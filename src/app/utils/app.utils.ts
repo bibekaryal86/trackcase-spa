@@ -1,3 +1,4 @@
+import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
 import { LocalStorage } from './storage.utils'
@@ -85,19 +86,9 @@ export const getNumber = (number: number | string | undefined) => (number ? Numb
 export const getDate = (str: string | undefined) => {
   if (str) {
     const [year, month, day] = str.split('-').map(Number)
-    return new Date(year, month - 1, day)
+    return dayjs(`${year}-${month}-${day}`, { format: 'YYYY-MM-DD' })
   }
   return undefined
-}
-
-export const getDateString = (date: Date | undefined) => {
-  if (date) {
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  }
-  return ''
 }
 
 export const validateAddress = (
@@ -133,17 +124,15 @@ export const isNumericOnly = (input: string, is_allow_period: boolean = false): 
 
 export const getNumericOnly = (input: string, limit: number) => input.replace(/\D/g, '').slice(0, limit)
 
-export const convertDateToLocaleString = (date?: Date | string) => {
+export const convertDateToLocaleString = (date?: Dayjs) => {
   if (date) {
-    if (typeof date === 'string') {
-      date = new Date(date)
-    }
-    const yyyy = date.getUTCFullYear()
-    const MM = String(date.getUTCMonth() + 1).padStart(2, '0')
-    const dd = String(date.getUTCDate()).padStart(2, '0')
-    const HH = String(date.getUTCHours()).padStart(2, '0')
-    const mm = String(date.getUTCMinutes()).padStart(2, '0')
-    const ss = String(date.getUTCSeconds()).padStart(2, '0')
+    date = dayjs(date)
+    const yyyy = date.year()
+    const MM = date.month()
+    const dd = date.date()
+    const HH = date.hour()
+    const mm = date.minute()
+    const ss = date.second()
     return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`
   }
   return ''

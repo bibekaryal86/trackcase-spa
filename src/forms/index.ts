@@ -21,9 +21,4 @@ export { getForm, getForms, getOneForm }
 export { Form, Forms }
 export { forms }
 export { FORM_CREATE_SUCCESS, FORM_UPDATE_SUCCESS, FORM_DELETE_SUCCESS }
-export type { FormResponse,
-  FormsAction,
-  FormSchema,
-  FormsState,
-  HistoryFormSchema,
-  NoteFormSchema, }
+export type { FormResponse, FormsAction, FormSchema, FormsState, HistoryFormSchema, NoteFormSchema }

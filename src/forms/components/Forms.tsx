@@ -251,7 +251,12 @@ const Forms = (props: FormsProps): React.ReactElement => {
     />
   )
 
-  return (
+  return courtCaseId ? (
+    <>
+      {formsTable()}
+      {modal && showModal()}
+    </>
+  ) : (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>

@@ -18,9 +18,4 @@ import {
 export { getCourt, getCourts, getOneCourt }
 export { Court, Courts }
 export { courts }
-export type { CourtResponse,
-  CourtsAction,
-  CourtSchema,
-  CourtsState,
-  HistoryCourtSchema,
-  NoteCourtSchema }
+export type { CourtResponse, CourtsAction, CourtSchema, CourtsState, HistoryCourtSchema, NoteCourtSchema }

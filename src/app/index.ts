@@ -10,7 +10,6 @@ import {
   FormSelectField,
   FormSelectStateField,
   FormSelectStatusField,
-  FormTextDateField,
   FormTextField,
   GridFormWrapper,
 } from './components/FormComponents'
@@ -48,7 +47,6 @@ import {
   convertDateToLocaleString,
   convertNotesToNotesList,
   getDate,
-  getDateString,
   getEndpoint,
   getErrMsg,
   getFullAddress,
@@ -77,15 +75,14 @@ export {
   FormSelectField,
   FormSelectStateField,
   FormSelectStatusField,
-  FormTextDateField,
   FormTextField,
   GridFormWrapper,
 }
 export { Link }
 export { Modal }
 export { Notes }
-export { Switch}
-export {Table}
+export { Switch }
+export { Table }
 export type { GlobalDispatch, GlobalState }
 export { RESET_ALERT, RESET_SPINNER, SET_ALERT, SET_SPINNER }
 export type {
@@ -112,7 +109,6 @@ export {
   convertDateToLocaleString,
   convertNotesToNotesList,
   getDate,
-  getDateString,
   getEndpoint,
   getErrMsg,
   getFullAddress,
@@ -127,6 +123,6 @@ export {
   validateEmailAddress,
 }
 export { Async }
-export type { FetchOptions, FetchResponse}
+export type { FetchOptions, FetchResponse }
 export { resetSpinner, setSpinner }
 export { LocalStorage, SessionStorage }

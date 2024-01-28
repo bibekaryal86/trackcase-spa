@@ -21,9 +21,4 @@ export { getClient, getClients, getOneClient }
 export { Client, Clients }
 export { clients }
 export { CLIENT_CREATE_SUCCESS, CLIENT_UPDATE_SUCCESS, CLIENT_DELETE_SUCCESS }
-export type { ClientResponse,
-  ClientsAction,
-  ClientSchema,
-  ClientsState,
-  HistoryClientSchema,
-  NoteClientSchema, }
+export type { ClientResponse, ClientsAction, ClientSchema, ClientsState, HistoryClientSchema, NoteClientSchema }

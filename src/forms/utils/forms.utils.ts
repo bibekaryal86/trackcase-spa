@@ -1,4 +1,6 @@
-import { getDate, getNumber } from '../../app'
+import { Dayjs } from 'dayjs'
+
+import { getNumber } from '../../app'
 import { FormSchema } from '../types/forms.data.types'
 
 // TODO
@@ -33,8 +35,17 @@ export const isFormFormFieldError = (name: string, value: string | number | unde
   return false
 }
 
-export const handleFormDateOnChange = (name: string, value: Date | null) => {
-  console.log(name, value)
+export const handleFormDateOnChange = (
+  name: string,
+  value: Dayjs | null,
+  selectedForm: FormSchema,
+  setSelectedForm: (updatedForm: FormSchema) => void,
+) => {
+  const updatedForm = {
+    ...selectedForm,
+    [name]: value,
+  }
+  setSelectedForm(updatedForm)
 }
 
 export const handleFormFormOnChange = (
@@ -55,36 +66,6 @@ export const handleFormFormOnChange = (
       updatedForm = {
         ...selectedForm,
         courtCaseId: getNumber(value),
-      }
-      break
-    case 'submitDate':
-      updatedForm = {
-        ...selectedForm,
-        submitDate: getDate(value),
-      }
-      break
-    case 'receiptDate':
-      updatedForm = {
-        ...selectedForm,
-        receiptDate: getDate(value),
-      }
-      break
-    case 'rfeDate':
-      updatedForm = {
-        ...selectedForm,
-        rfeDate: getDate(value),
-      }
-      break
-    case 'rfeSubmitDate':
-      updatedForm = {
-        ...selectedForm,
-        rfeSubmitDate: getDate(value),
-      }
-      break
-    case 'decisionDate':
-      updatedForm = {
-        ...selectedForm,
-        decisionDate: getDate(value),
       }
       break
     case 'taskCalendarId':

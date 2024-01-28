@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs'
 import React, { ReactElement } from 'react'
 
 export type TableOrder = 'asc' | 'desc'
@@ -117,8 +118,8 @@ export const DefaultLoginResponse: LoginResponse = {
 // base models for all types
 export interface BaseModelSchema {
   id?: number
-  created?: Date
-  modified?: Date
+  created?: Dayjs
+  modified?: Dayjs
 }
 
 export interface NameDescBaseSchema {
