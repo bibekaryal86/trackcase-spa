@@ -17,6 +17,6 @@
 
 * table sort might not be working as expected
 
-FORMS TO-DO:
-* FormForm date elements
-* validate form in forms util
+TODO
+* Add USCIS receipt number and priority date in forms
+* Add task calendar dropdown to FormForm.tsx
