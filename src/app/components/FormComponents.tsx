@@ -327,9 +327,12 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   disablePast = false,
   disableOpenPicker = false,
   format = 'YYYY-MM-DD',
+  minDate,
+  maxDate,
 }) => {
   // TODO maxDate, minDate
   const { label, id } = getComponentLabelAndId(componentLabel)
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
@@ -341,10 +344,13 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
         disablePast={disablePast}
         disableOpenPicker={disableOpenPicker}
         format={format}
+        minDate={minDate}
+        maxDate={maxDate}
         slotProps={{
           textField: {
             helperText: 'YYYY-MM-DD',
           },
+          field: { clearable: true },
         }}
       />
     </LocalizationProvider>
