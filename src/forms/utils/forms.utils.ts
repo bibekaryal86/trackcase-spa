@@ -8,6 +8,7 @@ export const validateForm = (form: FormSchema) =>
   form.courtCaseId &&
   (form.submitDate ? form.submitDate.isValid() : true) &&
   (form.receiptDate ? form.receiptDate.isValid() : true) &&
+  (form.priorityDate ? form.priorityDate.isValid() : true) &&
   (form.rfeDate ? form.rfeDate.isValid() : true) &&
   (form.rfeSubmitDate ? form.rfeSubmitDate.isValid() : true) &&
   (form.decisionDate ? form.decisionDate.isValid() : true)
@@ -18,6 +19,8 @@ export const isAreTwoFormsSame = (one: FormSchema, two: FormSchema) =>
   one.formTypeId === two.formTypeId &&
   one.courtCaseId === two.courtCaseId &&
   one.submitDate === two.submitDate &&
+  one.receiptDate === two.receiptDate &&
+  one.receiptNumber === two.receiptNumber &&
   one.receiptDate === two.receiptDate &&
   one.rfeDate === two.rfeDate &&
   one.rfeSubmitDate === two.rfeSubmitDate &&

@@ -113,16 +113,16 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
 
   const judgesTableDataCommon = (x: JudgeSchema | HistoryJudgeSchema) => {
     return {
-      name: isHistoryView ? x.name || '' : linkToJudge(x),
+      name: isHistoryView ? x.name : linkToJudge(x),
       court: isHistoryView
-        ? x.court?.name || ''
-        : selectedCourt?.name
-        ? selectedCourt.name || ''
+        ? x.court?.name
+        : selectedCourt
+        ? selectedCourt.name
         : x.court
         ? linkToCourt(x.court)
         : '',
-      webex: isHistoryView ? x.webex || '' : x.webex ? linkToWebex(x.webex) : '',
-      status: x.status || '',
+      webex: isHistoryView ? x.webex : x.webex ? linkToWebex(x.webex) : '',
+      status: x.status,
     }
   }
 

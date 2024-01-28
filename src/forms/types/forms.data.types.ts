@@ -12,6 +12,8 @@ export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
   courtCaseId: number
   submitDate?: Dayjs
   receiptDate?: Dayjs
+  receiptNumber?: string
+  priorityDate?: Dayjs
   rfeDate?: Dayjs
   rfeSubmitDate?: Dayjs
   decisionDate?: Dayjs
@@ -45,6 +47,8 @@ export interface HistoryFormSchema extends BaseModelSchema {
   courtCaseId?: number
   submitDate?: Dayjs
   receiptDate?: Dayjs
+  receiptNumber?: string
+  priorityDate?: Dayjs
   rfeDate?: Dayjs
   rfeSubmitDate?: Dayjs
   decisionDate?: Dayjs
@@ -73,6 +77,8 @@ export const DefaultFormSchema: FormSchema = {
   courtCaseId: ID_DEFAULT,
   submitDate: undefined,
   receiptDate: undefined,
+  receiptNumber: '',
+  priorityDate: undefined,
   rfeDate: undefined,
   rfeSubmitDate: undefined,
   decisionDate: undefined,
