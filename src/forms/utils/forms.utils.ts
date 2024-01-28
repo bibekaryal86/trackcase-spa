@@ -3,9 +3,14 @@ import { Dayjs } from 'dayjs'
 import { getNumber } from '../../app'
 import { FormSchema } from '../types/forms.data.types'
 
-export const validateForm = (form: FormSchema) => form.formTypeId && form.courtCaseId && (form.submitDate ? form.submitDate.isValid() : true)
-    && (form.receiptDate ? form.receiptDate.isValid() : true) && (form.rfeDate ? form.rfeDate.isValid() : true) && (form.rfeSubmitDate ? form.rfeSubmitDate.isValid() : true)
-    && (form.decisionDate ? form.decisionDate.isValid() : true)
+export const validateForm = (form: FormSchema) =>
+  form.formTypeId &&
+  form.courtCaseId &&
+  (form.submitDate ? form.submitDate.isValid() : true) &&
+  (form.receiptDate ? form.receiptDate.isValid() : true) &&
+  (form.rfeDate ? form.rfeDate.isValid() : true) &&
+  (form.rfeSubmitDate ? form.rfeSubmitDate.isValid() : true) &&
+  (form.decisionDate ? form.decisionDate.isValid() : true)
 
 export const isAreTwoFormsSame = (one: FormSchema, two: FormSchema) =>
   one &&
