@@ -147,7 +147,7 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
         return {
           ...clientsTableDataCommon(x),
           user: x.userName,
-          date: convertDateToLocaleString(x.created),
+          date: convertDateToLocaleString(x.created, true),
         }
       })
     } else {

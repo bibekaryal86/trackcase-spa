@@ -124,16 +124,16 @@ export const isNumericOnly = (input: string, is_allow_period: boolean = false): 
 
 export const getNumericOnly = (input: string, limit: number) => input.replace(/\D/g, '').slice(0, limit)
 
-export const convertDateToLocaleString = (date?: Dayjs) => {
+export const convertDateToLocaleString = (date?: Dayjs, isIncludeTime: boolean = false) => {
   if (date) {
     date = dayjs(date)
     const yyyy = date.year()
-    const MM = date.month()
-    const dd = date.date()
-    const HH = date.hour()
-    const mm = date.minute()
-    const ss = date.second()
-    return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`
+    const MM = String(date.month() + 1).padStart(2, '0')
+    const dd = String(date.date()).padStart(2, '0')
+    const HH = isIncludeTime ? String(date.hour()).padStart(2, '0'): ''
+    const mm = isIncludeTime ? String(date.minute()).padStart(2, '0'): ''
+    const ss = isIncludeTime ? String(date.second()).padStart(2, '0'): ''
+    return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`.trim()
   }
   return ''
 }

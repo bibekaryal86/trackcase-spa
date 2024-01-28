@@ -133,7 +133,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
         return {
           ...judgesTableDataCommon(x),
           user: x.userName,
-          date: convertDateToLocaleString(x.created),
+          date: convertDateToLocaleString(x.created, true),
         }
       })
     } else {

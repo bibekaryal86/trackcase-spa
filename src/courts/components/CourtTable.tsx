@@ -123,7 +123,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
         return {
           ...courtsTableDataCommon(x),
           user: x.userName,
-          date: convertDateToLocaleString(x.created),
+          date: convertDateToLocaleString(x.created, true),
         }
       })
     } else {

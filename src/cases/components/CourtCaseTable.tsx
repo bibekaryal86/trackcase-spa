@@ -118,14 +118,14 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
         return {
           ...courtCasesTableDataCommon(x),
           user: x.userName,
-          date: convertDateToLocaleString(x.created),
+          date: convertDateToLocaleString(x.created, true),
         }
       })
     } else {
       tableData = Array.from(courtCasesList, (x) => {
         return {
           ...courtCasesTableDataCommon(x),
-          created: convertDateToLocaleString(x.created),
+          created: convertDateToLocaleString(x.created, true),
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })
