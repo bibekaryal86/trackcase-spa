@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -24,6 +24,7 @@ import {
 } from '../../app'
 import { ClientSchema, getClients } from '../../clients'
 import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
+import { Forms } from '../../forms'
 import { CaseTypeSchema } from '../../types'
 import { getCaseTypes } from '../../types/actions/caseTypes.action'
 import { editCourtCase, getCourtCase } from '../actions/courtCases.action'
@@ -33,6 +34,7 @@ import { isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.u
 
 const mapStateToProps = ({ courtCases, statuses, caseTypes, clients }: GlobalState) => {
   return {
+    isForceFetch: courtCases.isForceFetch,
     selectedCourtCase: courtCases.selectedCourtCase,
     statusList: statuses.statuses,
     caseTypesList: caseTypes.caseTypes,
@@ -54,6 +56,7 @@ const mapDispatchToProps = {
 }
 
 interface CourtCaseProps {
+  isForceFetch: boolean
   selectedCourtCase: CourtCaseSchema
   getCourtCase: (courtCaseId: number) => void
   editCourtCase: (id: number, courtCase: CourtCaseSchema) => void
@@ -70,10 +73,9 @@ interface CourtCaseProps {
 }
 
 const CourtCase = (props: CourtCaseProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
+  const { isForceFetch } = props
   const { getCourtCase, editCourtCase } = props
   const { statusList, getStatusesList } = props
   const { unmountPage } = props
@@ -93,13 +95,20 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   }, [id, getCourtCase, selectedCourtCase.id])
 
   useEffect(() => {
-    if (!isFetchRunDone.current) {
+    if (isForceFetch) {
       statusList.court_case.all.length === 0 && getStatusesList()
       caseTypesList.length === 0 && getCaseTypes()
       clientsList.length === 0 && getClients()
     }
-    isFetchRunDone.current = true
-  }, [statusList.court_case.all, getStatusesList, caseTypesList.length, getCaseTypes, clientsList.length, getClients])
+  }, [
+    isForceFetch,
+    statusList.court_case.all,
+    getStatusesList,
+    caseTypesList.length,
+    getCaseTypes,
+    clientsList.length,
+    getClients,
+  ])
 
   useEffect(() => {
     if (statusList.court_case.all.length > 0) {
@@ -258,6 +267,12 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {courtCaseForm()}
               {courtCaseButtons()}
+            </Grid>
+            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Typography component="h1" variant="h6" color="primary">
+                Forms in Case:
+              </Typography>
+              <Forms courtCaseId={id} />
             </Grid>
             {isShowHistory && historyModal()}
             {isShowNotes && notesModal()}

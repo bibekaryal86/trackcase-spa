@@ -2,7 +2,13 @@ import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
-import { FormCommentsField, FormSelectState, FormSelectStatus, FormTextField, GridFormWrapper } from '../../app'
+import {
+  FormCommentsField,
+  FormSelectStateField,
+  FormSelectStatusField,
+  FormTextField,
+  GridFormWrapper,
+} from '../../app'
 import { CourtSchema } from '../types/courts.data.types'
 import { handleCourtFormOnChange, isCourtFormFieldError } from '../utils/courts.utils'
 
@@ -19,8 +25,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
 
   const courtName = () => (
     <FormTextField
-      component="court"
-      label="Name"
+      componentLabel="Court--Name"
       autoFocus={!isShowOneCourt}
       value={selectedCourt.name || ''}
       onChange={(e) => handleCourtFormOnChange('name', e.target.value, selectedCourt, setSelectedCourt)}
@@ -30,8 +35,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
 
   const courtStreetAddress = () => (
     <FormTextField
-      component="court"
-      label="Street Address"
+      componentLabel="Court--Street Address"
       value={selectedCourt.streetAddress || ''}
       onChange={(e) => handleCourtFormOnChange('streetAddress', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.streetAddress)}
@@ -40,8 +44,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
 
   const courtCity = () => (
     <FormTextField
-      component="court"
-      label="City"
+      componentLabel="Court--City"
       value={selectedCourt.city || ''}
       onChange={(e) => handleCourtFormOnChange('city', e.target.value, selectedCourt, setSelectedCourt)}
       error={isCourtFormFieldError(selectedCourt.city)}
@@ -49,9 +52,8 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   )
 
   const courtState = () => (
-    <FormSelectState
-      component="court"
-      inputLabel="State"
+    <FormSelectStateField
+      componentLabel="Court--State"
       value={selectedCourt.state || ''}
       onChange={(e) => handleCourtFormOnChange('state', e.target.value, selectedCourt, setSelectedCourt)}
       required={true}
@@ -61,8 +63,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
 
   const courtZipCode = () => (
     <FormTextField
-      component="court"
-      label="Zip Code"
+      componentLabel="Court--Zip Code"
       maxLength={5}
       value={selectedCourt.zipCode || ''}
       onChange={(e) => handleCourtFormOnChange('zipCode', e.target.value, selectedCourt, setSelectedCourt)}
@@ -72,8 +73,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
 
   const courtPhoneNumber = () => (
     <FormTextField
-      component="court"
-      label="Phone"
+      componentLabel="Court--Phone"
       maxLength={15}
       value={selectedCourt.phoneNumber || ''}
       onChange={(e) => handleCourtFormOnChange('phoneNumber', e.target.value, selectedCourt, setSelectedCourt)}
@@ -83,8 +83,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
 
   const courtDhsAddress = () => (
     <FormTextField
-      component="court"
-      label="DHS Address"
+      componentLabel="Court--DHS Address"
       required={false}
       maxLength={199}
       value={selectedCourt.dhsAddress || ''}
@@ -93,8 +92,8 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   )
 
   const courtStatus = () => (
-    <FormSelectStatus
-      component="court"
+    <FormSelectStatusField
+      componentLabel="Court--Status"
       value={selectedCourt.status || ''}
       onChange={(e) => handleCourtFormOnChange('status', e.target.value, selectedCourt, setSelectedCourt)}
       statusList={courtStatusList}
@@ -104,7 +103,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
 
   const courtComments = () => (
     <FormCommentsField
-      component="court"
+      componentLabel="Court--Comments"
       value={selectedCourt.comments || ''}
       onChange={(e) => handleCourtFormOnChange('comments', e.target.value, selectedCourt, setSelectedCourt)}
     />

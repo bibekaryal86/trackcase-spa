@@ -8,6 +8,7 @@ import thunk from 'redux-thunk'
 import { courtCases, CourtCasesState } from '../../cases'
 import { clients, ClientsState } from '../../clients'
 import { courts, CourtsState } from '../../courts'
+import { forms, FormsState } from '../../forms'
 import { judges, JudgesState } from '../../judges'
 import {
   caseTypes,
@@ -47,6 +48,7 @@ export interface GlobalState {
   judges: JudgesState
   clients: ClientsState
   courtCases: CourtCasesState
+  forms: FormsState
 }
 
 export interface GlobalDispatch {
@@ -67,6 +69,7 @@ const appReducers = combineReducers({
   judges,
   clients,
   courtCases,
+  forms,
 })
 
 const rootReducer = (state: any, action: any) => {

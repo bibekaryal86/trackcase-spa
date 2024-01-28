@@ -6,12 +6,13 @@ import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
   FormCommentsField,
+  FormDatePickerField,
   FormSelectField,
-  FormSelectState,
-  FormSelectStatus,
+  FormSelectStateField,
+  FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-} from './components/FormComponents'
+} from './components/FormFields'
 import Link from './components/Link'
 import Modal from './components/Modal'
 import Notes from './components/Notes'
@@ -40,10 +41,12 @@ import {
 } from './types/app.data.types'
 // utils
 import { resetAlert, setAlert } from './utils/alerts.utils'
+import { useStateData } from './utils/app.hooks'
 import {
   clearMessages,
   convertDateToLocaleString,
   convertNotesToNotesList,
+  getDate,
   getEndpoint,
   getErrMsg,
   getFullAddress,
@@ -62,62 +65,64 @@ import { resetSpinner, setSpinner } from './utils/spinner.utils'
 import { LocalStorage, SessionStorage } from './utils/storage.utils'
 
 // EXPORTS
-export { testDatabase }
 export { userLogout }
-export { getStatusesList }
 export { addNote, editNote, deleteNote }
-export { convertNotesToNotesList }
+export { getStatusesList }
+export { testDatabase }
 export {
-  GridFormWrapper,
-  FormTextField,
-  FormSelectField,
-  FormSelectState,
-  FormSelectStatus,
   FormCommentsField,
-  Link,
-  Modal,
-  Notes,
-  Switch,
-  Table,
+  FormDatePickerField,
+  FormSelectField,
+  FormSelectStateField,
+  FormSelectStatusField,
+  FormTextField,
+  GridFormWrapper,
 }
-export { SET_ALERT, RESET_ALERT, SET_SPINNER, RESET_SPINNER }
-export type { GlobalState, GlobalDispatch }
+export { Link }
+export { Modal }
+export { Notes }
+export { Switch }
+export { Table }
+export type { GlobalDispatch, GlobalState }
+export { RESET_ALERT, RESET_SPINNER, SET_ALERT, SET_SPINNER }
 export type {
-  UserDetails,
   AddressBaseSchema,
   BaseModelSchema,
+  ErrorSuccessSchema,
   NameDescBaseSchema,
+  NoteBaseSchema,
+  NoteResponse,
+  NoteSchema,
+  ResponseBase,
   StatusBaseSchema,
   StatusSchema,
-  ErrorSuccessSchema,
-  ResponseBase,
   TableData,
   TableHeaderData,
   TableOrder,
   TableRowsPerPage,
-  NoteBaseSchema,
-  NoteSchema,
-  NoteResponse,
-  FetchOptions,
-  FetchResponse,
+  UserDetails,
 }
-export { Async }
-export { LocalStorage, SessionStorage }
-export { setAlert, resetAlert }
-export { setSpinner, resetSpinner }
+export { resetAlert, setAlert }
+export { useStateData }
 export {
   clearMessages,
   convertDateToLocaleString,
-  isLoggedIn,
+  convertNotesToNotesList,
+  getDate,
   getEndpoint,
   getErrMsg,
   getFullAddress,
-  getStartOfTheYear,
-  getStartOfTheMonth,
-  unmountPage,
-  validateAddress,
-  isNumericOnly,
-  validateEmailAddress,
   getNumber,
   getNumericOnly,
+  getStartOfTheMonth,
+  getStartOfTheYear,
+  isLoggedIn,
+  isNumericOnly,
+  unmountPage,
+  validateAddress,
+  validateEmailAddress,
 }
+export { Async }
+export type { FetchOptions, FetchResponse }
+export { resetSpinner, setSpinner }
+export { LocalStorage, SessionStorage }

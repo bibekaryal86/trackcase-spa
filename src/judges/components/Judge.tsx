@@ -2,7 +2,7 @@ import { Grid } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -32,6 +32,7 @@ import { isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
 
 const mapStateToProps = ({ judges, statuses, courts }: GlobalState) => {
   return {
+    isForceFetch: judges.isForceFetch,
     selectedJudge: judges.selectedJudge,
     statusList: statuses.statuses,
     courtsList: courts.courts,
@@ -51,6 +52,7 @@ const mapDispatchToProps = {
 }
 
 interface JudgeProps {
+  isForceFetch: boolean
   selectedJudge: JudgeSchema
   getJudge: (judgeId: number) => void
   editJudge: (judgeId: number, judge: JudgeSchema) => void
@@ -65,10 +67,9 @@ interface JudgeProps {
 }
 
 const Judge = (props: JudgeProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
+  const { isForceFetch } = props
   const { getJudge, editJudge } = props
   const { courtsList, getCourts } = props
   const { statusList, getStatusesList } = props
@@ -88,12 +89,11 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   }, [id, getJudge, selectedJudge.id])
 
   useEffect(() => {
-    if (!isFetchRunDone.current) {
+    if (isForceFetch) {
       statusList.court_case.all.length === 0 && getStatusesList()
       courtsList.length === 0 && getCourts()
     }
-    isFetchRunDone.current = true
-  }, [statusList.court_case.all, getStatusesList, courtsList.length, getCourts])
+  }, [isForceFetch, statusList.court_case.all, getStatusesList, courtsList.length, getCourts])
 
   useEffect(() => {
     if (statusList.judge.all.length > 0) {

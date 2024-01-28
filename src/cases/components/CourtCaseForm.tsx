@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import { FormCommentsField, FormSelectField, FormSelectStatus, GridFormWrapper } from '../../app'
+import { FormCommentsField, FormSelectField, FormSelectStatusField, GridFormWrapper } from '../../app'
 import { ClientSchema } from '../../clients'
 import { ID_DEFAULT } from '../../constants'
 import { CaseTypeSchema } from '../../types'
@@ -40,35 +40,31 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
 
   const courtCaseType = () => (
     <FormSelectField
-      component="court-case"
-      inputLabel="Case Type"
+      componentLabel="Court Case--Case Type"
       required={true}
       value={selectedCourtCase.caseTypeId || ID_DEFAULT}
       onChange={(e) =>
         handleCourtCaseFormOnChange('caseTypeId', e.target.value, selectedCourtCase, setSelectedCourtCase)
       }
       error={isCourtCaseFormFieldError('caseTypeId', selectedCourtCase.caseTypeId)}
-      selectOptions={caseTypesList}
       menuItems={caseTypesListForSelect()}
     />
   )
 
   const courtCaseClient = () => (
     <FormSelectField
-      component="court-case"
-      inputLabel="Client"
+      componentLabel="Court Case--Client"
       required={true}
       value={selectedCourtCase.clientId || ID_DEFAULT}
       onChange={(e) => handleCourtCaseFormOnChange('clientId', e.target.value, selectedCourtCase, setSelectedCourtCase)}
       error={isCourtCaseFormFieldError('clientId', selectedCourtCase.clientId)}
-      selectOptions={clientsList}
       menuItems={clientsListForSelect()}
     />
   )
 
   const courtCaseStatus = () => (
-    <FormSelectStatus
-      component="court-case"
+    <FormSelectStatusField
+      componentLabel="Court Case--Status"
       value={selectedCourtCase.status || ''}
       onChange={(e) => handleCourtCaseFormOnChange('status', e.target.value, selectedCourtCase, setSelectedCourtCase)}
       statusList={courtCaseStatusList}
@@ -78,7 +74,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
 
   const courtCaseComments = () => (
     <FormCommentsField
-      component="court-case"
+      componentLabel="Court Case--Comments"
       value={selectedCourtCase.comments || ''}
       onChange={(e) => handleCourtCaseFormOnChange('comments', e.target.value, selectedCourtCase, setSelectedCourtCase)}
     />

@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 import CourtCaseForm from './CourtCaseForm'
@@ -28,6 +28,7 @@ import { isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.u
 
 const mapStateToProps = ({ courtCases, statuses, clients, caseTypes }: GlobalState) => {
   return {
+    isForceFetch: courtCases.isForceFetch,
     isCloseModal: courtCases.isCloseModal,
     courtCasesList: courtCases.courtCases,
     statusList: statuses.statuses,
@@ -50,6 +51,7 @@ const mapDispatchToProps = {
 }
 
 interface CourtCasesProps {
+  isForceFetch: boolean
   isCloseModal: boolean
   courtCasesList: CourtCaseSchema[]
   getCourtCases: () => void
@@ -69,11 +71,9 @@ interface CourtCasesProps {
 }
 
 const CourtCases = (props: CourtCasesProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
   const { courtCasesList, getCourtCases, clientsList, getClients } = props
   const { unmountPage } = props
-  const { isCloseModal } = props
+  const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
   const { clientId, selectedClient, getClient } = props
   const { caseTypesList, getCaseTypes } = props
@@ -85,23 +85,14 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   const [courtCaseStatusList, setCourtCaseStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (clientId) {
-      setSelectedCourtCase({ ...DefaultCourtCaseSchema, clientId: getNumber(clientId) })
-      if (!selectedClient) {
-        getClient(getNumber(clientId))
-      }
-    }
-  }, [clientId, selectedClient, getClient])
-
-  useEffect(() => {
-    if (!isFetchRunDone.current) {
+    if (isForceFetch) {
       courtCasesList.length === 0 && getCourtCases()
       clientsList.length === 0 && getClients()
       caseTypesList.length === 0 && getCaseTypes()
       statusList.court_case.all.length === 0 && getStatusesList()
     }
-    isFetchRunDone.current = true
   }, [
+    isForceFetch,
     courtCasesList.length,
     getCourtCases,
     statusList.court_case.all,
@@ -117,6 +108,15 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       setCourtCaseStatusList(statusList.court_case.all)
     }
   }, [statusList.court_case.all])
+
+  useEffect(() => {
+    if (clientId) {
+      setSelectedCourtCase({ ...DefaultCourtCaseSchema, clientId: getNumber(clientId) })
+      if (!selectedClient) {
+        getClient(getNumber(clientId))
+      }
+    }
+  }, [clientId, selectedClient, getClient])
 
   useEffect(() => {
     if (isCloseModal) {
@@ -142,7 +142,6 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
         props.addCourtCase(selectedCourtCase)
       }
     }
-    isFetchRunDone.current = false
   }
 
   const secondaryButtonCallback = () => {

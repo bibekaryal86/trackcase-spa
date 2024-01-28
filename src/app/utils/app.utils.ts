@@ -1,7 +1,8 @@
+import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
 import { LocalStorage } from './storage.utils'
-import { REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { ID_NUMBER, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
 import { AuthState, ErrorDetail, NoteSchema, UserDetails } from '../types/app.data.types'
 
@@ -80,7 +81,15 @@ export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-0
 export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
   streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
 
-export const getNumber = (number: number | string | undefined) => (number ? Number(number) : -4)
+export const getNumber = (number: number | string | undefined) => (number ? Number(number) : ID_NUMBER)
+
+export const getDate = (str: string | undefined) => {
+  if (str) {
+    const [year, month, day] = str.split('-').map(Number)
+    return dayjs(`${year}-${month}-${day}`, { format: 'YYYY-MM-DD' })
+  }
+  return undefined
+}
 
 export const validateAddress = (
   streetAddress: string | undefined,
@@ -115,18 +124,21 @@ export const isNumericOnly = (input: string, is_allow_period: boolean = false): 
 
 export const getNumericOnly = (input: string, limit: number) => input.replace(/\D/g, '').slice(0, limit)
 
-export const convertDateToLocaleString = (date?: Date | string) => {
+export const convertDateToLocaleString = (date?: Dayjs, isIncludeTime: boolean = false) => {
   if (date) {
-    if (typeof date === 'string') {
-      date = new Date(date)
+    date = dayjs(date)
+    const yyyy = date.year()
+    const MM = String(date.month() + 1).padStart(2, '0')
+    const dd = String(date.date()).padStart(2, '0')
+
+    if (isIncludeTime) {
+      const HH = String(date.hour()).padStart(2, '0')
+      const mm = String(date.minute()).padStart(2, '0')
+      const ss = String(date.second()).padStart(2, '0')
+      return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`
     }
-    const yyyy = date.getUTCFullYear()
-    const MM = String(date.getUTCMonth() + 1).padStart(2, '0')
-    const dd = String(date.getUTCDate()).padStart(2, '0')
-    const HH = String(date.getUTCHours()).padStart(2, '0')
-    const mm = String(date.getUTCMinutes()).padStart(2, '0')
-    const ss = String(date.getUTCSeconds()).padStart(2, '0')
-    return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`
+
+    return `${yyyy}-${MM}-${dd}`
   }
   return ''
 }

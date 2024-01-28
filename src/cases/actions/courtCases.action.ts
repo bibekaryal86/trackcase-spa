@@ -82,33 +82,39 @@ export const getCourtCases = (isForceFetch: boolean = false) => {
   }
 }
 
+export const getOneCourtCase = async (courtCaseId: number) => {
+  try {
+    const urlPath = getEndpoint(process.env.COURT_CASE_RETRIEVE_ENDPOINT as string)
+    const options: Partial<FetchOptions> = {
+      method: 'GET',
+      pathParams: { court_case_id: courtCaseId },
+      extraParams: {
+        isIncludeExtra: true,
+        isIncludeHistory: true,
+      },
+    }
+
+    return Async.fetch(urlPath, options)
+  } catch (error) {
+    console.log('Get OneCourtCase Error: ', error)
+    const errorResponse: CourtCaseResponse = { courtCases: [], detail: { error: error as string } }
+    return Promise.resolve(errorResponse)
+  }
+}
+
 export const getCourtCase = (courtCaseId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(courtCasesRequest(COURT_CASES_RETRIEVE_REQUEST))
 
     // call api, if it fails fallback to store
     try {
-      const urlPath = getEndpoint(process.env.COURT_CASE_RETRIEVE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'GET',
-        pathParams: { court_case_id: courtCaseId },
-        extraParams: {
-          isIncludeExtra: true,
-          isIncludeHistory: true,
-        },
-      }
-
-      const courtCaseResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
+      const courtCaseResponse = (await getOneCourtCase(courtCaseId)) as CourtCaseResponse
       if (courtCaseResponse.detail) {
         dispatch(courtCasesFailure(COURT_CASES_RETRIEVE_FAILURE, getErrMsg(courtCaseResponse.detail)))
         setSelectedCourtCaseFromStore(getStore(), dispatch, courtCaseId)
       } else {
         dispatch(courtCaseSelect(courtCaseResponse.courtCases[0]))
       }
-    } catch (error) {
-      console.log('Get CourtCase Error: ', error)
-      dispatch(courtCasesFailure(COURT_CASES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
-      setSelectedCourtCaseFromStore(getStore(), dispatch, courtCaseId)
     } finally {
       dispatch(courtCasesComplete())
     }

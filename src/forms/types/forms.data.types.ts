@@ -1,17 +1,20 @@
+import { Dayjs } from 'dayjs'
+
 import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CaseCollectionSchema, CashCollectionSchema } from '../../collections'
+import { ID_DEFAULT } from '../../constants'
 import { FormTypeSchema } from '../../types'
 
 export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
   formTypeId: number
   courtCaseId: number
-  submitDate?: Date
-  receiptDate?: Date
-  rfeDate?: Date
-  rfeSubmitDate?: Date
-  decisionDate?: Date
+  submitDate?: Dayjs
+  receiptDate?: Dayjs
+  rfeDate?: Dayjs
+  rfeSubmitDate?: Dayjs
+  decisionDate?: Dayjs
   taskCalendarId?: number
   // orm_mode
   formType?: FormTypeSchema
@@ -40,15 +43,47 @@ export interface HistoryFormSchema extends BaseModelSchema {
   // from form schema, need everything optional here so can't extend
   formTypeId?: number
   courtCaseId?: number
-  submitDate?: Date
-  receiptDate?: Date
-  rfeDate?: Date
-  rfeSubmitDate?: Date
-  decisionDate?: Date
+  submitDate?: Dayjs
+  receiptDate?: Dayjs
+  rfeDate?: Dayjs
+  rfeSubmitDate?: Dayjs
+  decisionDate?: Dayjs
   taskCalendarId?: number
+  status?: string
   // orm_mode
   form?: FormSchema
   formType?: FormTypeSchema
   taskCalendar?: TaskCalendarSchema
   courtCase?: CourtCaseSchema
+}
+
+export interface FormsState {
+  isForceFetch: boolean
+  isCloseModal: boolean
+  forms: FormSchema[]
+  selectedForm: FormSchema
+}
+
+export interface FormsAction extends FormsState {
+  type: string
+}
+
+export const DefaultFormSchema: FormSchema = {
+  formTypeId: ID_DEFAULT,
+  courtCaseId: ID_DEFAULT,
+  submitDate: undefined,
+  receiptDate: undefined,
+  rfeDate: undefined,
+  rfeSubmitDate: undefined,
+  decisionDate: undefined,
+  taskCalendarId: ID_DEFAULT,
+  status: '',
+  comments: '',
+}
+
+export const DefaultFormState: FormsState = {
+  isForceFetch: true,
+  isCloseModal: true,
+  forms: [],
+  selectedForm: DefaultFormSchema,
 }

@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 import JudgeForm from './JudgeForm'
@@ -26,6 +26,7 @@ import { isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
 
 const mapStateToProps = ({ judges, statuses, courts }: GlobalState) => {
   return {
+    isForceFetch: judges.isForceFetch,
     isCloseModal: judges.isCloseModal,
     judgesList: judges.judges,
     statusList: statuses.statuses,
@@ -46,6 +47,7 @@ const mapDispatchToProps = {
 }
 
 interface JudgesProps {
+  isForceFetch: boolean
   isCloseModal: boolean
   judgesList: JudgeSchema[]
   getJudges: () => void
@@ -63,11 +65,9 @@ interface JudgesProps {
 }
 
 const Judges = (props: JudgesProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
   const { judgesList, courtsList, getJudges, getCourts } = props
   const { unmountPage } = props
-  const { isCloseModal } = props
+  const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
   const { courtId, selectedCourt, getCourt } = props
 
@@ -78,28 +78,35 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const [judgeStatusList, setJudgeStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (courtId) {
-      setSelectedJudge({ ...DefaultJudgeSchema, courtId: getNumber(courtId) })
-      if (!selectedCourt) {
-        getCourt(getNumber(courtId))
-      }
-    }
-  }, [courtId, selectedCourt, getCourt, courtsList.length, getCourts, judgesList.length, getJudges])
-
-  useEffect(() => {
-    if (!isFetchRunDone.current) {
+    if (isForceFetch) {
       judgesList.length === 0 && getJudges()
       courtsList.length === 0 && getCourts()
       statusList.court_case.all.length === 0 && getStatusesList()
     }
-    isFetchRunDone.current = true
-  }, [judgesList.length, getJudges, statusList.court_case.all, getStatusesList, courtsList.length, getCourts])
+  }, [
+    isForceFetch,
+    judgesList.length,
+    getJudges,
+    statusList.court_case.all,
+    getStatusesList,
+    courtsList.length,
+    getCourts,
+  ])
 
   useEffect(() => {
     if (statusList.judge.all.length > 0) {
       setJudgeStatusList(statusList.judge.all)
     }
   }, [statusList.judge.all])
+
+  useEffect(() => {
+    if (courtId) {
+      setSelectedJudge({ ...DefaultJudgeSchema, courtId: getNumber(courtId) })
+      if (!selectedCourt) {
+        getCourt(getNumber(courtId))
+      }
+    }
+  }, [courtId, selectedCourt, getCourt])
 
   useEffect(() => {
     if (isCloseModal) {
@@ -128,7 +135,6 @@ const Judges = (props: JudgesProps): React.ReactElement => {
         props.addJudge(selectedJudge)
       }
     }
-    isFetchRunDone.current = false
   }
 
   const secondaryButtonCallback = () => {
