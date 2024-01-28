@@ -348,7 +348,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
         maxDate={maxDate}
         slotProps={{
           textField: {
-            helperText: 'YYYY-MM-DD',
+            helperText: format,
           },
           field: { clearable: true },
         }}
