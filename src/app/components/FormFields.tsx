@@ -301,7 +301,6 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   minDate,
   maxDate,
 }) => {
-  // TODO maxDate, minDate
   const { label, id } = getComponentLabelAndId(componentLabel)
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
