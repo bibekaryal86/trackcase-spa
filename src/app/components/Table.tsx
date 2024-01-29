@@ -140,14 +140,14 @@ function getDataItemValue(dataItem: string | number | boolean | React.JSX.Elemen
   let dataItemValue = ''
   if (dataItem) {
     if (isValidElement(dataItem)) {
-    for (const [key, value] of Object.entries(dataItem)) {
-      if (key === 'props' && value[TABLE_EXPORT_KEY_FOR_TITLE]) {
-        dataItemValue = value[TABLE_EXPORT_KEY_FOR_TITLE]
+      for (const [key, value] of Object.entries(dataItem)) {
+        if (key === 'props' && value[TABLE_EXPORT_KEY_FOR_TITLE]) {
+          dataItemValue = value[TABLE_EXPORT_KEY_FOR_TITLE]
+        }
       }
+    } else {
+      dataItemValue = dataItem.toString()
     }
-  } else {
-    dataItemValue = dataItem.toString()
-  }
   }
   return dataItemValue
 }

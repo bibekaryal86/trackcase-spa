@@ -1,4 +1,4 @@
-import { getNumber } from '../../app'
+import { getComments } from '../../app'
 import { JudgeSchema } from '../types/judges.data.types'
 
 export const validateJudge = (judge: JudgeSchema) => judge.name.trim() && judge.courtId > 0 && judge.status.trim()
@@ -17,37 +17,14 @@ export const handleJudgeFormOnChange = (
   value: string | number,
   selectedJudge: JudgeSchema,
   setSelectedJudge: (updatedJudge: JudgeSchema) => void,
+  getValue: (value: string | number) => string | number,
 ) => {
-  let updatedJudge = selectedJudge
-  if (name === 'name') {
-    updatedJudge = {
-      ...selectedJudge,
-      name: value.toString(),
-    }
+  if (name === 'comments' && typeof value === 'string') {
+    value = getComments(value)
   }
-  if (name === 'webex') {
-    updatedJudge = {
-      ...selectedJudge,
-      webex: value.toString(),
-    }
+  const updatedForm = {
+    ...selectedJudge,
+    [name]: getValue(value),
   }
-  if (name === 'courtId') {
-    updatedJudge = {
-      ...selectedJudge,
-      courtId: getNumber(value),
-    }
-  }
-  if (name === 'status') {
-    updatedJudge = {
-      ...selectedJudge,
-      status: value.toString(),
-    }
-  }
-  if (name === 'comments') {
-    updatedJudge = {
-      ...selectedJudge,
-      comments: value.toString(),
-    }
-  }
-  setSelectedJudge(updatedJudge)
+  setSelectedJudge(updatedForm)
 }

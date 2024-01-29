@@ -107,20 +107,12 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     />
   )
 
-  const linkToJudge = (x: JudgeSchema | HistoryJudgeSchema) => (
-    <Link text={x.name} navigateToPage={`/judge/${x.id}`} />
-  )
+  const linkToJudge = (x: JudgeSchema | HistoryJudgeSchema) => <Link text={x.name} navigateToPage={`/judge/${x.id}`} />
 
   const judgesTableDataCommon = (x: JudgeSchema | HistoryJudgeSchema) => {
     return {
       name: isHistoryView ? x.name : linkToJudge(x),
-      court: isHistoryView
-        ? x.court?.name
-        : selectedCourt
-        ? selectedCourt.name
-        : x.court
-        ? linkToCourt(x.court)
-        : '',
+      court: isHistoryView ? x.court?.name : selectedCourt ? selectedCourt.name : x.court ? linkToCourt(x.court) : '',
       webex: isHistoryView ? x.webex : x.webex ? linkToWebex(x.webex) : '',
       status: x.status,
     }

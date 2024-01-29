@@ -81,14 +81,23 @@ export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-0
 export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
   streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
 
-export const getNumber = (number: number | string | undefined) => (number ? Number(number) : ID_NUMBER)
+export const getNumber = (value: number | string | null | undefined): number => (value ? Number(value) : ID_NUMBER)
 
-export const getDate = (str: string | undefined) => {
-  if (str) {
-    const [year, month, day] = str.split('-').map(Number)
+export const getString = (value: string | number | Dayjs | null | undefined): string => (value ? value.toString() : '')
+
+export const getDate = (value: string | undefined) => {
+  if (value) {
+    const [year, month, day] = value.split('-').map(Number)
     return dayjs(`${year}-${month}-${day}`, { format: 'YYYY-MM-DD' })
   }
   return undefined
+}
+
+export const getComments = (value: string): string => {
+  if (value.length > 8888) {
+    return value.substring(0, 8888)
+  }
+  return value
 }
 
 export const validateAddress = (

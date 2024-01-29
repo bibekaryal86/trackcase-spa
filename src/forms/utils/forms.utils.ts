@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { getNumber } from '../../app'
+import { getComments, getNumber } from '../../app'
 import { FormSchema } from '../types/forms.data.types'
 
 export const validateForm = (form: FormSchema) =>
@@ -56,48 +56,17 @@ export const handleFormDateOnChange = (
 
 export const handleFormFormOnChange = (
   name: string,
-  value: string,
+  value: string | number,
   selectedForm: FormSchema,
   setSelectedForm: (updatedForm: FormSchema) => void,
+  getValue: (value: string | number) => string | number,
 ) => {
-  let updatedForm = selectedForm
-  switch (name) {
-    case 'formTypeId':
-      updatedForm = {
-        ...selectedForm,
-        formTypeId: getNumber(value),
-      }
-      break
-    case 'courtCaseId':
-      updatedForm = {
-        ...selectedForm,
-        courtCaseId: getNumber(value),
-      }
-      break
-    case 'receiptNumber':
-      updatedForm = {
-        ...selectedForm,
-        receiptNumber: value,
-      }
-      break
-    case 'taskCalendarId':
-      updatedForm = {
-        ...selectedForm,
-        taskCalendarId: getNumber(value),
-      }
-      break
-    case 'status':
-      updatedForm = {
-        ...selectedForm,
-        status: value,
-      }
-      break
-    case 'comments':
-      updatedForm = {
-        ...selectedForm,
-        comments: value.length < 8888 ? value : selectedForm.comments,
-      }
-      break
+  if (name === 'comments' && typeof value === 'string') {
+    value = getComments(value)
+  }
+  const updatedForm = {
+    ...selectedForm,
+    [name]: getValue(value),
   }
   setSelectedForm(updatedForm)
 }

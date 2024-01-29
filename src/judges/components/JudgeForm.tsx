@@ -3,7 +3,15 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import { FormCommentsField, FormSelectField, FormSelectStatusField, FormTextField, GridFormWrapper } from '../../app'
+import {
+  FormCommentsField,
+  FormSelectField,
+  FormSelectStatusField,
+  FormTextField,
+  getNumber,
+  getString,
+  GridFormWrapper,
+} from '../../app'
 import { CourtSchema } from '../../courts'
 import { JudgeSchema } from '../types/judges.data.types'
 import { handleJudgeFormOnChange } from '../utils/judges.utils'
@@ -25,7 +33,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       componentLabel="Judge--Name"
       autoFocus={!isShowOneJudge}
       value={selectedJudge.name}
-      onChange={(e) => handleJudgeFormOnChange('name', e.target.value, selectedJudge, setSelectedJudge)}
+      onChange={(e) => handleJudgeFormOnChange('name', e.target.value, selectedJudge, setSelectedJudge, getString)}
       error={selectedJudge.name.trim() === ''}
     />
   )
@@ -35,7 +43,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       componentLabel="Judge--Webex"
       required={false}
       value={selectedJudge.webex}
-      onChange={(e) => handleJudgeFormOnChange('webex', e.target.value, selectedJudge, setSelectedJudge)}
+      onChange={(e) => handleJudgeFormOnChange('webex', e.target.value, selectedJudge, setSelectedJudge, getString)}
     />
   )
 
@@ -50,7 +58,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormSelectField
       componentLabel="Judge--Court"
       value={selectedJudge.courtId <= 0 ? -1 : selectedJudge.courtId}
-      onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge)}
+      onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge, getNumber)}
       menuItems={courtsListForSelect()}
     />
   )
@@ -58,8 +66,8 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   const judgeStatus = () => (
     <FormSelectStatusField
       componentLabel="Judge--Status"
-      value={selectedJudge.status || ''}
-      onChange={(e) => handleJudgeFormOnChange('status', e.target.value, selectedJudge, setSelectedJudge)}
+      value={selectedJudge.status}
+      onChange={(e) => handleJudgeFormOnChange('status', e.target.value, selectedJudge, setSelectedJudge, getString)}
       statusList={judgeStatusList}
       error={!selectedJudge.status}
     />
@@ -69,7 +77,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="Judge--Comments"
       value={selectedJudge.comments}
-      onChange={(e) => handleJudgeFormOnChange('comments', e.target.value, selectedJudge, setSelectedJudge)}
+      onChange={(e) => handleJudgeFormOnChange('comments', e.target.value, selectedJudge, setSelectedJudge, getString)}
     />
   )
 

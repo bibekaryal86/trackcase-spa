@@ -3,7 +3,14 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import { FormCommentsField, FormSelectField, FormSelectStatusField, GridFormWrapper } from '../../app'
+import {
+  FormCommentsField,
+  FormSelectField,
+  FormSelectStatusField,
+  getNumber,
+  getString,
+  GridFormWrapper,
+} from '../../app'
 import { ClientSchema } from '../../clients'
 import { ID_DEFAULT } from '../../constants'
 import { CaseTypeSchema } from '../../types'
@@ -44,7 +51,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       required={true}
       value={selectedCourtCase.caseTypeId || ID_DEFAULT}
       onChange={(e) =>
-        handleCourtCaseFormOnChange('caseTypeId', e.target.value, selectedCourtCase, setSelectedCourtCase)
+        handleCourtCaseFormOnChange('caseTypeId', e.target.value, selectedCourtCase, setSelectedCourtCase, getNumber)
       }
       error={isCourtCaseFormFieldError('caseTypeId', selectedCourtCase.caseTypeId)}
       menuItems={caseTypesListForSelect()}
@@ -56,7 +63,9 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       componentLabel="Court Case--Client"
       required={true}
       value={selectedCourtCase.clientId || ID_DEFAULT}
-      onChange={(e) => handleCourtCaseFormOnChange('clientId', e.target.value, selectedCourtCase, setSelectedCourtCase)}
+      onChange={(e) =>
+        handleCourtCaseFormOnChange('clientId', e.target.value, selectedCourtCase, setSelectedCourtCase, getNumber)
+      }
       error={isCourtCaseFormFieldError('clientId', selectedCourtCase.clientId)}
       menuItems={clientsListForSelect()}
     />
@@ -65,8 +74,10 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
   const courtCaseStatus = () => (
     <FormSelectStatusField
       componentLabel="Court Case--Status"
-      value={selectedCourtCase.status || ''}
-      onChange={(e) => handleCourtCaseFormOnChange('status', e.target.value, selectedCourtCase, setSelectedCourtCase)}
+      value={selectedCourtCase.status}
+      onChange={(e) =>
+        handleCourtCaseFormOnChange('status', e.target.value, selectedCourtCase, setSelectedCourtCase, getString)
+      }
       statusList={courtCaseStatusList}
       error={isCourtCaseFormFieldError('status', selectedCourtCase.status)}
     />
@@ -76,7 +87,9 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="Court Case--Comments"
       value={selectedCourtCase.comments}
-      onChange={(e) => handleCourtCaseFormOnChange('comments', e.target.value, selectedCourtCase, setSelectedCourtCase)}
+      onChange={(e) =>
+        handleCourtCaseFormOnChange('comments', e.target.value, selectedCourtCase, setSelectedCourtCase, getString)
+      }
     />
   )
 

@@ -1,4 +1,4 @@
-import { getNumber } from '../../app'
+import { getComments, getNumber } from '../../app'
 import { CourtCaseSchema } from '../types/courtCases.data.types'
 
 export const validateCourtCase = (courtCase: CourtCaseSchema) =>
@@ -28,33 +28,14 @@ export const handleCourtCaseFormOnChange = (
   value: string | number,
   selectedCourtCase: CourtCaseSchema,
   setSelectedCourtCase: (updatedCourtCase: CourtCaseSchema) => void,
+  getValue: (value: string | number) => string | number,
 ) => {
-  let updatedCourtCase = selectedCourtCase
-  switch (name) {
-    case 'caseTypeId':
-      updatedCourtCase = {
-        ...selectedCourtCase,
-        caseTypeId: getNumber(value),
-      }
-      break
-    case 'clientId':
-      updatedCourtCase = {
-        ...selectedCourtCase,
-        clientId: getNumber(value),
-      }
-      break
-    case 'status':
-      updatedCourtCase = {
-        ...selectedCourtCase,
-        status: value.toString(),
-      }
-      break
-    case 'comments':
-      updatedCourtCase = {
-        ...selectedCourtCase,
-        comments: value.toString().length < 8888 ? value.toString() : selectedCourtCase.comments,
-      }
-      break
+  if (name === 'comments') {
+    value = getComments(value.toString())
+  }
+  const updatedCourtCase = {
+    ...selectedCourtCase,
+    [name]: getValue(value),
   }
   setSelectedCourtCase(updatedCourtCase)
 }
