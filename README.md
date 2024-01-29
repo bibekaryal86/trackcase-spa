@@ -18,5 +18,4 @@
 * table sort might not be working as expected
 
 TODO
-* Add USCIS receipt number and priority date in forms
 * Add task calendar dropdown to FormForm.tsx
