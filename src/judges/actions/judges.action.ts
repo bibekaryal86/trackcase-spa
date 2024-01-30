@@ -26,6 +26,7 @@ export const addJudge = (judge: JudgeSchema) => {
     const validationErrors = validateJudge(judge)
     if (validationErrors) {
       dispatch(judgesFailure(JUDGE_CREATE_FAILURE, validationErrors))
+      return
     }
 
     dispatch(judgesRequest(JUDGE_CREATE_REQUEST))
@@ -136,6 +137,7 @@ export const editJudge = (id: number, judge: JudgeSchema) => {
     const validationErrors = validateJudge(judge)
     if (validationErrors) {
       dispatch(judgesFailure(JUDGE_UPDATE_FAILURE, validationErrors))
+      return
     }
 
     dispatch(judgesRequest(JUDGE_UPDATE_REQUEST))

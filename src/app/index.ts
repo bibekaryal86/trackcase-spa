@@ -61,6 +61,7 @@ import {
   unmountPage,
   validateAddress,
   validateEmailAddress,
+  validatePhoneNumber,
 } from './utils/app.utils'
 import { Async, FetchOptions, FetchResponse } from './utils/fetch.utils'
 import { resetSpinner, setSpinner } from './utils/spinner.utils'
@@ -125,6 +126,7 @@ export {
   unmountPage,
   validateAddress,
   validateEmailAddress,
+  validatePhoneNumber,
 }
 export { Async }
 export type { FetchOptions, FetchResponse }

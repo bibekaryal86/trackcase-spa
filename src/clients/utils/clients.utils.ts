@@ -1,4 +1,11 @@
-import { getComments, getNumericOnly, isNumericOnly, validateAddress, validateEmailAddress } from '../../app'
+import {
+  getComments,
+  getNumericOnly,
+  isNumericOnly,
+  validateAddress,
+  validateEmailAddress,
+  validatePhoneNumber,
+} from '../../app'
 import { ClientSchema } from '../types/clients.data.types'
 
 export const validateClient = (client: ClientSchema) => {
@@ -7,14 +14,17 @@ export const validateClient = (client: ClientSchema) => {
   if (!client.name.trim()) {
     errors.push('Name is required')
   }
-  if (!client.phoneNumber?.trim()) {
-    errors.push('Phone is required')
+  if (!validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)) {
+    errors.push('Full address is incomplete/invalid')
+  }
+  if (!validatePhoneNumber(client.phoneNumber)) {
+    errors.push('Phone Number is incomplete/invalid')
   }
   if (!client.email.trim()) {
     errors.push('Email is required')
   }
-  if (!validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)) {
-    errors.push('Full address is incomplete/invalid')
+  if (!client.status.trim()) {
+    errors.push('Status is required')
   }
 
   return errors.length ? errors.join(', ') : ''
