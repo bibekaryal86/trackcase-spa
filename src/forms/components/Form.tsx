@@ -29,7 +29,7 @@ import { getFormTypes } from '../../types/actions/formTypes'
 import { editForm, getForm } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
-import { isAreTwoFormsSame, validateForm } from '../utils/forms.utils'
+import { isAreTwoFormsSame } from '../utils/forms.utils'
 
 const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
   return {
@@ -159,9 +159,7 @@ const Form = (props: FormProps): React.ReactElement => {
   )
 
   const updateAction = () => {
-    if (validateForm(selectedForm)) {
-      editForm(getNumber(id), selectedForm)
-    }
+    editForm(getNumber(id), selectedForm)
   }
 
   const notesContent = () => (

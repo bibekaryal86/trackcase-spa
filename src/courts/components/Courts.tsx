@@ -21,7 +21,7 @@ import {
 import { addCourt, deleteCourt, editCourt, getCourts } from '../actions/courts.action'
 import { COURTS_UNMOUNT } from '../types/courts.action.types'
 import { CourtSchema, DefaultCourtSchema } from '../types/courts.data.types'
-import { isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
+import { isAreTwoCourtsSame } from '../utils/courts.utils'
 
 const mapStateToProps = ({ courts, statuses }: GlobalState) => {
   return {
@@ -55,7 +55,7 @@ interface CourtsProps {
 }
 
 const Courts = (props: CourtsProps): React.ReactElement => {
-  const { courtsList, getCourts } = props
+  const { courtsList, getCourts, addCourt, editCourt, deleteCourt } = props
   const { unmountPage } = props
   const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
@@ -93,15 +93,11 @@ const Courts = (props: CourtsProps): React.ReactElement => {
 
   const primaryButtonCallback = (action: string, id?: number) => {
     if (id && action === ACTION_DELETE) {
-      props.deleteCourt(id)
+      deleteCourt(id)
     } else if (id && action === ACTION_UPDATE) {
-      if (validateCourt(selectedCourt)) {
-        props.editCourt(id, selectedCourt)
-      }
+      editCourt(id, selectedCourt)
     } else {
-      if (validateCourt(selectedCourt)) {
-        props.addCourt(selectedCourt)
-      }
+      addCourt(selectedCourt)
     }
   }
 

@@ -22,7 +22,7 @@ import { CourtSchema, getCourt, getCourts } from '../../courts'
 import { addJudge, deleteJudge, editJudge, getJudges } from '../actions/judges.action'
 import { JUDGES_UNMOUNT } from '../types/judges.action.types'
 import { DefaultJudgeSchema, JudgeSchema } from '../types/judges.data.types'
-import { isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
+import { isAreTwoJudgesSame } from '../utils/judges.utils'
 
 const mapStateToProps = ({ judges, statuses, courts }: GlobalState) => {
   return {
@@ -65,7 +65,7 @@ interface JudgesProps {
 }
 
 const Judges = (props: JudgesProps): React.ReactElement => {
-  const { judgesList, courtsList, getJudges, getCourts } = props
+  const { judgesList, courtsList, getJudges, addJudge, editJudge, deleteJudge, getCourts } = props
   const { unmountPage } = props
   const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
@@ -125,15 +125,11 @@ const Judges = (props: JudgesProps): React.ReactElement => {
 
   const primaryButtonCallback = (action: string, id?: number) => {
     if (id && action === ACTION_DELETE) {
-      props.deleteJudge(id)
+      deleteJudge(id)
     } else if (id && action === ACTION_UPDATE) {
-      if (validateJudge(selectedJudge)) {
-        props.editJudge(id, selectedJudge)
-      }
+      editJudge(id, selectedJudge)
     } else {
-      if (validateJudge(selectedJudge)) {
-        props.addJudge(selectedJudge)
-      }
+      addJudge(selectedJudge)
     }
   }
 

@@ -1,10 +1,24 @@
 import { getComments, getNumericOnly, isNumericOnly, validateAddress } from '../../app'
 import { CourtSchema } from '../types/courts.data.types'
 
-export const validateCourt = (court: CourtSchema) =>
-  court.name.trim() &&
-  court.status.trim() &&
-  validateAddress(court.streetAddress, court.city, court.state, court.zipCode, true)
+export const validateCourt = (court: CourtSchema) => {
+  const errors: string[] = []
+
+  if (!court.name.trim()) {
+    errors.push('Name is required')
+  }
+  if (!validateAddress(court.streetAddress, court.city, court.state, court.zipCode, true)) {
+    errors.push('Full address is incomplete/invalid')
+  }
+  if (!court.phoneNumber?.trim()) {
+    errors.push('Phone number is required')
+  }
+  if (!court.status.trim()) {
+    errors.push('Status is required')
+  }
+
+  return errors.length ? errors.join(', ') : ''
+}
 
 export const isAreTwoCourtsSame = (one: CourtSchema, two: CourtSchema) =>
   one &&

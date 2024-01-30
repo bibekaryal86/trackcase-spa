@@ -27,7 +27,7 @@ import { Judges } from '../../judges'
 import { editCourt, getCourt } from '../actions/courts.action'
 import { COURTS_UNMOUNT } from '../types/courts.action.types'
 import { CourtSchema, DefaultCourtSchema } from '../types/courts.data.types'
-import { isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
+import { isAreTwoCourtsSame } from '../utils/courts.utils'
 
 const mapStateToProps = ({ courts, statuses }: GlobalState) => {
   return {
@@ -133,9 +133,7 @@ const Court = (props: CourtProps): React.ReactElement => {
   )
 
   const updateAction = () => {
-    if (validateCourt(selectedCourt)) {
-      editCourt(getNumber(id), selectedCourt)
-    }
+    editCourt(getNumber(id), selectedCourt)
   }
 
   const notesContent = () => (

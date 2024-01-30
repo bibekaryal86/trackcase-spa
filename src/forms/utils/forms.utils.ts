@@ -3,15 +3,36 @@ import { Dayjs } from 'dayjs'
 import { getComments, getNumber } from '../../app'
 import { FormSchema } from '../types/forms.data.types'
 
-export const validateForm = (form: FormSchema) =>
-  form.formTypeId &&
-  form.courtCaseId &&
-  (form.submitDate ? form.submitDate.isValid() : true) &&
-  (form.receiptDate ? form.receiptDate.isValid() : true) &&
-  (form.priorityDate ? form.priorityDate.isValid() : true) &&
-  (form.rfeDate ? form.rfeDate.isValid() : true) &&
-  (form.rfeSubmitDate ? form.rfeSubmitDate.isValid() : true) &&
-  (form.decisionDate ? form.decisionDate.isValid() : true)
+export const validateForm = (form: FormSchema) => {
+  const errors: string[] = []
+
+  if (form.formTypeId <= 0) {
+    errors.push('Form Type is required')
+  }
+  if (form.courtCaseId <= 0) {
+    errors.push('Case is required')
+  }
+  if (form.submitDate && !form.submitDate.isValid()) {
+    errors.push('Submit Date is invalid')
+  }
+  if (form.receiptDate && !form.receiptDate.isValid()) {
+    errors.push('Receipt Date is invalid')
+  }
+  if (form.priorityDate && !form.priorityDate.isValid()) {
+    errors.push('Priority Date is invalid')
+  }
+  if (form.rfeDate && !form.rfeDate.isValid()) {
+    errors.push('RFE Date is invalid')
+  }
+  if (form.rfeSubmitDate && !form.rfeSubmitDate.isValid()) {
+    errors.push('RFE Submit Date is invalid')
+  }
+  if (form.decisionDate && !form.decisionDate.isValid()) {
+    errors.push('Decision Date is invalid')
+  }
+
+  return errors.length ? errors.join(', ') : ''
+}
 
 export const isAreTwoFormsSame = (one: FormSchema, two: FormSchema) =>
   one &&

@@ -19,9 +19,16 @@ import {
   SET_SELECTED_FORM,
 } from '../types/forms.action.types'
 import { FormResponse, FormSchema } from '../types/forms.data.types'
+import { validateForm } from '../utils/forms.utils'
 
 export const addForm = (form: FormSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    const validationErrors = validateForm(form)
+    if (validationErrors) {
+      dispatch(formsFailure(FORM_CREATE_FAILURE, validationErrors))
+      return
+    }
+
     dispatch(formsRequest(FORM_CREATE_REQUEST))
 
     try {
@@ -123,6 +130,12 @@ export const getForm = (formId: number) => {
 
 export const editForm = (id: number, form: FormSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    const validationErrors = validateForm(form)
+    if (validationErrors) {
+      dispatch(formsFailure(FORM_UPDATE_FAILURE, validationErrors))
+      return
+    }
+
     dispatch(formsRequest(FORM_UPDATE_REQUEST))
 
     try {

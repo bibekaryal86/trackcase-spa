@@ -1,7 +1,21 @@
 import { getComments } from '../../app'
 import { JudgeSchema } from '../types/judges.data.types'
 
-export const validateJudge = (judge: JudgeSchema) => judge.name.trim() && judge.courtId > 0 && judge.status.trim()
+export const validateJudge = (judge: JudgeSchema) => {
+  const errors: string[] = []
+
+  if (!judge.name.trim()) {
+    errors.push('Name is required')
+  }
+  if (judge.courtId <= 0) {
+    errors.push('Court is required')
+  }
+  if (!judge.status.trim()) {
+    errors.push('Status is required')
+  }
+
+  return errors.length ? errors.join(', ') : ''
+}
 
 export const isAreTwoJudgesSame = (one: JudgeSchema, two: JudgeSchema) =>
   one &&

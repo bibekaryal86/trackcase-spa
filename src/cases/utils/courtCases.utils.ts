@@ -1,8 +1,21 @@
 import { getComments, getNumber } from '../../app'
 import { CourtCaseSchema } from '../types/courtCases.data.types'
 
-export const validateCourtCase = (courtCase: CourtCaseSchema) =>
-  courtCase.caseTypeId && courtCase.clientId && courtCase.status
+export const validateCourtCase = (courtCase: CourtCaseSchema) => {
+  const errors: string[] = []
+
+  if (courtCase.caseTypeId <= 0) {
+    errors.push('Case Type is required')
+  }
+  if (courtCase.clientId <= 0) {
+    errors.push('Client is required')
+  }
+  if (!courtCase.status.trim()) {
+    errors.push('Status is required')
+  }
+
+  return errors.length ? errors.join(', ') : ''
+}
 
 export const isAreTwoCourtCasesSame = (one: CourtCaseSchema, two: CourtCaseSchema) =>
   one &&

@@ -2,11 +2,22 @@ import { getComments, getNumericOnly, isNumericOnly, validateAddress, validateEm
 import { ClientSchema } from '../types/clients.data.types'
 
 export const validateClient = (client: ClientSchema) => {
-  const nameValid = !!client.name.trim()
-  const phoneValid = !!client.phoneNumber?.trim()
-  const emailValid = !!client.email.trim() && validateEmailAddress(client.email)
-  const addressValid = validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)
-  return nameValid && phoneValid && emailValid && addressValid
+  const errors: string[] = []
+
+  if (!client.name.trim()) {
+    errors.push('Name is required')
+  }
+  if (!client.phoneNumber?.trim()) {
+    errors.push('Phone is required')
+  }
+  if (!client.email.trim()) {
+    errors.push('Email is required')
+  }
+  if (!validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)) {
+    errors.push('Full address is incomplete/invalid')
+  }
+
+  return errors.length ? errors.join(', ') : ''
 }
 
 export const isAreTwoClientsSame = (one: ClientSchema, two: ClientSchema) =>

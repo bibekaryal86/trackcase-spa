@@ -28,7 +28,7 @@ import { getJudges, JudgeSchema } from '../../judges'
 import { editClient, getClient } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
 import { ClientSchema, DefaultClientSchema, HistoryClientSchema } from '../types/clients.data.types'
-import { isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
+import { isAreTwoClientsSame } from '../utils/clients.utils'
 
 const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
   return {
@@ -140,9 +140,7 @@ const Client = (props: ClientProps): React.ReactElement => {
   )
 
   const updateAction = () => {
-    if (validateClient(selectedClient)) {
-      editClient(getNumber(id), selectedClient)
-    }
+    editClient(getNumber(id), selectedClient)
   }
 
   const notesContent = () => (

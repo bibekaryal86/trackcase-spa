@@ -19,5 +19,3 @@
 
 TODO
 * Add task calendar dropdown to FormForm.tsx
-
-** add validation message to the actions and show popup

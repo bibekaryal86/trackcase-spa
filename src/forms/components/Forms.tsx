@@ -24,7 +24,7 @@ import { getFormTypes } from '../../types/actions/formTypes'
 import { addForm, deleteForm, editForm, getForms } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
-import { isAreTwoFormsSame, validateForm } from '../utils/forms.utils'
+import { isAreTwoFormsSame } from '../utils/forms.utils'
 
 const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
   return {
@@ -71,7 +71,7 @@ interface FormsProps {
 }
 
 const Forms = (props: FormsProps): React.ReactElement => {
-  const { formsList, getForms } = props
+  const { formsList, getForms, addForm, editForm, deleteForm } = props
   const { unmountPage } = props
   const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
@@ -132,15 +132,11 @@ const Forms = (props: FormsProps): React.ReactElement => {
 
   const primaryButtonCallback = (action: string, id?: number) => {
     if (id && action === ACTION_DELETE) {
-      props.deleteForm(id)
+      deleteForm(id)
     } else if (id && action === ACTION_UPDATE) {
-      if (validateForm(selectedForm)) {
-        props.editForm(id, selectedForm)
-      }
+      editForm(id, selectedForm)
     } else {
-      if (validateForm(selectedForm)) {
-        props.addForm(selectedForm)
-      }
+      addForm(selectedForm)
     }
   }
 
