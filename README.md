@@ -5,7 +5,7 @@
   * add pagination to service response
     * similar to check IG/TT API response
   * add restrictions and filters
-    * form can't be added to closed cases (filter court case dropdown in formsReducer page)
+    * form can't be added to closed cases (filter court case dropdown in forms page)
     * form can't be added to task calendars in the past
     * task calendars can't be added to closed cases
     * task calendars can't be updated if in the past
