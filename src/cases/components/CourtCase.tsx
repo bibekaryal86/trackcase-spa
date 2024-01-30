@@ -30,7 +30,7 @@ import { getCaseTypes } from '../../types/actions/caseTypes.action'
 import { editCourtCase, getCourtCase } from '../actions/courtCases.action'
 import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
 import { CourtCaseSchema, DefaultCourtCaseSchema, HistoryCourtCaseSchema } from '../types/courtCases.data.types'
-import { isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
+import { isAreTwoCourtCasesSame } from '../utils/courtCases.utils'
 
 const mapStateToProps = ({ courtCases, statuses, caseTypes, clients }: GlobalState) => {
   return {
@@ -155,9 +155,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   )
 
   const updateAction = () => {
-    if (validateCourtCase(selectedCourtCase)) {
-      editCourtCase(getNumber(id), selectedCourtCase)
-    }
+    editCourtCase(getNumber(id), selectedCourtCase)
   }
 
   const notesContent = () => (

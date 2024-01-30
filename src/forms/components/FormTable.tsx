@@ -52,6 +52,16 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
         isDisableSorting: isHistoryView,
       },
       {
+        id: 'receiptNumber',
+        label: 'Receipt Number',
+        isDisableSorting: isHistoryView,
+      },
+      {
+        id: 'priority',
+        label: 'Priority Date',
+        isDisableSorting: isHistoryView,
+      },
+      {
         id: 'rfe',
         label: 'RFE Date',
         isDisableSorting: isHistoryView,
@@ -139,14 +149,16 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
   const formsTableDataCommon = (x: FormSchema | HistoryFormSchema) => {
     return {
       clientCase: getClientCase(x),
-      type: x.formType?.name || '',
+      type: x.formType?.name,
       submit: convertDateToLocaleString(x.submitDate),
       receipt: convertDateToLocaleString(x.receiptDate),
+      receiptNumber: x.receiptNumber,
+      priority: convertDateToLocaleString(x.priorityDate),
       rfe: convertDateToLocaleString(x.rfeDate),
       rfeSubmit: convertDateToLocaleString(x.rfeSubmitDate),
       decision: convertDateToLocaleString(x.decisionDate),
-      task: x.taskCalendar?.taskType?.name || '',
-      status: x.status || '',
+      task: x.taskCalendar?.taskType?.name,
+      status: x.status,
     }
   }
 

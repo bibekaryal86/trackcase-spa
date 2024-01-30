@@ -19,9 +19,16 @@ import {
   SET_SELECTED_CLIENT,
 } from '../types/clients.action.types'
 import { ClientResponse, ClientSchema } from '../types/clients.data.types'
+import { validateClient } from '../utils/clients.utils'
 
 export const addClient = (client: ClientSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    const validationErrors = validateClient(client)
+    if (validationErrors) {
+      dispatch(clientsFailure(CLIENT_CREATE_FAILURE, validationErrors))
+      return
+    }
+
     dispatch(clientsRequest(CLIENT_CREATE_REQUEST))
 
     try {
@@ -123,6 +130,12 @@ export const getClient = (clientId: number) => {
 
 export const editClient = (id: number, client: ClientSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    const validationErrors = validateClient(client)
+    if (validationErrors) {
+      dispatch(clientsFailure(CLIENT_UPDATE_FAILURE, validationErrors))
+      return
+    }
+
     dispatch(clientsRequest(CLIENT_UPDATE_REQUEST))
 
     try {

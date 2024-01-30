@@ -136,16 +136,18 @@ function getCsvData(tableData: TableData[], tableDataKeys: string[]): CsvData[] 
   return csvData
 }
 
-function getDataItemValue(dataItem: string | number | boolean | React.JSX.Element): string {
+function getDataItemValue(dataItem: string | number | boolean | React.JSX.Element | undefined): string {
   let dataItemValue = ''
-  if (isValidElement(dataItem)) {
-    for (const [key, value] of Object.entries(dataItem)) {
-      if (key === 'props' && value[TABLE_EXPORT_KEY_FOR_TITLE]) {
-        dataItemValue = value[TABLE_EXPORT_KEY_FOR_TITLE]
+  if (dataItem) {
+    if (isValidElement(dataItem)) {
+      for (const [key, value] of Object.entries(dataItem)) {
+        if (key === 'props' && value[TABLE_EXPORT_KEY_FOR_TITLE]) {
+          dataItemValue = value[TABLE_EXPORT_KEY_FOR_TITLE]
+        }
       }
+    } else {
+      dataItemValue = dataItem.toString()
     }
-  } else {
-    dataItemValue = dataItem.toString()
   }
   return dataItemValue
 }

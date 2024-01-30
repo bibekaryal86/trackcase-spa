@@ -107,7 +107,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
           ? `${x.client.name}, ${x.caseType.name}`
           : `${x.clientId}, ${x.caseTypeId}`
         : linkToCourtCase(x),
-      status: x.status || '',
+      status: x.status,
     }
   }
 

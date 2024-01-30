@@ -5,7 +5,7 @@ export type TableOrder = 'asc' | 'desc'
 
 export type TableRowsPerPage = 10 | 20 | 50 | 100
 
-export type TableData = Record<string, string | number | boolean | React.JSX.Element>
+export type TableData = Record<string, string | number | boolean | React.JSX.Element | undefined>
 
 export type TableHeaderData = {
   id: keyof TableData

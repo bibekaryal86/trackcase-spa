@@ -1,16 +1,38 @@
 import { Dayjs } from 'dayjs'
 
-import { getNumber } from '../../app'
+import { getComments, getNumber } from '../../app'
 import { FormSchema } from '../types/forms.data.types'
 
-export const validateForm = (form: FormSchema) =>
-  form.formTypeId &&
-  form.courtCaseId &&
-  (form.submitDate ? form.submitDate.isValid() : true) &&
-  (form.receiptDate ? form.receiptDate.isValid() : true) &&
-  (form.rfeDate ? form.rfeDate.isValid() : true) &&
-  (form.rfeSubmitDate ? form.rfeSubmitDate.isValid() : true) &&
-  (form.decisionDate ? form.decisionDate.isValid() : true)
+export const validateForm = (form: FormSchema) => {
+  const errors: string[] = []
+
+  if (form.formTypeId <= 0) {
+    errors.push('Form Type is required')
+  }
+  if (form.courtCaseId <= 0) {
+    errors.push('Case is required')
+  }
+  if (form.submitDate && !form.submitDate.isValid()) {
+    errors.push('Submit Date is invalid')
+  }
+  if (form.receiptDate && !form.receiptDate.isValid()) {
+    errors.push('Receipt Date is invalid')
+  }
+  if (form.priorityDate && !form.priorityDate.isValid()) {
+    errors.push('Priority Date is invalid')
+  }
+  if (form.rfeDate && !form.rfeDate.isValid()) {
+    errors.push('RFE Date is invalid')
+  }
+  if (form.rfeSubmitDate && !form.rfeSubmitDate.isValid()) {
+    errors.push('RFE Submit Date is invalid')
+  }
+  if (form.decisionDate && !form.decisionDate.isValid()) {
+    errors.push('Decision Date is invalid')
+  }
+
+  return errors.length ? errors.join(', ') : ''
+}
 
 export const isAreTwoFormsSame = (one: FormSchema, two: FormSchema) =>
   one &&
@@ -18,6 +40,8 @@ export const isAreTwoFormsSame = (one: FormSchema, two: FormSchema) =>
   one.formTypeId === two.formTypeId &&
   one.courtCaseId === two.courtCaseId &&
   one.submitDate === two.submitDate &&
+  one.receiptDate === two.receiptDate &&
+  one.receiptNumber === two.receiptNumber &&
   one.receiptDate === two.receiptDate &&
   one.rfeDate === two.rfeDate &&
   one.rfeSubmitDate === two.rfeSubmitDate &&
@@ -53,42 +77,17 @@ export const handleFormDateOnChange = (
 
 export const handleFormFormOnChange = (
   name: string,
-  value: string,
+  value: string | number,
   selectedForm: FormSchema,
   setSelectedForm: (updatedForm: FormSchema) => void,
+  getValue: (value: string | number) => string | number,
 ) => {
-  let updatedForm = selectedForm
-  switch (name) {
-    case 'formTypeId':
-      updatedForm = {
-        ...selectedForm,
-        formTypeId: getNumber(value),
-      }
-      break
-    case 'courtCaseId':
-      updatedForm = {
-        ...selectedForm,
-        courtCaseId: getNumber(value),
-      }
-      break
-    case 'taskCalendarId':
-      updatedForm = {
-        ...selectedForm,
-        taskCalendarId: getNumber(value),
-      }
-      break
-    case 'status':
-      updatedForm = {
-        ...selectedForm,
-        status: value,
-      }
-      break
-    case 'comments':
-      updatedForm = {
-        ...selectedForm,
-        comments: value.length < 8888 ? value : selectedForm.comments,
-      }
-      break
+  if (name === 'comments' && typeof value === 'string') {
+    value = getComments(value)
+  }
+  const updatedForm = {
+    ...selectedForm,
+    [name]: getValue(value),
   }
   setSelectedForm(updatedForm)
 }

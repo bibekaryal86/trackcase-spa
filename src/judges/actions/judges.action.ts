@@ -19,9 +19,16 @@ import {
   SET_SELECTED_JUDGE,
 } from '../types/judges.action.types'
 import { JudgeResponse, JudgeSchema } from '../types/judges.data.types'
+import { validateJudge } from '../utils/judges.utils'
 
 export const addJudge = (judge: JudgeSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    const validationErrors = validateJudge(judge)
+    if (validationErrors) {
+      dispatch(judgesFailure(JUDGE_CREATE_FAILURE, validationErrors))
+      return
+    }
+
     dispatch(judgesRequest(JUDGE_CREATE_REQUEST))
 
     try {
@@ -83,7 +90,6 @@ export const getJudges = (isForceFetch: boolean = false) => {
 }
 
 export const getOneJudge = (judgeId: number) => {
-  // call api, if it fails fallback to store
   try {
     const urlPath = getEndpoint(process.env.JUDGE_RETRIEVE_ENDPOINT as string)
     const options: Partial<FetchOptions> = {
@@ -128,6 +134,12 @@ export const getJudge = (judgeId: number) => {
 
 export const editJudge = (id: number, judge: JudgeSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    const validationErrors = validateJudge(judge)
+    if (validationErrors) {
+      dispatch(judgesFailure(JUDGE_UPDATE_FAILURE, validationErrors))
+      return
+    }
+
     dispatch(judgesRequest(JUDGE_UPDATE_REQUEST))
 
     try {

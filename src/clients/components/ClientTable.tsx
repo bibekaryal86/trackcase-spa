@@ -119,24 +119,18 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
   )
 
   const linkToClient = (x: ClientSchema | HistoryClientSchema) => (
-    <Link text={x.name || ''} navigateToPage={`/client/${x.id}`} />
+    <Link text={x.name} navigateToPage={`/client/${x.id}`} />
   )
 
   const clientsTableDataCommon = (x: ClientSchema | HistoryClientSchema) => {
     return {
-      name: isHistoryView ? x.name || '' : linkToClient(x),
-      aNumber: x.aNumber || '',
-      email: x.email || '',
-      phone: x.phoneNumber || '',
+      name: isHistoryView ? x.name : linkToClient(x),
+      aNumber: x.aNumber,
+      email: x.email,
+      phone: x.phoneNumber,
       address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-      judge: isHistoryView
-        ? x.judge?.name || ''
-        : selectedJudge?.name
-        ? selectedJudge.name || ''
-        : x.judge
-        ? linkToJudge(x.judge)
-        : '',
-      status: x.status || '',
+      judge: isHistoryView ? x.judge?.name : selectedJudge ? selectedJudge.name : x.judge ? linkToJudge(x.judge) : '',
+      status: x.status,
     }
   }
 

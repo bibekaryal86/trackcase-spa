@@ -19,9 +19,16 @@ import {
   SET_SELECTED_COURT_CASE,
 } from '../types/courtCases.action.types'
 import { CourtCaseResponse, CourtCaseSchema } from '../types/courtCases.data.types'
+import { validateCourtCase } from '../utils/courtCases.utils'
 
 export const addCourtCase = (courtCase: CourtCaseSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    const validationErrors = validateCourtCase(courtCase)
+    if (validationErrors) {
+      dispatch(courtCasesFailure(COURT_CASE_CREATE_FAILURE, validationErrors))
+      return
+    }
+
     dispatch(courtCasesRequest(COURT_CASE_CREATE_REQUEST))
 
     try {
@@ -123,6 +130,12 @@ export const getCourtCase = (courtCaseId: number) => {
 
 export const editCourtCase = (id: number, courtCase: CourtCaseSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    const validationErrors = validateCourtCase(courtCase)
+    if (validationErrors) {
+      dispatch(courtCasesFailure(COURT_CASE_UPDATE_FAILURE, validationErrors))
+      return
+    }
+
     dispatch(courtCasesRequest(COURT_CASE_UPDATE_REQUEST))
 
     try {

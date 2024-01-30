@@ -9,6 +9,9 @@ import {
   FormDatePickerField,
   FormSelectField,
   FormSelectStatusField,
+  FormTextField,
+  getNumber,
+  getString,
   GridFormWrapper,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
@@ -50,7 +53,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       componentLabel="Form--Form Type"
       required={true}
       value={selectedForm.formTypeId || ID_DEFAULT}
-      onChange={(e) => handleFormFormOnChange('formTypeId', e.target.value, selectedForm, setSelectedForm)}
+      onChange={(e) => handleFormFormOnChange('formTypeId', e.target.value, selectedForm, setSelectedForm, getNumber)}
       error={isFormFormFieldError('formTypeId', selectedForm.formTypeId)}
       menuItems={formTypesListForSelect()}
     />
@@ -61,7 +64,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       componentLabel="Form--Client, Case"
       required={true}
       value={selectedForm.courtCaseId || ID_DEFAULT}
-      onChange={(e) => handleFormFormOnChange('courtCaseId', e.target.value, selectedForm, setSelectedForm)}
+      onChange={(e) => handleFormFormOnChange('courtCaseId', e.target.value, selectedForm, setSelectedForm, getNumber)}
       error={isFormFormFieldError('courtCaseId', selectedForm.courtCaseId)}
       menuItems={courtCasesListForSelect()}
     />
@@ -82,8 +85,29 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       componentLabel="Form--Receipt Date"
       value={selectedForm.receiptDate}
       onChange={(newValue) => handleFormDateOnChange('receiptDate', newValue, selectedForm, setSelectedForm)}
-      minDate={dayjs().subtract(1, 'week')}
-      maxDate={dayjs().add(1, 'week')}
+      minDate={dayjs().subtract(1, 'month')}
+      maxDate={dayjs().add(1, 'month')}
+    />
+  )
+
+  const formReceiptNumber = () => (
+    <FormTextField
+      componentLabel="Form--Receipt Number"
+      required={false}
+      value={selectedForm.receiptNumber}
+      onChange={(e) =>
+        handleFormFormOnChange('receiptNumber', e.target.value, selectedForm, setSelectedForm, getString)
+      }
+    />
+  )
+
+  const formPriorityDate = () => (
+    <FormDatePickerField
+      componentLabel="Form--Priority Date"
+      value={selectedForm.priorityDate}
+      onChange={(newValue) => handleFormDateOnChange('priorityDate', newValue, selectedForm, setSelectedForm)}
+      minDate={dayjs().subtract(1, 'month')}
+      maxDate={dayjs().add(1, 'month')}
     />
   )
 
@@ -92,8 +116,8 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       componentLabel="Form--RFE Date"
       value={selectedForm.rfeDate}
       onChange={(newValue) => handleFormDateOnChange('rfeDate', newValue, selectedForm, setSelectedForm)}
-      minDate={dayjs().subtract(1, 'week')}
-      maxDate={dayjs().add(1, 'week')}
+      minDate={dayjs().subtract(1, 'month')}
+      maxDate={dayjs().add(1, 'month')}
     />
   )
 
@@ -102,8 +126,8 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       componentLabel="Form--RFE Submit Date"
       value={selectedForm.rfeSubmitDate}
       onChange={(newValue) => handleFormDateOnChange('rfeSubmitDate', newValue, selectedForm, setSelectedForm)}
-      minDate={dayjs().subtract(1, 'week')}
-      maxDate={dayjs().add(1, 'week')}
+      minDate={dayjs().subtract(1, 'month')}
+      maxDate={dayjs().add(1, 'month')}
     />
   )
 
@@ -112,16 +136,16 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       componentLabel="Form--Decision Date"
       value={selectedForm.decisionDate}
       onChange={(newValue) => handleFormDateOnChange('decisionDate', newValue, selectedForm, setSelectedForm)}
-      minDate={dayjs().subtract(1, 'week')}
-      maxDate={dayjs().add(1, 'week')}
+      minDate={dayjs().subtract(1, 'month')}
+      maxDate={dayjs().add(1, 'month')}
     />
   )
 
   const formStatus = () => (
     <FormSelectStatusField
       componentLabel="Form--Status"
-      value={selectedForm.status || ''}
-      onChange={(e) => handleFormFormOnChange('status', e.target.value, selectedForm, setSelectedForm)}
+      value={selectedForm.status}
+      onChange={(e) => handleFormFormOnChange('status', e.target.value, selectedForm, setSelectedForm, getString)}
       statusList={formStatusList}
       error={isFormFormFieldError('status', selectedForm.status)}
     />
@@ -130,8 +154,8 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
   const formComments = () => (
     <FormCommentsField
       componentLabel="Form--Comments"
-      value={selectedForm.comments || ''}
-      onChange={(e) => handleFormFormOnChange('comments', e.target.value, selectedForm, setSelectedForm)}
+      value={selectedForm.comments}
+      onChange={(e) => handleFormFormOnChange('comments', e.target.value, selectedForm, setSelectedForm, getString)}
     />
   )
 
@@ -141,17 +165,23 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       isShowOne={isShowOneForm}
       justifyContent={isShowOneForm ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={3}>
+      <Grid item xs={12}>
+        {formCourtCase()}
+      </Grid>
+      <Grid item xs={6}>
         {formType()}
       </Grid>
-      <Grid item xs={9}>
-        {formCourtCase()}
+      <Grid item xs={6}>
+        {formReceiptNumber()}
       </Grid>
       <Grid item xs={6}>
         {formSubmitDate()}
       </Grid>
       <Grid item xs={6}>
         {formReceiptDate()}
+      </Grid>
+      <Grid item xs={6}>
+        {formPriorityDate()}
       </Grid>
       <Grid item xs={6}>
         {formRfeDate()}

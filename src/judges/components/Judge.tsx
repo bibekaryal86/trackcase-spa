@@ -28,7 +28,7 @@ import { CourtSchema, getCourts } from '../../courts'
 import { editJudge, getJudge } from '../actions/judges.action'
 import { JUDGES_UNMOUNT } from '../types/judges.action.types'
 import { DefaultJudgeSchema, HistoryJudgeSchema, JudgeSchema } from '../types/judges.data.types'
-import { isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
+import { isAreTwoJudgesSame } from '../utils/judges.utils'
 
 const mapStateToProps = ({ judges, statuses, courts }: GlobalState) => {
   return {
@@ -140,9 +140,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   )
 
   const updateAction = () => {
-    if (validateJudge(selectedJudge)) {
-      editJudge(getNumber(id), selectedJudge)
-    }
+    editJudge(getNumber(id), selectedJudge)
   }
 
   const notesContent = () => (

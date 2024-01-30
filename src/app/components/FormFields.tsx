@@ -30,7 +30,7 @@ interface FormTextFieldProps {
   variant?: TextFieldVariants
   margin?: 'dense' | 'normal' | 'none' | undefined
   maxLength?: number
-  value: string
+  value: string | undefined
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   error?: boolean
   sx?: object
@@ -49,7 +49,7 @@ interface FormCommentFieldProps {
   variant?: TextFieldVariants
   margin?: 'dense' | 'normal' | 'none' | undefined
   maxLength?: number
-  value: string
+  value: string | undefined
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   error?: boolean
   sx?: object
@@ -76,20 +76,12 @@ interface StateSelectProps {
   error?: boolean
   inputLabelSx?: object
   variant?: TextFieldVariants
-  value: string
+  value: string | undefined
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 }
 
-interface StatusSelectProps {
-  componentLabel: string
-  required?: boolean
-  formControlSx?: object
-  error?: boolean
-  inputLabelSx?: object
-  variant?: TextFieldVariants
-  value: string
+interface StatusSelectProps extends StateSelectProps {
   statusList: string[]
-  onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 }
 
 interface DatePickerProps {
@@ -166,7 +158,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       margin={margin}
       id={id}
       inputProps={{ maxLength: maxLength }}
-      value={value}
+      value={value || ''}
       onChange={onChange}
       error={error}
       sx={sx}
@@ -257,7 +249,7 @@ export const FormSelectStateField: React.FC<StateSelectProps> = ({
 }) => (
   <FormSelectField
     componentLabel={componentLabel}
-    value={value}
+    value={value || ''}
     onChange={onChange}
     menuItems={getStateItems()}
     required={required}
@@ -282,7 +274,7 @@ export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
 }) => (
   <FormSelectField
     componentLabel={componentLabel}
-    value={value}
+    value={value || ''}
     onChange={onChange}
     menuItems={getStatusItems(statusList)}
     required={required}

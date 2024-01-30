@@ -46,6 +46,7 @@ import {
   clearMessages,
   convertDateToLocaleString,
   convertNotesToNotesList,
+  getComments,
   getDate,
   getEndpoint,
   getErrMsg,
@@ -54,11 +55,13 @@ import {
   getNumericOnly,
   getStartOfTheMonth,
   getStartOfTheYear,
+  getString,
   isLoggedIn,
   isNumericOnly,
   unmountPage,
   validateAddress,
   validateEmailAddress,
+  validatePhoneNumber,
 } from './utils/app.utils'
 import { Async, FetchOptions, FetchResponse } from './utils/fetch.utils'
 import { resetSpinner, setSpinner } from './utils/spinner.utils'
@@ -108,6 +111,7 @@ export {
   clearMessages,
   convertDateToLocaleString,
   convertNotesToNotesList,
+  getComments,
   getDate,
   getEndpoint,
   getErrMsg,
@@ -116,11 +120,13 @@ export {
   getNumericOnly,
   getStartOfTheMonth,
   getStartOfTheYear,
+  getString,
   isLoggedIn,
   isNumericOnly,
   unmountPage,
   validateAddress,
   validateEmailAddress,
+  validatePhoneNumber,
 }
 export { Async }
 export type { FetchOptions, FetchResponse }

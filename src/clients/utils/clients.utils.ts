@@ -1,12 +1,33 @@
-import { getNumber, getNumericOnly, isNumericOnly, validateAddress, validateEmailAddress } from '../../app'
+import {
+  getComments,
+  getNumericOnly,
+  isNumericOnly,
+  validateAddress,
+  validateEmailAddress,
+  validatePhoneNumber,
+} from '../../app'
 import { ClientSchema } from '../types/clients.data.types'
 
 export const validateClient = (client: ClientSchema) => {
-  const nameValid = !!client.name.trim()
-  const phoneValid = !!client.phoneNumber?.trim()
-  const emailValid = !!client.email.trim() && validateEmailAddress(client.email)
-  const addressValid = validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)
-  return nameValid && phoneValid && emailValid && addressValid
+  const errors: string[] = []
+
+  if (!client.name.trim()) {
+    errors.push('Name is required')
+  }
+  if (!validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)) {
+    errors.push('Full address is incomplete/invalid')
+  }
+  if (!validatePhoneNumber(client.phoneNumber)) {
+    errors.push('Phone Number is incomplete/invalid')
+  }
+  if (!client.email.trim()) {
+    errors.push('Email is required')
+  }
+  if (!client.status.trim()) {
+    errors.push('Status is required')
+  }
+
+  return errors.length ? errors.join(', ') : ''
 }
 
 export const isAreTwoClientsSame = (one: ClientSchema, two: ClientSchema) =>
@@ -47,78 +68,23 @@ export const isClientFormFieldError = (name: string, value: string | undefined, 
 
 export const handleClientFormOnChange = (
   name: string,
-  value: string,
+  value: string | number,
   selectedClient: ClientSchema,
   setSelectedClient: (updatedClient: ClientSchema) => void,
+  getValue: (value: string | number) => string | number,
 ) => {
-  let updatedClient = selectedClient
-  switch (name) {
-    case 'name':
-      updatedClient = {
-        ...selectedClient,
-        name: value,
-      }
-      break
-    case 'aNumber':
-      updatedClient = {
-        ...selectedClient,
-        aNumber: getNumericOnly(value, 9),
-      }
-      break
-    case 'email':
-      updatedClient = {
-        ...selectedClient,
-        email: value,
-      }
-      break
-    case 'judgeId':
-      updatedClient = {
-        ...selectedClient,
-        judgeId: getNumber(value),
-      }
-      break
-    case 'status':
-      updatedClient = {
-        ...selectedClient,
-        status: value,
-      }
-      break
-    case 'comments':
-      updatedClient = {
-        ...selectedClient,
-        comments: value.length < 8888 ? value : selectedClient.comments,
-      }
-      break
-    case 'streetAddress':
-      updatedClient = {
-        ...selectedClient,
-        streetAddress: value,
-      }
-      break
-    case 'city':
-      updatedClient = {
-        ...selectedClient,
-        city: value,
-      }
-      break
-    case 'state':
-      updatedClient = {
-        ...selectedClient,
-        state: value,
-      }
-      break
-    case 'zipCode':
-      updatedClient = {
-        ...selectedClient,
-        zipCode: isNumericOnly(value) ? value : selectedClient.zipCode,
-      }
-      break
-    case 'phoneNumber':
-      updatedClient = {
-        ...selectedClient,
-        phoneNumber: getNumericOnly(value, 10),
-      }
-      break
+  if (name === 'comments') {
+    value = getComments(value.toString())
+  } else if (name === 'aNumber') {
+    value = getNumericOnly(value.toString(), 9)
+  } else if (name === 'zipCode') {
+    value = isNumericOnly(value.toString()) ? value : selectedClient.zipCode ? selectedClient.zipCode : ''
+  } else if (name === 'phoneNumber') {
+    value = getNumericOnly(value.toString(), 10)
+  }
+  const updatedClient = {
+    ...selectedClient,
+    [name]: getValue(value),
   }
   setSelectedClient(updatedClient)
 }

@@ -1,10 +1,24 @@
-import { getNumericOnly, isNumericOnly, validateAddress } from '../../app'
+import { getComments, getNumericOnly, isNumericOnly, validateAddress, validatePhoneNumber } from '../../app'
 import { CourtSchema } from '../types/courts.data.types'
 
-export const validateCourt = (court: CourtSchema) =>
-  court.name.trim() &&
-  court.status.trim() &&
-  validateAddress(court.streetAddress, court.city, court.state, court.zipCode, true)
+export const validateCourt = (court: CourtSchema) => {
+  const errors: string[] = []
+
+  if (!court.name.trim()) {
+    errors.push('Name is required')
+  }
+  if (!validateAddress(court.streetAddress, court.city, court.state, court.zipCode, true)) {
+    errors.push('Full address is incomplete/invalid')
+  }
+  if (!validatePhoneNumber(court.phoneNumber)) {
+    errors.push('Phone Number is incomplete/invalid')
+  }
+  if (!court.status.trim()) {
+    errors.push('Status is required')
+  }
+
+  return errors.length ? errors.join(', ') : ''
+}
 
 export const isAreTwoCourtsSame = (one: CourtSchema, two: CourtSchema) =>
   one &&
@@ -28,66 +42,21 @@ export const isCourtFormFieldError = (
 
 export const handleCourtFormOnChange = (
   name: string,
-  value: string,
+  value: string | number,
   selectedCourt: CourtSchema,
   setSelectedCourt: (updatedCourt: CourtSchema) => void,
+  getValue: (value: string | number) => string | number,
 ) => {
-  let updatedCourt = selectedCourt
-  switch (name) {
-    case 'name':
-      updatedCourt = {
-        ...selectedCourt,
-        name: value,
-      }
-      break
-    case 'streetAddress':
-      updatedCourt = {
-        ...selectedCourt,
-        streetAddress: value,
-      }
-      break
-    case 'city':
-      updatedCourt = {
-        ...selectedCourt,
-        city: value,
-      }
-      break
-    case 'state':
-      updatedCourt = {
-        ...selectedCourt,
-        state: value,
-      }
-      break
-    case 'zipCode':
-      updatedCourt = {
-        ...selectedCourt,
-        zipCode: isNumericOnly(value) ? value : selectedCourt.zipCode,
-      }
-      break
-    case 'phoneNumber':
-      updatedCourt = {
-        ...selectedCourt,
-        phoneNumber: getNumericOnly(value, 10),
-      }
-      break
-    case 'dhsAddress':
-      updatedCourt = {
-        ...selectedCourt,
-        dhsAddress: value,
-      }
-      break
-    case 'status':
-      updatedCourt = {
-        ...selectedCourt,
-        status: value,
-      }
-      break
-    case 'comments':
-      updatedCourt = {
-        ...selectedCourt,
-        comments: value.length < 8888 ? value : selectedCourt.comments,
-      }
-      break
+  if (name === 'comments') {
+    value = getComments(value.toString())
+  } else if (name === 'zipCode') {
+    value = isNumericOnly(value.toString()) ? value : selectedCourt.zipCode ? selectedCourt.zipCode : ''
+  } else if (name === 'phoneNumber') {
+    value = getNumericOnly(value.toString(), 10)
+  }
+  const updatedCourt = {
+    ...selectedCourt,
+    [name]: getValue(value),
   }
   setSelectedCourt(updatedCourt)
 }

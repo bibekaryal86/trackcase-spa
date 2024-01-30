@@ -24,7 +24,7 @@ import { getCaseTypes } from '../../types/actions/caseTypes.action'
 import { addCourtCase, deleteCourtCase, editCourtCase, getCourtCases } from '../actions/courtCases.action'
 import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
 import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
-import { isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
+import { isAreTwoCourtCasesSame } from '../utils/courtCases.utils'
 
 const mapStateToProps = ({ courtCases, statuses, clients, caseTypes }: GlobalState) => {
   return {
@@ -71,7 +71,7 @@ interface CourtCasesProps {
 }
 
 const CourtCases = (props: CourtCasesProps): React.ReactElement => {
-  const { courtCasesList, getCourtCases, clientsList, getClients } = props
+  const { courtCasesList, getCourtCases, addCourtCase, editCourtCase, deleteCourtCase, clientsList, getClients } = props
   const { unmountPage } = props
   const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
@@ -132,15 +132,11 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
 
   const primaryButtonCallback = (action: string, id?: number) => {
     if (id && action === ACTION_DELETE) {
-      props.deleteCourtCase(id)
+      deleteCourtCase(id)
     } else if (id && action === ACTION_UPDATE) {
-      if (validateCourtCase(selectedCourtCase)) {
-        props.editCourtCase(id, selectedCourtCase)
-      }
+      editCourtCase(id, selectedCourtCase)
     } else {
-      if (validateCourtCase(selectedCourtCase)) {
-        props.addCourtCase(selectedCourtCase)
-      }
+      addCourtCase(selectedCourtCase)
     }
   }
 

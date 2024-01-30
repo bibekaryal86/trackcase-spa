@@ -110,9 +110,9 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
     return {
       name: isHistoryView ? `${x.name}, ${x.state}` : linkToCourt(x),
       address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-      phone: x.phoneNumber || '',
-      dhsAddress: x.dhsAddress || '',
-      status: x.status || '',
+      phone: x.phoneNumber,
+      dhsAddress: x.dhsAddress,
+      status: x.status,
     }
   }
 

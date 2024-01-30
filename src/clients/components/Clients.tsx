@@ -22,7 +22,7 @@ import { getJudge, getJudges, JudgeSchema } from '../../judges'
 import { addClient, deleteClient, editClient, getClients } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
 import { ClientSchema, DefaultClientSchema } from '../types/clients.data.types'
-import { isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
+import { isAreTwoClientsSame } from '../utils/clients.utils'
 
 const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
   return {
@@ -65,7 +65,7 @@ interface ClientsProps {
 }
 
 const Clients = (props: ClientsProps): React.ReactElement => {
-  const { clientsList, getClients, judgesList, getJudges } = props
+  const { clientsList, getClients, addClient, editClient, deleteClient, judgesList, getJudges } = props
   const { unmountPage } = props
   const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
@@ -122,15 +122,11 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   const primaryButtonCallback = (action: string, id?: number) => {
     if (id && action === ACTION_DELETE) {
-      props.deleteClient(id)
+      deleteClient(id)
     } else if (id && action === ACTION_UPDATE) {
-      if (validateClient(selectedClient)) {
-        props.editClient(id, selectedClient)
-      }
+      editClient(id, selectedClient)
     } else {
-      if (validateClient(selectedClient)) {
-        props.addClient(selectedClient)
-      }
+      addClient(selectedClient)
     }
   }
 

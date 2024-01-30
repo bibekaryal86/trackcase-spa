@@ -1,7 +1,21 @@
-import { getNumber } from '../../app'
+import { getComments } from '../../app'
 import { JudgeSchema } from '../types/judges.data.types'
 
-export const validateJudge = (judge: JudgeSchema) => judge.name.trim() && judge.courtId > 0 && judge.status.trim()
+export const validateJudge = (judge: JudgeSchema) => {
+  const errors: string[] = []
+
+  if (!judge.name.trim()) {
+    errors.push('Name is required')
+  }
+  if (judge.courtId <= 0) {
+    errors.push('Court is required')
+  }
+  if (!judge.status.trim()) {
+    errors.push('Status is required')
+  }
+
+  return errors.length ? errors.join(', ') : ''
+}
 
 export const isAreTwoJudgesSame = (one: JudgeSchema, two: JudgeSchema) =>
   one &&
@@ -17,37 +31,14 @@ export const handleJudgeFormOnChange = (
   value: string | number,
   selectedJudge: JudgeSchema,
   setSelectedJudge: (updatedJudge: JudgeSchema) => void,
+  getValue: (value: string | number) => string | number,
 ) => {
-  let updatedJudge = selectedJudge
-  if (name === 'name') {
-    updatedJudge = {
-      ...selectedJudge,
-      name: value.toString(),
-    }
+  if (name === 'comments' && typeof value === 'string') {
+    value = getComments(value)
   }
-  if (name === 'webex') {
-    updatedJudge = {
-      ...selectedJudge,
-      webex: value.toString(),
-    }
+  const updatedForm = {
+    ...selectedJudge,
+    [name]: getValue(value),
   }
-  if (name === 'courtId') {
-    updatedJudge = {
-      ...selectedJudge,
-      courtId: getNumber(value),
-    }
-  }
-  if (name === 'status') {
-    updatedJudge = {
-      ...selectedJudge,
-      status: value.toString(),
-    }
-  }
-  if (name === 'comments') {
-    updatedJudge = {
-      ...selectedJudge,
-      comments: value.toString(),
-    }
-  }
-  setSelectedJudge(updatedJudge)
+  setSelectedJudge(updatedForm)
 }
