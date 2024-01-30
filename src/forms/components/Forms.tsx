@@ -237,7 +237,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
   const formsTable = () => (
     <FormTable
       isHistoryView={false}
-      formsList={formsList}
+      formsList={!(courtCaseId && selectedCourtCase) ? formsList : selectedCourtCase.forms || []}
       historyFormsList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}

@@ -126,7 +126,8 @@ export const validateAddress = (
   }
 }
 
-export const validatePhoneNumber = (phoneNumber?: string): boolean => !!phoneNumber && phoneNumber.trim().length === 10 && isNumericOnly(phoneNumber.trim())
+export const validatePhoneNumber = (phoneNumber?: string): boolean =>
+  !!phoneNumber && phoneNumber.trim().length === 10 && isNumericOnly(phoneNumber.trim())
 
 export const validateEmailAddress = (email: string): boolean => !!email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,3}$/.test(email)
 
