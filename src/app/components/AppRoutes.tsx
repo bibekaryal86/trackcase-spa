@@ -60,7 +60,7 @@ export const protectedRoutes: RoutesType[] = [
     element: <Collection />,
     subroutes: [
       {
-        path: ':id',
+        path: ':type/:id',
         element: <Collection />,
       },
     ],
@@ -76,7 +76,7 @@ export const protectedRoutes: RoutesType[] = [
     element: <Calendar />,
     subroutes: [
       {
-        path: ':id',
+        path: ':type/:id',
         element: <Calendar />,
       },
     ],
