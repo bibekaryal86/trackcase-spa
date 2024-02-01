@@ -4,7 +4,6 @@ import CasesRoundedIcon from '@mui/icons-material/CasesRounded'
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded'
 import ChecklistRtlRoundedIcon from '@mui/icons-material/ChecklistRtlRounded'
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
-import EventIcon from '@mui/icons-material/Event'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import FilePresentRoundedIcon from '@mui/icons-material/FilePresentRounded'
 import GroupsIcon from '@mui/icons-material/Groups'
@@ -17,7 +16,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Login from './Login'
 import Logout from './Logout'
 import NotFound from './NotFound'
-import { HearingCalendar, HearingCalendars, TaskCalendar, TaskCalendars } from '../../calendars'
+import { Calendar, Calendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
 import { Collection, Collections } from '../../collections'
@@ -67,34 +66,18 @@ export const protectedRoutes: RoutesType[] = [
     ],
   },
   {
-    path: '/hearing_calendars',
-    display: 'Hearing Calendars',
-    element: <HearingCalendars />,
+    path: '/calendars',
+    display: 'Calendars',
+    element: <Calendars />,
     icon: <TodayIcon />,
   },
   {
-    path: '/hearing_calendar',
-    element: <HearingCalendar />,
+    path: '/calendar',
+    element: <Calendar />,
     subroutes: [
       {
         path: ':id',
-        element: <HearingCalendar />,
-      },
-    ],
-  },
-  {
-    path: '/task_calendars',
-    display: 'Task Calendars',
-    element: <TaskCalendars />,
-    icon: <EventIcon />,
-  },
-  {
-    path: '/task_calendar',
-    element: <TaskCalendar />,
-    subroutes: [
-      {
-        path: ':id',
-        element: <TaskCalendar />,
+        element: <Calendar />,
       },
     ],
   },

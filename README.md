@@ -20,5 +20,6 @@
 TODO
 * Add task calendar dropdown to FormForm.tsx
 * Move statuses in track case service to database
-* Add submission_type in form type
-  * submission_type = form, motion, other
+  * update whole json
+* Add filing_type in form type
+  * filing_type = form, motion, other

@@ -1,8 +1,6 @@
 // components
-import HearingCalendar from './components/HearingCalendar'
-import HearingCalendars from './components/HearingCalendars'
-import TaskCalendar from './components/TaskCalendar'
-import TaskCalendars from './components/TaskCalendars'
+import Calendar from './components/Calendar'
+import Calendars from './components/Calendars'
 // types
 import {
   HearingCalendarResponse,
@@ -15,7 +13,7 @@ import {
   TaskCalendarSchema,
 } from './types/calendars.data.types'
 
-export { HearingCalendar, HearingCalendars, TaskCalendar, TaskCalendars }
+export { Calendar, Calendars }
 export type {
   HearingCalendarSchema,
   HearingCalendarResponse,
