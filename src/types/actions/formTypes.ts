@@ -70,10 +70,7 @@ export const getFormTypes = (isForceFetch: boolean = false) => {
           dispatch(formTypesSuccess(FORM_TYPES_RETRIEVE_SUCCESS, '', formTypeResponse.formTypes))
         }
       } else {
-        formTypeResponse = {
-          formTypes: formTypesInStore,
-        }
-        dispatch(formTypesSuccess(FORM_TYPES_RETRIEVE_SUCCESS, '', formTypeResponse.formTypes))
+        dispatch(formTypesSuccess(FORM_TYPES_RETRIEVE_SUCCESS, '', formTypesInStore))
       }
     } catch (error) {
       console.log('Get FormTypes Error: ', error)

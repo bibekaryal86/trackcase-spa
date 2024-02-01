@@ -1,7 +1,11 @@
+// actions
 // components
 import Calendar from './components/Calendar'
 import Calendars from './components/Calendars'
-// types
+// reducers
+import calendars from './reducers/calendars.reducer'
+// action types
+// data types
 import {
   HearingCalendarResponse,
   HearingCalendarSchema,
@@ -14,13 +18,14 @@ import {
 } from './types/calendars.data.types'
 
 export { Calendar, Calendars }
+export { calendars }
 export type {
-  HearingCalendarSchema,
   HearingCalendarResponse,
-  NoteHearingCalendarSchema,
+  HearingCalendarSchema,
   HistoryHearingCalendarSchema,
-  TaskCalendarSchema,
-  TaskCalendarResponse,
-  NoteTaskCalendarSchema,
   HistoryTaskCalendarSchema,
+  NoteHearingCalendarSchema,
+  NoteTaskCalendarSchema,
+  TaskCalendarResponse,
+  TaskCalendarSchema,
 }

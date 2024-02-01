@@ -70,10 +70,7 @@ export const getCaseTypes = (isForceFetch: boolean = false) => {
           dispatch(caseTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, '', caseTypeResponse.caseTypes))
         }
       } else {
-        caseTypeResponse = {
-          caseTypes: caseTypesInStore,
-        }
-        dispatch(caseTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, '', caseTypeResponse.caseTypes))
+        dispatch(caseTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, '', caseTypesInStore))
       }
     } catch (error) {
       console.log('Get CaseTypes Error: ', error)

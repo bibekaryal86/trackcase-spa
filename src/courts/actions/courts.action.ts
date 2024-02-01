@@ -74,10 +74,7 @@ export const getCourts = (isForceFetch: boolean = false) => {
           dispatch(courtsSuccess(COURTS_RETRIEVE_SUCCESS, '', courtResponse.courts))
         }
       } else {
-        courtResponse = {
-          courts: courtsInStore,
-        }
-        dispatch(courtsSuccess(COURTS_RETRIEVE_SUCCESS, '', courtResponse.courts))
+        dispatch(courtsSuccess(COURTS_RETRIEVE_SUCCESS, '', courtsInStore))
       }
     } catch (error) {
       console.log('Get Courts Error: ', error)

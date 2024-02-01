@@ -78,12 +78,7 @@ export const getCollectionMethods = (isForceFetch: boolean = false) => {
           )
         }
       } else {
-        collectionMethodResponse = {
-          collectionMethods: collectionMethodsInStore,
-        }
-        dispatch(
-          collectionMethodsSuccess(COLLECTION_METHODS_RETRIEVE_SUCCESS, '', collectionMethodResponse.collectionMethods),
-        )
+        dispatch(collectionMethodsSuccess(COLLECTION_METHODS_RETRIEVE_SUCCESS, '', collectionMethodsInStore))
       }
     } catch (error) {
       console.log('Get CollectionMethods Error: ', error)

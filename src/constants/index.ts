@@ -59,6 +59,12 @@ export const NOTE_OBJECT_TYPES = Object.freeze({
   CASH_COLLECTION: 'cash_collection',
 })
 
+// CALENDAR TYPES
+export const CALENDAR_OBJECT_TYPES = Object.freeze({
+  HEARING: 'HEARING_CALENDAR',
+  TASK: 'TASK_CALENDAR',
+})
+
 // STATES
 export const STATES_LIST = [
   { name: 'Alabama', abbreviation: 'AL' },

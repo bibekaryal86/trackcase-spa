@@ -70,10 +70,7 @@ export const getTaskTypes = (isForceFetch: boolean = false) => {
           dispatch(taskTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, '', taskTypeResponse.taskTypes))
         }
       } else {
-        taskTypeResponse = {
-          taskTypes: taskTypesInStore,
-        }
-        dispatch(taskTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, '', taskTypeResponse.taskTypes))
+        dispatch(taskTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, '', taskTypesInStore))
       }
     } catch (error) {
       console.log('Get TaskTypes Error: ', error)

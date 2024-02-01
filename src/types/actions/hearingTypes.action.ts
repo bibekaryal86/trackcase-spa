@@ -70,10 +70,7 @@ export const getHearingTypes = (isForceFetch: boolean = false) => {
           dispatch(hearingTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, '', hearingTypeResponse.hearingTypes))
         }
       } else {
-        hearingTypeResponse = {
-          hearingTypes: hearingTypesInStore,
-        }
-        dispatch(hearingTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, '', hearingTypeResponse.hearingTypes))
+        dispatch(hearingTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, '', hearingTypesInStore))
       }
     } catch (error) {
       console.log('Get HearingTypes Error: ', error)

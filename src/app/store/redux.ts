@@ -5,6 +5,8 @@ import { applyMiddleware, combineReducers, legacy_createStore as createStore } f
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant'
 import thunk from 'redux-thunk'
 
+import { calendars } from '../../calendars'
+import { CalendarsState } from '../../calendars/types/calendars.data.types'
 import { courtCases, CourtCasesState } from '../../cases'
 import { clients, ClientsState } from '../../clients'
 import { courts, CourtsState } from '../../courts'
@@ -49,6 +51,7 @@ export interface GlobalState {
   clients: ClientsState
   courtCases: CourtCasesState
   forms: FormsState
+  calendars: CalendarsState
 }
 
 export interface GlobalDispatch {
@@ -70,6 +73,7 @@ const appReducers = combineReducers({
   clients,
   courtCases,
   forms,
+  calendars,
 })
 
 const rootReducer = (state: any, action: any) => {

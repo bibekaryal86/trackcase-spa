@@ -75,10 +75,7 @@ export const getJudges = (isForceFetch: boolean = false) => {
           dispatch(judgesSuccess(JUDGES_RETRIEVE_SUCCESS, '', judgeResponse.judges))
         }
       } else {
-        judgeResponse = {
-          judges: judgesInStore,
-        }
-        dispatch(judgesSuccess(JUDGES_RETRIEVE_SUCCESS, '', judgeResponse.judges))
+        dispatch(judgesSuccess(JUDGES_RETRIEVE_SUCCESS, '', judgesInStore))
       }
     } catch (error) {
       console.log('Get Judges Error: ', error)

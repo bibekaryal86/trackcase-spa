@@ -75,10 +75,7 @@ export const getClients = (isForceFetch: boolean = false) => {
           dispatch(clientsSuccess(CLIENTS_RETRIEVE_SUCCESS, '', clientResponse.clients))
         }
       } else {
-        clientResponse = {
-          clients: clientsInStore,
-        }
-        dispatch(clientsSuccess(CLIENTS_RETRIEVE_SUCCESS, '', clientResponse.clients))
+        dispatch(clientsSuccess(CLIENTS_RETRIEVE_SUCCESS, '', clientsInStore))
       }
     } catch (error) {
       console.log('Get Clients Error: ', error)

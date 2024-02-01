@@ -75,10 +75,7 @@ export const getForms = (isForceFetch: boolean = false) => {
           dispatch(formsSuccess(FORMS_RETRIEVE_SUCCESS, '', formsResponse.forms))
         }
       } else {
-        formsResponse = {
-          forms: formsInStore,
-        }
-        dispatch(formsSuccess(FORMS_RETRIEVE_SUCCESS, '', formsResponse.forms))
+        dispatch(formsSuccess(FORMS_RETRIEVE_SUCCESS, '', formsInStore))
       }
     } catch (error) {
       console.log('Get Forms Error: ', error)
