@@ -90,7 +90,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     if (isHistoryView) {
       tableHeaderData.push(
         {
-          id: 'user_name',
+          id: 'user',
           label: 'User',
           isDisableSorting: true,
         },
