@@ -26,8 +26,8 @@ interface CalendarTableProps {
   calendarType: string
   calendarsList: HearingCalendarSchema[] | TaskCalendarSchema[]
   historyCalendarsList: HistoryHearingCalendarSchema[] | HistoryTaskCalendarSchema[]
-  setModal?: (action: string, calendarType: string) => void
-  setSelectedId?: (id: number, calendarType: string) => void
+  setModal?: (action: string) => void
+  setSelectedId?: (id: number) => void
   setSelectedCalendar?: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
   setSelectedCalendarForReset?: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
   courtCasesList: CourtCaseSchema[]
@@ -91,8 +91,8 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     <>
       <Button
         onClick={() => {
-          setModal && setModal(ACTION_UPDATE, calendarType)
-          setSelectedId && setSelectedId(id, calendarType)
+          setModal && setModal(ACTION_UPDATE)
+          setSelectedId && setSelectedId(id)
           setSelectedCalendar && setSelectedCalendar(calendar)
           setSelectedCalendarForReset && setSelectedCalendarForReset(calendar)
         }}
@@ -101,8 +101,8 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       </Button>
       <Button
         onClick={() => {
-          setModal && setModal(ACTION_DELETE, calendarType)
-          setSelectedId && setSelectedId(id, calendarType)
+          setModal && setModal(ACTION_DELETE)
+          setSelectedId && setSelectedId(id)
           setSelectedCalendar && setSelectedCalendar(calendar)
         }}
       >
@@ -161,9 +161,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
 
   const addButton = () =>
     isHistoryView ? undefined : (
-      <Button
-        onClick={() => setModal && setModal(ACTION_ADD, calendarType)}
-      >{`Add New ${calendarTypeForDisplay}`}</Button>
+      <Button onClick={() => setModal && setModal(ACTION_ADD)}>{`Add New ${calendarTypeForDisplay}`}</Button>
     )
 
   return (
