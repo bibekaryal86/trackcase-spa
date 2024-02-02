@@ -46,10 +46,10 @@ const mapDispatchToProps = {
   editForm: (formId: number, form: FormSchema) => editForm(formId, form),
   unmountPage: () => unmountPage(FORMS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => addNote(noteObjectType, noteObjectId, note),
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
-    editNote(noteObjectType, noteObjectId, note, noteId),
-  deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
+  addNote: (noteObjectId: number, note: string) => addNote(NOTE_OBJECT_TYPES.FORM, noteObjectId, note),
+  editNote: (noteObjectId: number, note: string, noteId: number) =>
+    editNote(NOTE_OBJECT_TYPES.FORM, noteObjectId, note, noteId),
+  deleteNote: (noteId: number) => deleteNote(NOTE_OBJECT_TYPES.FORM, noteId),
   getFormTypesList: () => getFormTypes(),
   getCourtCasesList: () => getCourtCases(),
 }
@@ -62,9 +62,9 @@ interface FormProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteObjectType: string, noteId: number) => void
+  addNote: (noteObjectId: number, note: string) => void
+  editNote: (noteObjectId: number, note: string, noteId: number) => void
+  deleteNote: (noteId: number) => void
   formTypesList: FormTypeSchema[]
   getFormTypesList: () => void
   courtCasesList: CourtCaseSchema[]
@@ -164,7 +164,6 @@ const Form = (props: FormProps): React.ReactElement => {
 
   const notesContent = () => (
     <Notes
-      noteObjectType={NOTE_OBJECT_TYPES.FORM}
       noteObjectId={selectedForm.id || ID_DEFAULT}
       notesList={convertNotesToNotesList(selectedForm.noteForms || [], selectedForm.id || ID_LIST)}
       addNote={props.addNote}

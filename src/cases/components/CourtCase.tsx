@@ -47,10 +47,10 @@ const mapDispatchToProps = {
   editCourtCase: (courtCaseId: number, courtCase: CourtCaseSchema) => editCourtCase(courtCaseId, courtCase),
   unmountPage: () => unmountPage(COURT_CASES_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => addNote(noteObjectType, noteObjectId, note),
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
-    editNote(noteObjectType, noteObjectId, note, noteId),
-  deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
+  addNote: (noteObjectId: number, note: string) => addNote(NOTE_OBJECT_TYPES.COURT_CASE, noteObjectId, note),
+  editNote: (noteObjectId: number, note: string, noteId: number) =>
+    editNote(NOTE_OBJECT_TYPES.COURT_CASE, noteObjectId, note, noteId),
+  deleteNote: (noteId: number) => deleteNote(NOTE_OBJECT_TYPES.COURT_CASE, noteId),
   getCaseTypes: () => getCaseTypes(),
   getClients: () => getClients(),
 }
@@ -63,9 +63,9 @@ interface CourtCaseProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteObjectType: string, noteId: number) => void
+  addNote: (noteObjectId: number, note: string) => void
+  editNote: (noteObjectId: number, note: string, noteId: number) => void
+  deleteNote: (noteId: number) => void
   caseTypesList: CaseTypeSchema[]
   getCaseTypes: () => void
   clientsList: ClientSchema[]
@@ -160,7 +160,6 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
 
   const notesContent = () => (
     <Notes
-      noteObjectType={NOTE_OBJECT_TYPES.COURT_CASE}
       noteObjectId={selectedCourtCase.id || ID_DEFAULT}
       notesList={convertNotesToNotesList(selectedCourtCase.noteCourtCases || [], selectedCourtCase.id || ID_LIST)}
       addNote={props.addNote}

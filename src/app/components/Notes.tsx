@@ -8,16 +8,16 @@ import { convertDateToLocaleString, Modal, NoteSchema, Table, TableData, TableHe
 import { BUTTON_CANCEL, BUTTON_DELETE, ID_ACTION_BUTTON, ID_DEFAULT } from '../../constants'
 
 interface NoteProps {
-  noteObjectType: string
+  // noteObjectType: string   // noteObjectType provided in calling components props directly
   noteObjectId: number
   notesList: NoteSchema[]
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteObjectType: string, noteId: number) => void
+  addNote: (noteObjectId: number, note: string) => void
+  editNote: (noteObjectId: number, note: string, noteId: number) => void
+  deleteNote: (noteId: number) => void
 }
 
 const Notes = (props: NoteProps): React.ReactElement => {
-  const { noteObjectType, noteObjectId, notesList } = props
+  const { noteObjectId, notesList } = props
 
   const [note, setNote] = useState('')
   const [noteInit, setNoteInit] = useState('')
@@ -41,7 +41,7 @@ const Notes = (props: NoteProps): React.ReactElement => {
   ]
 
   const deletePrimaryButtonCallback = () => {
-    props.deleteNote(noteObjectType, noteId)
+    props.deleteNote(noteId)
     setIsShowDeleteModal(false)
     setNoteId(ID_DEFAULT)
     setNote('')
@@ -103,7 +103,7 @@ const Notes = (props: NoteProps): React.ReactElement => {
     <Table componentName="Court Notes" headerData={notesTableHeaderData} tableData={notesTableData} />
   )
 
-  const noteField = `${noteObjectType}-note`
+  const noteField = `${noteObjectId}-note`
   const addNote = () => (
     <TextField
       required
@@ -129,7 +129,7 @@ const Notes = (props: NoteProps): React.ReactElement => {
           <Button
             disabled={note.trim() === noteInit}
             onClick={() => {
-              props.editNote(noteObjectType, noteObjectId, note, noteId)
+              props.editNote(noteObjectId, note, noteId)
               setNote('')
             }}
           >
@@ -139,7 +139,7 @@ const Notes = (props: NoteProps): React.ReactElement => {
           <Button
             disabled={note.trim() === ''}
             onClick={() => {
-              props.addNote(noteObjectType, noteObjectId, note)
+              props.addNote(noteObjectId, note)
               setNote('')
             }}
           >

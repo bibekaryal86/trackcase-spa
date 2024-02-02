@@ -44,10 +44,10 @@ const mapDispatchToProps = {
   editJudge: (judgeId: number, judge: JudgeSchema) => editJudge(judgeId, judge),
   unmountPage: () => unmountPage(JUDGES_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => addNote(noteObjectType, noteObjectId, note),
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
-    editNote(noteObjectType, noteObjectId, note, noteId),
-  deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
+  addNote: (noteObjectId: number, note: string) => addNote(NOTE_OBJECT_TYPES.JUDGE, noteObjectId, note),
+  editNote: (noteObjectId: number, note: string, noteId: number) =>
+    editNote(NOTE_OBJECT_TYPES.JUDGE, noteObjectId, note, noteId),
+  deleteNote: (noteId: number) => deleteNote(NOTE_OBJECT_TYPES.JUDGE, noteId),
   getCourts: () => getCourts(),
 }
 
@@ -59,9 +59,9 @@ interface JudgeProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteObjectType: string, noteId: number) => void
+  addNote: (noteObjectId: number, note: string) => void
+  editNote: (noteObjectId: number, note: string, noteId: number) => void
+  deleteNote: (noteId: number) => void
   courtsList: CourtSchema[]
   getCourts: () => void
 }
@@ -145,7 +145,6 @@ const Judge = (props: JudgeProps): React.ReactElement => {
 
   const notesContent = () => (
     <Notes
-      noteObjectType={NOTE_OBJECT_TYPES.JUDGE}
       noteObjectId={selectedJudge.id || ID_DEFAULT}
       notesList={convertNotesToNotesList(selectedJudge.noteJudges || [], selectedJudge.id || ID_LIST)}
       addNote={props.addNote}
