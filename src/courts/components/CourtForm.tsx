@@ -113,7 +113,9 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="Court--Comments"
       value={selectedCourt.comments}
-      onChange={(e) => handleCourtFormOnChange('comments', e.target.value, selectedCourt, setSelectedCourt, getComments)}
+      onChange={(e) =>
+        handleCourtFormOnChange('comments', e.target.value, selectedCourt, setSelectedCourt, getComments)
+      }
     />
   )
 
