@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { getComments, getNumber } from '../../app'
+import { getNumber } from '../../app'
 import { CALENDAR_OBJECT_TYPES } from '../../constants'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 
@@ -111,9 +111,6 @@ export const handleCalendarFormOnChange = (
   setSelectedCalendar: (updatedCalendar: HearingCalendarSchema | TaskCalendarSchema) => void,
   getValue: (value: string | number) => string | number,
 ) => {
-  if (name === 'comments') {
-    value = getComments(value.toString())
-  }
   const updatedCalendar = {
     ...selectedCalendar,
     [name]: getValue(value),

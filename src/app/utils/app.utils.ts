@@ -93,11 +93,12 @@ export const getDate = (value: string | undefined) => {
   return undefined
 }
 
-export const getComments = (value: string): string => {
-  if (value.length > 8888) {
-    return value.substring(0, 8888)
+export const getComments = (value: string | number): string => {
+  const valueString = typeof value === 'number' ? value.toString() : value
+  if (valueString.length > 8888) {
+    return valueString.substring(0, 8888)
   }
-  return value
+  return valueString
 }
 
 export const validateAddress = (

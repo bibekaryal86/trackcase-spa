@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { getComments, getNumber } from '../../app'
+import { getNumber } from '../../app'
 import { FormSchema } from '../types/forms.data.types'
 
 export const validateForm = (form: FormSchema) => {
@@ -82,9 +82,6 @@ export const handleFormFormOnChange = (
   setSelectedForm: (updatedForm: FormSchema) => void,
   getValue: (value: string | number) => string | number,
 ) => {
-  if (name === 'comments' && typeof value === 'string') {
-    value = getComments(value)
-  }
   const updatedForm = {
     ...selectedForm,
     [name]: getValue(value),

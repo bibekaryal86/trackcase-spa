@@ -10,6 +10,7 @@ import {
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
+  getComments,
   getNumber,
   getString,
   GridFormWrapper,
@@ -155,7 +156,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="Form--Comments"
       value={selectedForm.comments}
-      onChange={(e) => handleFormFormOnChange('comments', e.target.value, selectedForm, setSelectedForm, getString)}
+      onChange={(e) => handleFormFormOnChange('comments', e.target.value, selectedForm, setSelectedForm, getComments)}
     />
   )
 

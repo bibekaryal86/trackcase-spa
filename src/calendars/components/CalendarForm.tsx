@@ -9,6 +9,7 @@ import {
   FormDatePickerField,
   FormSelectField,
   FormSelectStatusField,
+  getComments,
   getNumber,
   getString,
   GridFormWrapper,
@@ -150,7 +151,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
       componentLabel="Calendar--Comments"
       value={selectedCalendar.comments}
       onChange={(e) =>
-        handleCalendarFormOnChange('comments', e.target.value, selectedCalendar, setSelectedCalendar, getString)
+        handleCalendarFormOnChange('comments', e.target.value, selectedCalendar, setSelectedCalendar, getComments)
       }
     />
   )

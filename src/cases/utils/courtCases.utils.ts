@@ -1,4 +1,4 @@
-import { getComments, getNumber } from '../../app'
+import { getNumber } from '../../app'
 import { CourtCaseSchema } from '../types/courtCases.data.types'
 
 export const validateCourtCase = (courtCase: CourtCaseSchema) => {
@@ -43,9 +43,6 @@ export const handleCourtCaseFormOnChange = (
   setSelectedCourtCase: (updatedCourtCase: CourtCaseSchema) => void,
   getValue: (value: string | number) => string | number,
 ) => {
-  if (name === 'comments') {
-    value = getComments(value.toString())
-  }
   const updatedCourtCase = {
     ...selectedCourtCase,
     [name]: getValue(value),

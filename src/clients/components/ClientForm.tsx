@@ -9,6 +9,7 @@ import {
   FormSelectStateField,
   FormSelectStatusField,
   FormTextField,
+  getComments,
   getNumber,
   getString,
   GridFormWrapper,
@@ -148,7 +149,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       componentLabel="Client--Comments"
       value={selectedClient.comments}
       onChange={(e) =>
-        handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient, getString)
+        handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient, getComments)
       }
     />
   )

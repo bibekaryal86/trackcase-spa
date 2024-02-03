@@ -1,11 +1,4 @@
-import {
-  getComments,
-  getNumericOnly,
-  isNumericOnly,
-  validateAddress,
-  validateEmailAddress,
-  validatePhoneNumber,
-} from '../../app'
+import { getNumericOnly, isNumericOnly, validateAddress, validateEmailAddress, validatePhoneNumber } from '../../app'
 import { ClientSchema } from '../types/clients.data.types'
 
 export const validateClient = (client: ClientSchema) => {
@@ -73,9 +66,7 @@ export const handleClientFormOnChange = (
   setSelectedClient: (updatedClient: ClientSchema) => void,
   getValue: (value: string | number) => string | number,
 ) => {
-  if (name === 'comments') {
-    value = getComments(value.toString())
-  } else if (name === 'aNumber') {
+  if (name === 'aNumber') {
     value = getNumericOnly(value.toString(), 9)
   } else if (name === 'zipCode') {
     value = isNumericOnly(value.toString()) ? value : selectedClient.zipCode ? selectedClient.zipCode : ''
