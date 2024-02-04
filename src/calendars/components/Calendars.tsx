@@ -245,11 +245,11 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         ? (selectedCalendar as HearingCalendarSchema).hearingDate
         : (selectedCalendar as TaskCalendarSchema).taskDate
     if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
-      return `Are you sure you want to delete Hearing Calendar for date ${calendarDate.toISOString()} for case ${
+      return `Are you sure you want to delete Hearing Calendar for date ${calendarDate?.toISOString()} for case ${
         selectedCalendar.courtCaseId
       }?!?`
     } else {
-      return `Are you sure you want to delete Task Calendar for date ${calendarDate.toISOString()} for case ${
+      return `Are you sure you want to delete Task Calendar for date ${calendarDate?.toISOString()} for case ${
         selectedCalendar.courtCaseId
       }?!?`
     }

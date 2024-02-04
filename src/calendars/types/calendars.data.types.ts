@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 
 import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { CourtCaseSchema } from '../../cases'
@@ -7,7 +7,7 @@ import { FormSchema } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 
 export interface HearingCalendarSchema extends StatusBaseSchema, BaseModelSchema {
-  hearingDate: Dayjs
+  hearingDate: Dayjs | undefined    // set undefined for default object
   hearingTypeId: number
   courtCaseId: number
   // orm_mode
@@ -45,7 +45,7 @@ export interface HistoryHearingCalendarSchema extends BaseModelSchema {
 }
 
 export interface TaskCalendarSchema extends StatusBaseSchema, BaseModelSchema {
-  taskDate: Dayjs
+  taskDate: Dayjs | undefined   // set undefined for default object
   taskTypeId: number
   courtCaseId: number
   hearingCalendarId?: number
@@ -104,13 +104,13 @@ export interface CalendarTypeId {
 export const DefaultHearingCalendarSchema: HearingCalendarSchema = {
   courtCaseId: ID_DEFAULT,
   hearingTypeId: ID_DEFAULT,
-  hearingDate: dayjs(),
+  hearingDate: undefined,
   status: '',
   comments: '',
 }
 
 export const DefaultTaskCalendarSchema: TaskCalendarSchema = {
-  taskDate: dayjs(),
+  taskDate: undefined,
   taskTypeId: ID_DEFAULT,
   courtCaseId: ID_DEFAULT,
   hearingCalendarId: ID_DEFAULT,

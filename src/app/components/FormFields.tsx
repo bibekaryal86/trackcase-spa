@@ -93,8 +93,10 @@ interface DatePickerProps {
   disablePast?: boolean
   disableOpenPicker?: boolean
   format?: string
+  helperText?: string
   maxDate?: Dayjs
   minDate?: Dayjs
+  required?: boolean
 }
 
 export const GridFormWrapper: React.FC<FormWrapperProps> = ({
@@ -290,10 +292,13 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   disablePast = false,
   disableOpenPicker = false,
   format = 'YYYY-MM-DD',
+  helperText,
   minDate,
   maxDate,
+  required = false
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
+  const isError = value ? !dayjs(value).isValid() : required
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
@@ -309,8 +314,9 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
         maxDate={maxDate}
         slotProps={{
           textField: {
-            helperText: format,
+            helperText: helperText,
             fullWidth: true,
+            error: isError,
           },
           field: { clearable: true },
         }}

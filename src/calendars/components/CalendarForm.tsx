@@ -43,7 +43,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const isHearingCalendarForm = isHearingCalendar(calendarType)
 
   const calendarDate = () => {
-    const label = isHearingCalendarForm ? 'Hearing Calendar--Date' : 'Task Calendar--Date'
+    const label = isHearingCalendarForm ? 'Hearing Calendar--Calendar Date' : 'Task Calendar--Calendar Date'
     const value = 'hearingDate' in selectedCalendar ? selectedCalendar.hearingDate : selectedCalendar.taskDate
     const name = isHearingCalendarForm ? 'hearingDate' : 'taskDate'
     return (
@@ -53,6 +53,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         onChange={(newValue) => handleCalendarDateOnChange(name, newValue, selectedCalendar, setSelectedCalendar)}
         minDate={dayjs().subtract(1, 'month')}
         maxDate={dayjs().add(1, 'year')}
+        required
       />
     )
   }
@@ -65,7 +66,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarHearingTaskTypesList = () => {
-    const label = isHearingCalendarForm ? 'Hearing Calendar--Type' : 'Task Calendar--Type'
+    const label = isHearingCalendarForm ? 'Hearing Calendar--Calendar Type' : 'Task Calendar--Calendar Type'
     const value = 'hearingTypeId' in selectedCalendar ? selectedCalendar.hearingTypeId : selectedCalendar.taskTypeId
     const name = isHearingCalendarForm ? 'hearingTypeId' : 'taskTypeId'
     return (
@@ -77,6 +78,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         }
         menuItems={calendarHearingTaskTypesListForSelect()}
         error={isCalendarFormFieldError(name, value, undefined)}
+        required
       />
     )
   }
@@ -89,7 +91,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarCourtCasesList = () => {
-    const label = isHearingCalendarForm ? 'Hearing Calendar--Case' : 'Task Calendar--Case'
+    const label = isHearingCalendarForm ? 'Hearing Calendar--Client Case' : 'Task Calendar--Client Case'
     return (
       <FormSelectField
         componentLabel={label}
@@ -99,6 +101,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         }
         menuItems={calendarCourtCasesListForSelect()}
         error={isCalendarFormFieldError('courtCaseId', selectedCalendar.courtCaseId, undefined)}
+        required
       />
     )
   }
@@ -106,7 +109,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const calendarHearingCalendarListForSelect = () =>
     hearingCalendarsList.map((x) => (
       <MenuItem key={x.id} value={x.id}>
-        {x.hearingDate.toISOString()}, {x.hearingTypeId}
+        {x.hearingDate?.toISOString()}, {x.hearingTypeId}
       </MenuItem>
     ))
 
