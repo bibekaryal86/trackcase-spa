@@ -23,3 +23,9 @@ TODO
   * update whole json
 * Add filing_type in form type
   * filing_type = form, motion, other
+* In task calendar
+  * add column called due_date
+  * if created automatically by hearing_calendar, should be 3 days before hearing date
+  * if created manually, make it a mandatory field
+  * if hearing calendar is selected in UI, populate to 3 days before hearing date
+    * make it selectable/updatable but can't be on or after hearing date
