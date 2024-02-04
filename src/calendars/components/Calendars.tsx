@@ -106,7 +106,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
   const { hearingTypesList, getHearingTypesList, taskTypesList, getTaskTypesList } = props
-  const { courtCasesList, getCourtCasesList } = props
+  const { courtCasesList, getCourtCasesList, formsList, getFormsList } = props
 
   const [modal, setModal] = useState('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
@@ -124,6 +124,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       hearingTypesList.length === 0 && getHearingTypesList()
       taskTypesList.length === 0 && getTaskTypesList()
       courtCasesList.length === 0 && getCourtCasesList()
+      formsList.length === 0 && getFormsList()
     }
   }, [
     isForceFetch,
@@ -139,6 +140,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     getTaskTypesList,
     courtCasesList.length,
     getCourtCasesList,
+    formsList.length,
+    getFormsList
   ])
 
   useEffect(() => {
