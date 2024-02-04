@@ -15,13 +15,14 @@ import {
   GridFormWrapper,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
-import { CALENDAR_OBJECT_TYPES, ID_LIST } from '../../constants'
+import { ID_LIST } from '../../constants'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 import {
   handleCalendarDateOnChange,
   handleCalendarFormOnChange,
   isCalendarFormFieldError,
+  isHearingCalendar,
 } from '../utils/calendars.utils'
 
 interface CalendarFormProps {
@@ -39,12 +40,12 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
   const { courtCasesList, hearingCalendarsList, calendarStatusList } = props
-  const isHearingCalendar = calendarType === CALENDAR_OBJECT_TYPES.HEARING
+  const isHearingCalendarForm = isHearingCalendar(calendarType)
 
   const calendarDate = () => {
-    const label = isHearingCalendar ? 'Hearing Calendar--Date' : 'Task Calendar--Date'
+    const label = isHearingCalendarForm ? 'Hearing Calendar--Date' : 'Task Calendar--Date'
     const value = 'hearingDate' in selectedCalendar ? selectedCalendar.hearingDate : selectedCalendar.taskDate
-    const name = isHearingCalendar ? 'hearingDate' : 'taskDate'
+    const name = isHearingCalendarForm ? 'hearingDate' : 'taskDate'
     return (
       <FormDatePickerField
         componentLabel={label}
@@ -64,9 +65,9 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarHearingTaskTypesList = () => {
-    const label = isHearingCalendar ? 'Hearing Calendar--Type' : 'Task Calendar--Type'
+    const label = isHearingCalendarForm ? 'Hearing Calendar--Type' : 'Task Calendar--Type'
     const value = 'hearingTypeId' in selectedCalendar ? selectedCalendar.hearingTypeId : selectedCalendar.taskTypeId
-    const name = isHearingCalendar ? 'hearingTypeId' : 'taskTypeId'
+    const name = isHearingCalendarForm ? 'hearingTypeId' : 'taskTypeId'
     return (
       <FormSelectField
         componentLabel={label}
@@ -88,7 +89,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarCourtCasesList = () => {
-    const label = isHearingCalendar ? 'Hearing Calendar--Case' : 'Task Calendar--Case'
+    const label = isHearingCalendarForm ? 'Hearing Calendar--Case' : 'Task Calendar--Case'
     return (
       <FormSelectField
         componentLabel={label}
@@ -171,7 +172,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
       <Grid item xs={6}>
         {calendarCourtCasesList()}
       </Grid>
-      {!isHearingCalendar && (
+      {!isHearingCalendarForm && (
         <Grid item xs={4}>
           {calendarHearingCalendarList()}
         </Grid>

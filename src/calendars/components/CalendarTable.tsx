@@ -10,7 +10,6 @@ import {
   ACTION_UPDATE,
   BUTTON_DELETE,
   BUTTON_UPDATE,
-  CALENDAR_OBJECT_TYPES,
   ID_ACTION_BUTTON,
 } from '../../constants'
 import { FormSchema } from '../../forms'
@@ -20,6 +19,7 @@ import {
   HistoryTaskCalendarSchema,
   TaskCalendarSchema,
 } from '../types/calendars.data.types'
+import { isHearingCalendar } from '../utils/calendars.utils'
 
 interface CalendarTableProps {
   isHistoryView: boolean
@@ -38,7 +38,8 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   const { isHistoryView, calendarType, calendarsList, historyCalendarsList } = props
   const { setModal, setSelectedId, setSelectedCalendar, setSelectedCalendarForReset } = props
 
-  const calendarTypeForDisplay = calendarType === CALENDAR_OBJECT_TYPES.HEARING ? 'Hearing Calendar' : 'Task Calendar'
+  const isHearingCalendarTable = isHearingCalendar(calendarType)
+  const calendarTypeForDisplay = isHearingCalendarTable ? 'Hearing Calendar' : 'Task Calendar'
 
   const calendarsTableHeaderData = (): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = [

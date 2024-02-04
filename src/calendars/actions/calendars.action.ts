@@ -15,9 +15,10 @@ import {
   TaskCalendarResponse,
   TaskCalendarSchema,
 } from '../types/calendars.data.types'
-import { validateCalendar } from '../utils/calendars.utils'
+import { isHearingCalendar, validateCalendar } from '../utils/calendars.utils'
 
 export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema, calendarType: string) => {
+  const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     const validationErrors = validateCalendar(calendarType, calendar)
     if (validationErrors) {
@@ -33,7 +34,7 @@ export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema
         method: 'POST',
         requestBody: getRequestBody(calendar),
       }
-      if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
+      if (isHearingCalendarRequest) {
         const urlPath = getEndpoint(process.env.HEARING_CALENDAR_CREATE_ENDPOINT as string)
         calendarResponse = (await Async.fetch(urlPath, options)) as HearingCalendarResponse
       } else {
@@ -56,6 +57,7 @@ export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema
 }
 
 export const getCalendars = (calendarType: string, isForceFetch: boolean = false) => {
+  const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(calendarsRequest(`${calendarType}S_RETRIEVE_REQUEST`))
 
@@ -64,13 +66,12 @@ export const getCalendars = (calendarType: string, isForceFetch: boolean = false
       const options: Partial<FetchOptions> = {
         method: 'GET',
       }
-      const calendarsInStore: HearingCalendarSchema[] | TaskCalendarSchema[] =
-        calendarType === CALENDAR_OBJECT_TYPES.HEARING
-          ? getStore().calendars.hearingCalendars
-          : getStore().calendars.taskCalendars
+      const calendarsInStore: HearingCalendarSchema[] | TaskCalendarSchema[] = isHearingCalendarRequest
+        ? getStore().calendars.hearingCalendars
+        : getStore().calendars.taskCalendars
 
       if (isForceFetch || calendarsInStore.length === 0) {
-        if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
+        if (isHearingCalendarRequest) {
           const urlPath = getEndpoint(process.env.HEARING_CALENDARS_RETRIEVE_ENDPOINT as string)
           calendarResponse = (await Async.fetch(urlPath, options)) as HearingCalendarResponse
         } else {
@@ -98,6 +99,7 @@ export const getCalendars = (calendarType: string, isForceFetch: boolean = false
 }
 
 export const getOneCalendar = async (calendarId: number, calendarType: string) => {
+  const isHearingCalendarRequest = isHearingCalendar(calendarType)
   try {
     let urlPath: string
     const options: Partial<FetchOptions> = {
@@ -108,7 +110,7 @@ export const getOneCalendar = async (calendarId: number, calendarType: string) =
       },
     }
 
-    if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
+    if (isHearingCalendarRequest) {
       urlPath = getEndpoint(process.env.HEARING_CALENDAR_RETRIEVE_ENDPOINT as string)
       options['pathParams'] = { hearing_calendar_id: calendarId }
     } else {
@@ -129,13 +131,14 @@ export const getOneCalendar = async (calendarId: number, calendarType: string) =
 }
 
 export const getCalendar = (calendarId: number, calendarType: string) => {
+  const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(calendarsRequest(`${calendarType}_RETRIEVE_REQUEST`))
 
     // call api, if it fails fallback to store
     try {
       let calendarResponse: HearingCalendarResponse | TaskCalendarResponse
-      if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
+      if (isHearingCalendarRequest) {
         calendarResponse = (await getOneCalendar(calendarId, calendarType)) as HearingCalendarResponse
       } else {
         calendarResponse = (await getOneCalendar(calendarId, calendarType)) as TaskCalendarResponse
@@ -162,6 +165,7 @@ export const editCalendar = (
   calendarType: string,
   calendar: HearingCalendarSchema | TaskCalendarSchema,
 ) => {
+  const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     const validationErrors = validateCalendar(calendarType, calendar)
     if (validationErrors) {
@@ -177,7 +181,7 @@ export const editCalendar = (
         method: 'PUT',
         requestBody: getRequestBody(calendar),
       }
-      if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
+      if (isHearingCalendarRequest) {
         const urlPath = getEndpoint(process.env.HEARING_CALENDAR_UPDATE_ENDPOINT as string)
         options['pathParams'] = { hearing_calendar_id: id }
         calendarResponse = (await Async.fetch(urlPath, options)) as HearingCalendarResponse
@@ -202,6 +206,7 @@ export const editCalendar = (
 }
 
 export const deleteCalendar = (id: number, calendarType: string) => {
+  const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     dispatch(calendarsRequest(`${calendarType}_DELETE_REQUEST`))
 
@@ -211,7 +216,7 @@ export const deleteCalendar = (id: number, calendarType: string) => {
         method: 'DELETE',
       }
 
-      if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
+      if (isHearingCalendarRequest) {
         const urlPath = getEndpoint(process.env.HEARING_CALENDAR_DELETE_ENDPOINT as string)
         options['pathParams'] = { hearing_calendar_id: id }
         calendarResponse = (await Async.fetch(urlPath, options)) as HearingCalendarResponse
@@ -245,12 +250,13 @@ const calendarsSuccess = (
   calendarType: string,
   calendars: HearingCalendarSchema[] | TaskCalendarSchema[],
 ) => {
+  const isHearingCalendarRequest = isHearingCalendar(calendarType)
   if (success) {
     return {
       type: type,
       success: success,
     }
-  } else if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
+  } else if (isHearingCalendarRequest) {
     return {
       type: type,
       hearingCalendars: calendars,
@@ -275,7 +281,7 @@ const calendarsComplete = (type: string) => ({
 })
 
 const calendarSelect = (selectedCalendar: HearingCalendarSchema | TaskCalendarSchema, calendarType: string) => ({
-  type: calendarType === CALENDAR_OBJECT_TYPES.HEARING ? SET_SELECTED_HEARING_CALENDAR : SET_SELECTED_TASK_CALENDAR,
+  type: isHearingCalendar(calendarType) ? SET_SELECTED_HEARING_CALENDAR : SET_SELECTED_TASK_CALENDAR,
   selectedCalendar,
 })
 
@@ -285,8 +291,9 @@ const setSelectedCalendarFromStore = (
   calendarId: number,
   calendarType: string,
 ) => {
-  const calendarsInStore: HearingCalendarSchema[] | TaskCalendarSchema[] =
-    calendarType === CALENDAR_OBJECT_TYPES.HEARING ? store.calendars.hearingCalendars : store.calendars.taskCalendars
+  const calendarsInStore: HearingCalendarSchema[] | TaskCalendarSchema[] = isHearingCalendar(calendarType)
+    ? store.calendars.hearingCalendars
+    : store.calendars.taskCalendars
   const calendarInStore: HearingCalendarSchema | TaskCalendarSchema | undefined = calendarsInStore.find(
     (calendar) => calendar.id === calendarId,
   )

@@ -2,7 +2,7 @@ import { Dayjs } from 'dayjs'
 
 import { getNumber } from '../../app'
 import { CALENDAR_OBJECT_TYPES } from '../../constants'
-import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
+import { CalendarTypeId, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 
 export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSchema): string | undefined => {
   if ('hearingDate' in calendar || 'hearingTypeId' in calendar) {
@@ -13,16 +13,20 @@ export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSc
   return undefined
 }
 
-export const validateCalendarType = (calendarType: string): boolean => {
-  return calendarType
-    ? calendarType === CALENDAR_OBJECT_TYPES.HEARING || calendarType === CALENDAR_OBJECT_TYPES.TASK
+export const isHearingCalendar = (calendarType?: string, calendarTypeId?: CalendarTypeId) =>
+  calendarType
+    ? calendarType === CALENDAR_OBJECT_TYPES.HEARING
+    : calendarTypeId
+    ? calendarTypeId.type === CALENDAR_OBJECT_TYPES.HEARING
     : false
-}
+
+export const validateCalendarType = (calendarType: string): boolean =>
+  calendarType === CALENDAR_OBJECT_TYPES.HEARING || calendarType === CALENDAR_OBJECT_TYPES.TASK
 
 export const validateCalendar = (calendarType: string, calendar: HearingCalendarSchema | TaskCalendarSchema) => {
   const errors: string[] = []
 
-  if (!validateCalendarType(calendarType) || !getCalendarType(calendar)) {
+  if (!validateCalendarType(calendarType)) {
     return 'Invalid Calendar Type!!!'
   }
 
@@ -34,24 +38,28 @@ export const validateCalendar = (calendarType: string, calendar: HearingCalendar
     errors.push('Status is required')
   }
   // hearing calendar
-  if ('hearingDate' in calendar && (!calendar.hearingDate || !calendar.hearingDate.isValid())) {
-    errors.push('Hearing Date is incomplete/invalid')
-  }
-  if ('hearingTypeId' in calendar && calendar.hearingTypeId <= 0) {
-    errors.push('Hearing Type is required')
-  }
-  // task calendar
-  if ('taskDate' in calendar && (!calendar.taskDate || !calendar.taskDate.isValid())) {
-    errors.push('Task Date is incomplete/invalid')
-  }
-  if ('taskTypeId' in calendar && calendar.taskTypeId <= 0) {
-    errors.push('Task Type is required')
+  if (isHearingCalendar(calendarType)) {
+    const hearingCalendar = calendar as HearingCalendarSchema
+    if (!hearingCalendar.hearingDate || !hearingCalendar.hearingDate.isValid()) {
+      errors.push('Hearing Date is incomplete/invalid')
+    }
+    if (hearingCalendar.hearingTypeId <= 0) {
+      errors.push('Hearing Type is required')
+    }
+  } else {
+    const taskCalendar = calendar as TaskCalendarSchema
+    if (!taskCalendar.taskDate || !taskCalendar.taskDate.isValid()) {
+      errors.push('Task Date is incomplete/invalid')
+    }
+    if (taskCalendar.taskTypeId <= 0) {
+      errors.push('Task Type is required')
+    }
   }
 
   return errors.length ? errors.join(', ') : ''
 }
 
-export const isAreTwoHearingCalendarsSame = (one: HearingCalendarSchema, two: HearingCalendarSchema) =>
+const isAreTwoHearingCalendarsSame = (one: HearingCalendarSchema, two: HearingCalendarSchema) =>
   one &&
   two &&
   one.hearingDate === two.hearingDate &&
@@ -60,7 +68,7 @@ export const isAreTwoHearingCalendarsSame = (one: HearingCalendarSchema, two: He
   one.status === two.status &&
   one.comments === two.comments
 
-export const isAreTwoTaskCalendarsSame = (one: TaskCalendarSchema, two: TaskCalendarSchema) =>
+const isAreTwoTaskCalendarsSame = (one: TaskCalendarSchema, two: TaskCalendarSchema) =>
   one &&
   two &&
   one.taskDate === two.taskDate &&

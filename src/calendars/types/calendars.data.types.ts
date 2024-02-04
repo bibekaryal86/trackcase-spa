@@ -96,6 +96,11 @@ export interface CalendarsAction extends CalendarsState {
   type: string
 }
 
+export interface CalendarTypeId {
+  type: string
+  id: number
+}
+
 export const DefaultHearingCalendarSchema: HearingCalendarSchema = {
   courtCaseId: ID_DEFAULT,
   hearingTypeId: ID_DEFAULT,
@@ -125,4 +130,9 @@ export const DefaultCalendarsState: CalendarsState = {
 export const DefaultCalendar = {
   ...DefaultHearingCalendarSchema,
   ...DefaultTaskCalendarSchema,
+}
+
+export const DefaultCalendarTypeId: CalendarTypeId = {
+  type: '',
+  id: ID_DEFAULT,
 }

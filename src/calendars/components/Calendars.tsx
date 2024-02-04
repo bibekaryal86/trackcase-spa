@@ -29,7 +29,6 @@ import { CALENDARS_UNMOUNT } from '../types/calendars.action.types'
 import { DefaultCalendar, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 import { isAreTwoCalendarsSame } from '../utils/calendars.utils'
 
-
 const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms }: GlobalState) => {
   return {
     isForceFetch: calendars.isForceFetch,
@@ -141,7 +140,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     courtCasesList.length,
     getCourtCasesList,
     formsList.length,
-    getFormsList
+    getFormsList,
   ])
 
   useEffect(() => {
