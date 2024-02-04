@@ -295,7 +295,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   helperText,
   minDate,
   maxDate,
-  required = false
+  required = false,
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
   const isError = value ? !dayjs(value).isValid() : required

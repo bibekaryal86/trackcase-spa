@@ -44,7 +44,12 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
 
   const calendarDate = () => {
     const label = isHearingCalendarForm ? 'Hearing Calendar--Calendar Date' : 'Task Calendar--Calendar Date'
-    const value = 'hearingDate' in selectedCalendar ? selectedCalendar.hearingDate : selectedCalendar.taskDate
+    const value =
+      isHearingCalendarForm && 'hearingDate' in selectedCalendar
+        ? selectedCalendar.hearingDate
+        : !isHearingCalendarForm && 'taskDate' in selectedCalendar
+        ? selectedCalendar.taskDate
+        : undefined
     const name = isHearingCalendarForm ? 'hearingDate' : 'taskDate'
     return (
       <FormDatePickerField
@@ -67,7 +72,12 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
 
   const calendarHearingTaskTypesList = () => {
     const label = isHearingCalendarForm ? 'Hearing Calendar--Calendar Type' : 'Task Calendar--Calendar Type'
-    const value = 'hearingTypeId' in selectedCalendar ? selectedCalendar.hearingTypeId : selectedCalendar.taskTypeId
+    const value =
+      isHearingCalendarForm && 'hearingTypeId' in selectedCalendar
+        ? selectedCalendar.hearingTypeId
+        : !isHearingCalendarForm && 'taskTypeId' in selectedCalendar
+        ? selectedCalendar.taskTypeId
+        : ID_LIST
     const name = isHearingCalendarForm ? 'hearingTypeId' : 'taskTypeId'
     return (
       <FormSelectField

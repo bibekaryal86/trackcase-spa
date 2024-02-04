@@ -241,10 +241,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   }
 
   const getDeleteContextText = () => {
-    const calendarDate =
-      isHearingCalendar(selectedType)
-        ? (selectedCalendar as HearingCalendarSchema).hearingDate
-        : (selectedCalendar as TaskCalendarSchema).taskDate
+    const calendarDate = isHearingCalendar(selectedType)
+      ? (selectedCalendar as HearingCalendarSchema).hearingDate
+      : (selectedCalendar as TaskCalendarSchema).taskDate
     if (isHearingCalendar(selectedType)) {
       return `Are you sure you want to delete Hearing Calendar for date ${calendarDate?.toISOString()} for case ${
         selectedCalendar.courtCaseId

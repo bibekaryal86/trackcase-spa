@@ -165,11 +165,12 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
 
   const addButton = () =>
     isHistoryView ? undefined : (
-      <Button onClick={() => {
-        setModal && setModal(ACTION_ADD)
-        setSelectedType && setSelectedType(calendarType)
-      }
-      }>
+      <Button
+        onClick={() => {
+          setModal && setModal(ACTION_ADD)
+          setSelectedType && setSelectedType(calendarType)
+        }}
+      >
         {`Add New ${calendarTypeForDisplay}`}
       </Button>
     )

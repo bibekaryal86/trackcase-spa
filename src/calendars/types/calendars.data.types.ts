@@ -7,7 +7,7 @@ import { FormSchema } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 
 export interface HearingCalendarSchema extends StatusBaseSchema, BaseModelSchema {
-  hearingDate: Dayjs | undefined    // set undefined for default object
+  hearingDate: Dayjs | undefined // set undefined for default object
   hearingTypeId: number
   courtCaseId: number
   // orm_mode
@@ -45,7 +45,7 @@ export interface HistoryHearingCalendarSchema extends BaseModelSchema {
 }
 
 export interface TaskCalendarSchema extends StatusBaseSchema, BaseModelSchema {
-  taskDate: Dayjs | undefined   // set undefined for default object
+  taskDate: Dayjs | undefined // set undefined for default object
   taskTypeId: number
   courtCaseId: number
   hearingCalendarId?: number

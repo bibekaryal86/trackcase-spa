@@ -165,20 +165,20 @@ export const Async = {
     const response = await window.fetch(url, requestInit)
 
     if (response.ok) {
-      LocalStorage.removeItems([FORCE_LOGOUT]);
+      LocalStorage.removeItems([FORCE_LOGOUT])
     } else {
       if (response.status === 401) {
-        console.log('Error Response for 401: ', response);
+        console.log('Error Response for 401: ', response)
         LocalStorage.setItem(FORCE_LOGOUT, true)
       } else {
         const clonedResponse = response.clone()
         const responseBody = await clonedResponse.text()
         if (responseBody.includes('too many connections for role') && retryCount <= 3) {
           console.log('Retrying in 3 seconds due to TOO MANY CONNECTIONS ERROR... Attempt: ', retryCount)
-          await new Promise(resolve => setTimeout(resolve, 3000));
-          return Async.fetch(url, requestInit, retryCount + 1);
+          await new Promise((resolve) => setTimeout(resolve, 3000))
+          return Async.fetch(url, requestInit, retryCount + 1)
         } else {
-          console.log('Error Response non 401: ', response);
+          console.log('Error Response non 401: ', response)
         }
       }
     }

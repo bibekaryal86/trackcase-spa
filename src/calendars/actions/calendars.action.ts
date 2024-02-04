@@ -315,7 +315,10 @@ const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, is
     task_date: !isHearingCalendarRequest && 'taskDate' in calendar ? calendar.taskDate : undefined,
     task_type_id: !isHearingCalendarRequest && 'taskTypeId' in calendar ? calendar.taskTypeId : undefined,
     hearing_calendar_id:
-      !isHearingCalendarRequest && 'hearingCalendarId' in calendar && calendar.hearingCalendarId && calendar.hearingCalendarId > 0
+      !isHearingCalendarRequest &&
+      'hearingCalendarId' in calendar &&
+      calendar.hearingCalendarId &&
+      calendar.hearingCalendarId > 0
         ? calendar.hearingCalendarId
         : undefined,
   }
