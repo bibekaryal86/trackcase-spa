@@ -144,10 +144,10 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   ])
 
   useEffect(() => {
-    if (statusList.calendar.all.length > 0) {
-      setCalendarStatusList(statusList.calendar.all)
+    if (statusList.calendars.all.length > 0) {
+      setCalendarStatusList(statusList.calendars.all)
     }
-  }, [statusList.calendar.all])
+  }, [statusList.calendars.all])
 
   useEffect(() => {
     if (isCloseModal) {
