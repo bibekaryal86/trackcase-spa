@@ -27,7 +27,7 @@ import { getTaskTypes } from '../../types/actions/taskTypes.action'
 import { addCalendar, deleteCalendar, editCalendar, getCalendars } from '../actions/calendars.action'
 import { CALENDARS_UNMOUNT } from '../types/calendars.action.types'
 import { DefaultCalendar, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
-import { isAreTwoCalendarsSame } from '../utils/calendars.utils'
+import { isAreTwoCalendarsSame, isHearingCalendar } from '../utils/calendars.utils'
 
 const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms }: GlobalState) => {
   return {
@@ -107,8 +107,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const { hearingTypesList, getHearingTypesList, taskTypesList, getTaskTypesList } = props
   const { courtCasesList, getCourtCasesList, formsList, getFormsList } = props
 
-  const [modal, setModal] = useState('')
+  const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
+  const [selectedType, setSelectedType] = useState<string>('')
   const [selectedCalendar, setSelectedCalendar] = useState<HearingCalendarSchema | TaskCalendarSchema>(DefaultCalendar)
   const [selectedCalendarForReset, setSelectedCalendarForReset] = useState<HearingCalendarSchema | TaskCalendarSchema>(
     DefaultCalendar,
@@ -199,52 +200,52 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     />
   )
 
-  const addModal = (calendarType: string) => (
+  const addModal = () => (
     <Modal
       isOpen={true}
       setIsOpenExtra={setModal}
       cleanupOnClose={secondaryButtonCallback}
-      title={calendarType === CALENDAR_OBJECT_TYPES.HEARING ? 'Add Hearing Calendar' : 'Add Task Calendar'}
+      title={isHearingCalendar(selectedType) ? 'Add Hearing Calendar' : 'Add Task Calendar'}
       primaryButtonText={BUTTON_ADD}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_ADD, calendarType)}
-      primaryButtonDisabled={isAreTwoCalendarsSame(selectedCalendar, selectedCalendarForReset, calendarType)}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_ADD, selectedType)}
+      primaryButtonDisabled={isAreTwoCalendarsSame(selectedCalendar, selectedCalendarForReset, selectedType)}
       secondaryButtonText={BUTTON_CANCEL}
       secondaryButtonCallback={secondaryButtonCallback}
       contentText="Provide the following details..."
-      content={calendarForm(calendarType)}
+      content={calendarForm(selectedType)}
       resetButtonText={BUTTON_RESET}
       resetButtonCallback={() => resetButtonCallback(ACTION_ADD)}
-      resetButtonDisabled={isAreTwoCalendarsSame(selectedCalendar, selectedCalendarForReset, calendarType)}
+      resetButtonDisabled={isAreTwoCalendarsSame(selectedCalendar, selectedCalendarForReset, selectedType)}
     />
   )
 
-  const updateModal = (calendarType: string) => {
+  const updateModal = () => {
     return (
       <Modal
         isOpen={true}
         setIsOpenExtra={setModal}
         cleanupOnClose={secondaryButtonCallback}
-        title={calendarType === CALENDAR_OBJECT_TYPES.HEARING ? 'Update Hearing Calendar' : 'Update Task Calendar'}
+        title={isHearingCalendar(selectedType) ? 'Update Hearing Calendar' : 'Update Task Calendar'}
         primaryButtonText={BUTTON_UPDATE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_UPDATE, calendarType, selectedId)}
-        primaryButtonDisabled={isAreTwoCalendarsSame(selectedCalendar, selectedCalendarForReset, calendarType)}
+        primaryButtonCallback={() => primaryButtonCallback(ACTION_UPDATE, selectedType, selectedId)}
+        primaryButtonDisabled={isAreTwoCalendarsSame(selectedCalendar, selectedCalendarForReset, selectedType)}
         secondaryButtonText={BUTTON_CANCEL}
         secondaryButtonCallback={secondaryButtonCallback}
         contentText="Provide the following details..."
-        content={calendarForm(calendarType)}
+        content={calendarForm(selectedType)}
         resetButtonText={BUTTON_RESET}
         resetButtonCallback={() => resetButtonCallback(ACTION_UPDATE)}
-        resetButtonDisabled={isAreTwoCalendarsSame(selectedCalendar, selectedCalendarForReset, calendarType)}
+        resetButtonDisabled={isAreTwoCalendarsSame(selectedCalendar, selectedCalendarForReset, selectedType)}
       />
     )
   }
 
-  const getDeleteContextText = (calendarType: string) => {
+  const getDeleteContextText = () => {
     const calendarDate =
-      calendarType === CALENDAR_OBJECT_TYPES.HEARING
+      isHearingCalendar(selectedType)
         ? (selectedCalendar as HearingCalendarSchema).hearingDate
         : (selectedCalendar as TaskCalendarSchema).taskDate
-    if (calendarType === CALENDAR_OBJECT_TYPES.HEARING) {
+    if (isHearingCalendar(selectedType)) {
       return `Are you sure you want to delete Hearing Calendar for date ${calendarDate?.toISOString()} for case ${
         selectedCalendar.courtCaseId
       }?!?`
@@ -255,29 +256,29 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     }
   }
 
-  const deleteModal = (calendarType: string) => {
+  const deleteModal = () => {
     return (
       <Modal
         isOpen={true}
         setIsOpenExtra={setModal}
         cleanupOnClose={secondaryButtonCallback}
-        title={calendarType === CALENDAR_OBJECT_TYPES.HEARING ? 'Delete Hearing Calendar' : 'Delete Task Calendar'}
+        title={selectedType === CALENDAR_OBJECT_TYPES.HEARING ? 'Delete Hearing Calendar' : 'Delete Task Calendar'}
         primaryButtonText={BUTTON_DELETE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_DELETE, calendarType, selectedId)}
+        primaryButtonCallback={() => primaryButtonCallback(ACTION_DELETE, selectedType, selectedId)}
         secondaryButtonText={BUTTON_CANCEL}
         secondaryButtonCallback={secondaryButtonCallback}
-        contentText={getDeleteContextText(calendarType)}
+        contentText={getDeleteContextText()}
       />
     )
   }
 
-  const showModal = (calendarType: string) =>
+  const showModal = () =>
     modal === ACTION_ADD
-      ? addModal(calendarType)
+      ? addModal()
       : modal === ACTION_UPDATE
-      ? updateModal(calendarType)
+      ? updateModal()
       : modal === ACTION_DELETE
-      ? deleteModal(calendarType)
+      ? deleteModal()
       : null
 
   const calendarsPageTitle = () => (
@@ -294,6 +295,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       historyCalendarsList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}
+      setSelectedType={setSelectedType}
       setSelectedCalendar={setSelectedCalendar}
       setSelectedCalendarForReset={setSelectedCalendarForReset}
       courtCasesList={[]}
@@ -308,6 +310,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       calendarsList={taskCalendarsList}
       historyCalendarsList={[]}
       setModal={setModal}
+      setSelectedType={setSelectedType}
       setSelectedId={setSelectedId}
       setSelectedCalendar={setSelectedCalendar}
       setSelectedCalendarForReset={setSelectedCalendarForReset}
@@ -329,7 +332,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
           {taskCalendarsTable()}
         </Grid>
       </Grid>
-      {modal && showModal(CALENDAR_OBJECT_TYPES.HEARING)}
+      {modal && showModal()}
     </Box>
   )
 }

@@ -176,7 +176,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         {calendarCourtCasesList()}
       </Grid>
       {!isHearingCalendarForm && (
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           {calendarHearingCalendarList()}
         </Grid>
       )}

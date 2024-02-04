@@ -28,6 +28,7 @@ interface CalendarTableProps {
   historyCalendarsList: HistoryHearingCalendarSchema[] | HistoryTaskCalendarSchema[]
   setModal?: (action: string) => void
   setSelectedId?: (id: number) => void
+  setSelectedType?: (type: string) => void
   setSelectedCalendar?: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
   setSelectedCalendarForReset?: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
   courtCasesList: CourtCaseSchema[]
@@ -36,7 +37,7 @@ interface CalendarTableProps {
 
 const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   const { isHistoryView, calendarType, calendarsList, historyCalendarsList } = props
-  const { setModal, setSelectedId, setSelectedCalendar, setSelectedCalendarForReset } = props
+  const { setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
 
   const isHearingCalendarTable = isHearingCalendar(calendarType)
   const calendarTypeForDisplay = isHearingCalendarTable ? 'Hearing Calendar' : 'Task Calendar'
@@ -94,6 +95,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         onClick={() => {
           setModal && setModal(ACTION_UPDATE)
           setSelectedId && setSelectedId(id)
+          setSelectedType && setSelectedType(calendarType)
           setSelectedCalendar && setSelectedCalendar(calendar)
           setSelectedCalendarForReset && setSelectedCalendarForReset(calendar)
         }}
@@ -104,6 +106,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         onClick={() => {
           setModal && setModal(ACTION_DELETE)
           setSelectedId && setSelectedId(id)
+          setSelectedType && setSelectedType(calendarType)
           setSelectedCalendar && setSelectedCalendar(calendar)
         }}
       >
@@ -162,7 +165,13 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
 
   const addButton = () =>
     isHistoryView ? undefined : (
-      <Button onClick={() => setModal && setModal(ACTION_ADD)}>{`Add New ${calendarTypeForDisplay}`}</Button>
+      <Button onClick={() => {
+        setModal && setModal(ACTION_ADD)
+        setSelectedType && setSelectedType(calendarType)
+      }
+      }>
+        {`Add New ${calendarTypeForDisplay}`}
+      </Button>
     )
 
   return (

@@ -51,12 +51,12 @@ const RefTypes = (props: RefTypesProps): React.ReactElement => {
   const { refTypesList, getRefTypes } = props
   const { isCloseModal } = props
 
-  const [modal, setModal] = useState('')
+  const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
-  const [selectedName, setSelectedName] = useState('')
-  const [selectedDesc, setSelectedDesc] = useState('')
-  const [selectedNameForReset, setSelectedNameForReset] = useState('')
-  const [selectedDescForReset, setSelectedDescForReset] = useState('')
+  const [selectedName, setSelectedName] = useState<string>('')
+  const [selectedDesc, setSelectedDesc] = useState<string>('')
+  const [selectedNameForReset, setSelectedNameForReset] = useState<string>('')
+  const [selectedDescForReset, setSelectedDescForReset] = useState<string>('')
 
   useEffect(() => {
     if (refTypesList.length === 0 && !isFetchRunDone.current) {

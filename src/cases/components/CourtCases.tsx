@@ -78,7 +78,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   const { clientId, selectedClient, getClient } = props
   const { caseTypesList, getCaseTypes } = props
 
-  const [modal, setModal] = useState('')
+  const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedCourtCase, setSelectedCourtCase] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
   const [selectedCourtCaseForReset, setSelectedCourtCaseForReset] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)

@@ -71,7 +71,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const { statusList, getStatusesList } = props
   const { courtId, selectedCourt, getCourt } = props
 
-  const [modal, setModal] = useState('')
+  const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedJudge, setSelectedJudge] = useState<JudgeSchema>(DefaultJudgeSchema)
   const [selectedJudgeForReset, setSelectedJudgeForReset] = useState<JudgeSchema>(DefaultJudgeSchema)

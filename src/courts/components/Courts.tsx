@@ -60,7 +60,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
   const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
 
-  const [modal, setModal] = useState('')
+  const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedCourt, setSelectedCourt] = useState<CourtSchema>(DefaultCourtSchema)
   const [selectedCourtForReset, setSelectedCourtForReset] = useState<CourtSchema>(DefaultCourtSchema)

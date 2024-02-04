@@ -78,7 +78,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
   const { formTypesList, getFormTypesList, courtCasesList, getCourtCasesList } = props
   const { courtCaseId, selectedCourtCase, getCourtCase } = props
 
-  const [modal, setModal] = useState('')
+  const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedForm, setSelectedForm] = useState<FormSchema>(DefaultFormSchema)
   const [selectedFormForReset, setSelectedFormForReset] = useState<FormSchema>(DefaultFormSchema)
