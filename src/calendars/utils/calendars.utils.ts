@@ -70,6 +70,15 @@ export const isAreTwoTaskCalendarsSame = (one: TaskCalendarSchema, two: TaskCale
   one.status === two.status &&
   one.comments === two.comments
 
+export const isAreTwoCalendarsSame = (
+  one: HearingCalendarSchema | TaskCalendarSchema,
+  two: HearingCalendarSchema | TaskCalendarSchema,
+  calendarType: string,
+) =>
+  calendarType === CALENDAR_OBJECT_TYPES.HEARING
+    ? isAreTwoHearingCalendarsSame(one as HearingCalendarSchema, two as HearingCalendarSchema)
+    : isAreTwoTaskCalendarsSame(one as TaskCalendarSchema, two as TaskCalendarSchema)
+
 export const isCalendarFormFieldError = (
   name: string,
   value: string | number | undefined,

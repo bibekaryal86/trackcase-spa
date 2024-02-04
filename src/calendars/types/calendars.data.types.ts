@@ -121,3 +121,8 @@ export const DefaultCalendarsState: CalendarsState = {
   selectedHearingCalendar: DefaultHearingCalendarSchema,
   selectedTaskCalendar: DefaultTaskCalendarSchema,
 }
+
+export const DefaultCalendar = {
+  ...DefaultHearingCalendarSchema,
+  ...DefaultTaskCalendarSchema,
+}
