@@ -305,10 +305,10 @@ const setSelectedCalendarFromStore = (
 const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, isHearingCalendarRequest: boolean) => {
   return {
     // common
-    court_case_id: calendar.courtCaseId,
     status: calendar.status,
     comments: calendar.comments,
     // hearing calendar
+    court_case_id: isHearingCalendarRequest && 'courtCaseId' in calendar ? calendar.courtCaseId : undefined,
     hearing_date: isHearingCalendarRequest && 'hearingDate' in calendar ? calendar.hearingDate : undefined,
     hearing_type_id: isHearingCalendarRequest && 'hearingTypeId' in calendar ? calendar.hearingTypeId : undefined,
     // task calendar
@@ -320,6 +320,10 @@ const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, is
       calendar.hearingCalendarId &&
       calendar.hearingCalendarId > 0
         ? calendar.hearingCalendarId
+        : undefined,
+    form_id:
+      !isHearingCalendarRequest && 'formId' in calendar && calendar.formId && calendar.formId > 0
+        ? calendar.formId
         : undefined,
   }
 }

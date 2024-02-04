@@ -16,6 +16,7 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ID_LIST } from '../../constants'
+import { FormSchema } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 import {
@@ -30,7 +31,7 @@ interface CalendarFormProps {
   selectedCalendar: HearingCalendarSchema | TaskCalendarSchema
   calendarTypesList: HearingTypeSchema[] | TaskTypeSchema[]
   courtCasesList: CourtCaseSchema[]
-  hearingCalendarsList: HearingCalendarSchema[]
+  formsList: FormSchema[]
   setSelectedCalendar: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
   calendarStatusList: string[]
   isShowOneCalendar: boolean
@@ -39,11 +40,11 @@ interface CalendarFormProps {
 const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
-  const { courtCasesList, hearingCalendarsList, calendarStatusList } = props
+  const { courtCasesList, formsList, calendarStatusList } = props
   const isHearingCalendarForm = isHearingCalendar(calendarType)
 
   const calendarDate = () => {
-    const label = isHearingCalendarForm ? 'Hearing Calendar--Calendar Date' : 'Task Calendar--Calendar Date'
+    const label = isHearingCalendarForm ? 'Hearing Calendar--Hearing Date' : 'Task Calendar--Task Date'
     const value =
       isHearingCalendarForm && 'hearingDate' in selectedCalendar
         ? selectedCalendar.hearingDate
@@ -63,6 +64,20 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     )
   }
 
+  const calendarDueDate = () => {
+    const value = !isHearingCalendarForm && 'dueDate' in selectedCalendar ? selectedCalendar.dueDate : undefined
+    return (
+      <FormDatePickerField
+        componentLabel="Task Calendar--Due Date"
+        value={value}
+        onChange={(newValue) => handleCalendarDateOnChange('dueDate', newValue, selectedCalendar, setSelectedCalendar)}
+        minDate={dayjs().subtract(1, 'month')}
+        maxDate={dayjs().add(1, 'year')}
+        required
+      />
+    )
+  }
+
   const calendarHearingTaskTypesListForSelect = () =>
     calendarTypesList.map((x: HearingTypeSchema | TaskTypeSchema) => (
       <MenuItem key={x.id} value={x.id}>
@@ -71,7 +86,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarHearingTaskTypesList = () => {
-    const label = isHearingCalendarForm ? 'Hearing Calendar--Calendar Type' : 'Task Calendar--Calendar Type'
+    const label = isHearingCalendarForm ? 'Hearing Calendar--Hearing Type' : 'Task Calendar--Task Type'
     const value =
       isHearingCalendarForm && 'hearingTypeId' in selectedCalendar
         ? selectedCalendar.hearingTypeId
@@ -101,49 +116,38 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarCourtCasesList = () => {
-    const label = isHearingCalendarForm ? 'Hearing Calendar--Client Case' : 'Task Calendar--Client Case'
+    const value = 'courtCaseId' in selectedCalendar ? selectedCalendar.courtCaseId : ID_LIST
     return (
       <FormSelectField
-        componentLabel={label}
-        value={selectedCalendar.courtCaseId}
+        componentLabel="Hearing Calendar--Case"
+        value={value}
         onChange={(e) =>
           handleCalendarFormOnChange('courtCaseId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)
         }
         menuItems={calendarCourtCasesListForSelect()}
-        error={isCalendarFormFieldError('courtCaseId', selectedCalendar.courtCaseId, undefined)}
+        error={isCalendarFormFieldError('courtCaseId', value, undefined)}
         required
       />
     )
   }
 
-  const calendarHearingCalendarListForSelect = () =>
-    hearingCalendarsList.map((x) => (
+  const calendarFormListForSelect = () =>
+    formsList.map((x) => (
       <MenuItem key={x.id} value={x.id}>
-        {x.hearingDate?.toISOString()}, {x.hearingTypeId}
+        {x.courtCaseId}, {x.formTypeId}
       </MenuItem>
     ))
 
-  const calendarHearingCalendarList = () => {
-    const value =
-      'hearingCalendarId' in selectedCalendar
-        ? selectedCalendar.hearingCalendarId
-          ? selectedCalendar.hearingCalendarId
-          : ID_LIST
-        : ID_LIST
+  const calendarFormList = () => {
+    const value = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_LIST
     return (
       <FormSelectField
-        componentLabel="Task Calendar--Hearing Calendar"
+        componentLabel="Task Calendar--Form"
         value={value}
         onChange={(e) =>
-          handleCalendarFormOnChange(
-            'hearingCalendarId',
-            e.target.value,
-            selectedCalendar,
-            setSelectedCalendar,
-            getNumber,
-          )
+          handleCalendarFormOnChange('formId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)
         }
-        menuItems={calendarHearingCalendarListForSelect()}
+        menuItems={calendarFormListForSelect()}
       />
     )
   }
@@ -179,15 +183,21 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
       <Grid item xs={6}>
         {calendarDate()}
       </Grid>
+      {!isHearingCalendarForm && (
+        <Grid item xs={6}>
+          {calendarDueDate()}
+        </Grid>
+      )}
       <Grid item xs={6}>
         {calendarHearingTaskTypesList()}
       </Grid>
-      <Grid item xs={6}>
-        {calendarCourtCasesList()}
-      </Grid>
-      {!isHearingCalendarForm && (
+      {isHearingCalendarForm ? (
         <Grid item xs={6}>
-          {calendarHearingCalendarList()}
+          {calendarCourtCasesList()}
+        </Grid>
+      ) : (
+        <Grid item xs={6}>
+          {calendarFormList()}
         </Grid>
       )}
       <Grid item xs={6}>

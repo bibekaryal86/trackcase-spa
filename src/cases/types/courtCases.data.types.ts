@@ -1,5 +1,5 @@
 import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
-import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
+import { HearingCalendarSchema } from '../../calendars'
 import { ClientSchema } from '../../clients'
 import { CaseCollectionSchema, CashCollectionSchema } from '../../collections'
 import { ID_DEFAULT } from '../../constants'
@@ -16,7 +16,6 @@ export interface CourtCaseSchema extends StatusBaseSchema, BaseModelSchema {
   cashCollections?: CashCollectionSchema[]
   caseCollections?: CaseCollectionSchema[]
   hearingCalendars?: HearingCalendarSchema[]
-  taskCalendars?: TaskCalendarSchema[]
   // notes and history
   noteCourtCases?: NoteCourtCaseSchema[]
   historyCourtCases?: HistoryCourtCaseSchema[]

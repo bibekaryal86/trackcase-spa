@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
-import { CREATE_SUCCESS, DELETE_SUCCESS, ID_DEFAULT, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
+import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
   FORM_CREATE_FAILURE,
   FORM_CREATE_REQUEST,
@@ -227,7 +227,6 @@ const getRequestBody = (form: FormSchema) => {
     rfe_date: form.rfeDate,
     rfe_submit_date: form.rfeSubmitDate,
     decision_date: form.decisionDate,
-    task_calendar_id: form.taskCalendarId === ID_DEFAULT ? undefined : form.taskCalendarId,
     status: form.status,
     comments: form.comments,
   }

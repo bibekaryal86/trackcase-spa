@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button'
-import { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
 import { convertDateToLocaleString, Link, Table, TableData, TableHeaderData } from '../../app'
@@ -55,16 +55,31 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         isDisableSorting: isHistoryView,
       },
       {
-        id: 'courtCase',
-        label: 'Case',
-        isDisableSorting: isHistoryView,
-      },
-      {
         id: 'status',
         label: 'Status',
         isDisableSorting: isHistoryView,
       },
     ]
+    if (isHearingCalendarTable) {
+      tableHeaderData.push({
+        id: 'courtCase',
+        label: 'Case',
+        isDisableSorting: isHistoryView,
+      })
+    } else {
+      tableHeaderData.push(
+        {
+          id: 'hearingCalendar',
+          label: 'Hearing Calendar',
+          isDisableSorting: isHistoryView,
+        },
+        {
+          id: 'form',
+          label: 'Form',
+          isDisableSorting: isHistoryView,
+        },
+      )
+    }
     if (isHistoryView) {
       tableHeaderData.push(
         {
@@ -118,9 +133,12 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   const linkToCalendar = (calendarDate?: Dayjs, calendarId?: number) =>
     calendarDate && calendarId ? (
       isHistoryView ? (
-        calendarDate.toISOString()
+        dayjs(calendarDate).format('YYYY-MM-DD')
       ) : (
-        <Link text={calendarDate.toISOString()} navigateToPage={`/calendar/${calendarType}/${calendarId}`} />
+        <Link
+          text={dayjs(calendarDate).format('YYYY-MM-DD')}
+          navigateToPage={`/calendar/${calendarType}/${calendarId}`}
+        />
       )
     ) : (
       ''
@@ -129,16 +147,23 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   const calendarsTableDataCommon = (
     x: HearingCalendarSchema | TaskCalendarSchema | HistoryHearingCalendarSchema | HistoryTaskCalendarSchema,
   ) => {
-    return {
-      calendarDate:
-        'hearingDate' in x
-          ? linkToCalendar(x.hearingDate, x.id)
-          : 'taskDate' in x
-          ? linkToCalendar(x.taskDate, x.id)
-          : '',
-      calendarType: 'hearingTypeId' in x ? x.hearingTypeId : 'taskTypeId' in x ? x.taskTypeId : '',
-      courtCase: x.courtCaseId,
-      status: x.status,
+    if (isHearingCalendarTable) {
+      const hearingCalendar = x as HearingCalendarSchema
+      return {
+        calendarDate: linkToCalendar(hearingCalendar.hearingDate, hearingCalendar.id),
+        calendarType: hearingCalendar.hearingTypeId,
+        courtCase: hearingCalendar.courtCaseId,
+        status: x.status,
+      }
+    } else {
+      const taskCalendar = x as TaskCalendarSchema
+      return {
+        calendarDate: linkToCalendar(taskCalendar.taskDate, x.id),
+        calendarType: taskCalendar.taskTypeId,
+        hearingCalendar: taskCalendar.hearingCalendarId,
+        form: taskCalendar.formId,
+        status: x.status,
+      }
     }
   }
 

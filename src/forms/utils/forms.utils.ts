@@ -46,11 +46,9 @@ export const isAreTwoFormsSame = (one: FormSchema, two: FormSchema) =>
   one.rfeDate === two.rfeDate &&
   one.rfeSubmitDate === two.rfeSubmitDate &&
   one.decisionDate === two.decisionDate &&
-  one.taskCalendarId === two.taskCalendarId &&
   one.status === two.status &&
   one.comments === two.comments
 
-// TODO
 export const isFormFormFieldError = (name: string, value: string | number | undefined) => {
   switch (name) {
     case 'formTypeId':

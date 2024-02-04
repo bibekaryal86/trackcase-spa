@@ -1,4 +1,4 @@
-import { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 
 import { getNumber } from '../../app'
 import { CALENDAR_OBJECT_TYPES } from '../../constants'
@@ -31,28 +31,57 @@ export const validateCalendar = (calendarType: string, calendar: HearingCalendar
   }
 
   // common
-  if (calendar.courtCaseId <= 0) {
-    errors.push('Case is required')
-  }
   if (!calendar.status.trim()) {
     errors.push('Status is required')
   }
   // hearing calendar
   if (isHearingCalendar(calendarType)) {
     const hearingCalendar = calendar as HearingCalendarSchema
-    if (!hearingCalendar.hearingDate || !hearingCalendar.hearingDate.isValid()) {
-      errors.push('Hearing Date is incomplete/invalid')
+    if (
+      !hearingCalendar.hearingDate ||
+      !hearingCalendar.hearingDate.isValid() ||
+      hearingCalendar.hearingDate.isBefore(dayjs(), 'day')
+    ) {
+      errors.push('Hearing Date is required and cannot be in the past')
     }
     if (hearingCalendar.hearingTypeId <= 0) {
       errors.push('Hearing Type is required')
     }
+    if (hearingCalendar.courtCaseId <= 0) {
+      errors.push('Case is required')
+    }
   } else {
     const taskCalendar = calendar as TaskCalendarSchema
-    if (!taskCalendar.taskDate || !taskCalendar.taskDate.isValid()) {
-      errors.push('Task Date is incomplete/invalid')
+    if (!taskCalendar.taskDate || !taskCalendar.taskDate.isValid() || taskCalendar.taskDate.isBefore(dayjs(), 'day')) {
+      errors.push('Task Date is required and cannot be in the past')
     }
+    if (!taskCalendar.dueDate || !taskCalendar.dueDate.isValid() || taskCalendar.dueDate.isBefore(dayjs(), 'day')) {
+      errors.push('Due Date is required and cannot be in the past')
+    }
+    // due date cannot be before task date
+    if (taskCalendar.taskDate && taskCalendar.dueDate && taskCalendar.dueDate.isBefore(taskCalendar.taskDate)) {
+      errors.push('Due Date cannot be before Task Calendar Date')
+    }
+    // TODO due date cannot be after hearing date if hearing calendar is selected
+    if (taskCalendar.dueDate && taskCalendar.hearingCalendarId) {
+      const hearingCalendar = taskCalendar.hearingCalendar
+      if (hearingCalendar && hearingCalendar.hearingDate) {
+        if (taskCalendar.dueDate.isAfter(hearingCalendar.hearingDate)) {
+          errors.push('Due Date cannot be after Hearing Calendar Date')
+        }
+      } else {
+        errors.push('Hearing Calendar Could Not Be Verified!')
+      }
+    }
+
     if (taskCalendar.taskTypeId <= 0) {
       errors.push('Task Type is required')
+    }
+    if (
+      (!taskCalendar.hearingCalendarId || taskCalendar.hearingCalendarId <= 0) &&
+      (!taskCalendar.formId || taskCalendar.formId <= 0)
+    ) {
+      errors.push('Either Hearing Calendar OR Form is required')
     }
   }
 
@@ -73,7 +102,7 @@ const isAreTwoTaskCalendarsSame = (one: TaskCalendarSchema, two: TaskCalendarSch
   two &&
   one.taskDate === two.taskDate &&
   one.taskTypeId === two.taskTypeId &&
-  one.courtCaseId === two.courtCaseId &&
+  one.formId === two.formId &&
   one.hearingCalendarId === two.hearingCalendarId &&
   one.status === two.status &&
   one.comments === two.comments

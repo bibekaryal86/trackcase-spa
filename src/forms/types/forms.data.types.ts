@@ -1,7 +1,6 @@
 import { Dayjs } from 'dayjs'
 
 import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
-import { TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CaseCollectionSchema, CashCollectionSchema } from '../../collections'
 import { ID_DEFAULT } from '../../constants'
@@ -17,10 +16,8 @@ export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
   rfeDate?: Dayjs
   rfeSubmitDate?: Dayjs
   decisionDate?: Dayjs
-  taskCalendarId?: number
   // orm_mode
   formType?: FormTypeSchema
-  taskCalendar?: TaskCalendarSchema
   courtCase?: CourtCaseSchema
   caseCollections?: CaseCollectionSchema[]
   cashCollections?: CashCollectionSchema[]
@@ -52,12 +49,10 @@ export interface HistoryFormSchema extends BaseModelSchema {
   rfeDate?: Dayjs
   rfeSubmitDate?: Dayjs
   decisionDate?: Dayjs
-  taskCalendarId?: number
   status?: string
   // orm_mode
   form?: FormSchema
   formType?: FormTypeSchema
-  taskCalendar?: TaskCalendarSchema
   courtCase?: CourtCaseSchema
 }
 
@@ -82,7 +77,6 @@ export const DefaultFormSchema: FormSchema = {
   rfeDate: undefined,
   rfeSubmitDate: undefined,
   decisionDate: undefined,
-  taskCalendarId: ID_DEFAULT,
   status: '',
   comments: '',
 }

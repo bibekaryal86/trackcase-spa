@@ -77,11 +77,6 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
         isDisableSorting: isHistoryView,
       },
       {
-        id: 'task',
-        label: 'Task Calendar',
-        isDisableSorting: true,
-      },
-      {
         id: 'status',
         label: 'Status',
         isDisableSorting: isHistoryView,
@@ -157,7 +152,6 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
       rfe: convertDateToLocaleString(x.rfeDate),
       rfeSubmit: convertDateToLocaleString(x.rfeSubmitDate),
       decision: convertDateToLocaleString(x.decisionDate),
-      task: x.taskCalendar?.taskType?.name,
       status: x.status,
     }
   }

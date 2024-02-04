@@ -12,7 +12,7 @@ export interface HearingCalendarSchema extends StatusBaseSchema, BaseModelSchema
   courtCaseId: number
   // orm_mode
   hearingType?: HearingTypeSchema
-  courtDate?: CourtCaseSchema
+  courtCase?: CourtCaseSchema
   taskCalendars?: TaskCalendarSchema[]
   // notes and history
   noteHearingCalendars?: NoteHearingCalendarSchema[]
@@ -46,12 +46,12 @@ export interface HistoryHearingCalendarSchema extends BaseModelSchema {
 
 export interface TaskCalendarSchema extends StatusBaseSchema, BaseModelSchema {
   taskDate: Dayjs | undefined // set undefined for default object
+  dueDate: Dayjs | undefined // set undefined for default object
   taskTypeId: number
-  courtCaseId: number
   hearingCalendarId?: number
+  formId?: number
   // orm_mode
   taskType?: TaskTypeSchema
-  courtCase?: CourtCaseSchema
   hearingCalendar?: HearingCalendarSchema
   forms?: FormSchema[]
 }
@@ -71,6 +71,7 @@ export interface HistoryTaskCalendarSchema extends BaseModelSchema {
   taskCalendarId: number
   // from hearing calendar schema, need everything optional here so can't extend
   taskDate?: Dayjs
+  dueDate?: Dayjs
   taskTypeId?: number
   courtCaseId?: number
   hearingCalendarId?: number
@@ -111,9 +112,10 @@ export const DefaultHearingCalendarSchema: HearingCalendarSchema = {
 
 export const DefaultTaskCalendarSchema: TaskCalendarSchema = {
   taskDate: undefined,
+  dueDate: undefined,
   taskTypeId: ID_DEFAULT,
-  courtCaseId: ID_DEFAULT,
   hearingCalendarId: ID_DEFAULT,
+  formId: ID_DEFAULT,
   status: '',
   comments: '',
 }
@@ -130,9 +132,4 @@ export const DefaultCalendarsState: CalendarsState = {
 export const DefaultCalendar = {
   ...DefaultHearingCalendarSchema,
   ...DefaultTaskCalendarSchema,
-}
-
-export const DefaultCalendarTypeId: CalendarTypeId = {
-  type: '',
-  id: ID_DEFAULT,
 }

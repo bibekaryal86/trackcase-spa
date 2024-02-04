@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
@@ -193,7 +194,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       selectedCalendar={selectedCalendar}
       calendarTypesList={calendarType === CALENDAR_OBJECT_TYPES.HEARING ? hearingTypesList : taskTypesList}
       courtCasesList={courtCasesList}
-      hearingCalendarsList={hearingCalendarsList}
+      formsList={formsList}
       setSelectedCalendar={setSelectedCalendar}
       calendarStatusList={calendarStatusList}
       isShowOneCalendar={false}
@@ -245,13 +246,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       ? (selectedCalendar as HearingCalendarSchema).hearingDate
       : (selectedCalendar as TaskCalendarSchema).taskDate
     if (isHearingCalendar(selectedType)) {
-      return `Are you sure you want to delete Hearing Calendar for date ${calendarDate?.toISOString()} for case ${
-        selectedCalendar.courtCaseId
-      }?!?`
+      return `Are you sure you want to delete Hearing Calendar for date ${dayjs(calendarDate)?.format('YYYY-MM-DD')}?!?`
     } else {
-      return `Are you sure you want to delete Task Calendar for date ${calendarDate?.toISOString()} for case ${
-        selectedCalendar.courtCaseId
-      }?!?`
+      return `Are you sure you want to delete Task Calendar for date ${dayjs(calendarDate)?.format('YYYY-MM-DD')}?!?`
     }
   }
 
