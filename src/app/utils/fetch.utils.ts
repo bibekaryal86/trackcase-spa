@@ -171,7 +171,8 @@ export const Async = {
         console.log('Error Response for 401: ', response);
         LocalStorage.setItem(FORCE_LOGOUT, true)
       } else {
-        const responseBody = await response.text()
+        const clonedResponse = response.clone()
+        const responseBody = await clonedResponse.text()
         if (responseBody.includes('too many connections for role') && retryCount <= 3) {
           console.log('Retrying in 3 seconds due to TOO MANY CONNECTIONS ERROR... Attempt: ', retryCount)
           await new Promise(resolve => setTimeout(resolve, 3000));

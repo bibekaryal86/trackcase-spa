@@ -32,7 +32,7 @@ export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema
       let calendarResponse: HearingCalendarResponse | TaskCalendarResponse
       const options: Partial<FetchOptions> = {
         method: 'POST',
-        requestBody: getRequestBody(calendar),
+        requestBody: getRequestBody(calendar, isHearingCalendarRequest),
       }
       if (isHearingCalendarRequest) {
         const urlPath = getEndpoint(process.env.HEARING_CALENDAR_CREATE_ENDPOINT as string)
@@ -179,7 +179,7 @@ export const editCalendar = (
       let calendarResponse: HearingCalendarResponse | TaskCalendarResponse
       const options: Partial<FetchOptions> = {
         method: 'PUT',
-        requestBody: getRequestBody(calendar),
+        requestBody: getRequestBody(calendar, isHearingCalendarRequest),
       }
       if (isHearingCalendarRequest) {
         const urlPath = getEndpoint(process.env.HEARING_CALENDAR_UPDATE_ENDPOINT as string)
@@ -302,20 +302,20 @@ const setSelectedCalendarFromStore = (
   }
 }
 
-const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema) => {
+const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, isHearingCalendarRequest: boolean) => {
   return {
     // common
     court_case_id: calendar.courtCaseId,
     status: calendar.status,
     comments: calendar.comments,
     // hearing calendar
-    hearing_date: 'hearingDate' in calendar ? calendar.hearingDate : undefined,
-    hearing_type_id: 'hearingTypeId' in calendar ? calendar.hearingTypeId : undefined,
+    hearing_date: isHearingCalendarRequest && 'hearingDate' in calendar ? calendar.hearingDate : undefined,
+    hearing_type_id: isHearingCalendarRequest && 'hearingTypeId' in calendar ? calendar.hearingTypeId : undefined,
     // task calendar
-    task_date: 'taskDate' in calendar ? calendar.taskDate : undefined,
-    task_type_id: 'taskTypeId' in calendar ? calendar.taskTypeId : undefined,
+    task_date: !isHearingCalendarRequest && 'taskDate' in calendar ? calendar.taskDate : undefined,
+    task_type_id: !isHearingCalendarRequest && 'taskTypeId' in calendar ? calendar.taskTypeId : undefined,
     hearing_calendar_id:
-      'hearingCalendarId' in calendar && calendar.hearingCalendarId && calendar.hearingCalendarId > 0
+      !isHearingCalendarRequest && 'hearingCalendarId' in calendar && calendar.hearingCalendarId && calendar.hearingCalendarId > 0
         ? calendar.hearingCalendarId
         : undefined,
   }
