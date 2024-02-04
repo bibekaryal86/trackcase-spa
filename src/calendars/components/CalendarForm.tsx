@@ -86,7 +86,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const calendarCourtCasesListForSelect = () =>
     courtCasesList.map((x) => (
       <MenuItem key={x.id} value={x.id}>
-        {x.clientId}, {x.caseTypeId}
+        {x.client?.name}, {x.caseType?.name}
       </MenuItem>
     ))
 
