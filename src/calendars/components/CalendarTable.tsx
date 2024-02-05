@@ -10,6 +10,7 @@ import {
   ACTION_UPDATE,
   BUTTON_DELETE,
   BUTTON_UPDATE,
+  CALENDAR_OBJECT_TYPES,
   ID_ACTION_BUTTON,
 } from '../../constants'
 import { FormSchema } from '../../forms'
@@ -38,6 +39,7 @@ interface CalendarTableProps {
 const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   const { isHistoryView, calendarType, calendarsList, historyCalendarsList } = props
   const { setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
+  const { courtCasesList, formsList } = props
 
   const isHearingCalendarTable = isHearingCalendar(calendarType)
   const calendarTypeForDisplay = isHearingCalendarTable ? 'Hearing Calendar' : 'Task Calendar'
@@ -135,19 +137,33 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToCalendar = (calendarDate?: Dayjs, calendarId?: number) =>
-    calendarDate && calendarId ? (
+  const linkToCalendar = (calendarDate?: Dayjs, calendarId?: number, calendarTypePage?: string) =>
+    calendarDate && calendarId && calendarTypePage ? (
       isHistoryView ? (
         dayjs(calendarDate).format('YYYY-MM-DD')
       ) : (
         <Link
           text={dayjs(calendarDate).format('YYYY-MM-DD')}
-          navigateToPage={`/calendar/${calendarType}/${calendarId}`}
+          navigateToPage={`/calendar/${calendarTypePage}/${calendarId}`}
         />
       )
     ) : (
       ''
     )
+
+  const getCourtCase = (calendar: HearingCalendarSchema | HistoryHearingCalendarSchema) => {
+    const courtCase = courtCasesList.find((cc) => cc.id === calendar.courtCaseId)
+    return `${courtCase?.client?.name}, ${courtCase?.caseType?.name}`
+  }
+
+  const getForm = (calendar: TaskCalendarSchema | HistoryTaskCalendarSchema) => {
+    const form = formsList.find((f) => f.id === calendar.formId)
+    if (form) {
+      const courtCase = courtCasesList.find((cc) => cc.id === form.courtCaseId)
+      return `${courtCase?.client?.name}, ${courtCase?.caseType?.name}`
+    }
+    return ''
+  }
 
   const calendarsTableDataCommon = (
     x: HearingCalendarSchema | TaskCalendarSchema | HistoryHearingCalendarSchema | HistoryTaskCalendarSchema,
@@ -155,19 +171,19 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     if (isHearingCalendarTable) {
       const hearingCalendar = x as HearingCalendarSchema
       return {
-        calendarDate: linkToCalendar(hearingCalendar.hearingDate, hearingCalendar.id),
-        calendarType: hearingCalendar.hearingTypeId,
-        courtCase: hearingCalendar.courtCaseId,
+        calendarDate: linkToCalendar(hearingCalendar.hearingDate, hearingCalendar.id, CALENDAR_OBJECT_TYPES.HEARING),
+        calendarType: hearingCalendar.hearingType?.name,
+        courtCase: getCourtCase(hearingCalendar),
         status: x.status,
       }
     } else {
       const taskCalendar = x as TaskCalendarSchema
       return {
-        calendarDate: linkToCalendar(taskCalendar.taskDate, x.id),
-        calendarType: taskCalendar.taskTypeId,
+        calendarDate: linkToCalendar(taskCalendar.taskDate, x.id, CALENDAR_OBJECT_TYPES.TASK),
+        calendarType: taskCalendar.taskType?.name,
         dueDate: taskCalendar.dueDate ? dayjs(taskCalendar.dueDate).format('YYYY-MM-DD') : '',
-        hearingCalendar: taskCalendar.hearingCalendarId,
-        form: taskCalendar.formId,
+        hearingCalendar: linkToCalendar(taskCalendar.hearingCalendar?.hearingDate, taskCalendar.hearingCalendarId, CALENDAR_OBJECT_TYPES.HEARING),
+        form: getForm(taskCalendar),
         status: x.status,
       }
     }

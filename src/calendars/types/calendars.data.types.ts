@@ -75,6 +75,7 @@ export interface HistoryTaskCalendarSchema extends BaseModelSchema {
   taskTypeId?: number
   courtCaseId?: number
   hearingCalendarId?: number
+  formId?: number
   status?: string
   comments?: string
   // orm_mode
