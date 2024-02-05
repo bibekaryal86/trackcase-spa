@@ -35,14 +35,14 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
 
   if (matchesSuccessHc || matchesSuccessTc) {
     return {
-        ...state,
-        isForceFetch: true,
-        isCloseModal: true,
-        hearingCalendars: [],
-        taskCalendars: [],
-        selectedHearingCalendar: DefaultHearingCalendarSchema,
-        selectedTaskCalendar: DefaultTaskCalendarSchema,
-      }
+      ...state,
+      isForceFetch: true,
+      isCloseModal: true,
+      hearingCalendars: [],
+      taskCalendars: [],
+      selectedHearingCalendar: DefaultHearingCalendarSchema,
+      selectedTaskCalendar: DefaultTaskCalendarSchema,
+    }
   }
 
   switch (action.type) {

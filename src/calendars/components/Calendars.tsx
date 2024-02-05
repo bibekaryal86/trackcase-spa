@@ -294,8 +294,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       setSelectedType={setSelectedType}
       setSelectedCalendar={setSelectedCalendar}
       setSelectedCalendarForReset={setSelectedCalendarForReset}
-      courtCasesList={[]}
-      formsList={[]}
+      courtCasesList={courtCasesList}
+      formsList={formsList}
     />
   )
 
@@ -310,8 +310,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       setSelectedId={setSelectedId}
       setSelectedCalendar={setSelectedCalendar}
       setSelectedCalendarForReset={setSelectedCalendarForReset}
-      courtCasesList={[]}
-      formsList={[]}
+      courtCasesList={courtCasesList}
+      formsList={formsList}
     />
   )
 

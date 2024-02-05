@@ -170,7 +170,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
       tableData = Array.from(formsList, (x) => {
         return {
           ...formsTableDataCommon(x),
-          action: actionButtons(x.id || ID_ACTION_BUTTON, x),
+          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })
     }

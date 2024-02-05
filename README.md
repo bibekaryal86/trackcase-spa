@@ -24,3 +24,5 @@ TODO
 * due date cannot be after hearing date if hearing calendar is selected
   * if updating task calendar with hearing calendar
   * display hearing calendar dropdown, but make it not-updatable
+* create an api to get all ref types and call that when loading home page
+

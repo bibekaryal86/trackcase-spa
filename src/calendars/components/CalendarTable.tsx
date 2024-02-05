@@ -54,11 +54,6 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         label: 'Type',
         isDisableSorting: isHistoryView,
       },
-      {
-        id: 'status',
-        label: 'Status',
-        isDisableSorting: isHistoryView,
-      },
     ]
     if (isHearingCalendarTable) {
       tableHeaderData.push({
@@ -68,6 +63,11 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       })
     } else {
       tableHeaderData.push(
+        {
+          id: 'dueDate',
+          label: 'Due Date',
+          isDisableSorting: isHistoryView,
+        },
         {
           id: 'hearingCalendar',
           label: 'Hearing Calendar',
@@ -80,6 +80,11 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         },
       )
     }
+    tableHeaderData.push({
+      id: 'status',
+      label: 'Status',
+      isDisableSorting: isHistoryView,
+    })
     if (isHistoryView) {
       tableHeaderData.push(
         {
@@ -160,6 +165,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       return {
         calendarDate: linkToCalendar(taskCalendar.taskDate, x.id),
         calendarType: taskCalendar.taskTypeId,
+        dueDate: taskCalendar.dueDate ? dayjs(taskCalendar.dueDate).format('YYYY-MM-DD') : '',
         hearingCalendar: taskCalendar.hearingCalendarId,
         form: taskCalendar.formId,
         status: x.status,
@@ -181,7 +187,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       tableData = Array.from(calendarsList, (x: HearingCalendarSchema | TaskCalendarSchema) => {
         return {
           ...calendarsTableDataCommon(x),
-          action: actionButtons(x.id || ID_ACTION_BUTTON, x),
+          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })
     }
