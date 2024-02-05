@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
-import { getStatusesList, testDatabase } from '../../app'
+import { getStatusesList } from '../../app'
 
 const mapDispatchToProps = {
   getStatuses: () => getStatusesList(),
@@ -15,7 +15,6 @@ const Home = (props: HomeProps): React.ReactElement => {
   const { getStatuses } = props
   useEffect(() => {
     // This code will run when the component mounts (page loads)
-    testDatabase()
     getStatuses()
     // Provide an empty dependency array to run the effect only on mount
   }, [getStatuses])
