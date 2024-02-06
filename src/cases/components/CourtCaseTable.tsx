@@ -11,7 +11,7 @@ import {
   BUTTON_UPDATE,
   ID_ACTION_BUTTON,
 } from '../../constants'
-import { CourtCaseSchema, HistoryCourtCaseSchema } from '../types/courtCases.data.types'
+import { CourtCaseSchema } from '../types/courtCases.data.types'
 
 interface CourtCaseTableProps {
   courtCasesList: CourtCaseSchema[]
@@ -23,7 +23,7 @@ interface CourtCaseTableProps {
 }
 
 const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
-  const { courtCasesList } = props
+  const { courtCasesList, selectedClient } = props
   const { setModal, setSelectedId, setSelectedCourtCase, setSelectedCourtCaseForReset } = props
 
   const courtCasesTableHeaderData = (): TableHeaderData[] => {
@@ -31,6 +31,10 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
       {
         id: 'clientCaseType',
         label: 'Case',
+      },
+      {
+        id: 'client',
+        label: 'Client',
       },
       {
         id: 'status',
@@ -73,13 +77,24 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToCourtCase = (x: CourtCaseSchema | HistoryCourtCaseSchema) => (
+  const linkToCourtCase = (x: CourtCaseSchema) => (
     <Link text={`${x.client?.name}, ${x.caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
   )
 
-  const courtCasesTableDataCommon = (x: CourtCaseSchema | HistoryCourtCaseSchema) => {
+  const linkToClient = (x: CourtCaseSchema) =>
+    selectedClient ? (
+      selectedClient.name
+    ) : (
+      <Link
+        text={x.client?.name}
+        navigateToPage={`/client/${x.id}?backTo=${window.location.pathname}&prevPage=Court Cases`}
+      />
+    )
+
+  const courtCasesTableDataCommon = (x: CourtCaseSchema) => {
     return {
       clientCaseType: linkToCourtCase(x),
+      client: linkToClient(x),
       status: x.status,
     }
   }

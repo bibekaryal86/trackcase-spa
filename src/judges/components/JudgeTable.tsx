@@ -78,22 +78,25 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToWebex = (webex: string) => <Link text={webex} href={webex} target="_blank" />
+  const linkToWebex = (webex?: string) => (webex ? <Link text={webex} href={webex} target="_blank" /> : '')
 
-  const linkToCourt = (x: CourtSchema) => (
-    <Link
-      text={`${x.name}, ${x.state}`}
-      navigateToPage={`/court/${x.id}?backTo=${window.location.pathname}&prevPage=Judges`}
-    />
-  )
+  const linkToCourt = (x?: CourtSchema) =>
+    selectedCourt ? (
+      selectedCourt.name
+    ) : (
+      <Link
+        text={`${x?.name}, ${x?.state}`}
+        navigateToPage={`/court/${x?.id}?backTo=${window.location.pathname}&prevPage=Judges`}
+      />
+    )
 
   const linkToJudge = (x: JudgeSchema) => <Link text={x.name} navigateToPage={`/judge/${x.id}`} />
 
   const judgesTableDataCommon = (x: JudgeSchema) => {
     return {
       name: linkToJudge(x),
-      court: selectedCourt ? selectedCourt.name : x.court ? linkToCourt(x.court) : '',
-      webex: x.webex ? linkToWebex(x.webex) : '',
+      court: linkToCourt(x.court),
+      webex: linkToWebex(x.webex),
       status: x.status,
     }
   }

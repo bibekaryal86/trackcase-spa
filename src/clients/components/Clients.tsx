@@ -230,7 +230,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       setSelectedId={setSelectedId}
       setSelectedClient={setSelectedClient}
       setSelectedClientForReset={setSelectedClientForReset}
-      selectedJudge={selectedJudge}
+      selectedJudge={!(judgeId && selectedJudge) ? undefined : selectedJudge}
     />
   )
 

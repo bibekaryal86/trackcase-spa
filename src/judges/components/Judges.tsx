@@ -233,7 +233,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       setSelectedId={setSelectedId}
       setSelectedJudge={setSelectedJudge}
       setSelectedJudgeForReset={setSelectedJudgeForReset}
-      selectedCourt={selectedCourt}
+      selectedCourt={!(courtId && selectedCourt) ? undefined : selectedCourt}
     />
   )
 

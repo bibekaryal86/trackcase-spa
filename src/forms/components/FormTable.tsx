@@ -10,8 +10,8 @@ import {
   BUTTON_DELETE,
   BUTTON_UPDATE,
   ID_ACTION_BUTTON,
-  ID_DEFAULT,
 } from '../../constants'
+import { FormTypeSchema } from '../../types'
 import { FormSchema } from '../types/forms.data.types'
 
 interface FormTableProps {
@@ -21,21 +21,23 @@ interface FormTableProps {
   setSelectedForm?: (form: FormSchema) => void
   setSelectedFormForReset?: (form: FormSchema) => void
   courtCasesList: CourtCaseSchema[]
+  selectedCourtCase?: CourtCaseSchema
+  formTypesList: FormTypeSchema[]
 }
 
 const FormTable = (props: FormTableProps): React.ReactElement => {
-  const { formsList, courtCasesList } = props
+  const { formsList, courtCasesList, selectedCourtCase, formTypesList } = props
   const { setModal, setSelectedId, setSelectedForm, setSelectedFormForReset } = props
 
   const formsTableHeaderData = (): TableHeaderData[] => {
     return [
       {
-        id: 'clientCase',
-        label: 'Client Case',
+        id: 'type',
+        label: 'Form',
       },
       {
-        id: 'type',
-        label: 'Type',
+        id: 'clientCase',
+        label: 'Client Case',
       },
       {
         id: 'submit',
@@ -102,19 +104,31 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToForm = (clientName: string, caseTypeName: string, formId: number) => (
-    <Link text={`${clientName}, ${caseTypeName}`} navigateToPage={`/form/${formId}`} />
-  )
+  const linkToForm = (x: FormSchema) => {
+    let formType = x.formType
+    if (!formType) {
+      formType = formTypesList.find((y) => x.formTypeId === y.id)
+    }
+    return <Link text={formType?.name} navigateToPage={`/form/${x.id}`} />
+  }
 
-  const getClientCase = (x: FormSchema) => {
+  const linkToCourtCase = (x: FormSchema) => {
+    if (selectedCourtCase) {
+      return `${selectedCourtCase?.client?.name}, ${selectedCourtCase?.caseType?.name}`
+    }
     const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
-    return linkToForm(courtCase?.client?.name || 'Client', courtCase?.caseType?.name || 'Type', x.id || ID_DEFAULT)
+    return (
+      <Link
+        text={`${courtCase?.client?.name}, ${courtCase?.caseType?.name}`}
+        navigateToPage={`/court_case/${x.id}?backTo=${window.location.pathname}&prevPage=Forms`}
+      />
+    )
   }
 
   const formsTableDataCommon = (x: FormSchema) => {
     return {
-      clientCase: getClientCase(x),
-      type: x.formType?.name,
+      type: linkToForm(x),
+      clientCase: linkToCourtCase(x),
       submit: convertDateToLocaleString(x.submitDate),
       receipt: convertDateToLocaleString(x.receiptDate),
       receiptNumber: x.receiptNumber,

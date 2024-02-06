@@ -259,7 +259,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       setSelectedId={setSelectedId}
       setSelectedCourtCase={setSelectedCourtCase}
       setSelectedCourtCaseForReset={setSelectedCourtCaseForReset}
-      selectedClient={selectedClient}
+      selectedClient={clientId && selectedClient ? selectedClient : undefined}
     />
   )
 

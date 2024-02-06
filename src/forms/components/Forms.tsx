@@ -242,6 +242,8 @@ const Forms = (props: FormsProps): React.ReactElement => {
       setSelectedForm={setSelectedForm}
       setSelectedFormForReset={setSelectedFormForReset}
       courtCasesList={courtCasesList}
+      selectedCourtCase={!(courtCaseId && selectedCourtCase) ? undefined : selectedCourtCase}
+      formTypesList={formTypesList}
     />
   )
 

@@ -93,9 +93,12 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToJudge = (x: JudgeSchema) => (
-    <Link text={x.name} navigateToPage={`/judge/${x.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
-  )
+  const linkToJudge = (x?: JudgeSchema) =>
+    selectedJudge ? (
+      selectedJudge.name
+    ) : (
+      <Link text={x?.name} navigateToPage={`/judge/${x?.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
+    )
 
   const linkToClient = (x: ClientSchema) => <Link text={x.name} navigateToPage={`/client/${x.id}`} />
 
@@ -106,7 +109,7 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
       email: x.email,
       phone: x.phoneNumber,
       address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-      judge: selectedJudge ? selectedJudge.name : x.judge ? linkToJudge(x.judge) : '',
+      judge: linkToJudge(x.judge),
       status: x.status,
     }
   }
