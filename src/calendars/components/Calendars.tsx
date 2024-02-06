@@ -9,6 +9,7 @@ import CalendarForm from './CalendarForm'
 import CalendarTable from './CalendarTable'
 import { getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
+import { ClientSchema, getClients } from '../../clients'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -30,7 +31,7 @@ import { CALENDARS_UNMOUNT } from '../types/calendars.action.types'
 import { DefaultCalendar, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 import { isAreTwoCalendarsSame, isHearingCalendar } from '../utils/calendars.utils'
 
-const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms }: GlobalState) => {
+const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms, clients }: GlobalState) => {
   return {
     isForceFetch: calendars.isForceFetch,
     isCloseModal: calendars.isCloseModal,
@@ -41,6 +42,7 @@ const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCa
     taskTypesList: taskTypes.taskTypes,
     courtCasesList: courtCases.courtCases,
     formsList: forms.forms,
+    clientsList: clients.clients,
   }
 }
 
@@ -61,6 +63,7 @@ const mapDispatchToProps = {
   getTaskTypesList: () => getTaskTypes(),
   getCourtCasesList: () => getCourtCases(),
   getFormsList: () => getForms(),
+  getClientsList: () => getClients(),
 }
 
 interface CalendarsProps {
@@ -87,6 +90,8 @@ interface CalendarsProps {
   getCourtCasesList: () => void
   formsList: FormSchema[]
   getFormsList: () => void
+  clientsList: ClientSchema[]
+  getClientsList: () => void
 }
 
 const Calendars = (props: CalendarsProps): React.ReactElement => {
@@ -106,7 +111,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const { isCloseModal, isForceFetch } = props
   const { statusList, getStatusesList } = props
   const { hearingTypesList, getHearingTypesList, taskTypesList, getTaskTypesList } = props
-  const { courtCasesList, getCourtCasesList, formsList, getFormsList } = props
+  const { courtCasesList, getCourtCasesList, formsList, getFormsList, clientsList, getClientsList } = props
 
   const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
@@ -126,6 +131,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       taskTypesList.length === 0 && getTaskTypesList()
       courtCasesList.length === 0 && getCourtCasesList()
       formsList.length === 0 && getFormsList()
+      clientsList.length === 0 && getClientsList()
     }
   }, [
     isForceFetch,
@@ -143,6 +149,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     getCourtCasesList,
     formsList.length,
     getFormsList,
+    clientsList.length,
+    getClientsList,
   ])
 
   useEffect(() => {
@@ -195,6 +203,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       calendarTypesList={calendarType === CALENDAR_OBJECT_TYPES.HEARING ? hearingTypesList : taskTypesList}
       courtCasesList={courtCasesList}
       formsList={formsList}
+      clientsList={clientsList}
       setSelectedCalendar={setSelectedCalendar}
       calendarStatusList={calendarStatusList}
       isShowOneCalendar={false}

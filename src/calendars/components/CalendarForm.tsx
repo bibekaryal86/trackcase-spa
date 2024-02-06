@@ -15,6 +15,7 @@ import {
   GridFormWrapper,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
+import { ClientSchema } from '../../clients'
 import { ID_LIST } from '../../constants'
 import { FormSchema } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
@@ -29,10 +30,11 @@ import {
 interface CalendarFormProps {
   calendarType: string
   selectedCalendar: HearingCalendarSchema | TaskCalendarSchema
+  setSelectedCalendar: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
   calendarTypesList: HearingTypeSchema[] | TaskTypeSchema[]
   courtCasesList: CourtCaseSchema[]
   formsList: FormSchema[]
-  setSelectedCalendar: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
+  clientsList: ClientSchema[]
   calendarStatusList: string[]
   isShowOneCalendar: boolean
 }
@@ -40,7 +42,7 @@ interface CalendarFormProps {
 const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
-  const { courtCasesList, formsList, calendarStatusList } = props
+  const { courtCasesList, formsList, clientsList, calendarStatusList } = props
   const isHearingCalendarForm = isHearingCalendar(calendarType)
 
   const calendarDate = () => {
@@ -131,10 +133,16 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     )
   }
 
+  const calendarFormForSelect = (x: FormSchema) => {
+    const client = clientsList.find((y) => x.courtCase?.clientId === y.id)
+    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+    return `${client?.name}, ${courtCase?.caseType?.name} [${x.formType?.name}]`
+  }
+
   const calendarFormListForSelect = () =>
     formsList.map((x) => (
       <MenuItem key={x.id} value={x.id}>
-        {x.courtCaseId}, {x.formTypeId}
+        {calendarFormForSelect(x)}
       </MenuItem>
     ))
 

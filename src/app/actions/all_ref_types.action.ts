@@ -63,8 +63,8 @@ export const getAllRefTypes = () => {
         const options: Partial<FetchOptions> = {
           method: 'GET',
           queryParams: {
-            'components': requestComponents.join(",")
-          }
+            components: requestComponents.join(','),
+          },
         }
         const allRefTypes = (await Async.fetch(urlPath, options)) as AllRefTypesSchema
 
