@@ -84,7 +84,7 @@ export const validateCalendar = (
     if (getNumber(taskCalendar.taskTypeId) <= 0) {
       errors.push('Task Type is required')
     } else if (taskCalendar.taskTypeId === DUE_AT_HEARING_ID && getNumber(taskCalendar.hearingCalendarId) <= 0) {
-      errors.push('For Due at Hearing task type, Hearing date is required!')
+      errors.push('For Due at Hearing task type Hearing Calendar is required!')
     }
     if (getNumber(taskCalendar.hearingCalendarId) <= 0 && getNumber(taskCalendar.formId) <= 0) {
       errors.push('Either Hearing Calendar OR Form is required')
