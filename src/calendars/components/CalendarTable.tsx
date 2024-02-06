@@ -182,7 +182,11 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         calendarDate: linkToCalendar(taskCalendar.taskDate, x.id, CALENDAR_OBJECT_TYPES.TASK),
         calendarType: taskCalendar.taskType?.name,
         dueDate: taskCalendar.dueDate ? dayjs(taskCalendar.dueDate).format('YYYY-MM-DD') : '',
-        hearingCalendar: linkToCalendar(taskCalendar.hearingCalendar?.hearingDate, taskCalendar.hearingCalendarId, CALENDAR_OBJECT_TYPES.HEARING),
+        hearingCalendar: linkToCalendar(
+          taskCalendar.hearingCalendar?.hearingDate,
+          taskCalendar.hearingCalendarId,
+          CALENDAR_OBJECT_TYPES.HEARING,
+        ),
         form: getForm(taskCalendar),
         status: x.status,
       }

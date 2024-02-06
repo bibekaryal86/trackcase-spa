@@ -1,23 +1,23 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
-import { getStatusesList } from '../../app'
+import { getAllRefTypes } from '../../app'
 
 const mapDispatchToProps = {
-  getStatuses: () => getStatusesList(),
+  getAllRefTypes: () => getAllRefTypes(),
 }
 
 interface HomeProps {
-  getStatuses: () => void
+  getAllRefTypes: () => void
 }
 
 const Home = (props: HomeProps): React.ReactElement => {
-  const { getStatuses } = props
+  const { getAllRefTypes } = props
   useEffect(() => {
     // This code will run when the component mounts (page loads)
-    getStatuses()
+    getAllRefTypes()
     // Provide an empty dependency array to run the effect only on mount
-  }, [getStatuses])
+  }, [getAllRefTypes])
 
   const homePageText = () => (
     <>

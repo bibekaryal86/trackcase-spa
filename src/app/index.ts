@@ -1,4 +1,5 @@
 // actions
+import { getAllRefTypes } from './actions/all_ref_types.action'
 import { userLogout } from './actions/logout.action'
 import { addNote, deleteNote, editNote } from './actions/notes.action'
 import { getStatusesList } from './actions/statuses.action'
@@ -70,6 +71,7 @@ import { LocalStorage, SessionStorage } from './utils/storage.utils'
 // EXPORTS
 export { userLogout }
 export { addNote, editNote, deleteNote }
+export { getAllRefTypes }
 export { getStatusesList }
 export { testDatabase }
 export {
