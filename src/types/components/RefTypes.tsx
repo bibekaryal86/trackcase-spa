@@ -209,6 +209,7 @@ const RefTypes = (props: RefTypesProps): React.ReactElement => {
 
   const addButton = () => <Button onClick={() => setModal(ACTION_ADD)}>Add New {refTypeName}</Button>
 
+  const isDisabled = (name: string) => ['Due at Hearing', 'MASTER', 'MERIT'].includes(name)
   const actionButtons = (id: number, name: string, description: string) => (
     <>
       <Button
@@ -218,6 +219,7 @@ const RefTypes = (props: RefTypesProps): React.ReactElement => {
           setSelectedName(name)
           setSelectedDesc(description)
         }}
+        disabled={isDisabled(name)}
       >
         Update
       </Button>
@@ -228,6 +230,7 @@ const RefTypes = (props: RefTypesProps): React.ReactElement => {
           setSelectedName(name)
           setSelectedDesc(description)
         }}
+        disabled={isDisabled(name)}
       >
         Delete
       </Button>

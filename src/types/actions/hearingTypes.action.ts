@@ -38,7 +38,7 @@ export const addHearingType = (name: string, description: string) => {
       if (hearingTypeResponse.detail) {
         dispatch(hearingTypesFailure(HEARING_TYPE_CREATE_FAILURE, getErrMsg(hearingTypeResponse.detail)))
       } else {
-        dispatch(hearingTypesSuccess(HEARING_TYPE_CREATE_SUCCESS, CREATE_SUCCESS('Case Type'), []))
+        dispatch(hearingTypesSuccess(HEARING_TYPE_CREATE_SUCCESS, CREATE_SUCCESS('Hearing Type'), []))
       }
     } catch (error) {
       console.log('Add HearingType Error: ', error)
@@ -101,7 +101,7 @@ export const editHearingType = (id: number, name: string, description: string) =
       if (hearingTypeResponse.detail) {
         dispatch(hearingTypesFailure(HEARING_TYPE_UPDATE_FAILURE, getErrMsg(hearingTypeResponse.detail)))
       } else {
-        dispatch(hearingTypesSuccess(HEARING_TYPE_UPDATE_SUCCESS, UPDATE_SUCCESS('Case Type'), []))
+        dispatch(hearingTypesSuccess(HEARING_TYPE_UPDATE_SUCCESS, UPDATE_SUCCESS('Hearing Type'), []))
       }
     } catch (error) {
       console.log('Edit HearingType Error: ', error)
@@ -128,7 +128,7 @@ export const deleteHearingType = (id: number) => {
       if (hearingTypeResponse.detail) {
         dispatch(hearingTypesFailure(HEARING_TYPE_DELETE_FAILURE, getErrMsg(hearingTypeResponse.detail)))
       } else {
-        dispatch(hearingTypesSuccess(HEARING_TYPE_DELETE_SUCCESS, DELETE_SUCCESS('Case Type'), []))
+        dispatch(hearingTypesSuccess(HEARING_TYPE_DELETE_SUCCESS, DELETE_SUCCESS('Hearing Type'), []))
       }
     } catch (error) {
       console.log('Delete HearingType Error: ', error)

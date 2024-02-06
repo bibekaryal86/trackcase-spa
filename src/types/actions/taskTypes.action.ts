@@ -38,7 +38,7 @@ export const addTaskType = (name: string, description: string) => {
       if (taskTypeResponse.detail) {
         dispatch(taskTypesFailure(TASK_TYPE_CREATE_FAILURE, getErrMsg(taskTypeResponse.detail)))
       } else {
-        dispatch(taskTypesSuccess(TASK_TYPE_CREATE_SUCCESS, CREATE_SUCCESS('Case Type'), []))
+        dispatch(taskTypesSuccess(TASK_TYPE_CREATE_SUCCESS, CREATE_SUCCESS('Task Type'), []))
       }
     } catch (error) {
       console.log('Add TaskType Error: ', error)
@@ -101,7 +101,7 @@ export const editTaskType = (id: number, name: string, description: string) => {
       if (taskTypeResponse.detail) {
         dispatch(taskTypesFailure(TASK_TYPE_UPDATE_FAILURE, getErrMsg(taskTypeResponse.detail)))
       } else {
-        dispatch(taskTypesSuccess(TASK_TYPE_UPDATE_SUCCESS, UPDATE_SUCCESS('Case Type'), []))
+        dispatch(taskTypesSuccess(TASK_TYPE_UPDATE_SUCCESS, UPDATE_SUCCESS('Task Type'), []))
       }
     } catch (error) {
       console.log('Edit TaskType Error: ', error)
@@ -128,7 +128,7 @@ export const deleteTaskType = (id: number) => {
       if (taskTypeResponse.detail) {
         dispatch(taskTypesFailure(TASK_TYPE_DELETE_FAILURE, getErrMsg(taskTypeResponse.detail)))
       } else {
-        dispatch(taskTypesSuccess(TASK_TYPE_DELETE_SUCCESS, DELETE_SUCCESS('Case Type'), []))
+        dispatch(taskTypesSuccess(TASK_TYPE_DELETE_SUCCESS, DELETE_SUCCESS('Task Type'), []))
       }
     } catch (error) {
       console.log('Delete TaskType Error: ', error)

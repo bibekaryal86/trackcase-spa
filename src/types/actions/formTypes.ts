@@ -38,7 +38,7 @@ export const addFormType = (name: string, description: string) => {
       if (formTypeResponse.detail) {
         dispatch(formTypesFailure(FORM_TYPE_CREATE_FAILURE, getErrMsg(formTypeResponse.detail)))
       } else {
-        dispatch(formTypesSuccess(FORM_TYPE_CREATE_SUCCESS, CREATE_SUCCESS('Case Type'), []))
+        dispatch(formTypesSuccess(FORM_TYPE_CREATE_SUCCESS, CREATE_SUCCESS('Form Type'), []))
       }
     } catch (error) {
       console.log('Add FormTypes Error: ', error)
@@ -101,7 +101,7 @@ export const editFormType = (id: number, name: string, description: string) => {
       if (formTypeResponse.detail) {
         dispatch(formTypesFailure(FORM_TYPE_UPDATE_FAILURE, getErrMsg(formTypeResponse.detail)))
       } else {
-        dispatch(formTypesSuccess(FORM_TYPE_UPDATE_SUCCESS, UPDATE_SUCCESS('Case Type'), []))
+        dispatch(formTypesSuccess(FORM_TYPE_UPDATE_SUCCESS, UPDATE_SUCCESS('Form Type'), []))
       }
     } catch (error) {
       console.log('Edit FormTypes Error: ', error)
@@ -128,7 +128,7 @@ export const deleteFormType = (id: number) => {
       if (formTypeResponse.detail) {
         dispatch(formTypesFailure(FORM_TYPE_DELETE_FAILURE, getErrMsg(formTypeResponse.detail)))
       } else {
-        dispatch(formTypesSuccess(FORM_TYPE_DELETE_SUCCESS, DELETE_SUCCESS('Case Type'), []))
+        dispatch(formTypesSuccess(FORM_TYPE_DELETE_SUCCESS, DELETE_SUCCESS('Form Type'), []))
       }
     } catch (error) {
       console.log('Delete FormTypes Error: ', error)
