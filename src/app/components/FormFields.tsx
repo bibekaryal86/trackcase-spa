@@ -36,7 +36,6 @@ interface FormTextFieldProps {
   error?: boolean
   sx?: object
   multiline?: boolean
-  rows?: number
   maxRows?: number
   type?: string
   InputLabelProps?: object
@@ -56,7 +55,6 @@ interface FormCommentFieldProps {
   error?: boolean
   sx?: object
   multiline?: boolean
-  rows?: number
   maxRows?: number
 }
 
@@ -147,8 +145,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   error = false,
   sx = {},
   multiline = false,
-  maxRows = 8,
-  rows = 4,
+  maxRows = 4,
   type = 'text',
   InputLabelProps = {},
   isReadOnly = false,
@@ -179,7 +176,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
           : undefined
       }
       // Conditionally include maxRows only if multiline is true
-      {...(multiline && { maxRows, rows })}
+      {...(multiline && { maxRows })}
     />
   )
 }
@@ -196,8 +193,7 @@ export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
   onChange,
   error = false,
   sx = { mt: '16px', mb: '8px' },
-  rows = 4,
-  maxRows = 8,
+  maxRows = 4,
 }) => {
   return (
     <FormTextField
@@ -213,7 +209,6 @@ export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
       error={error}
       sx={sx}
       multiline={true}
-      rows={rows}
       maxRows={maxRows}
     />
   )
