@@ -30,6 +30,7 @@ interface CalendarTableProps {
   formsList: FormSchema[]
   selectedCourtCase?: CourtCaseSchema
   hearingTypesList?: HearingTypeSchema[]
+  selectedForm?: FormSchema
   taskTypesList?: TaskTypeSchema[]
 }
 

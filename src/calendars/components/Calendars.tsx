@@ -21,7 +21,7 @@ import {
   CALENDAR_OBJECT_TYPES,
   ID_DEFAULT,
 } from '../../constants'
-import { FormSchema, getForms } from '../../forms'
+import { FormSchema, getForm, getForms } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { getHearingTypes } from '../../types/actions/hearingTypes.action'
 import { getTaskTypes } from '../../types/actions/taskTypes.action'
@@ -43,6 +43,7 @@ const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCa
     formsList: forms.forms,
     clientsList: clients.clients,
     selectedCourtCase: courtCases.selectedCourtCase,
+    selectedForm: forms.selectedForm,
   }
 }
 
@@ -65,6 +66,7 @@ const mapDispatchToProps = {
   getFormsList: () => getForms(),
   getClientsList: () => getClients(),
   getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId),
+  getForm: (formId: number) => getForm(formId),
 }
 
 interface CalendarsProps {
@@ -96,6 +98,9 @@ interface CalendarsProps {
   courtCaseId?: string
   selectedCourtCase?: CourtCaseSchema
   getCourtCase: (courtCaseId: number) => void
+  formId?: string
+  selectedForm?: FormSchema
+  getForm: (formId: number) => void
 }
 
 const Calendars = (props: CalendarsProps): React.ReactElement => {
@@ -117,6 +122,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const { hearingTypesList, getHearingTypesList, taskTypesList, getTaskTypesList } = props
   const { courtCasesList, getCourtCasesList, formsList, getFormsList, clientsList, getClientsList } = props
   const { courtCaseId, selectedCourtCase, getCourtCase } = props
+  const { formId, selectedForm, getForm } = props
 
   const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
@@ -137,6 +143,24 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       }
     }
   }, [courtCaseId, getCourtCase, selectedCourtCase])
+
+    useEffect(() => {
+    if (courtCaseId) {
+      setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
+      if (!selectedCourtCase) {
+        getCourtCase(getNumber(courtCaseId))
+      }
+    }
+  }, [courtCaseId, getCourtCase, selectedCourtCase])
+
+  useEffect(() => {
+    if (formId) {
+      setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
+      if (!selectedForm) {
+        getForm(getNumber(formId))
+      }
+    }
+  }, [formId, getForm, selectedForm])
 
   useEffect(() => {
     if (isForceFetch) {
@@ -329,7 +353,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const taskCalendarsTable = () => (
     <CalendarTable
       calendarType={CALENDAR_OBJECT_TYPES.TASK}
-      calendarsList={taskCalendarsList}
+      calendarsList={!(formId && selectedForm) ? taskCalendarsList : selectedForm.taskCalendars || []}
       setModal={setModal}
       setSelectedType={setSelectedType}
       setSelectedId={setSelectedId}
@@ -337,6 +361,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       setSelectedCalendarForReset={setSelectedCalendarForReset}
       courtCasesList={courtCasesList}
       formsList={formsList}
+      selectedForm={!(formId && selectedForm) ? undefined : selectedForm}
       taskTypesList={taskTypesList}
     />
   )
@@ -344,6 +369,11 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   return courtCaseId ? (
     <>
       {hearingCalendarsTable()}
+      {modal && showModal()}
+    </>
+  ) : formId ? (
+    <>
+      {taskCalendarsTable()}
       {modal && showModal()}
     </>
   ) : (

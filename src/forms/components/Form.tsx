@@ -8,6 +8,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 
 import FormForm from './FormForm'
 import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
+import { Calendars } from '../../calendars'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { FormTypeSchema } from '../../types'
 import { getFormTypes } from '../../types/actions/formTypes'
@@ -181,6 +182,12 @@ const Form = (props: FormProps): React.ReactElement => {
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {formForm()}
               {formButtons()}
+            </Grid>
+            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Typography component="h1" variant="h6" color="primary">
+                Task Calendar of Form:
+              </Typography>
+              <Calendars formId={id} />
             </Grid>
           </>
         )}
