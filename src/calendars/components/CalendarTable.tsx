@@ -35,7 +35,7 @@ interface CalendarTableProps {
 }
 
 const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
-  const { calendarType, calendarsList, selectedCourtCase, hearingTypesList, taskTypesList } = props
+  const { calendarType, calendarsList, selectedCourtCase, hearingTypesList, selectedForm, taskTypesList } = props
   const { setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
   const { courtCasesList, formsList } = props
 
@@ -113,9 +113,12 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToCalendar = (calendarDate?: Dayjs, calendarId?: number, calendarTypePage?: string) => (
-    <Link text={getDayjsString(calendarDate)} navigateToPage={`/calendar/${calendarTypePage}/${calendarId}`} />
-  )
+  const linkToCalendar = (calendarTypePage: string, calendarDate?: Dayjs, calendarId?: number) =>
+    calendarDate && calendarId ? (
+      <Link text={getDayjsString(calendarDate)} navigateToPage={`/calendar/${calendarTypePage}/${calendarId}`} />
+    ) : (
+      ''
+    )
 
   const linkToCourtCase = (x: HearingCalendarSchema) => {
     if (selectedCourtCase) {
@@ -130,11 +133,19 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     )
   }
 
-  const getForm = (x: TaskCalendarSchema) => {
+  const linkToForm = (x: TaskCalendarSchema) => {
+    if (selectedForm) {
+      return `${selectedForm.courtCase?.client?.name}, ${selectedForm.courtCase?.caseType?.name} [${selectedForm.formType?.name}]`
+    }
     const form = formsList.find((f) => f.id === x.formId)
     if (form) {
       const courtCase = courtCasesList.find((cc) => cc.id === form.courtCaseId)
-      return `${courtCase?.client?.name}, ${courtCase?.caseType?.name}`
+      return (
+        <Link
+          text={`${courtCase?.client?.name}, ${courtCase?.caseType?.name}, [${form.formType?.name}]`}
+          navigateToPage={`/form/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+        />
+      )
     }
     return ''
   }
@@ -159,7 +170,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     if (isHearingCalendarTable) {
       const hearingCalendar = x as HearingCalendarSchema
       return {
-        calendarDate: linkToCalendar(hearingCalendar.hearingDate, hearingCalendar.id, CALENDAR_OBJECT_TYPES.HEARING),
+        calendarDate: linkToCalendar(CALENDAR_OBJECT_TYPES.HEARING, hearingCalendar.hearingDate, hearingCalendar.id),
         calendarType: getHearingType(x as HearingCalendarSchema),
         courtCase: linkToCourtCase(hearingCalendar),
         status: x.status,
@@ -167,15 +178,15 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     } else {
       const taskCalendar = x as TaskCalendarSchema
       return {
-        calendarDate: linkToCalendar(taskCalendar.taskDate, x.id, CALENDAR_OBJECT_TYPES.TASK),
+        calendarDate: linkToCalendar(CALENDAR_OBJECT_TYPES.TASK, taskCalendar.taskDate, x.id),
         calendarType: getTaskType(x as TaskCalendarSchema),
         dueDate: getDayjsString(taskCalendar.dueDate),
         hearingCalendar: linkToCalendar(
+          CALENDAR_OBJECT_TYPES.HEARING,
           taskCalendar.hearingCalendar?.hearingDate,
           taskCalendar.hearingCalendarId,
-          CALENDAR_OBJECT_TYPES.HEARING,
         ),
-        form: getForm(taskCalendar),
+        form: linkToForm(taskCalendar),
         status: x.status,
       }
     }

@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs'
 
 import { getNumber } from '../../app'
-import { CALENDAR_OBJECT_TYPES } from '../../constants'
+import { CALENDAR_OBJECT_TYPES, DUE_AT_HEARING_ID } from '../../constants'
 import { CalendarTypeId, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 
 export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSchema): string | undefined => {
@@ -23,7 +23,11 @@ export const isHearingCalendar = (calendarType?: string, calendarTypeId?: Calend
 export const validateCalendarType = (calendarType: string): boolean =>
   calendarType === CALENDAR_OBJECT_TYPES.HEARING || calendarType === CALENDAR_OBJECT_TYPES.TASK
 
-export const validateCalendar = (calendarType: string, calendar: HearingCalendarSchema | TaskCalendarSchema) => {
+export const validateCalendar = (
+  calendarType: string,
+  calendar: HearingCalendarSchema | TaskCalendarSchema,
+  hearingCalendarParam?: HearingCalendarSchema,
+) => {
   const errors: string[] = []
 
   if (!validateCalendarType(calendarType)) {
@@ -44,13 +48,14 @@ export const validateCalendar = (calendarType: string, calendar: HearingCalendar
     ) {
       errors.push('Hearing Date is required and cannot be in the past')
     }
-    if (hearingCalendar.hearingTypeId <= 0) {
+    if (getNumber(hearingCalendar.hearingTypeId) <= 0) {
       errors.push('Hearing Type is required')
     }
-    if (hearingCalendar.courtCaseId <= 0) {
+    if (getNumber(hearingCalendar.courtCaseId) <= 0) {
       errors.push('Case is required')
     }
   } else {
+    // task calendar
     const taskCalendar = calendar as TaskCalendarSchema
     if (!taskCalendar.taskDate || !taskCalendar.taskDate.isValid() || taskCalendar.taskDate.isBefore(dayjs(), 'day')) {
       errors.push('Task Date is required and cannot be in the past')
@@ -62,9 +67,12 @@ export const validateCalendar = (calendarType: string, calendar: HearingCalendar
     if (taskCalendar.taskDate && taskCalendar.dueDate && taskCalendar.dueDate.isBefore(taskCalendar.taskDate)) {
       errors.push('Due Date cannot be before Task Calendar Date')
     }
-    // TODO due date cannot be after hearing date if hearing calendar is selected
-    if (taskCalendar.dueDate && taskCalendar.hearingCalendarId) {
-      const hearingCalendar = taskCalendar.hearingCalendar
+    // due date cannot be after hearing date if hearing calendar is selected
+    if (taskCalendar.dueDate && getNumber(taskCalendar.hearingCalendarId) > 0) {
+      let hearingCalendar = taskCalendar.hearingCalendar
+      if (!hearingCalendar) {
+        hearingCalendar = hearingCalendarParam
+      }
       if (hearingCalendar && hearingCalendar.hearingDate) {
         if (taskCalendar.dueDate.isAfter(hearingCalendar.hearingDate)) {
           errors.push('Due Date cannot be after Hearing Calendar Date')
@@ -73,14 +81,12 @@ export const validateCalendar = (calendarType: string, calendar: HearingCalendar
         errors.push('Hearing Calendar Could Not Be Verified!')
       }
     }
-
-    if (taskCalendar.taskTypeId <= 0) {
+    if (getNumber(taskCalendar.taskTypeId) <= 0) {
       errors.push('Task Type is required')
+    } else if (taskCalendar.taskTypeId === DUE_AT_HEARING_ID && getNumber(taskCalendar.hearingCalendarId) <= 0) {
+      errors.push('For Due at Hearing task type, Hearing date is required!')
     }
-    if (
-      (!taskCalendar.hearingCalendarId || taskCalendar.hearingCalendarId <= 0) &&
-      (!taskCalendar.formId || taskCalendar.formId <= 0)
-    ) {
+    if (getNumber(taskCalendar.hearingCalendarId) <= 0 && getNumber(taskCalendar.formId) <= 0) {
       errors.push('Either Hearing Calendar OR Form is required')
     }
   }

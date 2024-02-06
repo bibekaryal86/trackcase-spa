@@ -19,8 +19,21 @@ import { isHearingCalendar, validateCalendar } from '../utils/calendars.utils'
 
 export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema, calendarType: string) => {
   const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    const validationErrors = validateCalendar(calendarType, calendar)
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+    let hearingCalendar = undefined
+    if (calendarType === CALENDAR_OBJECT_TYPES.TASK) {
+      hearingCalendar = getSelectedCalendarFromStore(
+        getStore(),
+        calendarType,
+        (calendar as TaskCalendarSchema).hearingCalendarId,
+      )
+    }
+
+    const validationErrors = validateCalendar(
+      calendarType,
+      calendar,
+      hearingCalendar ? (hearingCalendar as HearingCalendarSchema) : undefined,
+    )
     if (validationErrors) {
       dispatch(calendarsFailure(`${calendarType}_CREATE_FAILURE`, validationErrors))
       return
@@ -166,8 +179,21 @@ export const editCalendar = (
   calendar: HearingCalendarSchema | TaskCalendarSchema,
 ) => {
   const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    const validationErrors = validateCalendar(calendarType, calendar)
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+    let hearingCalendar = undefined
+    if (calendarType === CALENDAR_OBJECT_TYPES.TASK) {
+      hearingCalendar = getSelectedCalendarFromStore(
+        getStore(),
+        calendarType,
+        (calendar as TaskCalendarSchema).hearingCalendarId,
+      )
+    }
+
+    const validationErrors = validateCalendar(
+      calendarType,
+      calendar,
+      hearingCalendar ? (hearingCalendar as HearingCalendarSchema) : undefined,
+    )
     if (validationErrors) {
       dispatch(calendarsFailure(`${calendarType}_UPDATE_FAILURE`, validationErrors))
       return
@@ -302,6 +328,13 @@ const setSelectedCalendarFromStore = (
   }
 }
 
+const getSelectedCalendarFromStore = (store: GlobalState, calendarType: string, calendarId?: number) => {
+  const calendarsInStore: HearingCalendarSchema[] | TaskCalendarSchema[] = isHearingCalendar(calendarType)
+    ? store.calendars.hearingCalendars
+    : store.calendars.taskCalendars
+  return calendarsInStore.find((calendar) => calendar.id === calendarId)
+}
+
 const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, isHearingCalendarRequest: boolean) => {
   return {
     // common
@@ -314,6 +347,7 @@ const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, is
     // task calendar
     task_date: !isHearingCalendarRequest && 'taskDate' in calendar ? calendar.taskDate : undefined,
     task_type_id: !isHearingCalendarRequest && 'taskTypeId' in calendar ? calendar.taskTypeId : undefined,
+    due_date: !isHearingCalendarRequest && 'dueDate' in calendar ? calendar.dueDate : undefined,
     hearing_calendar_id:
       !isHearingCalendarRequest &&
       'hearingCalendarId' in calendar &&

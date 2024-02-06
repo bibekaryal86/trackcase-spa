@@ -144,7 +144,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     }
   }, [courtCaseId, getCourtCase, selectedCourtCase])
 
-    useEffect(() => {
+  useEffect(() => {
     if (courtCaseId) {
       setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
       if (!selectedCourtCase) {
