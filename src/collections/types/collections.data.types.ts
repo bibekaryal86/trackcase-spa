@@ -5,7 +5,6 @@ import { CollectionMethodSchema } from '../../types'
 export interface CaseCollectionSchema extends StatusBaseSchema, BaseModelSchema {
   quoteDate: Date
   quoteAmount: number
-  initialPayment: number
   courtCaseId: number
   // orm_mode
   courtCase?: CourtCaseSchema
@@ -44,7 +43,6 @@ export interface HistoryCaseCollectionSchema extends BaseModelSchema {
   comments?: string
   quoteDate?: Date
   quoteAmount?: number
-  initialPayment?: number
   courtCaseId?: number
   // orm mode
   caseCollection?: CaseCollectionSchema
