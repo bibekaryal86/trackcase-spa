@@ -14,6 +14,7 @@ import {
   ID_ACTION_BUTTON,
 } from '../../constants'
 import { FormSchema } from '../../forms'
+import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 import { isHearingCalendar } from '../utils/calendars.utils'
 
@@ -27,10 +28,13 @@ interface CalendarTableProps {
   setSelectedCalendarForReset?: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
   courtCasesList: CourtCaseSchema[]
   formsList: FormSchema[]
+  selectedCourtCase?: CourtCaseSchema
+  hearingTypesList?: HearingTypeSchema[]
+  taskTypesList?: TaskTypeSchema[]
 }
 
 const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
-  const { calendarType, calendarsList } = props
+  const { calendarType, calendarsList, selectedCourtCase, hearingTypesList, taskTypesList } = props
   const { setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
   const { courtCasesList, formsList } = props
 
@@ -108,20 +112,25 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToCalendar = (calendarDate?: Dayjs, calendarId?: number, calendarTypePage?: string) =>
-    calendarDate && calendarId && calendarTypePage ? (
-      <Link text={getDayjsString(calendarDate)} navigateToPage={`/calendar/${calendarTypePage}/${calendarId}`} />
-    ) : (
-      ''
-    )
+  const linkToCalendar = (calendarDate?: Dayjs, calendarId?: number, calendarTypePage?: string) => (
+    <Link text={getDayjsString(calendarDate)} navigateToPage={`/calendar/${calendarTypePage}/${calendarId}`} />
+  )
 
-  const getCourtCase = (calendar: HearingCalendarSchema) => {
-    const courtCase = courtCasesList.find((cc) => cc.id === calendar.courtCaseId)
-    return `${courtCase?.client?.name}, ${courtCase?.caseType?.name}`
+  const linkToCourtCase = (x: HearingCalendarSchema) => {
+    if (selectedCourtCase) {
+      return `${selectedCourtCase?.client?.name}, ${selectedCourtCase?.caseType?.name}`
+    }
+    const courtCase = courtCasesList.find((cc) => cc.id === x.courtCaseId)
+    return (
+      <Link
+        text={`${courtCase?.client?.name}, ${courtCase?.caseType?.name}`}
+        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+      />
+    )
   }
 
-  const getForm = (calendar: TaskCalendarSchema) => {
-    const form = formsList.find((f) => f.id === calendar.formId)
+  const getForm = (x: TaskCalendarSchema) => {
+    const form = formsList.find((f) => f.id === x.formId)
     if (form) {
       const courtCase = courtCasesList.find((cc) => cc.id === form.courtCaseId)
       return `${courtCase?.client?.name}, ${courtCase?.caseType?.name}`
@@ -129,20 +138,36 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     return ''
   }
 
+  const getHearingType = (x: HearingCalendarSchema) => {
+    let hearingType = x.hearingType
+    if (!hearingType) {
+      hearingType = hearingTypesList?.find((y) => y.id === x.hearingTypeId)
+    }
+    return hearingType?.name
+  }
+
+  const getTaskType = (x: TaskCalendarSchema) => {
+    let taskType = x.taskType
+    if (!taskType) {
+      taskType = taskTypesList?.find((y) => y.id === x.taskTypeId)
+    }
+    return taskType?.name
+  }
+
   const calendarsTableDataCommon = (x: HearingCalendarSchema | TaskCalendarSchema) => {
     if (isHearingCalendarTable) {
       const hearingCalendar = x as HearingCalendarSchema
       return {
         calendarDate: linkToCalendar(hearingCalendar.hearingDate, hearingCalendar.id, CALENDAR_OBJECT_TYPES.HEARING),
-        calendarType: hearingCalendar.hearingType?.name,
-        courtCase: getCourtCase(hearingCalendar),
+        calendarType: getHearingType(x as HearingCalendarSchema),
+        courtCase: linkToCourtCase(hearingCalendar),
         status: x.status,
       }
     } else {
       const taskCalendar = x as TaskCalendarSchema
       return {
         calendarDate: linkToCalendar(taskCalendar.taskDate, x.id, CALENDAR_OBJECT_TYPES.TASK),
-        calendarType: taskCalendar.taskType?.name,
+        calendarType: getTaskType(x as TaskCalendarSchema),
         dueDate: getDayjsString(taskCalendar.dueDate),
         hearingCalendar: linkToCalendar(
           taskCalendar.hearingCalendar?.hearingDate,

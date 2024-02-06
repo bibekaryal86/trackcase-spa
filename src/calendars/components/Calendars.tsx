@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 
 import CalendarForm from './CalendarForm'
 import CalendarTable from './CalendarTable'
-import { getDayjsString, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
-import { CourtCaseSchema, getCourtCases } from '../../cases'
+import { getDayjsString, getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
+import { CourtCaseSchema, getCourtCase, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
 import {
   ACTION_ADD,
@@ -27,7 +27,7 @@ import { getHearingTypes } from '../../types/actions/hearingTypes.action'
 import { getTaskTypes } from '../../types/actions/taskTypes.action'
 import { addCalendar, deleteCalendar, editCalendar, getCalendars } from '../actions/calendars.action'
 import { CALENDARS_UNMOUNT } from '../types/calendars.action.types'
-import { DefaultCalendar, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
+import { DefaultCalendarSchema, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 import { isAreTwoCalendarsSame, isHearingCalendar } from '../utils/calendars.utils'
 
 const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms, clients }: GlobalState) => {
@@ -42,6 +42,7 @@ const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCa
     courtCasesList: courtCases.courtCases,
     formsList: forms.forms,
     clientsList: clients.clients,
+    selectedCourtCase: courtCases.selectedCourtCase,
   }
 }
 
@@ -63,6 +64,7 @@ const mapDispatchToProps = {
   getCourtCasesList: () => getCourtCases(),
   getFormsList: () => getForms(),
   getClientsList: () => getClients(),
+  getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId),
 }
 
 interface CalendarsProps {
@@ -91,6 +93,9 @@ interface CalendarsProps {
   getFormsList: () => void
   clientsList: ClientSchema[]
   getClientsList: () => void
+  courtCaseId?: string
+  selectedCourtCase?: CourtCaseSchema
+  getCourtCase: (courtCaseId: number) => void
 }
 
 const Calendars = (props: CalendarsProps): React.ReactElement => {
@@ -111,15 +116,27 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const { statusList, getStatusesList } = props
   const { hearingTypesList, getHearingTypesList, taskTypesList, getTaskTypesList } = props
   const { courtCasesList, getCourtCasesList, formsList, getFormsList, clientsList, getClientsList } = props
+  const { courtCaseId, selectedCourtCase, getCourtCase } = props
 
   const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedType, setSelectedType] = useState<string>('')
-  const [selectedCalendar, setSelectedCalendar] = useState<HearingCalendarSchema | TaskCalendarSchema>(DefaultCalendar)
+  const [selectedCalendar, setSelectedCalendar] = useState<HearingCalendarSchema | TaskCalendarSchema>(
+    DefaultCalendarSchema,
+  )
   const [selectedCalendarForReset, setSelectedCalendarForReset] = useState<HearingCalendarSchema | TaskCalendarSchema>(
-    DefaultCalendar,
+    DefaultCalendarSchema,
   )
   const [calendarStatusList, setCalendarStatusList] = useState<string[]>([])
+
+  useEffect(() => {
+    if (courtCaseId) {
+      setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
+      if (!selectedCourtCase) {
+        getCourtCase(getNumber(courtCaseId))
+      }
+    }
+  }, [courtCaseId, getCourtCase, selectedCourtCase])
 
   useEffect(() => {
     if (isForceFetch) {
@@ -186,12 +203,12 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedCalendar(DefaultCalendar)
-    setSelectedCalendarForReset(DefaultCalendar)
+    setSelectedCalendar(DefaultCalendarSchema)
+    setSelectedCalendarForReset(DefaultCalendarSchema)
   }
 
   const resetButtonCallback = (action: string) => {
-    action === ACTION_ADD && setSelectedCalendar(DefaultCalendar)
+    action === ACTION_ADD && setSelectedCalendar(DefaultCalendarSchema)
     action === ACTION_UPDATE && setSelectedCalendar(selectedCalendarForReset)
   }
 
@@ -294,7 +311,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const hearingCalendarsTable = () => (
     <CalendarTable
       calendarType={CALENDAR_OBJECT_TYPES.HEARING}
-      calendarsList={hearingCalendarsList}
+      calendarsList={
+        !(courtCaseId && selectedCourtCase) ? hearingCalendarsList : selectedCourtCase.hearingCalendars || []
+      }
       setModal={setModal}
       setSelectedId={setSelectedId}
       setSelectedType={setSelectedType}
@@ -302,6 +321,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       setSelectedCalendarForReset={setSelectedCalendarForReset}
       courtCasesList={courtCasesList}
       formsList={formsList}
+      selectedCourtCase={!(courtCaseId && selectedCourtCase) ? undefined : selectedCourtCase}
+      hearingTypesList={hearingTypesList}
     />
   )
 
@@ -316,10 +337,16 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       setSelectedCalendarForReset={setSelectedCalendarForReset}
       courtCasesList={courtCasesList}
       formsList={formsList}
+      taskTypesList={taskTypesList}
     />
   )
 
-  return (
+  return courtCaseId ? (
+    <>
+      {hearingCalendarsTable()}
+      {modal && showModal()}
+    </>
+  ) : (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>

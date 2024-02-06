@@ -8,6 +8,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 
 import CourtCaseForm from './CourtCaseForm'
 import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
+import { Calendars } from '../../calendars'
 import { ClientSchema, getClients } from '../../clients'
 import { Forms } from '../../forms'
 import { CaseTypeSchema } from '../../types'
@@ -186,6 +187,12 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
                 Forms in Case:
               </Typography>
               <Forms courtCaseId={id} />
+            </Grid>
+            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Typography component="h1" variant="h6" color="primary">
+                Case Hearing Calendar:
+              </Typography>
+              <Calendars courtCaseId={id} />
             </Grid>
           </>
         )}
