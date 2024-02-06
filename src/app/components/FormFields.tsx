@@ -7,10 +7,11 @@ import Select from '@mui/material/Select'
 import TextField, { TextFieldVariants } from '@mui/material/TextField'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
-import { STATES_LIST } from '../../constants'
+import { DATE_FORMAT, STATES_LIST } from '../../constants'
+import { getDayjs } from '../utils/app.utils'
 
 interface FormWrapperProps {
   isSmallScreen?: boolean
@@ -291,20 +292,21 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   disableFuture = false,
   disablePast = false,
   disableOpenPicker = false,
-  format = 'YYYY-MM-DD',
+  format = DATE_FORMAT,
   helperText,
   minDate,
   maxDate,
   required = false,
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
-  const isError = value ? !dayjs(value).isValid() : required
+  const dayjsValue = getDayjs(value)
+  const isError = dayjsValue ? dayjsValue.isValid() : required
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         name={id}
         label={label}
-        value={value ? dayjs(value) : null}
+        value={dayjsValue}
         onChange={onChange}
         disableFuture={disableFuture}
         disablePast={disablePast}

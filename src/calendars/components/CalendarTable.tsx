@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button'
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 import React from 'react'
 
-import { Link, Table, TableData, TableHeaderData } from '../../app'
+import { getDayjsString, Link, Table, TableData, TableHeaderData } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import {
   ACTION_ADD,
@@ -110,10 +110,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
 
   const linkToCalendar = (calendarDate?: Dayjs, calendarId?: number, calendarTypePage?: string) =>
     calendarDate && calendarId && calendarTypePage ? (
-      <Link
-        text={dayjs(calendarDate).format('YYYY-MM-DD')}
-        navigateToPage={`/calendar/${calendarTypePage}/${calendarId}`}
-      />
+      <Link text={getDayjsString(calendarDate)} navigateToPage={`/calendar/${calendarTypePage}/${calendarId}`} />
     ) : (
       ''
     )
@@ -146,7 +143,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       return {
         calendarDate: linkToCalendar(taskCalendar.taskDate, x.id, CALENDAR_OBJECT_TYPES.TASK),
         calendarType: taskCalendar.taskType?.name,
-        dueDate: taskCalendar.dueDate ? dayjs(taskCalendar.dueDate).format('YYYY-MM-DD') : '',
+        dueDate: getDayjsString(taskCalendar.dueDate),
         hearingCalendar: linkToCalendar(
           taskCalendar.hearingCalendar?.hearingDate,
           taskCalendar.hearingCalendarId,

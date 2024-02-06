@@ -42,9 +42,9 @@ import { useStateData } from './utils/app.hooks'
 import {
   clearMessages,
   convertDateToLocaleString,
-  convertNotesToNotesList,
   getComments,
-  getDate,
+  getDayjs,
+  getDayjsString,
   getEndpoint,
   getErrMsg,
   getFullAddress,
@@ -104,9 +104,9 @@ export { useStateData }
 export {
   clearMessages,
   convertDateToLocaleString,
-  convertNotesToNotesList,
   getComments,
-  getDate,
+  getDayjs,
+  getDayjsString,
   getEndpoint,
   getErrMsg,
   getFullAddress,

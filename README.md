@@ -27,7 +27,6 @@ TODO
   * display hearing calendar dropdown, but make it not-updatable
 * remove pages for hearing and task calendars
   * upon clicking on calendar date link, open a popup for that date
-* create a function to getDayjs()
 * task calendars on form
 * hearing calendars on court case
 * task calendars on hearing calendar popup
