@@ -294,10 +294,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   const hearingCalendarsTable = () => (
     <CalendarTable
-      isHistoryView={false}
       calendarType={CALENDAR_OBJECT_TYPES.HEARING}
       calendarsList={hearingCalendarsList}
-      historyCalendarsList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}
       setSelectedType={setSelectedType}
@@ -310,10 +308,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   const taskCalendarsTable = () => (
     <CalendarTable
-      isHistoryView={false}
       calendarType={CALENDAR_OBJECT_TYPES.TASK}
       calendarsList={taskCalendarsList}
-      historyCalendarsList={[]}
       setModal={setModal}
       setSelectedType={setSelectedType}
       setSelectedId={setSelectedId}

@@ -228,9 +228,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
 
   const judgesTable = () => (
     <JudgeTable
-      isHistoryView={false}
       judgesList={!(courtId && selectedCourt) ? judgesList : selectedCourt.judges || []}
-      historyJudgesList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}
       setSelectedJudge={setSelectedJudge}

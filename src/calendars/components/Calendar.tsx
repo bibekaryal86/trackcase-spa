@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { addNote, deleteNote, editNote, getStatusesList, GlobalState, StatusSchema, unmountPage } from '../../app'
+import { getStatusesList, GlobalState, StatusSchema, unmountPage } from '../../app'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { CALENDAR_OBJECT_TYPES } from '../../constants'
 import { FormSchema, getForms } from '../../forms'
@@ -35,10 +35,6 @@ const mapDispatchToProps = {
     editCalendar(calendarId, CALENDAR_OBJECT_TYPES.TASK, calendar),
   unmountPage: () => unmountPage(CALENDARS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => addNote(noteObjectType, noteObjectId, note),
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
-    editNote(noteObjectType, noteObjectId, note, noteId),
-  deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
   getHearingTypesList: () => getHearingTypes(),
   getTaskTypesList: () => getTaskTypes(),
   getCourtCasesList: () => getCourtCases(),
@@ -54,9 +50,6 @@ interface CalendarProps {
   editTaskCalendar: (calendarId: number, calendar: TaskCalendarSchema) => void
   unmountPage: () => void
   statusList: StatusSchema<string>
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteObjectType: string, noteId: number) => void
   hearingTypesList: HearingTypeSchema[]
   getHearingTypesList: () => void
   taskTypesList: TaskTypeSchema[]

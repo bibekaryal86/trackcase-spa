@@ -152,19 +152,6 @@ export interface ErrorSuccessSchema {
   success: string
 }
 
-export interface NoteBaseSchema {
-  userName: string
-  note: string
-}
-
-export interface NoteSchema extends NoteBaseSchema, BaseModelSchema {
-  noteObjectId: number
-}
-
-export interface NoteResponse extends ResponseBase {
-  success: boolean
-}
-
 export type StatusSchema<T extends string> = {
   [key: string]: {
     active: T[]

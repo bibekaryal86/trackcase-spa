@@ -7,23 +7,8 @@ import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import FormForm from './FormForm'
-import FormTable from './FormTable'
-import {
-  addNote,
-  convertNotesToNotesList,
-  deleteNote,
-  editNote,
-  getNumber,
-  getStatusesList,
-  GlobalState,
-  Link,
-  Modal,
-  Notes,
-  StatusSchema,
-  unmountPage,
-} from '../../app'
+import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
-import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
 import { FormTypeSchema } from '../../types'
 import { getFormTypes } from '../../types/actions/formTypes'
 import { editForm, getForm } from '../actions/forms.action'
@@ -46,10 +31,6 @@ const mapDispatchToProps = {
   editForm: (formId: number, form: FormSchema) => editForm(formId, form),
   unmountPage: () => unmountPage(FORMS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  addNote: (noteObjectId: number, note: string) => addNote(NOTE_OBJECT_TYPES.FORM, noteObjectId, note),
-  editNote: (noteObjectId: number, note: string, noteId: number) =>
-    editNote(NOTE_OBJECT_TYPES.FORM, noteObjectId, note, noteId),
-  deleteNote: (noteId: number) => deleteNote(NOTE_OBJECT_TYPES.FORM, noteId),
   getFormTypesList: () => getFormTypes(),
   getCourtCasesList: () => getCourtCases(),
 }
@@ -62,9 +43,6 @@ interface FormProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  addNote: (noteObjectId: number, note: string) => void
-  editNote: (noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteId: number) => void
   formTypesList: FormTypeSchema[]
   getFormTypesList: () => void
   courtCasesList: CourtCaseSchema[]
@@ -83,8 +61,6 @@ const Form = (props: FormProps): React.ReactElement => {
   const [selectedForm, setSelectedForm] = useState<FormSchema>(DefaultFormSchema)
   const [selectedFormForReset, setSelectedFormForReset] = useState<FormSchema>(DefaultFormSchema)
   const [formStatusList, setFormStatusList] = useState<string[]>([])
-  const [isShowNotes, setIsShowNotes] = useState(false)
-  const [isShowHistory, setIsShowHistory] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -162,53 +138,6 @@ const Form = (props: FormProps): React.ReactElement => {
     editForm(getNumber(id), selectedForm)
   }
 
-  const notesContent = () => (
-    <Notes
-      noteObjectId={selectedForm.id || ID_DEFAULT}
-      notesList={convertNotesToNotesList(selectedForm.noteForms || [], selectedForm.id || ID_LIST)}
-      addNote={props.addNote}
-      editNote={props.editNote}
-      deleteNote={props.deleteNote}
-    />
-  )
-
-  const historyContent = () => (
-    <FormTable
-      isHistoryView={true}
-      formsList={[]}
-      historyFormsList={selectedForm.historyForms || []}
-      courtCasesList={courtCasesList}
-    />
-  )
-
-  const notesModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpen={() => setIsShowNotes(false)}
-        maxWidth="sm"
-        title="Form Notes"
-        primaryButtonText={BUTTON_CLOSE}
-        primaryButtonCallback={() => setIsShowNotes(false)}
-        content={notesContent()}
-      />
-    )
-  }
-
-  const historyModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpen={() => setIsShowHistory(false)}
-        maxWidth="md"
-        title="Form Update History"
-        primaryButtonText={BUTTON_CLOSE}
-        primaryButtonCallback={() => setIsShowHistory(false)}
-        content={historyContent()}
-      />
-    )
-  }
-
   const formButtons = () => {
     return (
       <>
@@ -220,10 +149,6 @@ const Form = (props: FormProps): React.ReactElement => {
           onClick={() => setSelectedForm(selectedFormForReset)}
         >
           Cancel
-        </Button>
-        <Button onClick={() => setIsShowNotes(true)}>View Form Notes [{selectedForm.noteForms?.length}]</Button>
-        <Button onClick={() => setIsShowHistory(true)}>
-          View Form Update History [{selectedForm.historyForms?.length}]
         </Button>
       </>
     )
@@ -257,8 +182,6 @@ const Form = (props: FormProps): React.ReactElement => {
               {formForm()}
               {formButtons()}
             </Grid>
-            {isShowHistory && historyModal()}
-            {isShowNotes && notesModal()}
           </>
         )}
       </Grid>

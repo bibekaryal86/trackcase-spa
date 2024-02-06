@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
 import { FormSchema } from '../../forms'
@@ -14,19 +14,12 @@ export interface HearingCalendarSchema extends StatusBaseSchema, BaseModelSchema
   hearingType?: HearingTypeSchema
   courtCase?: CourtCaseSchema
   taskCalendars?: TaskCalendarSchema[]
-  // notes and history
-  noteHearingCalendars?: NoteHearingCalendarSchema[]
+  // history
   historyHearingCalendars?: HistoryHearingCalendarSchema[]
 }
 
 export interface HearingCalendarResponse extends ResponseBase {
   hearingCalendars: HearingCalendarSchema[]
-}
-
-export interface NoteHearingCalendarSchema extends NoteBaseSchema, BaseModelSchema {
-  hearingCalendarId: number
-  // orm_mode
-  hearingCalendar?: HearingCalendarSchema
 }
 
 export interface HistoryHearingCalendarSchema extends BaseModelSchema {
@@ -53,17 +46,11 @@ export interface TaskCalendarSchema extends StatusBaseSchema, BaseModelSchema {
   // orm_mode
   taskType?: TaskTypeSchema
   hearingCalendar?: HearingCalendarSchema
-  forms?: FormSchema[]
+  form?: FormSchema
 }
 
 export interface TaskCalendarResponse extends ResponseBase {
   taskCalendars: TaskCalendarSchema[]
-}
-
-export interface NoteTaskCalendarSchema extends NoteBaseSchema, BaseModelSchema {
-  taskCalendarId: number
-  // orm_mode
-  taskCalendar?: TaskCalendarSchema
 }
 
 export interface HistoryTaskCalendarSchema extends BaseModelSchema {
@@ -73,7 +60,6 @@ export interface HistoryTaskCalendarSchema extends BaseModelSchema {
   taskDate?: Dayjs
   dueDate?: Dayjs
   taskTypeId?: number
-  courtCaseId?: number
   hearingCalendarId?: number
   formId?: number
   status?: string
@@ -81,8 +67,8 @@ export interface HistoryTaskCalendarSchema extends BaseModelSchema {
   // orm_mode
   taskCalendar?: TaskCalendarSchema
   taskType?: TaskTypeSchema
-  courtCase?: CourtCaseSchema
   hearingCalendar?: HearingCalendarSchema
+  form?: FormSchema
 }
 
 export interface CalendarsState {

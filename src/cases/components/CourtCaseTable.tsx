@@ -14,9 +14,7 @@ import {
 import { CourtCaseSchema, HistoryCourtCaseSchema } from '../types/courtCases.data.types'
 
 interface CourtCaseTableProps {
-  isHistoryView: boolean
   courtCasesList: CourtCaseSchema[]
-  historyCourtCasesList: HistoryCourtCaseSchema[]
   setModal?: (action: string) => void
   setSelectedId?: (id: number) => void
   setSelectedCourtCase?: (courtCase: CourtCaseSchema) => void
@@ -25,51 +23,30 @@ interface CourtCaseTableProps {
 }
 
 const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
-  const { isHistoryView, courtCasesList, historyCourtCasesList } = props
+  const { courtCasesList } = props
   const { setModal, setSelectedId, setSelectedCourtCase, setSelectedCourtCaseForReset } = props
 
   const courtCasesTableHeaderData = (): TableHeaderData[] => {
-    const tableHeaderData: TableHeaderData[] = [
+    return [
       {
         id: 'clientCaseType',
         label: 'Case',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'status',
         label: 'Status',
-        isDisableSorting: isHistoryView,
+      },
+      {
+        id: 'created',
+        label: 'Created',
+      },
+      {
+        id: 'actions',
+        label: 'Actions',
+        align: 'center' as const,
+        isDisableSorting: true,
       },
     ]
-    if (isHistoryView) {
-      tableHeaderData.push(
-        {
-          id: 'user',
-          label: 'User',
-          isDisableSorting: true,
-        },
-        {
-          id: 'date',
-          label: 'Date (UTC)',
-          isDisableSorting: true,
-        },
-      )
-    } else {
-      tableHeaderData.push(
-        {
-          id: 'created',
-          label: 'Created',
-          isDisableSorting: isHistoryView,
-        },
-        {
-          id: 'actions',
-          label: 'Actions',
-          align: 'center' as const,
-          isDisableSorting: true,
-        },
-      )
-    }
-    return tableHeaderData
   }
 
   const actionButtons = (id: number, courtCase: CourtCaseSchema) => (
@@ -102,39 +79,22 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
 
   const courtCasesTableDataCommon = (x: CourtCaseSchema | HistoryCourtCaseSchema) => {
     return {
-      clientCaseType: isHistoryView
-        ? x.caseType && x.client
-          ? `${x.client.name}, ${x.caseType.name}`
-          : `${x.clientId}, ${x.caseTypeId}`
-        : linkToCourtCase(x),
+      clientCaseType: linkToCourtCase(x),
       status: x.status,
     }
   }
 
   const courtCasesTableData = (): TableData[] => {
-    let tableData: TableData[]
-    if (isHistoryView) {
-      tableData = Array.from(historyCourtCasesList, (x) => {
-        return {
-          ...courtCasesTableDataCommon(x),
-          user: x.userName,
-          date: convertDateToLocaleString(x.created, true),
-        }
-      })
-    } else {
-      tableData = Array.from(courtCasesList, (x) => {
-        return {
-          ...courtCasesTableDataCommon(x),
-          created: convertDateToLocaleString(x.created, true),
-          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
-        }
-      })
-    }
-    return tableData
+    return Array.from(courtCasesList, (x) => {
+      return {
+        ...courtCasesTableDataCommon(x),
+        created: convertDateToLocaleString(x.created, true),
+        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+      }
+    })
   }
 
-  const addButton = () =>
-    isHistoryView ? undefined : <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Case</Button>
+  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Case</Button>
 
   return (
     <Table

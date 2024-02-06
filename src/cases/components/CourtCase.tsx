@@ -7,29 +7,14 @@ import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import CourtCaseForm from './CourtCaseForm'
-import CourtCaseTable from './CourtCaseTable'
-import {
-  addNote,
-  convertNotesToNotesList,
-  deleteNote,
-  editNote,
-  getNumber,
-  getStatusesList,
-  GlobalState,
-  Link,
-  Modal,
-  Notes,
-  StatusSchema,
-  unmountPage,
-} from '../../app'
+import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
 import { ClientSchema, getClients } from '../../clients'
-import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
 import { Forms } from '../../forms'
 import { CaseTypeSchema } from '../../types'
 import { getCaseTypes } from '../../types/actions/caseTypes.action'
 import { editCourtCase, getCourtCase } from '../actions/courtCases.action'
 import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
-import { CourtCaseSchema, DefaultCourtCaseSchema, HistoryCourtCaseSchema } from '../types/courtCases.data.types'
+import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
 import { isAreTwoCourtCasesSame } from '../utils/courtCases.utils'
 
 const mapStateToProps = ({ courtCases, statuses, caseTypes, clients }: GlobalState) => {
@@ -47,10 +32,6 @@ const mapDispatchToProps = {
   editCourtCase: (courtCaseId: number, courtCase: CourtCaseSchema) => editCourtCase(courtCaseId, courtCase),
   unmountPage: () => unmountPage(COURT_CASES_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  addNote: (noteObjectId: number, note: string) => addNote(NOTE_OBJECT_TYPES.COURT_CASE, noteObjectId, note),
-  editNote: (noteObjectId: number, note: string, noteId: number) =>
-    editNote(NOTE_OBJECT_TYPES.COURT_CASE, noteObjectId, note, noteId),
-  deleteNote: (noteId: number) => deleteNote(NOTE_OBJECT_TYPES.COURT_CASE, noteId),
   getCaseTypes: () => getCaseTypes(),
   getClients: () => getClients(),
 }
@@ -84,8 +65,6 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   const [selectedCourtCase, setSelectedCourtCase] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
   const [selectedCourtCaseForReset, setSelectedCourtCaseForReset] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
   const [courtCaseStatusList, setCourtCaseStatusList] = useState<string[]>([])
-  const [isShowNotes, setIsShowNotes] = useState(false)
-  const [isShowHistory, setIsShowHistory] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -158,63 +137,6 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
     editCourtCase(getNumber(id), selectedCourtCase)
   }
 
-  const notesContent = () => (
-    <Notes
-      noteObjectId={selectedCourtCase.id || ID_DEFAULT}
-      notesList={convertNotesToNotesList(selectedCourtCase.noteCourtCases || [], selectedCourtCase.id || ID_LIST)}
-      addNote={props.addNote}
-      editNote={props.editNote}
-      deleteNote={props.deleteNote}
-    />
-  )
-
-  const historyContent = () => {
-    const caseTypesMap = new Map(caseTypesList.map((caseType) => [caseType.id, caseType]))
-    const clientsMap = new Map(clientsList.map((client) => [client.id, client]))
-    const historyCourtCases = selectedCourtCase.historyCourtCases
-      ? JSON.parse(JSON.stringify(selectedCourtCase.historyCourtCases))
-      : []
-    historyCourtCases.forEach((x: HistoryCourtCaseSchema) => {
-      const matchingCaseType = caseTypesMap.get(x.caseTypeId)
-      if (matchingCaseType) {
-        x.caseType = matchingCaseType
-      }
-      const matchingClient = clientsMap.get(x.clientId)
-      if (matchingClient) {
-        x.client = matchingClient
-      }
-    })
-    return <CourtCaseTable isHistoryView={true} courtCasesList={[]} historyCourtCasesList={historyCourtCases || []} />
-  }
-
-  const notesModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpen={() => setIsShowNotes(false)}
-        maxWidth="sm"
-        title="Case Notes"
-        primaryButtonText={BUTTON_CLOSE}
-        primaryButtonCallback={() => setIsShowNotes(false)}
-        content={notesContent()}
-      />
-    )
-  }
-
-  const historyModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpen={() => setIsShowHistory(false)}
-        maxWidth="lg"
-        title="Case Update History"
-        primaryButtonText={BUTTON_CLOSE}
-        primaryButtonCallback={() => setIsShowHistory(false)}
-        content={historyContent()}
-      />
-    )
-  }
-
   const courtCaseButtons = () => {
     return (
       <>
@@ -226,12 +148,6 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
           onClick={() => setSelectedCourtCase(selectedCourtCaseForReset)}
         >
           Cancel
-        </Button>
-        <Button onClick={() => setIsShowNotes(true)}>
-          View CourtCase Notes [{selectedCourtCase.noteCourtCases?.length}]
-        </Button>
-        <Button onClick={() => setIsShowHistory(true)}>
-          View CourtCase Update History [{selectedCourtCase.historyCourtCases?.length}]
         </Button>
       </>
     )
@@ -271,8 +187,6 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
               </Typography>
               <Forms courtCaseId={id} />
             </Grid>
-            {isShowHistory && historyModal()}
-            {isShowNotes && notesModal()}
           </>
         )}
       </Grid>

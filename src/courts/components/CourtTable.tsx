@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import React from 'react'
 
-import { convertDateToLocaleString, getFullAddress, Link, Table, TableData, TableHeaderData } from '../../app'
+import { getFullAddress, Link, Table, TableData, TableHeaderData } from '../../app'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -10,12 +10,10 @@ import {
   BUTTON_UPDATE,
   ID_ACTION_BUTTON,
 } from '../../constants'
-import { CourtSchema, HistoryCourtSchema } from '../types/courts.data.types'
+import { CourtSchema } from '../types/courts.data.types'
 
 interface CourtTableProps {
-  isHistoryView: boolean
   courtsList: CourtSchema[]
-  historyCourtsList: HistoryCourtSchema[]
   setModal?: (action: string) => void
   setSelectedId?: (id: number) => void
   setSelectedCourt?: (court: CourtSchema) => void
@@ -23,15 +21,14 @@ interface CourtTableProps {
 }
 
 const CourtTable = (props: CourtTableProps): React.ReactElement => {
-  const { isHistoryView, courtsList, historyCourtsList } = props
+  const { courtsList } = props
   const { setModal, setSelectedId, setSelectedCourt, setSelectedCourtForReset } = props
 
   const courtsTableHeaderData = (): TableHeaderData[] => {
-    const tableHeaderData: TableHeaderData[] = [
+    return [
       {
         id: 'name',
         label: 'Name',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'address',
@@ -51,31 +48,14 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
       {
         id: 'status',
         label: 'Status',
-        isDisableSorting: isHistoryView,
       },
-    ]
-    if (isHistoryView) {
-      tableHeaderData.push(
-        {
-          id: 'user',
-          label: 'User',
-          isDisableSorting: true,
-        },
-        {
-          id: 'date',
-          label: 'Date (UTC)',
-          isDisableSorting: true,
-        },
-      )
-    } else {
-      tableHeaderData.push({
+      {
         id: 'actions',
         label: 'Actions',
         align: 'center' as const,
         isDisableSorting: true,
-      })
-    }
-    return tableHeaderData
+      },
+    ]
   }
 
   const actionButtons = (id: number, court: CourtSchema) => (
@@ -102,13 +82,11 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToCourt = (x: CourtSchema | HistoryCourtSchema) => (
-    <Link text={`${x.name}, ${x.state}`} navigateToPage={`/court/${x.id}`} />
-  )
+  const linkToCourt = (x: CourtSchema) => <Link text={`${x.name}, ${x.state}`} navigateToPage={`/court/${x.id}`} />
 
-  const courtsTableDataCommon = (x: CourtSchema | HistoryCourtSchema) => {
+  const courtsTableDataCommon = (x: CourtSchema) => {
     return {
-      name: isHistoryView ? `${x.name}, ${x.state}` : linkToCourt(x),
+      name: linkToCourt(x),
       address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
       phone: x.phoneNumber,
       dhsAddress: x.dhsAddress,
@@ -117,28 +95,15 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
   }
 
   const courtsTableData = (): TableData[] => {
-    let tableData: TableData[]
-    if (isHistoryView) {
-      tableData = Array.from(historyCourtsList, (x) => {
-        return {
-          ...courtsTableDataCommon(x),
-          user: x.userName,
-          date: convertDateToLocaleString(x.created, true),
-        }
-      })
-    } else {
-      tableData = Array.from(courtsList, (x) => {
-        return {
-          ...courtsTableDataCommon(x),
-          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
-        }
-      })
-    }
-    return tableData
+    return Array.from(courtsList, (x) => {
+      return {
+        ...courtsTableDataCommon(x),
+        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+      }
+    })
   }
 
-  const addButton = () =>
-    isHistoryView ? undefined : <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Court</Button>
+  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Court</Button>
 
   return (
     <Table

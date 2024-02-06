@@ -254,9 +254,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
 
   const courtCasesTable = () => (
     <CourtCaseTable
-      isHistoryView={false}
       courtCasesList={getCourtCasesList()}
-      historyCourtCasesList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}
       setSelectedCourtCase={setSelectedCourtCase}

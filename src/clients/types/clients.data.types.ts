@@ -1,4 +1,4 @@
-import { AddressBaseSchema, BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { AddressBaseSchema, BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
 import { JudgeSchema } from '../../judges'
@@ -11,19 +11,12 @@ export interface ClientSchema extends AddressBaseSchema, StatusBaseSchema, BaseM
   // orm_mode
   judge?: JudgeSchema
   courtCases?: CourtCaseSchema[]
-  // notes and history
-  noteClients?: NoteClientSchema[]
+  // history
   historyClients?: HistoryClientSchema[]
 }
 
 export interface ClientResponse extends ResponseBase {
   clients: ClientSchema[]
-}
-
-export interface NoteClientSchema extends NoteBaseSchema, BaseModelSchema {
-  clientId: number
-  // orm_mode
-  client?: ClientSchema
 }
 
 export interface HistoryClientSchema extends AddressBaseSchema, BaseModelSchema {

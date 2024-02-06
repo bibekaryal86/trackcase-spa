@@ -225,9 +225,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   const clientsTable = () => (
     <ClientTable
-      isHistoryView={false}
       clientsList={!(judgeId && selectedJudge) ? clientsList : selectedJudge?.clients || []}
-      historyClientsList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}
       setSelectedClient={setSelectedClient}

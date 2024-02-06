@@ -1,7 +1,7 @@
-import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { HearingCalendarSchema } from '../../calendars'
 import { ClientSchema } from '../../clients'
-import { CaseCollectionSchema, CashCollectionSchema } from '../../collections'
+import { CaseCollectionSchema } from '../../collections'
 import { ID_DEFAULT } from '../../constants'
 import { FormSchema } from '../../forms'
 import { CaseTypeSchema } from '../../types'
@@ -13,22 +13,14 @@ export interface CourtCaseSchema extends StatusBaseSchema, BaseModelSchema {
   caseType?: CaseTypeSchema
   client?: ClientSchema
   forms?: FormSchema[]
-  cashCollections?: CashCollectionSchema[]
   caseCollections?: CaseCollectionSchema[]
   hearingCalendars?: HearingCalendarSchema[]
-  // notes and history
-  noteCourtCases?: NoteCourtCaseSchema[]
+  // history
   historyCourtCases?: HistoryCourtCaseSchema[]
 }
 
 export interface CourtCaseResponse extends ResponseBase {
   courtCases: CourtCaseSchema[]
-}
-
-export interface NoteCourtCaseSchema extends NoteBaseSchema, BaseModelSchema {
-  courtCaseId: number
-  // orm_mode
-  courtCase?: CourtCaseSchema
 }
 
 export interface HistoryCourtCaseSchema extends BaseModelSchema {

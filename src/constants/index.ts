@@ -46,19 +46,6 @@ export const CREATE_SUCCESS = (what: string) => `Add ${what} Success!`
 export const UPDATE_SUCCESS = (what: string) => `Edit ${what} Success!`
 export const DELETE_SUCCESS = (what: string) => `Delete ${what} Success!`
 
-// NOTE OBJECT TYPES
-export const NOTE_OBJECT_TYPES = Object.freeze({
-  COURT: 'court',
-  JUDGE: 'judge',
-  CLIENT: 'client',
-  COURT_CASE: 'court_case',
-  HEARING_CALENDAR: 'hearing_calendar',
-  TASK_CALENDAR: 'task_calendar',
-  FORM: 'form',
-  CASE_COLLECTION: 'case_collection',
-  CASH_COLLECTION: 'cash_collection',
-})
-
 // CALENDAR TYPES
 export const CALENDAR_OBJECT_TYPES = Object.freeze({
   HEARING: 'HEARING_CALENDAR',

@@ -1,8 +1,8 @@
 import { Dayjs } from 'dayjs'
 
-import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
-import { CaseCollectionSchema, CashCollectionSchema } from '../../collections'
 import { ID_DEFAULT } from '../../constants'
 import { FormTypeSchema } from '../../types'
 
@@ -19,21 +19,13 @@ export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
   // orm_mode
   formType?: FormTypeSchema
   courtCase?: CourtCaseSchema
-  caseCollections?: CaseCollectionSchema[]
-  cashCollections?: CashCollectionSchema[]
-  // notes and history
-  noteForms?: NoteFormSchema[]
+  taskCalendars?: TaskCalendarSchema[]
+  // history
   historyForms?: HistoryFormSchema[]
 }
 
 export interface FormResponse extends ResponseBase {
   forms: FormSchema[]
-}
-
-export interface NoteFormSchema extends NoteBaseSchema, BaseModelSchema {
-  formId: number
-  // orm_mode
-  form?: FormSchema
 }
 
 export interface HistoryFormSchema extends BaseModelSchema {
@@ -50,6 +42,7 @@ export interface HistoryFormSchema extends BaseModelSchema {
   rfeSubmitDate?: Dayjs
   decisionDate?: Dayjs
   status?: string
+  comments?: string
   // orm_mode
   form?: FormSchema
   formType?: FormTypeSchema

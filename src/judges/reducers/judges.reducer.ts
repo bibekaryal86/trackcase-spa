@@ -2,7 +2,6 @@ import { CLIENT_CREATE_SUCCESS, CLIENT_DELETE_SUCCESS, CLIENT_UPDATE_SUCCESS } f
 import {
   JUDGE_CREATE_SUCCESS,
   JUDGE_DELETE_SUCCESS,
-  JUDGE_NOTE_SUCCESS,
   JUDGE_UPDATE_SUCCESS,
   JUDGES_RETRIEVE_REQUEST,
   JUDGES_RETRIEVE_SUCCESS,
@@ -43,7 +42,6 @@ export default function judges(state = DefaultJudgeState, action: JudgesAction):
         isForceFetch: false,
         selectedJudge: action.selectedJudge,
       }
-    case JUDGE_NOTE_SUCCESS:
     case CLIENT_CREATE_SUCCESS:
     case CLIENT_UPDATE_SUCCESS:
     case CLIENT_DELETE_SUCCESS:
