@@ -89,7 +89,7 @@ export const getDayjs = (value: Dayjs | null | undefined) => {
   if (value) {
     return dayjs(value)
   }
-  return undefined
+  return null
 }
 
 export const getDayjsString = (value: Dayjs | null | undefined, format: string = DATE_FORMAT) => {

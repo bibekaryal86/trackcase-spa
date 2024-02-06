@@ -121,7 +121,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     const value = 'courtCaseId' in selectedCalendar ? selectedCalendar.courtCaseId : ID_LIST
     return (
       <FormSelectField
-        componentLabel="Hearing Calendar--Case"
+        componentLabel="Hearing Calendar--Court Case"
         value={value}
         onChange={(e) =>
           handleCalendarFormOnChange('courtCaseId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)

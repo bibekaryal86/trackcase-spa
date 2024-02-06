@@ -87,7 +87,7 @@ interface StatusSelectProps extends StateSelectProps {
 
 interface DatePickerProps {
   componentLabel: string
-  value: Dayjs | undefined
+  value: Dayjs | null | undefined
   onChange: (value: Dayjs | null) => void
   defaultValue?: Dayjs
   disableFuture?: boolean
@@ -300,7 +300,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
   const dayjsValue = getDayjs(value)
-  const isError = dayjsValue ? dayjsValue.isValid() : required
+  const isError = dayjsValue ? !dayjsValue.isValid() : required
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker

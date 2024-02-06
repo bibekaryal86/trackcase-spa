@@ -51,7 +51,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     if (isHearingCalendarTable) {
       tableHeaderData.push({
         id: 'courtCase',
-        label: 'Case',
+        label: 'Client Case',
       })
     } else {
       tableHeaderData.push(
