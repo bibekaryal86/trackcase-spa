@@ -11,8 +11,6 @@ import {
   HearingCalendarSchema,
   HistoryHearingCalendarSchema,
   HistoryTaskCalendarSchema,
-  NoteHearingCalendarSchema,
-  NoteTaskCalendarSchema,
   TaskCalendarResponse,
   TaskCalendarSchema,
 } from './types/calendars.data.types'
@@ -24,8 +22,6 @@ export type {
   HearingCalendarSchema,
   HistoryHearingCalendarSchema,
   HistoryTaskCalendarSchema,
-  NoteHearingCalendarSchema,
-  NoteTaskCalendarSchema,
   TaskCalendarResponse,
   TaskCalendarSchema,
 }

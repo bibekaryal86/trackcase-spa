@@ -15,7 +15,6 @@ import {
 } from './components/FormFields'
 import Link from './components/Link'
 import Modal from './components/Modal'
-import Notes from './components/Notes'
 import Switch from './components/Switch'
 import Table from './components/Table'
 // action types
@@ -80,7 +79,6 @@ export {
 }
 export { Link }
 export { Modal }
-export { Notes }
 export { Switch }
 export { Table }
 export type { GlobalDispatch, GlobalState }
