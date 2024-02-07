@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs'
 
-import { getNumber } from '../../app'
+import { getDayjs, getNumber } from '../../app'
 import { CALENDAR_OBJECT_TYPES, DUE_AT_HEARING_ID } from '../../constants'
 import { CalendarTypeId, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 
@@ -41,11 +41,8 @@ export const validateCalendar = (
   // hearing calendar
   if (isHearingCalendar(calendarType)) {
     const hearingCalendar = calendar as HearingCalendarSchema
-    if (
-      !hearingCalendar.hearingDate ||
-      !hearingCalendar.hearingDate.isValid() ||
-      hearingCalendar.hearingDate.isBefore(dayjs(), 'day')
-    ) {
+    const hearingDate = getDayjs(hearingCalendar.hearingDate)
+    if (!hearingDate || !hearingDate.isValid() || hearingDate.isBefore(dayjs(), 'day')) {
       errors.push('Hearing Date is required and cannot be in the past')
     }
     if (getNumber(hearingCalendar.hearingTypeId) <= 0) {
@@ -57,26 +54,27 @@ export const validateCalendar = (
   } else {
     // task calendar
     const taskCalendar = calendar as TaskCalendarSchema
-    if (!taskCalendar.taskDate || !taskCalendar.taskDate.isValid() || taskCalendar.taskDate.isBefore(dayjs(), 'day')) {
+    const taskDate = getDayjs(taskCalendar.taskDate)
+    const dueDate = getDayjs(taskCalendar.dueDate)
+    if (!taskDate || !taskDate.isValid() || taskDate.isBefore(dayjs(), 'day')) {
       errors.push('Task Date is required and cannot be in the past!')
     }
-    if (!taskCalendar.dueDate || !taskCalendar.dueDate.isValid() || taskCalendar.dueDate.isBefore(dayjs(), 'day')) {
+    if (!dueDate || !dueDate.isValid() || dueDate.isBefore(dayjs(), 'day')) {
       errors.push('Due Date is required and cannot be in the past!')
     }
     // due date cannot be before task date
-    if (taskCalendar.taskDate && taskCalendar.dueDate && taskCalendar.dueDate.isBefore(taskCalendar.taskDate)) {
+    if (taskDate && dueDate && dueDate.isBefore(taskDate)) {
       errors.push('Due Date cannot be before Task Calendar Date!')
     }
     // due date cannot be after hearing date if hearing calendar is selected
-    console.log(hearingCalendarParam)
-    console.log(taskCalendar.hearingCalendar)
-    if (taskCalendar.dueDate && getNumber(taskCalendar.hearingCalendarId) > 0) {
+    if (dueDate && getNumber(taskCalendar.hearingCalendarId) > 0) {
       let hearingCalendar = taskCalendar.hearingCalendar
       if (!hearingCalendar) {
         hearingCalendar = hearingCalendarParam
       }
-      if (hearingCalendar && hearingCalendar.hearingDate) {
-        if (taskCalendar.dueDate.isAfter(hearingCalendar.hearingDate)) {
+      const hearingDate = getDayjs(hearingCalendar?.hearingDate)
+      if (hearingDate) {
+        if (dueDate.isAfter(hearingDate)) {
           errors.push('Due Date cannot be after Hearing Calendar Date!')
         }
       } else {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
+import { Async, FetchOptions, getEndpoint, getErrMsg, getNumber, GlobalDispatch, GlobalState } from '../../app'
 import {
   CALENDAR_OBJECT_TYPES,
   CREATE_SUCCESS,
@@ -349,15 +349,10 @@ const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, is
     task_type_id: !isHearingCalendarRequest && 'taskTypeId' in calendar ? calendar.taskTypeId : undefined,
     due_date: !isHearingCalendarRequest && 'dueDate' in calendar ? calendar.dueDate : undefined,
     hearing_calendar_id:
-      !isHearingCalendarRequest &&
-      'hearingCalendarId' in calendar &&
-      calendar.hearingCalendarId &&
-      calendar.hearingCalendarId > 0
+      !isHearingCalendarRequest && 'hearingCalendarId' in calendar && getNumber(calendar.hearingCalendarId) > 0
         ? calendar.hearingCalendarId
         : undefined,
     form_id:
-      !isHearingCalendarRequest && 'formId' in calendar && calendar.formId && calendar.formId > 0
-        ? calendar.formId
-        : undefined,
+      !isHearingCalendarRequest && 'formId' in calendar && getNumber(calendar.formId) > 0 ? calendar.formId : undefined,
   }
 }
