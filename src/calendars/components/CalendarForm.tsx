@@ -149,13 +149,24 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarHearingCalendarList = () => {
-    const value = 'hearingCalendarId' in selectedCalendar ? selectedCalendar.hearingCalendarId ? selectedCalendar.hearingCalendarId : ID_LIST : ID_LIST
+    const value =
+      'hearingCalendarId' in selectedCalendar
+        ? selectedCalendar.hearingCalendarId
+          ? selectedCalendar.hearingCalendarId
+          : ID_LIST
+        : ID_LIST
     return (
       <FormSelectField
         componentLabel="Task Calendar--Hearing Calendar"
         value={value}
         onChange={(e) =>
-          handleCalendarFormOnChange('hearingCalendarId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)
+          handleCalendarFormOnChange(
+            'hearingCalendarId',
+            e.target.value,
+            selectedCalendar,
+            setSelectedCalendar,
+            getNumber,
+          )
         }
         menuItems={calendarHearingCalendarListForSelect()}
       />
@@ -233,12 +244,13 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
           {calendarCourtCasesList()}
         </Grid>
       ) : (
-        <><Grid item xs={6}>
-          {calendarHearingCalendarList()}
-        </Grid>
-        <Grid item xs={6}>
-          {calendarFormList()}
-        </Grid>
+        <>
+          <Grid item xs={6}>
+            {calendarHearingCalendarList()}
+          </Grid>
+          <Grid item xs={6}>
+            {calendarFormList()}
+          </Grid>
         </>
       )}
       <Grid item xs={6}>
