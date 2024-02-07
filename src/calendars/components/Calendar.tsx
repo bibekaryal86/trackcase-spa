@@ -43,7 +43,8 @@ const mapDispatchToProps = {
 
 interface CalendarProps {
   isForceFetch: boolean
-  selectedCalendar: HearingCalendarSchema | TaskCalendarSchema
+  selectedHearingCalendar: HearingCalendarSchema
+  selectedTaskCalendar: TaskCalendarSchema
   getHearingCalendar: (calendarId: number) => void
   getTaskCalendar: (calendarId: number) => void
   editHearingCalendar: (calendarId: number, calendar: HearingCalendarSchema) => void

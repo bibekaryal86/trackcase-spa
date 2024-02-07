@@ -45,9 +45,6 @@ interface CourtCaseProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  addNote: (noteObjectId: number, note: string) => void
-  editNote: (noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteId: number) => void
   caseTypesList: CaseTypeSchema[]
   getCaseTypes: () => void
   clientsList: ClientSchema[]
