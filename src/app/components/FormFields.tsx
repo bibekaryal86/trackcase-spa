@@ -68,6 +68,7 @@ interface FormSelectFieldProps {
   value: number | string
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
   menuItems: React.ReactNode[]
+  disabled?: boolean
 }
 
 interface StateSelectProps {
@@ -224,12 +225,13 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   value,
   onChange,
   menuItems,
+  disabled = false,
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
   return (
     <FormControl sx={formControlSx} required={required} error={error}>
       <InputLabel sx={inputLabelSx}>{label}</InputLabel>
-      <Select labelId={id} id={id} variant={variant} value={value.toString()} onChange={onChange}>
+      <Select labelId={id} id={id} variant={variant} value={value.toString()} onChange={onChange} disabled={disabled}>
         {menuItems}
       </Select>
     </FormControl>

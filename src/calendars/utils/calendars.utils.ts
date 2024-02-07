@@ -58,16 +58,18 @@ export const validateCalendar = (
     // task calendar
     const taskCalendar = calendar as TaskCalendarSchema
     if (!taskCalendar.taskDate || !taskCalendar.taskDate.isValid() || taskCalendar.taskDate.isBefore(dayjs(), 'day')) {
-      errors.push('Task Date is required and cannot be in the past')
+      errors.push('Task Date is required and cannot be in the past!')
     }
     if (!taskCalendar.dueDate || !taskCalendar.dueDate.isValid() || taskCalendar.dueDate.isBefore(dayjs(), 'day')) {
-      errors.push('Due Date is required and cannot be in the past')
+      errors.push('Due Date is required and cannot be in the past!')
     }
     // due date cannot be before task date
     if (taskCalendar.taskDate && taskCalendar.dueDate && taskCalendar.dueDate.isBefore(taskCalendar.taskDate)) {
-      errors.push('Due Date cannot be before Task Calendar Date')
+      errors.push('Due Date cannot be before Task Calendar Date!')
     }
     // due date cannot be after hearing date if hearing calendar is selected
+    console.log(hearingCalendarParam)
+    console.log(taskCalendar.hearingCalendar)
     if (taskCalendar.dueDate && getNumber(taskCalendar.hearingCalendarId) > 0) {
       let hearingCalendar = taskCalendar.hearingCalendar
       if (!hearingCalendar) {
@@ -75,7 +77,7 @@ export const validateCalendar = (
       }
       if (hearingCalendar && hearingCalendar.hearingDate) {
         if (taskCalendar.dueDate.isAfter(hearingCalendar.hearingDate)) {
-          errors.push('Due Date cannot be after Hearing Calendar Date')
+          errors.push('Due Date cannot be after Hearing Calendar Date!')
         }
       } else {
         errors.push('Hearing Calendar Could Not Be Verified!')
@@ -85,9 +87,16 @@ export const validateCalendar = (
       errors.push('Task Type is required')
     } else if (taskCalendar.taskTypeId === DUE_AT_HEARING_ID && getNumber(taskCalendar.hearingCalendarId) <= 0) {
       errors.push('For Due at Hearing task type Hearing Calendar is required!')
+    } else if (taskCalendar.taskTypeId !== DUE_AT_HEARING_ID && getNumber(taskCalendar.hearingCalendarId) > 0) {
+      errors.push('For Hearing Calendar task type Due at Hearing is required!')
+    } else if (taskCalendar.taskTypeId === DUE_AT_HEARING_ID && getNumber(taskCalendar.formId) > 0) {
+      errors.push('For Due at Hearing task type Form is not allowed!')
     }
-    if (getNumber(taskCalendar.hearingCalendarId) <= 0 && getNumber(taskCalendar.formId) <= 0) {
-      errors.push('Either Hearing Calendar OR Form is required')
+    if (
+      (getNumber(taskCalendar.hearingCalendarId) <= 0 && getNumber(taskCalendar.formId) <= 0) ||
+      (getNumber(taskCalendar.hearingCalendarId) > 0 && getNumber(taskCalendar.formId) > 0)
+    ) {
+      errors.push('Either Hearing Calendar OR Form is required!')
     }
   }
 

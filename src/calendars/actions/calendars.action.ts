@@ -24,7 +24,7 @@ export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema
     if (calendarType === CALENDAR_OBJECT_TYPES.TASK) {
       hearingCalendar = getSelectedCalendarFromStore(
         getStore(),
-        calendarType,
+        CALENDAR_OBJECT_TYPES.HEARING,
         (calendar as TaskCalendarSchema).hearingCalendarId,
       )
     }
@@ -184,7 +184,7 @@ export const editCalendar = (
     if (calendarType === CALENDAR_OBJECT_TYPES.TASK) {
       hearingCalendar = getSelectedCalendarFromStore(
         getStore(),
-        calendarType,
+        CALENDAR_OBJECT_TYPES.HEARING,
         (calendar as TaskCalendarSchema).hearingCalendarId,
       )
     }

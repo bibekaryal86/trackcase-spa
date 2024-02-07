@@ -149,12 +149,8 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarHearingCalendarList = () => {
-    const value =
-      'hearingCalendarId' in selectedCalendar
-        ? selectedCalendar.hearingCalendarId
-          ? selectedCalendar.hearingCalendarId
-          : ID_LIST
-        : ID_LIST
+    const value = 'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_LIST
+    const formId = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_LIST
     return (
       <FormSelectField
         componentLabel="Task Calendar--Hearing Calendar"
@@ -169,6 +165,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
           )
         }
         menuItems={calendarHearingCalendarListForSelect()}
+        disabled={formId > 0}
       />
     )
   }
@@ -188,6 +185,8 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
 
   const calendarFormList = () => {
     const value = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_LIST
+    const hearingCalendarId =
+      'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_LIST
     return (
       <FormSelectField
         componentLabel="Task Calendar--Form"
@@ -196,6 +195,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
           handleCalendarFormOnChange('formId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)
         }
         menuItems={calendarFormListForSelect()}
+        disabled={hearingCalendarId > 0}
       />
     )
   }
