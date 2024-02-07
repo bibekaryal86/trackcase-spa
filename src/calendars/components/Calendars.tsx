@@ -246,6 +246,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       clientsList={clientsList}
       setSelectedCalendar={setSelectedCalendar}
       calendarStatusList={calendarStatusList}
+      hearingCalendarList={hearingCalendarsList}
       isShowOneCalendar={false}
     />
   )

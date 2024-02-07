@@ -10,6 +10,7 @@ import {
   FormSelectField,
   FormSelectStatusField,
   getComments,
+  getDayjsString,
   getNumber,
   getString,
   GridFormWrapper,
@@ -36,13 +37,14 @@ interface CalendarFormProps {
   formsList: FormSchema[]
   clientsList: ClientSchema[]
   calendarStatusList: string[]
+  hearingCalendarList: HearingCalendarSchema[]
   isShowOneCalendar: boolean
 }
 
 const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
   const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
-  const { courtCasesList, formsList, clientsList, calendarStatusList } = props
+  const { courtCasesList, formsList, clientsList, calendarStatusList, hearingCalendarList } = props
   const isHearingCalendarForm = isHearingCalendar(calendarType)
 
   const calendarDate = () => {
@@ -133,6 +135,33 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     )
   }
 
+  const calendarHearingCalendarForSelect = (x: HearingCalendarSchema) => {
+    const client = clientsList.find((y) => x.courtCase?.clientId === y.id)
+    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+    return `${client?.name}, ${courtCase?.caseType?.name} [${getDayjsString(x.hearingDate)}]`
+  }
+
+  const calendarHearingCalendarListForSelect = () =>
+    hearingCalendarList.map((x) => (
+      <MenuItem key={x.id} value={x.id}>
+        {calendarHearingCalendarForSelect(x)}
+      </MenuItem>
+    ))
+
+  const calendarHearingCalendarList = () => {
+    const value = 'hearingCalendarId' in selectedCalendar ? selectedCalendar.hearingCalendarId ? selectedCalendar.hearingCalendarId : ID_LIST : ID_LIST
+    return (
+      <FormSelectField
+        componentLabel="Task Calendar--Hearing Calendar"
+        value={value}
+        onChange={(e) =>
+          handleCalendarFormOnChange('hearingCalendarId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)
+        }
+        menuItems={calendarHearingCalendarListForSelect()}
+      />
+    )
+  }
+
   const calendarFormForSelect = (x: FormSchema) => {
     const client = clientsList.find((y) => x.courtCase?.clientId === y.id)
     const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
@@ -204,9 +233,13 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
           {calendarCourtCasesList()}
         </Grid>
       ) : (
+        <><Grid item xs={6}>
+          {calendarHearingCalendarList()}
+        </Grid>
         <Grid item xs={6}>
           {calendarFormList()}
         </Grid>
+        </>
       )}
       <Grid item xs={6}>
         {calendarStatus()}
