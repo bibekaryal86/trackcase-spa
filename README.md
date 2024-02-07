@@ -14,11 +14,20 @@
   * client report
     * when opening case page or client page, show cases, formsReducer, collections, etc all in one
     * maybe like campaign report, utilize tabs in the page to navigate without leaving page
+  * check table sort, some working, some not working
+    * likely the element ones not working (?)
+  * sticky header appbar is not working
 
-* table sort might not be working as expected
 
 TODO
-* Add task calendar dropdown to FormForm.tsx
 * Move statuses in track case service to database
-* Add submission_type in form type
-  * submission_type = form, motion, other
+* Add filing_type in form type
+  * filing_type = form, motion, other
+* due date cannot be after hearing date if hearing calendar is selected
+  * if updating task calendar with hearing calendar
+  * display hearing calendar dropdown, but make it not-updatable
+* remove pages for hearing and task calendars
+  * upon clicking on calendar date link, open a popup for that date
+* task calendars on hearing calendar popup
+* IF HEARING CALENDAR IS SELECTED, DESELECT AND DISABLE FORM
+  * if hearing calendar is selected, make task type due at hearing and disable

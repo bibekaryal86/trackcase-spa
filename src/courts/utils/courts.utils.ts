@@ -1,4 +1,4 @@
-import { getComments, getNumericOnly, isNumericOnly, validateAddress, validatePhoneNumber } from '../../app'
+import { getNumericOnly, isNumericOnly, validateAddress, validatePhoneNumber } from '../../app'
 import { CourtSchema } from '../types/courts.data.types'
 
 export const validateCourt = (court: CourtSchema) => {
@@ -47,9 +47,7 @@ export const handleCourtFormOnChange = (
   setSelectedCourt: (updatedCourt: CourtSchema) => void,
   getValue: (value: string | number) => string | number,
 ) => {
-  if (name === 'comments') {
-    value = getComments(value.toString())
-  } else if (name === 'zipCode') {
+  if (name === 'zipCode') {
     value = isNumericOnly(value.toString()) ? value : selectedCourt.zipCode ? selectedCourt.zipCode : ''
   } else if (name === 'phoneNumber') {
     value = getNumericOnly(value.toString(), 10)

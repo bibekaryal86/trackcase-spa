@@ -1,22 +1,15 @@
-import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { CourtCaseSchema } from '../../cases'
-import { FormSchema } from '../../forms'
 import { CollectionMethodSchema } from '../../types'
 
 export interface CaseCollectionSchema extends StatusBaseSchema, BaseModelSchema {
   quoteDate: Date
   quoteAmount: number
-  initialPayment: number
-  collectionMethodId: number
   courtCaseId: number
-  formId?: number
   // orm_mode
-  collectionMethod?: CollectionMethodSchema
   courtCase?: CourtCaseSchema
-  form?: FormSchema
   cashCollections?: CashCollectionSchema[]
-  // notes and history
-  noteCaseCollections?: NoteCaseCollectionSchema[]
+  // history
   historyCaseCollections?: HistoryCaseCollectionSchema[]
 }
 
@@ -34,25 +27,12 @@ export interface CashCollectionSchema extends StatusBaseSchema, BaseModelSchema 
   // orm_mode
   caseCollection?: CaseCollectionSchema
   collectionMethod?: CollectionMethodSchema
-  // notes and history
-  noteCashCollections?: NoteCashCollectionSchema[]
+  // history
   historyCashCollections?: HistoryCashCollectionSchema[]
 }
 
 export interface CashCollectionResponse extends ResponseBase {
   cashCollections: CashCollectionSchema[]
-}
-
-export interface NoteCaseCollectionSchema extends NoteBaseSchema, BaseModelSchema {
-  caseCollectionId: number
-  // orm_mode
-  caseCollection?: CaseCollectionSchema
-}
-
-export interface NoteCashCollectionSchema extends NoteBaseSchema, BaseModelSchema {
-  cashCollectionId: number
-  // orm_mode
-  cashCollection?: CashCollectionSchema
 }
 
 export interface HistoryCaseCollectionSchema extends BaseModelSchema {
@@ -63,15 +43,10 @@ export interface HistoryCaseCollectionSchema extends BaseModelSchema {
   comments?: string
   quoteDate?: Date
   quoteAmount?: number
-  initialPayment?: number
-  collectionMethodId?: number
   courtCaseId?: number
-  formId?: number
   // orm mode
   caseCollection?: CaseCollectionSchema
-  collectionMethod?: CollectionMethodSchema
   courtCase?: CourtCaseSchema
-  form?: FormSchema
 }
 
 export interface HistoryCashCollectionSchema extends BaseModelSchema {

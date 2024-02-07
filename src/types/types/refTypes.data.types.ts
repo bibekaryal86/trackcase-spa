@@ -1,7 +1,7 @@
 import { BaseModelSchema, NameDescBaseSchema, ResponseBase } from '../../app'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
-import { CaseCollectionSchema, CashCollectionSchema } from '../../collections'
+import { CashCollectionSchema } from '../../collections'
 import { FormSchema } from '../../forms'
 
 export interface CaseTypeSchema extends BaseModelSchema, NameDescBaseSchema {
@@ -16,7 +16,6 @@ export interface CaseTypeResponse extends ResponseBase {
 export interface CollectionMethodSchema extends BaseModelSchema, NameDescBaseSchema {
   // orm_mode
   cashCollections?: CashCollectionSchema[]
-  caseCollections?: CaseCollectionSchema[]
 }
 
 export interface CollectionMethodResponse extends ResponseBase {

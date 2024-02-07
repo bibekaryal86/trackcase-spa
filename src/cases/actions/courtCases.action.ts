@@ -75,10 +75,7 @@ export const getCourtCases = (isForceFetch: boolean = false) => {
           dispatch(courtCasesSuccess(COURT_CASES_RETRIEVE_SUCCESS, '', courtCasesResponse.courtCases))
         }
       } else {
-        courtCasesResponse = {
-          courtCases: courtCasesInStore,
-        }
-        dispatch(courtCasesSuccess(COURT_CASES_RETRIEVE_SUCCESS, '', courtCasesResponse.courtCases))
+        dispatch(courtCasesSuccess(COURT_CASES_RETRIEVE_SUCCESS, '', courtCasesInStore))
       }
     } catch (error) {
       console.log('Get CourtCases Error: ', error)

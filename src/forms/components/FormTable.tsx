@@ -10,105 +10,78 @@ import {
   BUTTON_DELETE,
   BUTTON_UPDATE,
   ID_ACTION_BUTTON,
-  ID_DEFAULT,
 } from '../../constants'
-import { FormSchema, HistoryFormSchema } from '../types/forms.data.types'
+import { FormTypeSchema } from '../../types'
+import { FormSchema } from '../types/forms.data.types'
 
 interface FormTableProps {
-  isHistoryView: boolean
   formsList: FormSchema[]
-  historyFormsList: HistoryFormSchema[]
   setModal?: (action: string) => void
   setSelectedId?: (id: number) => void
   setSelectedForm?: (form: FormSchema) => void
   setSelectedFormForReset?: (form: FormSchema) => void
   courtCasesList: CourtCaseSchema[]
+  selectedCourtCase?: CourtCaseSchema
+  formTypesList: FormTypeSchema[]
 }
 
 const FormTable = (props: FormTableProps): React.ReactElement => {
-  const { isHistoryView, formsList, historyFormsList, courtCasesList } = props
+  const { formsList, courtCasesList, selectedCourtCase, formTypesList } = props
   const { setModal, setSelectedId, setSelectedForm, setSelectedFormForReset } = props
 
   const formsTableHeaderData = (): TableHeaderData[] => {
-    const tableHeaderData: TableHeaderData[] = [
-      {
-        id: 'clientCase',
-        label: 'Client Case',
-        isDisableSorting: isHistoryView,
-      },
+    return [
       {
         id: 'type',
-        label: 'Type',
-        isDisableSorting: isHistoryView,
+        label: 'Form',
+      },
+      {
+        id: 'client',
+        label: 'Client',
+      },
+      {
+        id: 'case',
+        label: 'Case',
       },
       {
         id: 'submit',
         label: 'Submit Date',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'receipt',
         label: 'Receipt Date',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'receiptNumber',
         label: 'Receipt Number',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'priority',
         label: 'Priority Date',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'rfe',
         label: 'RFE Date',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'rfeSubmit',
         label: 'RFE Submit Date',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'decision',
         label: 'Decision Date',
-        isDisableSorting: isHistoryView,
-      },
-      {
-        id: 'task',
-        label: 'Task Calendar',
-        isDisableSorting: true,
       },
       {
         id: 'status',
         label: 'Status',
-        isDisableSorting: isHistoryView,
       },
-    ]
-    if (isHistoryView) {
-      tableHeaderData.push(
-        {
-          id: 'user_name',
-          label: 'User',
-          isDisableSorting: true,
-        },
-        {
-          id: 'date',
-          label: 'Date (UTC)',
-          isDisableSorting: true,
-        },
-      )
-    } else {
-      tableHeaderData.push({
+      {
         id: 'actions',
         label: 'Actions',
         align: 'center' as const,
         isDisableSorting: true,
-      })
-    }
-    return tableHeaderData
+      },
+    ]
   }
 
   const actionButtons = (id: number, form: FormSchema) => (
@@ -135,21 +108,45 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToForm = (clientName: string, caseTypeName: string, formId: number) => (
-    <Link text={`${clientName}, ${caseTypeName}`} navigateToPage={`/form/${formId}`} />
-  )
-
-  const getClientCase = (x: FormSchema | HistoryFormSchema) => {
-    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
-    return isHistoryView
-      ? `${courtCase?.client?.name}, ${courtCase?.caseType?.name}`
-      : linkToForm(courtCase?.client?.name || 'Client', courtCase?.caseType?.name || 'Type', x.id || ID_DEFAULT)
+  const linkToForm = (x: FormSchema) => {
+    let formType = x.formType
+    if (!formType) {
+      formType = formTypesList.find((y) => x.formTypeId === y.id)
+    }
+    return <Link text={formType?.name} navigateToPage={`/form/${x.id}`} />
   }
 
-  const formsTableDataCommon = (x: FormSchema | HistoryFormSchema) => {
+  const linkToClient = (x: FormSchema) => {
+    if (selectedCourtCase) {
+      return selectedCourtCase?.client?.name
+    }
+    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+    return (
+      <Link
+        text={courtCase?.client?.name}
+        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=Forms`}
+      />
+    )
+  }
+
+  const linkToCourtCase = (x: FormSchema) => {
+    if (selectedCourtCase) {
+      return selectedCourtCase?.caseType?.name
+    }
+    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+    return (
+      <Link
+        text={courtCase?.caseType?.name}
+        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Forms`}
+      />
+    )
+  }
+
+  const formsTableDataCommon = (x: FormSchema) => {
     return {
-      clientCase: getClientCase(x),
-      type: x.formType?.name,
+      type: linkToForm(x),
+      client: linkToClient(x),
+      case: linkToCourtCase(x),
       submit: convertDateToLocaleString(x.submitDate),
       receipt: convertDateToLocaleString(x.receiptDate),
       receiptNumber: x.receiptNumber,
@@ -157,34 +154,20 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
       rfe: convertDateToLocaleString(x.rfeDate),
       rfeSubmit: convertDateToLocaleString(x.rfeSubmitDate),
       decision: convertDateToLocaleString(x.decisionDate),
-      task: x.taskCalendar?.taskType?.name,
       status: x.status,
     }
   }
 
   const formsTableData = (): TableData[] => {
-    let tableData: TableData[]
-    if (isHistoryView) {
-      tableData = Array.from(historyFormsList, (x) => {
-        return {
-          ...formsTableDataCommon(x),
-          user: x.userName,
-          date: convertDateToLocaleString(x.created),
-        }
-      })
-    } else {
-      tableData = Array.from(formsList, (x) => {
-        return {
-          ...formsTableDataCommon(x),
-          action: actionButtons(x.id || ID_ACTION_BUTTON, x),
-        }
-      })
-    }
-    return tableData
+    return Array.from(formsList, (x) => {
+      return {
+        ...formsTableDataCommon(x),
+        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+      }
+    })
   }
 
-  const addButton = () =>
-    isHistoryView ? undefined : <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Form</Button>
+  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Form</Button>
 
   return (
     <Table

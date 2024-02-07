@@ -7,27 +7,12 @@ import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import ClientForm from './ClientForm'
-import ClientTable from './ClientTable'
-import {
-  addNote,
-  convertNotesToNotesList,
-  deleteNote,
-  editNote,
-  getNumber,
-  getStatusesList,
-  GlobalState,
-  Link,
-  Modal,
-  Notes,
-  StatusSchema,
-  unmountPage,
-} from '../../app'
+import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
 import { CourtCases } from '../../cases'
-import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
 import { getJudges, JudgeSchema } from '../../judges'
 import { editClient, getClient } from '../actions/clients.action'
 import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
-import { ClientSchema, DefaultClientSchema, HistoryClientSchema } from '../types/clients.data.types'
+import { ClientSchema, DefaultClientSchema } from '../types/clients.data.types'
 import { isAreTwoClientsSame } from '../utils/clients.utils'
 
 const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
@@ -44,10 +29,6 @@ const mapDispatchToProps = {
   editClient: (clientId: number, client: ClientSchema) => editClient(clientId, client),
   unmountPage: () => unmountPage(CLIENTS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => addNote(noteObjectType, noteObjectId, note),
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
-    editNote(noteObjectType, noteObjectId, note, noteId),
-  deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
   getJudges: () => getJudges(),
 }
 
@@ -59,9 +40,6 @@ interface ClientProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteObjectType: string, noteId: number) => void
   judgesList: JudgeSchema[]
   getJudges: () => void
 }
@@ -78,8 +56,6 @@ const Client = (props: ClientProps): React.ReactElement => {
   const [selectedClient, setSelectedClient] = useState<ClientSchema>(DefaultClientSchema)
   const [selectedClientForReset, setSelectedClientForReset] = useState<ClientSchema>(DefaultClientSchema)
   const [clientStatusList, setClientStatusList] = useState<string[]>([])
-  const [isShowNotes, setIsShowNotes] = useState(false)
-  const [isShowHistory, setIsShowHistory] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -143,59 +119,6 @@ const Client = (props: ClientProps): React.ReactElement => {
     editClient(getNumber(id), selectedClient)
   }
 
-  const notesContent = () => (
-    <Notes
-      noteObjectType={NOTE_OBJECT_TYPES.CLIENT}
-      noteObjectId={selectedClient.id || ID_DEFAULT}
-      notesList={convertNotesToNotesList(selectedClient.noteClients || [], selectedClient.id || ID_LIST)}
-      addNote={props.addNote}
-      editNote={props.editNote}
-      deleteNote={props.deleteNote}
-    />
-  )
-
-  const historyContent = () => {
-    const judgeMap = new Map(judgesList.map((judge) => [judge.id, judge]))
-    const historyClients = selectedClient.historyClients
-      ? JSON.parse(JSON.stringify(selectedClient.historyClients))
-      : []
-    historyClients.forEach((x: HistoryClientSchema) => {
-      const matchingJudge = judgeMap.get(x.judgeId)
-      if (matchingJudge) {
-        x.judge = matchingJudge
-      }
-    })
-    return <ClientTable isHistoryView={true} clientsList={[]} historyClientsList={historyClients || []} />
-  }
-
-  const notesModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpen={() => setIsShowNotes(false)}
-        maxWidth="sm"
-        title="Client Notes"
-        primaryButtonText={BUTTON_CLOSE}
-        primaryButtonCallback={() => setIsShowNotes(false)}
-        content={notesContent()}
-      />
-    )
-  }
-
-  const historyModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpen={() => setIsShowHistory(false)}
-        maxWidth="lg"
-        title="Client Update History"
-        primaryButtonText={BUTTON_CLOSE}
-        primaryButtonCallback={() => setIsShowHistory(false)}
-        content={historyContent()}
-      />
-    )
-  }
-
   const clientButtons = () => {
     return (
       <>
@@ -207,10 +130,6 @@ const Client = (props: ClientProps): React.ReactElement => {
           onClick={() => setSelectedClient(selectedClientForReset)}
         >
           Cancel
-        </Button>
-        <Button onClick={() => setIsShowNotes(true)}>View Client Notes [{selectedClient.noteClients?.length}]</Button>
-        <Button onClick={() => setIsShowHistory(true)}>
-          View Client Update History [{selectedClient.historyClients?.length}]
         </Button>
       </>
     )
@@ -249,8 +168,6 @@ const Client = (props: ClientProps): React.ReactElement => {
               </Typography>
               <CourtCases clientId={id} />
             </Grid>
-            {isShowHistory && historyModal()}
-            {isShowNotes && notesModal()}
           </>
         )}
       </Grid>

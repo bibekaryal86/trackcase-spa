@@ -1,4 +1,4 @@
-import { BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { ClientSchema } from '../../clients'
 import { ID_DEFAULT } from '../../constants'
 import { CourtSchema } from '../../courts'
@@ -10,19 +10,12 @@ export interface JudgeSchema extends StatusBaseSchema, BaseModelSchema {
   // orm_mode
   court?: CourtSchema
   clients?: ClientSchema[]
-  // notes and history
-  noteJudges?: NoteJudgeSchema[]
+  // history
   historyJudges?: HistoryJudgeSchema[]
 }
 
 export interface JudgeResponse extends ResponseBase {
   judges: JudgeSchema[]
-}
-
-export interface NoteJudgeSchema extends NoteBaseSchema, BaseModelSchema {
-  judgeId: number
-  // orm_mode
-  judge?: JudgeSchema
 }
 
 export interface HistoryJudgeSchema extends BaseModelSchema {

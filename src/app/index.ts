@@ -1,6 +1,6 @@
 // actions
+import { getAllRefTypes } from './actions/all_ref_types.action'
 import { userLogout } from './actions/logout.action'
-import { addNote, deleteNote, editNote } from './actions/notes.action'
 import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
@@ -15,7 +15,6 @@ import {
 } from './components/FormFields'
 import Link from './components/Link'
 import Modal from './components/Modal'
-import Notes from './components/Notes'
 import Switch from './components/Switch'
 import Table from './components/Table'
 // action types
@@ -27,9 +26,6 @@ import {
   BaseModelSchema,
   ErrorSuccessSchema,
   NameDescBaseSchema,
-  NoteBaseSchema,
-  NoteResponse,
-  NoteSchema,
   ResponseBase,
   StatusBaseSchema,
   StatusSchema,
@@ -45,9 +41,9 @@ import { useStateData } from './utils/app.hooks'
 import {
   clearMessages,
   convertDateToLocaleString,
-  convertNotesToNotesList,
   getComments,
-  getDate,
+  getDayjs,
+  getDayjsString,
   getEndpoint,
   getErrMsg,
   getFullAddress,
@@ -69,7 +65,7 @@ import { LocalStorage, SessionStorage } from './utils/storage.utils'
 
 // EXPORTS
 export { userLogout }
-export { addNote, editNote, deleteNote }
+export { getAllRefTypes }
 export { getStatusesList }
 export { testDatabase }
 export {
@@ -83,7 +79,6 @@ export {
 }
 export { Link }
 export { Modal }
-export { Notes }
 export { Switch }
 export { Table }
 export type { GlobalDispatch, GlobalState }
@@ -93,9 +88,6 @@ export type {
   BaseModelSchema,
   ErrorSuccessSchema,
   NameDescBaseSchema,
-  NoteBaseSchema,
-  NoteResponse,
-  NoteSchema,
   ResponseBase,
   StatusBaseSchema,
   StatusSchema,
@@ -110,9 +102,9 @@ export { useStateData }
 export {
   clearMessages,
   convertDateToLocaleString,
-  convertNotesToNotesList,
   getComments,
-  getDate,
+  getDayjs,
+  getDayjsString,
   getEndpoint,
   getErrMsg,
   getFullAddress,

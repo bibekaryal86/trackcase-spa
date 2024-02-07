@@ -28,22 +28,12 @@ export const DefaultStatusesState: StatusState = {
       inactive: [],
       all: [],
     },
-    case_collections: {
+    collections: {
       active: [],
       inactive: [],
       all: [],
     },
-    cash_collections: {
-      active: [],
-      inactive: [],
-      all: [],
-    },
-    hearing_calendar: {
-      active: [],
-      inactive: [],
-      all: [],
-    },
-    task_calendar: {
+    calendars: {
       active: [],
       inactive: [],
       all: [],

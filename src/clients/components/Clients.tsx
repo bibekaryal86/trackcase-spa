@@ -71,7 +71,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const { statusList, getStatusesList } = props
   const { judgeId, selectedJudge, getJudge } = props
 
-  const [modal, setModal] = useState('')
+  const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedClient, setSelectedClient] = useState<ClientSchema>(DefaultClientSchema)
   const [selectedClientForReset, setSelectedClientForReset] = useState<ClientSchema>(DefaultClientSchema)
@@ -225,14 +225,12 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   const clientsTable = () => (
     <ClientTable
-      isHistoryView={false}
       clientsList={!(judgeId && selectedJudge) ? clientsList : selectedJudge?.clients || []}
-      historyClientsList={[]}
       setModal={setModal}
       setSelectedId={setSelectedId}
       setSelectedClient={setSelectedClient}
       setSelectedClientForReset={setSelectedClientForReset}
-      selectedJudge={selectedJudge}
+      selectedJudge={!(judgeId && selectedJudge) ? undefined : selectedJudge}
     />
   )
 

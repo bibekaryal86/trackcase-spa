@@ -1,28 +1,27 @@
+// actions
 // components
-import HearingCalendar from './components/HearingCalendar'
-import HearingCalendars from './components/HearingCalendars'
-import TaskCalendar from './components/TaskCalendar'
-import TaskCalendars from './components/TaskCalendars'
-// types
+import Calendar from './components/Calendar'
+import Calendars from './components/Calendars'
+// reducers
+import calendars from './reducers/calendars.reducer'
+// action types
+// data types
 import {
   HearingCalendarResponse,
   HearingCalendarSchema,
   HistoryHearingCalendarSchema,
   HistoryTaskCalendarSchema,
-  NoteHearingCalendarSchema,
-  NoteTaskCalendarSchema,
   TaskCalendarResponse,
   TaskCalendarSchema,
 } from './types/calendars.data.types'
 
-export { HearingCalendar, HearingCalendars, TaskCalendar, TaskCalendars }
+export { Calendar, Calendars }
+export { calendars }
 export type {
-  HearingCalendarSchema,
   HearingCalendarResponse,
-  NoteHearingCalendarSchema,
+  HearingCalendarSchema,
   HistoryHearingCalendarSchema,
-  TaskCalendarSchema,
-  TaskCalendarResponse,
-  NoteTaskCalendarSchema,
   HistoryTaskCalendarSchema,
+  TaskCalendarResponse,
+  TaskCalendarSchema,
 }

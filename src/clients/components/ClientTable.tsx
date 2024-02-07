@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import React from 'react'
 
-import { convertDateToLocaleString, getFullAddress, Link, Table, TableData, TableHeaderData } from '../../app'
+import { getFullAddress, Link, Table, TableData, TableHeaderData } from '../../app'
 import {
   ACTION_ADD,
   ACTION_DELETE,
@@ -11,12 +11,10 @@ import {
   ID_ACTION_BUTTON,
 } from '../../constants'
 import { JudgeSchema } from '../../judges'
-import { ClientSchema, HistoryClientSchema } from '../types/clients.data.types'
+import { ClientSchema } from '../types/clients.data.types'
 
 interface ClientTableProps {
-  isHistoryView: boolean
   clientsList: ClientSchema[]
-  historyClientsList: HistoryClientSchema[]
   setModal?: (action: string) => void
   setSelectedId?: (id: number) => void
   setSelectedClient?: (client: ClientSchema) => void
@@ -25,15 +23,14 @@ interface ClientTableProps {
 }
 
 const ClientTable = (props: ClientTableProps): React.ReactElement => {
-  const { isHistoryView, clientsList, historyClientsList, selectedJudge } = props
+  const { clientsList, selectedJudge } = props
   const { setModal, setSelectedId, setSelectedClient, setSelectedClientForReset } = props
 
   const clientsTableHeaderData = (): TableHeaderData[] => {
-    const tableHeaderData: TableHeaderData[] = [
+    return [
       {
         id: 'name',
         label: 'Name',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'aNumber',
@@ -58,36 +55,18 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
       {
         id: 'judge',
         label: 'Judge',
-        isDisableSorting: isHistoryView,
       },
       {
         id: 'status',
         label: 'Status',
-        isDisableSorting: isHistoryView,
       },
-    ]
-    if (isHistoryView) {
-      tableHeaderData.push(
-        {
-          id: 'user',
-          label: 'User',
-          isDisableSorting: true,
-        },
-        {
-          id: 'date',
-          label: 'Date (UTC)',
-          isDisableSorting: true,
-        },
-      )
-    } else {
-      tableHeaderData.push({
+      {
         id: 'actions',
         label: 'Actions',
         align: 'center' as const,
         isDisableSorting: true,
-      })
-    }
-    return tableHeaderData
+      },
+    ]
   }
 
   const actionButtons = (id: number, client: ClientSchema) => (
@@ -114,49 +93,37 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToJudge = (x: JudgeSchema) => (
-    <Link text={x.name} navigateToPage={`/judge/${x.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
-  )
+  const linkToJudge = (x?: JudgeSchema) =>
+    selectedJudge ? (
+      selectedJudge.name
+    ) : (
+      <Link text={x?.name} navigateToPage={`/judge/${x?.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
+    )
 
-  const linkToClient = (x: ClientSchema | HistoryClientSchema) => (
-    <Link text={x.name} navigateToPage={`/client/${x.id}`} />
-  )
+  const linkToClient = (x: ClientSchema) => <Link text={x.name} navigateToPage={`/client/${x.id}`} />
 
-  const clientsTableDataCommon = (x: ClientSchema | HistoryClientSchema) => {
+  const clientsTableDataCommon = (x: ClientSchema) => {
     return {
-      name: isHistoryView ? x.name : linkToClient(x),
+      name: linkToClient(x),
       aNumber: x.aNumber,
       email: x.email,
       phone: x.phoneNumber,
       address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-      judge: isHistoryView ? x.judge?.name : selectedJudge ? selectedJudge.name : x.judge ? linkToJudge(x.judge) : '',
+      judge: linkToJudge(x.judge),
       status: x.status,
     }
   }
 
   const clientsTableData = (): TableData[] => {
-    let tableData: TableData[]
-    if (isHistoryView) {
-      tableData = Array.from(historyClientsList, (x) => {
-        return {
-          ...clientsTableDataCommon(x),
-          user: x.userName,
-          date: convertDateToLocaleString(x.created, true),
-        }
-      })
-    } else {
-      tableData = Array.from(clientsList, (x) => {
-        return {
-          ...clientsTableDataCommon(x),
-          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
-        }
-      })
-    }
-    return tableData
+    return Array.from(clientsList, (x) => {
+      return {
+        ...clientsTableDataCommon(x),
+        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+      }
+    })
   }
 
-  const addButton = () =>
-    isHistoryView ? undefined : <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Client</Button>
+  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Client</Button>
 
   return (
     <Table

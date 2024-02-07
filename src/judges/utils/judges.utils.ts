@@ -1,4 +1,3 @@
-import { getComments } from '../../app'
 import { JudgeSchema } from '../types/judges.data.types'
 
 export const validateJudge = (judge: JudgeSchema) => {
@@ -33,9 +32,6 @@ export const handleJudgeFormOnChange = (
   setSelectedJudge: (updatedJudge: JudgeSchema) => void,
   getValue: (value: string | number) => string | number,
 ) => {
-  if (name === 'comments' && typeof value === 'string') {
-    value = getComments(value)
-  }
   const updatedForm = {
     ...selectedJudge,
     [name]: getValue(value),

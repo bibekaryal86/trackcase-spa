@@ -117,7 +117,7 @@ const getBody = (method: string, body: unknown) =>
   method !== 'GET' && typeof body !== 'undefined' ? JSON.stringify(body) : ''
 
 export const Async = {
-  fetch: async (urlPath: string, options: Partial<FetchOptions>): Promise<FetchResponse> => {
+  fetch: async (urlPath: string, options: Partial<FetchOptions>, retryCount: number = 1): Promise<FetchResponse> => {
     const {
       queryParams,
       pathParams,
@@ -151,7 +151,7 @@ export const Async = {
     const headers = getHeaders(withBasicAuth, !noAuth, requestHeaders, token, username)
     const body = getBody(method, requestBody)
 
-    const init: RequestInit = {
+    const requestInit: RequestInit = {
       method,
       //credentials: 'include',
       headers,
@@ -159,27 +159,29 @@ export const Async = {
     }
 
     if (body) {
-      init.body = body
+      requestInit.body = body
     }
 
-    return await window
-      .fetch(url, init)
-      .then((response) => {
-        if (!response.ok) {
-          console.log('Error Response: ', response)
+    const response = await window.fetch(url, requestInit)
 
-          if (response.status === 401) {
-            LocalStorage.setItem(FORCE_LOGOUT, true)
-          }
+    if (response.ok) {
+      LocalStorage.removeItems([FORCE_LOGOUT])
+    } else {
+      if (response.status === 401) {
+        console.log('Error Response for 401: ', response)
+        LocalStorage.setItem(FORCE_LOGOUT, true)
+      } else {
+        const clonedResponse = response.clone()
+        const responseBody = await clonedResponse.text()
+        if (responseBody.includes('too many connections for role') && retryCount <= 3) {
+          console.log('Retrying in 3 seconds due to TOO MANY CONNECTIONS ERROR... Attempt: ', retryCount)
+          await new Promise((resolve) => setTimeout(resolve, 3000))
+          return Async.fetch(url, requestInit, retryCount + 1)
         } else {
-          LocalStorage.removeItems([FORCE_LOGOUT])
+          console.log('Error Response non 401: ', response)
         }
-
-        return response.json()
-      })
-      .catch((error) => {
-        console.log('Error in fetch: ', error)
-        throw new Error(error)
-      })
+      }
+    }
+    return response.json()
   },
 }

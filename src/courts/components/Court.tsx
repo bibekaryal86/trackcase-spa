@@ -7,22 +7,7 @@ import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import CourtForm from './CourtForm'
-import CourtTable from './CourtTable'
-import {
-  addNote,
-  convertNotesToNotesList,
-  deleteNote,
-  editNote,
-  getNumber,
-  getStatusesList,
-  GlobalState,
-  Link,
-  Modal,
-  Notes,
-  StatusSchema,
-  unmountPage,
-} from '../../app'
-import { BUTTON_CLOSE, ID_DEFAULT, ID_LIST, NOTE_OBJECT_TYPES } from '../../constants'
+import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
 import { Judges } from '../../judges'
 import { editCourt, getCourt } from '../actions/courts.action'
 import { COURTS_UNMOUNT } from '../types/courts.action.types'
@@ -42,10 +27,6 @@ const mapDispatchToProps = {
   editCourt: (courtId: number, court: CourtSchema) => editCourt(courtId, court),
   unmountPage: () => unmountPage(COURTS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => addNote(noteObjectType, noteObjectId, note),
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) =>
-    editNote(noteObjectType, noteObjectId, note, noteId),
-  deleteNote: (noteObjectType: string, noteId: number) => deleteNote(noteObjectType, noteId),
 }
 
 interface CourtProps {
@@ -56,9 +37,6 @@ interface CourtProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  addNote: (noteObjectType: string, noteObjectId: number, note: string) => void
-  editNote: (noteObjectType: string, noteObjectId: number, note: string, noteId: number) => void
-  deleteNote: (noteObjectType: string, noteId: number) => void
 }
 
 const Court = (props: CourtProps): React.ReactElement => {
@@ -72,8 +50,6 @@ const Court = (props: CourtProps): React.ReactElement => {
   const [selectedCourt, setSelectedCourt] = useState<CourtSchema>(DefaultCourtSchema)
   const [selectedCourtForReset, setSelectedCourtForReset] = useState<CourtSchema>(DefaultCourtSchema)
   const [courtStatusList, setCourtStatusList] = useState<string[]>([])
-  const [isShowNotes, setIsShowNotes] = useState(false)
-  const [isShowHistory, setIsShowHistory] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -136,49 +112,6 @@ const Court = (props: CourtProps): React.ReactElement => {
     editCourt(getNumber(id), selectedCourt)
   }
 
-  const notesContent = () => (
-    <Notes
-      noteObjectType={NOTE_OBJECT_TYPES.COURT}
-      noteObjectId={selectedCourt.id || ID_DEFAULT}
-      notesList={convertNotesToNotesList(selectedCourt.noteCourts || [], selectedCourt.id || ID_LIST)}
-      addNote={props.addNote}
-      editNote={props.editNote}
-      deleteNote={props.deleteNote}
-    />
-  )
-
-  const historyContent = () => (
-    <CourtTable isHistoryView={true} courtsList={[]} historyCourtsList={selectedCourt.historyCourts || []} />
-  )
-
-  const notesModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpen={() => setIsShowNotes(false)}
-        maxWidth="sm"
-        title="Court Notes"
-        primaryButtonText={BUTTON_CLOSE}
-        primaryButtonCallback={() => setIsShowNotes(false)}
-        content={notesContent()}
-      />
-    )
-  }
-
-  const historyModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpen={() => setIsShowHistory(false)}
-        maxWidth="md"
-        title="Court Update History"
-        primaryButtonText={BUTTON_CLOSE}
-        primaryButtonCallback={() => setIsShowHistory(false)}
-        content={historyContent()}
-      />
-    )
-  }
-
   const courtButtons = () => {
     return (
       <>
@@ -190,10 +123,6 @@ const Court = (props: CourtProps): React.ReactElement => {
           onClick={() => setSelectedCourt(selectedCourtForReset)}
         >
           Cancel
-        </Button>
-        <Button onClick={() => setIsShowNotes(true)}>View Court Notes [{selectedCourt.noteCourts?.length}]</Button>
-        <Button onClick={() => setIsShowHistory(true)}>
-          View Court Update History [{selectedCourt.historyCourts?.length}]
         </Button>
       </>
     )
@@ -231,8 +160,6 @@ const Court = (props: CourtProps): React.ReactElement => {
               </Typography>
               <Judges courtId={id} />
             </Grid>
-            {isShowHistory && historyModal()}
-            {isShowNotes && notesModal()}
           </>
         )}
       </Grid>

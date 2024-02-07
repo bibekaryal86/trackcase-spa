@@ -2,9 +2,9 @@ import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
 import { LocalStorage } from './storage.utils'
-import { ID_NUMBER, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { DATE_FORMAT, ID_NUMBER, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
-import { AuthState, ErrorDetail, NoteSchema, UserDetails } from '../types/app.data.types'
+import { AuthState, ErrorDetail, UserDetails } from '../types/app.data.types'
 
 export const unmountPage = (type: string) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
@@ -85,19 +85,26 @@ export const getNumber = (value: number | string | null | undefined): number => 
 
 export const getString = (value: string | number | Dayjs | null | undefined): string => (value ? value.toString() : '')
 
-export const getDate = (value: string | undefined) => {
+export const getDayjs = (value: Dayjs | null | undefined) => {
   if (value) {
-    const [year, month, day] = value.split('-').map(Number)
-    return dayjs(`${year}-${month}-${day}`, { format: 'YYYY-MM-DD' })
+    return dayjs(value)
   }
-  return undefined
+  return null
 }
 
-export const getComments = (value: string): string => {
-  if (value.length > 8888) {
-    return value.substring(0, 8888)
+export const getDayjsString = (value: Dayjs | null | undefined, format: string = DATE_FORMAT) => {
+  if (value) {
+    return dayjs(value).format(format)
   }
-  return value
+  return ''
+}
+
+export const getComments = (value: string | number): string => {
+  const valueString = typeof value === 'number' ? value.toString() : value
+  if (valueString.length > 8888) {
+    return valueString.substring(0, 8888)
+  }
+  return valueString
 }
 
 export const validateAddress = (
@@ -153,10 +160,4 @@ export const convertDateToLocaleString = (date?: Dayjs, isIncludeTime: boolean =
     return `${yyyy}-${MM}-${dd}`
   }
   return ''
-}
-
-export const convertNotesToNotesList = <T>(notesInput: T[], noteObjectId: number): NoteSchema[] => {
-  const notes: NoteSchema[] = JSON.parse(JSON.stringify(notesInput))
-  notes.forEach((note: NoteSchema) => (note.noteObjectId = noteObjectId))
-  return notes
 }

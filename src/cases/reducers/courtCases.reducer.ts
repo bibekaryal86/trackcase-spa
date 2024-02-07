@@ -2,7 +2,6 @@ import { FORM_CREATE_SUCCESS, FORM_DELETE_SUCCESS, FORM_UPDATE_SUCCESS } from '.
 import {
   COURT_CASE_CREATE_SUCCESS,
   COURT_CASE_DELETE_SUCCESS,
-  COURT_CASE_NOTE_SUCCESS,
   COURT_CASE_UPDATE_SUCCESS,
   COURT_CASES_RETRIEVE_REQUEST,
   COURT_CASES_RETRIEVE_SUCCESS,
@@ -48,7 +47,6 @@ export default function courtCases(state = DefaultCourtCaseState, action: CourtC
         isForceFetch: false,
         selectedCourtCase: action.selectedCourtCase,
       }
-    case COURT_CASE_NOTE_SUCCESS:
     case FORM_CREATE_SUCCESS:
     case FORM_UPDATE_SUCCESS:
     case FORM_DELETE_SUCCESS:

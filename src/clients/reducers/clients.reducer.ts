@@ -2,7 +2,6 @@ import { COURT_CASE_CREATE_SUCCESS, COURT_CASE_DELETE_SUCCESS, COURT_CASE_UPDATE
 import {
   CLIENT_CREATE_SUCCESS,
   CLIENT_DELETE_SUCCESS,
-  CLIENT_NOTE_SUCCESS,
   CLIENT_UPDATE_SUCCESS,
   CLIENTS_RETRIEVE_REQUEST,
   CLIENTS_RETRIEVE_SUCCESS,
@@ -43,7 +42,6 @@ export default function clients(state = DefaultClientState, action: ClientsActio
         isForceFetch: false,
         selectedClient: action.selectedClient,
       }
-    case CLIENT_NOTE_SUCCESS:
     case COURT_CASE_CREATE_SUCCESS:
     case COURT_CASE_UPDATE_SUCCESS:
     case COURT_CASE_DELETE_SUCCESS:

@@ -8,6 +8,7 @@ import {
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
+  getComments,
   getNumber,
   getString,
   GridFormWrapper,
@@ -77,7 +78,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="Judge--Comments"
       value={selectedJudge.comments}
-      onChange={(e) => handleJudgeFormOnChange('comments', e.target.value, selectedJudge, setSelectedJudge, getString)}
+      onChange={(e) =>
+        handleJudgeFormOnChange('comments', e.target.value, selectedJudge, setSelectedJudge, getComments)
+      }
     />
   )
 

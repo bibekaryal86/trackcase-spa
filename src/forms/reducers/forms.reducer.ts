@@ -1,7 +1,6 @@
 import {
   FORM_CREATE_SUCCESS,
   FORM_DELETE_SUCCESS,
-  FORM_NOTE_SUCCESS,
   FORM_UPDATE_SUCCESS,
   FORMS_RETRIEVE_REQUEST,
   FORMS_RETRIEVE_SUCCESS,
@@ -41,12 +40,6 @@ export default function forms(state = DefaultFormState, action: FormsAction): Fo
         ...state,
         isForceFetch: false,
         selectedForm: action.selectedForm,
-      }
-    case FORM_NOTE_SUCCESS:
-      return {
-        ...state,
-        isForceFetch: true,
-        selectedForm: DefaultFormSchema,
       }
     case FORMS_UNMOUNT:
       return {

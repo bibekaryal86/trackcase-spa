@@ -60,8 +60,8 @@ const Header = (props: HeaderProps) => {
 
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
   return (
-    <div id="app-header-id">
-      <AppBar position="sticky" open={props.isOpenDrawer} sx={{ boxShadow: 'none' }}>
+    <div id="app-header-id" style={{ marginBottom: '4rem' }}>
+      <AppBar position="fixed" open={props.isOpenDrawer} sx={{ boxShadow: 'none' }}>
         <Toolbar
           sx={{
             pr: '24px', // keep right padding when drawer closed

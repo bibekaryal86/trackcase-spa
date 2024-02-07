@@ -1,4 +1,4 @@
-import { AddressBaseSchema, BaseModelSchema, NoteBaseSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { AddressBaseSchema, BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { JudgeSchema } from '../../judges'
 
 export interface CourtSchema extends AddressBaseSchema, StatusBaseSchema, BaseModelSchema {
@@ -6,19 +6,12 @@ export interface CourtSchema extends AddressBaseSchema, StatusBaseSchema, BaseMo
   dhsAddress?: string
   // orm_mode
   judges?: JudgeSchema[]
-  // notes and history
-  noteCourts?: NoteCourtSchema[]
+  // history
   historyCourts?: HistoryCourtSchema[]
 }
 
 export interface CourtResponse extends ResponseBase {
   courts: CourtSchema[]
-}
-
-export interface NoteCourtSchema extends NoteBaseSchema, BaseModelSchema {
-  courtId: number
-  // orm mode
-  court?: CourtSchema
 }
 
 export interface HistoryCourtSchema extends AddressBaseSchema, BaseModelSchema {

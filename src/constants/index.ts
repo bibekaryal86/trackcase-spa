@@ -1,6 +1,12 @@
+// NOT RECOMMENDED HARD CODED IDS:
+// ids are 1 because inserted during migration
+export const DUE_AT_HEARING_ID = 1
+
 export const REGEX_LOGIN_INPUT_PATTERN = /^[A-Za-z0-9]+$/
 export const REGEX_DATE_FORMAT = new RegExp('[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}')
 export const REGEX_CURRENCY_FORMAT = new RegExp('^\\$|\\-\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{1,2})?$')
+
+export const DATE_FORMAT = 'YYYY-MM-DD'
 
 export const DRAWER_WIDTH: number = 240
 
@@ -46,17 +52,10 @@ export const CREATE_SUCCESS = (what: string) => `Add ${what} Success!`
 export const UPDATE_SUCCESS = (what: string) => `Edit ${what} Success!`
 export const DELETE_SUCCESS = (what: string) => `Delete ${what} Success!`
 
-// NOTE OBJECT TYPES
-export const NOTE_OBJECT_TYPES = Object.freeze({
-  COURT: 'court',
-  JUDGE: 'judge',
-  CLIENT: 'client',
-  COURT_CASE: 'court_case',
-  HEARING_CALENDAR: 'hearing_calendar',
-  TASK_CALENDAR: 'task_calendar',
-  FORM: 'form',
-  CASE_COLLECTION: 'case_collection',
-  CASH_COLLECTION: 'cash_collection',
+// CALENDAR TYPES
+export const CALENDAR_OBJECT_TYPES = Object.freeze({
+  HEARING: 'HEARING_CALENDAR',
+  TASK: 'TASK_CALENDAR',
 })
 
 // STATES

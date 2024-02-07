@@ -7,6 +7,7 @@ import {
   FormSelectStateField,
   FormSelectStatusField,
   FormTextField,
+  getComments,
   getString,
   GridFormWrapper,
 } from '../../app'
@@ -112,7 +113,9 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="Court--Comments"
       value={selectedCourt.comments}
-      onChange={(e) => handleCourtFormOnChange('comments', e.target.value, selectedCourt, setSelectedCourt, getString)}
+      onChange={(e) =>
+        handleCourtFormOnChange('comments', e.target.value, selectedCourt, setSelectedCourt, getComments)
+      }
     />
   )
 

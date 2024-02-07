@@ -18,18 +18,10 @@ import {
   CourtCaseSchema,
   CourtCasesState,
   HistoryCourtCaseSchema,
-  NoteCourtCaseSchema,
 } from './types/courtCases.data.types'
 
 export { getCourtCase, getCourtCases, getOneCourtCase }
 export { CourtCase, CourtCases }
 export { courtCases }
 export { COURT_CASE_CREATE_SUCCESS, COURT_CASE_UPDATE_SUCCESS, COURT_CASE_DELETE_SUCCESS }
-export type {
-  CourtCaseResponse,
-  CourtCasesAction,
-  CourtCaseSchema,
-  CourtCasesState,
-  HistoryCourtCaseSchema,
-  NoteCourtCaseSchema,
-}
+export type { CourtCaseResponse, CourtCasesAction, CourtCaseSchema, CourtCasesState, HistoryCourtCaseSchema }

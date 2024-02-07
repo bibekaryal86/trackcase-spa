@@ -2,7 +2,6 @@ import { JUDGE_CREATE_SUCCESS, JUDGE_DELETE_SUCCESS, JUDGE_UPDATE_SUCCESS } from
 import {
   COURT_CREATE_SUCCESS,
   COURT_DELETE_SUCCESS,
-  COURT_NOTE_SUCCESS,
   COURT_UPDATE_SUCCESS,
   COURTS_RETRIEVE_REQUEST,
   COURTS_RETRIEVE_SUCCESS,
@@ -43,7 +42,6 @@ export default function courts(state = DefaultCourtState, action: CourtsAction):
         isForceFetch: false,
         selectedCourt: action.selectedCourt,
       }
-    case COURT_NOTE_SUCCESS:
     case JUDGE_CREATE_SUCCESS:
     case JUDGE_UPDATE_SUCCESS:
     case JUDGE_DELETE_SUCCESS:
