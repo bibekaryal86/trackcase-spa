@@ -363,6 +363,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       formsList={formsList}
       selectedForm={!(formId && selectedForm) ? undefined : selectedForm}
       taskTypesList={taskTypesList}
+      hearingCalendarsList={hearingCalendarsList}
     />
   )
 

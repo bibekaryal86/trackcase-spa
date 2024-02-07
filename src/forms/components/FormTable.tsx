@@ -36,8 +36,12 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
         label: 'Form',
       },
       {
-        id: 'clientCase',
-        label: 'Client Case',
+        id: 'client',
+        label: 'Client',
+      },
+      {
+        id: 'case',
+        label: 'Case',
       },
       {
         id: 'submit',
@@ -112,15 +116,28 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     return <Link text={formType?.name} navigateToPage={`/form/${x.id}`} />
   }
 
-  const linkToCourtCase = (x: FormSchema) => {
+  const linkToClient = (x: FormSchema) => {
     if (selectedCourtCase) {
-      return `${selectedCourtCase?.client?.name}, ${selectedCourtCase?.caseType?.name}`
+      return selectedCourtCase?.client?.name
     }
     const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
     return (
       <Link
-        text={`${courtCase?.client?.name}, ${courtCase?.caseType?.name}`}
-        navigateToPage={`/court_case/${x.id}?backTo=${window.location.pathname}&prevPage=Forms`}
+        text={courtCase?.client?.name}
+        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=Forms`}
+      />
+    )
+  }
+
+  const linkToCourtCase = (x: FormSchema) => {
+    if (selectedCourtCase) {
+      return selectedCourtCase?.caseType?.name
+    }
+    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+    return (
+      <Link
+        text={courtCase?.caseType?.name}
+        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Forms`}
       />
     )
   }
@@ -128,7 +145,8 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
   const formsTableDataCommon = (x: FormSchema) => {
     return {
       type: linkToForm(x),
-      clientCase: linkToCourtCase(x),
+      client: linkToClient(x),
+      case: linkToCourtCase(x),
       submit: convertDateToLocaleString(x.submitDate),
       receipt: convertDateToLocaleString(x.receiptDate),
       receiptNumber: x.receiptNumber,
