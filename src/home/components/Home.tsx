@@ -25,6 +25,12 @@ const Home = (props: HomeProps): React.ReactElement => {
     // Provide an empty dependency array to run the effect only on mount
   }, [getAllRefTypes])
 
+    useEffect(() => {
+    return () => {
+      isForceFetch.current = true
+    }
+  }, [])
+
   const homePageText = () => (
     <>
       <h5>This is the Home Page!</h5>

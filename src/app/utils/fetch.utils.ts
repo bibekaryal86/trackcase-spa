@@ -173,8 +173,8 @@ export const Async = {
       } else {
         const clonedResponse = response.clone()
         const responseBody = await clonedResponse.text()
-        if (responseBody.includes('too many connections for role') && retryCount <= 3) {
-          console.log('Retrying in 3 seconds due to TOO MANY CONNECTIONS ERROR... Attempt: ', retryCount)
+        if ((responseBody.includes('too many connections for role') || responseBody.includes('server closed the connection unexpectedly')) && retryCount <= 3) {
+          console.log('Retrying in 3 seconds due to CONNECTIONS... Attempt: ', retryCount)
           await new Promise((resolve) => setTimeout(resolve, 3000))
           return Async.fetch(url, requestInit, retryCount + 1)
         } else {
