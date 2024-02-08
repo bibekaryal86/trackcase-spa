@@ -26,13 +26,9 @@ export interface SessionStorageItem {
   expiry: number
 }
 
-interface SpinRequests {
-  [key: string]: number
-}
-
 export interface SpinnerState {
   isLoading: boolean
-  spinRequests: SpinRequests
+  requestCount: number
 }
 
 export interface SpinnerAction {
