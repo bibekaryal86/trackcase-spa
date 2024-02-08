@@ -96,9 +96,11 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
   const linkToJudge = (x?: JudgeSchema) =>
     selectedJudge ? (
       selectedJudge.name
-    ) : (
+    ) : x ?
+
+      (
       <Link text={x?.name} navigateToPage={`/judge/${x?.id}?backTo=${window.location.pathname}&prevPage=Clients`} />
-    )
+    ) : ''
 
   const linkToClient = (x: ClientSchema) => <Link text={x.name} navigateToPage={`/client/${x.id}`} />
 
