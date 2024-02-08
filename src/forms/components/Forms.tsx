@@ -20,7 +20,7 @@ import {
   ID_DEFAULT,
 } from '../../constants'
 import { FormTypeSchema } from '../../types'
-import { getFormTypes } from '../../types/actions/formTypes'
+import { getFormTypes } from '../../types/actions/formTypes.action'
 import { addForm, deleteForm, editForm, getForms } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'

@@ -11,7 +11,7 @@ import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPag
 import { Calendars } from '../../calendars'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { FormTypeSchema } from '../../types'
-import { getFormTypes } from '../../types/actions/formTypes'
+import { getFormTypes } from '../../types/actions/formTypes.action'
 import { editForm, getForm } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
