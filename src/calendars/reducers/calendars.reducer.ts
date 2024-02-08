@@ -36,7 +36,6 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
   if (matchesSuccessHc || matchesSuccessTc) {
     return {
       ...state,
-      isForceFetch: true,
       isCloseModal: true,
       hearingCalendars: [],
       taskCalendars: [],
@@ -49,34 +48,29 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
     case HEARING_CALENDARS_RETRIEVE_SUCCESS:
       return {
         ...state,
-        isForceFetch: false,
         isCloseModal: true,
         hearingCalendars: action.hearingCalendars,
       }
     case TASK_CALENDARS_RETRIEVE_SUCCESS:
       return {
         ...state,
-        isForceFetch: false,
         isCloseModal: true,
         taskCalendars: action.taskCalendars,
       }
     case SET_SELECTED_HEARING_CALENDAR:
       return {
         ...state,
-        isForceFetch: false,
         selectedHearingCalendar: action.selectedHearingCalendar,
       }
     case SET_SELECTED_TASK_CALENDAR:
       return {
         ...state,
-        isForceFetch: false,
         selectedTaskCalendar: action.selectedTaskCalendar,
       }
     case TASK_CALENDARS_UNMOUNT:
     case HEARING_CALENDARS_UNMOUNT:
       return {
         ...state,
-        isForceFetch: true,
         selectedHearingCalendar: DefaultHearingCalendarSchema,
         selectedTaskCalendar: DefaultTaskCalendarSchema,
       }

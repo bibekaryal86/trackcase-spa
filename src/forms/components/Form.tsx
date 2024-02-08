@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -19,7 +19,6 @@ import { isAreTwoFormsSame } from '../utils/forms.utils'
 
 const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
   return {
-    isForceFetch: forms.isForceFetch,
     selectedForm: forms.selectedForm,
     statusList: statuses.statuses,
     formTypesList: formTypes.formTypes,
@@ -37,7 +36,6 @@ const mapDispatchToProps = {
 }
 
 interface FormProps {
-  isForceFetch: boolean
   selectedForm: FormSchema
   getForm: (formId: number) => void
   editForm: (id: number, form: FormSchema) => void
@@ -51,9 +49,11 @@ interface FormProps {
 }
 
 const Form = (props: FormProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
-  const { isForceFetch } = props
   const { getForm, editForm } = props
   const { statusList, getStatusesList } = props
   const { unmountPage } = props
@@ -64,21 +64,17 @@ const Form = (props: FormProps): React.ReactElement => {
   const [formStatusList, setFormStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (id) {
-      getForm(getNumber(id))
-    }
-    // add selectedForm.id to dependency array for note/history
-  }, [id, getForm, selectedForm.id])
-
-  useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
+      id && getForm(getNumber(id))
       statusList.form.all.length === 0 && getStatusesList()
       formTypesList.length === 0 && getFormTypesList()
       courtCasesList.length === 0 && getCourtCasesList()
     }
+    isForceFetch.current = false
   }, [
-    isForceFetch,
-    statusList.form.all,
+    id,
+    getForm,
+    statusList.form.all.length,
     getStatusesList,
     formTypesList.length,
     getFormTypesList,
@@ -99,6 +95,7 @@ const Form = (props: FormProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])

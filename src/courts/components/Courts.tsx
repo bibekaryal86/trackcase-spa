@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
 import CourtForm from './CourtForm'
@@ -25,7 +25,6 @@ import { isAreTwoCourtsSame } from '../utils/courts.utils'
 
 const mapStateToProps = ({ courts, statuses }: GlobalState) => {
   return {
-    isForceFetch: courts.isForceFetch,
     isCloseModal: courts.isCloseModal,
     courtsList: courts.courts,
     statusList: statuses.statuses,
@@ -42,7 +41,6 @@ const mapDispatchToProps = {
 }
 
 interface CourtsProps {
-  isForceFetch: boolean
   isCloseModal: boolean
   courtsList: CourtSchema[]
   getCourts: () => void
@@ -55,9 +53,12 @@ interface CourtsProps {
 }
 
 const Courts = (props: CourtsProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { courtsList, getCourts, addCourt, editCourt, deleteCourt } = props
   const { unmountPage } = props
-  const { isCloseModal, isForceFetch } = props
+  const { isCloseModal } = props
   const { statusList, getStatusesList } = props
 
   const [modal, setModal] = useState<string>('')
@@ -67,11 +68,12 @@ const Courts = (props: CourtsProps): React.ReactElement => {
   const [courtStatusList, setCourtStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
       courtsList.length === 0 && getCourts()
       statusList.court.all.length === 0 && getStatusesList()
     }
-  }, [isForceFetch, courtsList.length, getCourts, statusList.court.all, getStatusesList])
+    isForceFetch.current = false
+  }, [courtsList.length, getCourts, statusList.court.all, getStatusesList])
 
   useEffect(() => {
     if (statusList.court.all.length > 0) {
@@ -87,11 +89,13 @@ const Courts = (props: CourtsProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])
 
   const primaryButtonCallback = (action: string, id?: number) => {
+    isForceFetch.current = true
     if (id && action === ACTION_DELETE) {
       deleteCourt(id)
     } else if (id && action === ACTION_UPDATE) {

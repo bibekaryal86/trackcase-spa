@@ -23,7 +23,6 @@ export default function clients(state = DefaultClientState, action: ClientsActio
     case CLIENTS_RETRIEVE_SUCCESS:
       return {
         ...state,
-        isForceFetch: false,
         isCloseModal: true,
         clients: action.clients,
       }
@@ -31,7 +30,6 @@ export default function clients(state = DefaultClientState, action: ClientsActio
     case CLIENT_UPDATE_SUCCESS:
     case CLIENT_DELETE_SUCCESS:
       return {
-        isForceFetch: true,
         isCloseModal: true,
         clients: [],
         selectedClient: DefaultClientSchema,
@@ -39,7 +37,6 @@ export default function clients(state = DefaultClientState, action: ClientsActio
     case SET_SELECTED_CLIENT:
       return {
         ...state,
-        isForceFetch: false,
         selectedClient: action.selectedClient,
       }
     case COURT_CASE_CREATE_SUCCESS:
@@ -47,13 +44,11 @@ export default function clients(state = DefaultClientState, action: ClientsActio
     case COURT_CASE_DELETE_SUCCESS:
       return {
         ...state,
-        isForceFetch: true,
         selectedClient: DefaultClientSchema,
       }
     case CLIENTS_UNMOUNT:
       return {
         ...state,
-        isForceFetch: true,
         selectedClient: DefaultClientSchema,
       }
     default:

@@ -72,7 +72,6 @@ export interface HistoryTaskCalendarSchema extends BaseModelSchema {
 }
 
 export interface CalendarsState {
-  isForceFetch: boolean
   isCloseModal: boolean
   hearingCalendars: HearingCalendarSchema[]
   taskCalendars: TaskCalendarSchema[]
@@ -108,7 +107,6 @@ export const DefaultTaskCalendarSchema: TaskCalendarSchema = {
 }
 
 export const DefaultCalendarsState: CalendarsState = {
-  isForceFetch: true,
   isCloseModal: true,
   hearingCalendars: [],
   taskCalendars: [],

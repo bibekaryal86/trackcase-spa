@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
 import CalendarForm from './CalendarForm'
@@ -32,7 +32,6 @@ import { isAreTwoCalendarsSame, isHearingCalendar } from '../utils/calendars.uti
 
 const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms, clients }: GlobalState) => {
   return {
-    isForceFetch: calendars.isForceFetch,
     isCloseModal: calendars.isCloseModal,
     hearingCalendarsList: calendars.hearingCalendars,
     taskCalendarsList: calendars.taskCalendars,
@@ -70,7 +69,6 @@ const mapDispatchToProps = {
 }
 
 interface CalendarsProps {
-  isForceFetch: boolean
   isCloseModal: boolean
   hearingCalendarsList: HearingCalendarSchema[]
   getHearingCalendars: () => void
@@ -104,6 +102,9 @@ interface CalendarsProps {
 }
 
 const Calendars = (props: CalendarsProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const {
     hearingCalendarsList,
     taskCalendarsList,
@@ -117,7 +118,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     deleteTaskCalendar,
   } = props
   const { unmountPage } = props
-  const { isCloseModal, isForceFetch } = props
+  const { isCloseModal } = props
   const { statusList, getStatusesList } = props
   const { hearingTypesList, getHearingTypesList, taskTypesList, getTaskTypesList } = props
   const { courtCasesList, getCourtCasesList, formsList, getFormsList, clientsList, getClientsList } = props
@@ -136,34 +137,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const [calendarStatusList, setCalendarStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (courtCaseId) {
-      setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
-      if (!selectedCourtCase) {
-        getCourtCase(getNumber(courtCaseId))
-      }
-    }
-  }, [courtCaseId, getCourtCase, selectedCourtCase])
-
-  useEffect(() => {
-    if (courtCaseId) {
-      setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
-      if (!selectedCourtCase) {
-        getCourtCase(getNumber(courtCaseId))
-      }
-    }
-  }, [courtCaseId, getCourtCase, selectedCourtCase])
-
-  useEffect(() => {
-    if (formId) {
-      setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
-      if (!selectedForm) {
-        getForm(getNumber(formId))
-      }
-    }
-  }, [formId, getForm, selectedForm])
-
-  useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
       hearingCalendarsList.length === 0 && getHearingCalendars()
       taskCalendarsList.length === 0 && getTaskCalendars()
       statusList.calendars.all.length === 0 && getStatusesList()
@@ -172,9 +146,23 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       courtCasesList.length === 0 && getCourtCasesList()
       formsList.length === 0 && getFormsList()
       clientsList.length === 0 && getClientsList()
+
+      if (courtCaseId) {
+        setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
+        if (!selectedCourtCase) {
+          getCourtCase(getNumber(courtCaseId))
+        }
+      }
+
+      if (formId) {
+        setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
+        if (!selectedForm) {
+          getForm(getNumber(formId))
+        }
+      }
     }
+    isForceFetch.current = false
   }, [
-    isForceFetch,
     hearingCalendarsList.length,
     getHearingCalendars,
     taskCalendarsList.length,
@@ -191,6 +179,12 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     getFormsList,
     clientsList.length,
     getClientsList,
+    courtCaseId,
+    formId,
+    selectedCourtCase,
+    getCourtCase,
+    selectedForm,
+    getForm,
   ])
 
   useEffect(() => {
@@ -207,11 +201,13 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])
 
   const primaryButtonCallback = (action: string, type: string, id?: number) => {
+    isForceFetch.current = true
     if (id && action === ACTION_DELETE) {
       type === CALENDAR_OBJECT_TYPES.HEARING && deleteHearingCalendar(id)
       type === CALENDAR_OBJECT_TYPES.TASK && deleteTaskCalendar(id)

@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
 import JudgeForm from './JudgeForm'
@@ -26,7 +26,6 @@ import { isAreTwoJudgesSame } from '../utils/judges.utils'
 
 const mapStateToProps = ({ judges, statuses, courts }: GlobalState) => {
   return {
-    isForceFetch: judges.isForceFetch,
     isCloseModal: judges.isCloseModal,
     judgesList: judges.judges,
     statusList: statuses.statuses,
@@ -47,7 +46,6 @@ const mapDispatchToProps = {
 }
 
 interface JudgesProps {
-  isForceFetch: boolean
   isCloseModal: boolean
   judgesList: JudgeSchema[]
   getJudges: () => void
@@ -65,9 +63,12 @@ interface JudgesProps {
 }
 
 const Judges = (props: JudgesProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { judgesList, courtsList, getJudges, addJudge, editJudge, deleteJudge, getCourts } = props
   const { unmountPage } = props
-  const { isCloseModal, isForceFetch } = props
+  const { isCloseModal } = props
   const { statusList, getStatusesList } = props
   const { courtId, selectedCourt, getCourt } = props
 
@@ -78,19 +79,29 @@ const Judges = (props: JudgesProps): React.ReactElement => {
   const [judgeStatusList, setJudgeStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
       judgesList.length === 0 && getJudges()
       courtsList.length === 0 && getCourts()
-      statusList.court_case.all.length === 0 && getStatusesList()
+      statusList.judge.all.length === 0 && getStatusesList()
+
+      if (courtId) {
+        setSelectedJudge({ ...DefaultJudgeSchema, courtId: getNumber(courtId) })
+        if (!selectedCourt) {
+          getCourt(getNumber(courtId))
+        }
+      }
     }
+    isForceFetch.current = false
   }, [
-    isForceFetch,
     judgesList.length,
     getJudges,
-    statusList.court_case.all,
+    statusList.judge.all,
     getStatusesList,
     courtsList.length,
     getCourts,
+    courtId,
+    selectedCourt,
+    getCourt,
   ])
 
   useEffect(() => {
@@ -98,15 +109,6 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       setJudgeStatusList(statusList.judge.all)
     }
   }, [statusList.judge.all])
-
-  useEffect(() => {
-    if (courtId) {
-      setSelectedJudge({ ...DefaultJudgeSchema, courtId: getNumber(courtId) })
-      if (!selectedCourt) {
-        getCourt(getNumber(courtId))
-      }
-    }
-  }, [courtId, selectedCourt, getCourt])
 
   useEffect(() => {
     if (isCloseModal) {
@@ -119,11 +121,13 @@ const Judges = (props: JudgesProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])
 
   const primaryButtonCallback = (action: string, id?: number) => {
+    isForceFetch.current = true
     if (id && action === ACTION_DELETE) {
       deleteJudge(id)
     } else if (id && action === ACTION_UPDATE) {

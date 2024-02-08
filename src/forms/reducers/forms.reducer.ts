@@ -22,7 +22,6 @@ export default function forms(state = DefaultFormState, action: FormsAction): Fo
     case FORMS_RETRIEVE_SUCCESS:
       return {
         ...state,
-        isForceFetch: false,
         isCloseModal: true,
         forms: action.forms,
       }
@@ -30,7 +29,6 @@ export default function forms(state = DefaultFormState, action: FormsAction): Fo
     case FORM_UPDATE_SUCCESS:
     case FORM_DELETE_SUCCESS:
       return {
-        isForceFetch: true,
         isCloseModal: true,
         forms: [],
         selectedForm: DefaultFormSchema,
@@ -38,13 +36,11 @@ export default function forms(state = DefaultFormState, action: FormsAction): Fo
     case SET_SELECTED_FORM:
       return {
         ...state,
-        isForceFetch: false,
         selectedForm: action.selectedForm,
       }
     case FORMS_UNMOUNT:
       return {
         ...state,
-        isForceFetch: true,
         selectedForm: DefaultFormSchema,
       }
     default:

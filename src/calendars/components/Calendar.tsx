@@ -15,7 +15,6 @@ import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.da
 
 const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms }: GlobalState) => {
   return {
-    isForceFetch: calendars.isForceFetch,
     selectedHearingCalendar: calendars.selectedHearingCalendar,
     selectedTaskCalendar: calendars.selectedTaskCalendar,
     statusList: statuses.statuses,
@@ -42,7 +41,6 @@ const mapDispatchToProps = {
 }
 
 interface CalendarProps {
-  isForceFetch: boolean
   selectedHearingCalendar: HearingCalendarSchema
   selectedTaskCalendar: TaskCalendarSchema
   getHearingCalendar: (calendarId: number) => void

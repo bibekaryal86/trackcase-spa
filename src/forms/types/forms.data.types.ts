@@ -50,7 +50,6 @@ export interface HistoryFormSchema extends BaseModelSchema {
 }
 
 export interface FormsState {
-  isForceFetch: boolean
   isCloseModal: boolean
   forms: FormSchema[]
   selectedForm: FormSchema
@@ -75,7 +74,6 @@ export const DefaultFormSchema: FormSchema = {
 }
 
 export const DefaultFormState: FormsState = {
-  isForceFetch: true,
   isCloseModal: true,
   forms: [],
   selectedForm: DefaultFormSchema,

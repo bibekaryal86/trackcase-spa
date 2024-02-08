@@ -71,10 +71,10 @@ export const getAllRefTypes = () => {
         if (allRefTypes.statuses) {
           dispatch(allRefTypesSuccess(STATUSES_RETRIEVE_SUCCESS, 'statuses', allRefTypes.statuses))
         }
-        if (allRefTypes.case_types.length) {
+        if (allRefTypes.case_types?.length) {
           dispatch(allRefTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, 'caseTypes', allRefTypes.case_types))
         }
-        if (allRefTypes.collection_methods.length) {
+        if (allRefTypes.collection_methods?.length) {
           dispatch(
             allRefTypesSuccess(
               COLLECTION_METHODS_RETRIEVE_SUCCESS,
@@ -83,13 +83,13 @@ export const getAllRefTypes = () => {
             ),
           )
         }
-        if (allRefTypes.form_types.length) {
+        if (allRefTypes.form_types?.length) {
           dispatch(allRefTypesSuccess(FORM_TYPES_RETRIEVE_SUCCESS, 'formTypes', allRefTypes.form_types))
         }
-        if (allRefTypes.hearing_types.length) {
+        if (allRefTypes.hearing_types?.length) {
           dispatch(allRefTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, 'hearingTypes', allRefTypes.hearing_types))
         }
-        if (allRefTypes.task_types.length) {
+        if (allRefTypes.task_types?.length) {
           dispatch(allRefTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, 'taskTypes', allRefTypes.task_types))
         }
       }

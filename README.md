@@ -17,17 +17,18 @@
   * check table sort, some working, some not working
     * likely the element ones not working (?)
   * sticky header appbar is not working
+    * changed it to fixed, but give it another go with sticky header
+  * the issue of not re-rendering after adding first row is probably back
+    * because reverted back to using useRef
+    * eg: in court component, add first court, nothing happens
+    * no issue when adding second row
 
 
 TODO
 * Move statuses in track case service to database
 * Add filing_type in form type
   * filing_type = form, motion, other
-* due date cannot be after hearing date if hearing calendar is selected
-  * if updating task calendar with hearing calendar
-  * display hearing calendar dropdown, but make it not-updatable
 * remove pages for hearing and task calendars
   * upon clicking on calendar date link, open a popup for that date
 * task calendars on hearing calendar popup
-* IF HEARING CALENDAR IS SELECTED, DESELECT AND DISABLE FORM
-  * if hearing calendar is selected, make task type due at hearing and disable
+

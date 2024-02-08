@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 
 import { getAllRefTypes } from '../../app'
@@ -12,10 +12,16 @@ interface HomeProps {
 }
 
 const Home = (props: HomeProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { getAllRefTypes } = props
   useEffect(() => {
     // This code will run when the component mounts (page loads)
-    getAllRefTypes()
+    if (isForceFetch.current) {
+      getAllRefTypes()
+    }
+    isForceFetch.current = false
     // Provide an empty dependency array to run the effect only on mount
   }, [getAllRefTypes])
 

@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
 import ClientForm from './ClientForm'
@@ -26,7 +26,6 @@ import { isAreTwoClientsSame } from '../utils/clients.utils'
 
 const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
   return {
-    isForceFetch: clients.isForceFetch,
     isCloseModal: clients.isCloseModal,
     clientsList: clients.clients,
     statusList: statuses.statuses,
@@ -47,7 +46,6 @@ const mapDispatchToProps = {
 }
 
 interface ClientsProps {
-  isForceFetch: boolean
   isCloseModal: boolean
   clientsList: ClientSchema[]
   getClients: () => void
@@ -65,9 +63,12 @@ interface ClientsProps {
 }
 
 const Clients = (props: ClientsProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { clientsList, getClients, addClient, editClient, deleteClient, judgesList, getJudges } = props
   const { unmountPage } = props
-  const { isCloseModal, isForceFetch } = props
+  const { isCloseModal } = props
   const { statusList, getStatusesList } = props
   const { judgeId, selectedJudge, getJudge } = props
 
@@ -78,19 +79,29 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const [clientStatusList, setClientStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
       clientsList.length === 0 && getClients()
       judgesList.length === 0 && getJudges()
       statusList.court_case.all.length === 0 && getStatusesList()
+
+      if (judgeId) {
+        setSelectedClient({ ...DefaultClientSchema, judgeId: getNumber(judgeId) })
+        if (!selectedJudge) {
+          getJudge(getNumber(judgeId))
+        }
+      }
     }
+    isForceFetch.current = false
   }, [
-    isForceFetch,
     clientsList.length,
     getClients,
     statusList.court_case.all,
     getStatusesList,
     judgesList.length,
     getJudges,
+    judgeId,
+    selectedJudge,
+    getJudge,
   ])
 
   useEffect(() => {
@@ -100,15 +111,6 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   }, [statusList.client.all])
 
   useEffect(() => {
-    if (judgeId) {
-      setSelectedClient({ ...DefaultClientSchema, judgeId: getNumber(judgeId) })
-      if (!selectedJudge) {
-        getJudge(getNumber(judgeId))
-      }
-    }
-  }, [judgeId, selectedJudge, getJudge])
-
-  useEffect(() => {
     if (isCloseModal) {
       secondaryButtonCallback()
     }
@@ -116,11 +118,13 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])
 
   const primaryButtonCallback = (action: string, id?: number) => {
+    isForceFetch.current = true
     if (id && action === ACTION_DELETE) {
       deleteClient(id)
     } else if (id && action === ACTION_UPDATE) {
