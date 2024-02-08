@@ -16,6 +16,12 @@ const RbcToolbar = styled(Box)`
   }
 `
 
+const RbcButton = styled(Button)`
+  && {
+    font-size: 1.5rem;
+  }
+`
+
 const Toolbar = (props: ToolbarProps) => {
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
   // const goToDayView = () => props.onView('day')
@@ -27,16 +33,21 @@ const Toolbar = (props: ToolbarProps) => {
 
   return (
     <RbcToolbar className="rbc-toolbar">
-      <Box className="rbc-toolbar-flex-box" display="flex" flexDirection={isSmallScreen ? 'column' : 'row'}>
+      <Box
+        className="rbc-toolbar-flex-box"
+        display="flex"
+        flexDirection={isSmallScreen ? 'column' : 'row'}
+        alignItems="center"
+      >
         <Box className="rbc-btn-group">
           <Button className="rbc-btn" id="rbc-btn-previous" onClick={goToBack}>
             Previous
           </Button>
         </Box>
         <Box sx={{ justifyContent: 'center' }} className="rbc-toolbar-label rbc-date">
-          <Button className="rbc-btn" id="rbc-btn-label" onClick={goToToday}>
+          <RbcButton className="rbc-btn" id="rbc-btn-label" onClick={goToToday}>
             {props.label}
-          </Button>
+          </RbcButton>
         </Box>
         <Box className="rbc-btn-group">
           <Button className="rbc-btn" id="rbc-btn-next" onClick={goToNext}>

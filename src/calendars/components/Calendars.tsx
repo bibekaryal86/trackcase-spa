@@ -142,30 +142,26 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   useEffect(() => {
     if (isForceFetch.current) {
-      // TODO REMOVE THIS TEMP
-      const abcd = false
-      if (abcd) {
-        hearingCalendarsList.length === 0 && getHearingCalendars()
-        taskCalendarsList.length === 0 && getTaskCalendars()
-        statusList.calendars.all.length === 0 && getStatusesList()
-        hearingTypesList.length === 0 && getHearingTypesList()
-        taskTypesList.length === 0 && getTaskTypesList()
-        courtCasesList.length === 0 && getCourtCasesList()
-        formsList.length === 0 && getFormsList()
-        clientsList.length === 0 && getClientsList()
+      hearingCalendarsList.length === 0 && getHearingCalendars()
+      taskCalendarsList.length === 0 && getTaskCalendars()
+      statusList.calendars.all.length === 0 && getStatusesList()
+      hearingTypesList.length === 0 && getHearingTypesList()
+      taskTypesList.length === 0 && getTaskTypesList()
+      courtCasesList.length === 0 && getCourtCasesList()
+      formsList.length === 0 && getFormsList()
+      clientsList.length === 0 && getClientsList()
 
-        if (courtCaseId) {
-          setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
-          if (!selectedCourtCase) {
-            getCourtCase(getNumber(courtCaseId))
-          }
+      if (courtCaseId) {
+        setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
+        if (!selectedCourtCase) {
+          getCourtCase(getNumber(courtCaseId))
         }
+      }
 
-        if (formId) {
-          setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
-          if (!selectedForm) {
-            getForm(getNumber(formId))
-          }
+      if (formId) {
+        setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
+        if (!selectedForm) {
+          getForm(getNumber(formId))
         }
       }
     }
