@@ -1,12 +1,20 @@
 import { useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { styled } from '@mui/material/styles'
 import dayjs from 'dayjs'
 import React from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Calendar, dayjsLocalizer, Navigate, ToolbarProps } from 'react-big-calendar'
 
 const localizer = dayjsLocalizer(dayjs)
+
+const RbcToolbar = styled(Box)`
+  button {
+    font-size: 1rem;
+    color: ${({ theme }) => theme.palette.primary.main};
+  }
+`
 
 const Toolbar = (props: ToolbarProps) => {
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
@@ -18,7 +26,7 @@ const Toolbar = (props: ToolbarProps) => {
   const goToToday = () => props.onNavigate(Navigate.TODAY)
 
   return (
-    <Box className="rbc-toolbar">
+    <RbcToolbar className="rbc-toolbar">
       <Box className="rbc-toolbar-flex-box" display="flex" flexDirection={isSmallScreen ? 'column' : 'row'}>
         <Box className="rbc-btn-group">
           <Button className="rbc-btn" id="rbc-btn-previous" onClick={goToBack}>
@@ -26,7 +34,7 @@ const Toolbar = (props: ToolbarProps) => {
           </Button>
         </Box>
         <Box sx={{ justifyContent: 'center' }} className="rbc-toolbar-label rbc-date">
-          <Button className="rbc-btn" id="rbc-btn-week" onClick={goToToday}>
+          <Button className="rbc-btn" id="rbc-btn-label" onClick={goToToday}>
             {props.label}
           </Button>
         </Box>
@@ -47,7 +55,7 @@ const Toolbar = (props: ToolbarProps) => {
         {/*  </Button>*/}
         {/*</Box>*/}
       </Box>
-    </Box>
+    </RbcToolbar>
   )
 }
 
