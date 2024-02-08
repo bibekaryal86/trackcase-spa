@@ -3,7 +3,7 @@ import { SpinnerAction, SpinnerState } from '../types/app.data.types'
 
 const initialState: SpinnerState = {
   isLoading: false,
-  spinRequests: new Set<string>(),
+  spinRequests: {},
 }
 
 export default function spinner(state = initialState, action: SpinnerAction): SpinnerState {
@@ -26,9 +26,11 @@ export default function spinner(state = initialState, action: SpinnerAction): Sp
   }
 
   if (matchesRequest) {
-    const requestModule: string = type.split('_')[0]
-    const spinRequests = new Set(state.spinRequests)
-    spinRequests.add(requestModule)
+    const requestModule = type.split('_')[0]
+    const spinRequests = { ...state.spinRequests }
+    const count = spinRequests[requestModule] || 0
+    spinRequests[requestModule] = count + 2
+    // add by 2 to account for success/failure and complete in matchesResponse
     return {
       isLoading: true,
       spinRequests: spinRequests,
@@ -36,12 +38,17 @@ export default function spinner(state = initialState, action: SpinnerAction): Sp
   }
 
   if (matchesResponse) {
-    const responseModule: string = type.split('_')[0]
-    const spinRequests = new Set(state.spinRequests)
-    spinRequests.delete(responseModule)
+    const responseModule = type.split('_')[0]
+    const spinRequests = { ...state.spinRequests }
+    const count = spinRequests[responseModule] || 0
+    if (count <= 1) {
+      delete spinRequests[responseModule]
+    } else {
+      spinRequests[responseModule] = count - 1
+    }
 
     return {
-      isLoading: spinRequests.size > 0,
+      isLoading: Object.keys(spinRequests).length > 0,
       spinRequests: spinRequests,
     }
   }
