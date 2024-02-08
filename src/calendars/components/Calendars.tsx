@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import React, { useEffect, useRef, useState } from 'react'
@@ -6,6 +7,7 @@ import { connect } from 'react-redux'
 
 import CalendarForm from './CalendarForm'
 import CalendarTable from './CalendarTable'
+import CalendarViewSelector from './CalendarViewSelector'
 import { getDayjsString, getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import { CourtCaseSchema, getCourtCase, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
@@ -125,6 +127,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const { courtCaseId, selectedCourtCase, getCourtCase } = props
   const { formId, selectedForm, getForm } = props
 
+  const [isShowListView, setIsShowListView] = useState<boolean>(false)
   const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedType, setSelectedType] = useState<string>('')
@@ -324,9 +327,13 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       : null
 
   const calendarsPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary" gutterBottom>
-      Calendars
-    </Typography>
+    <Grid container alignItems="center" columnGap={2}>
+      <Typography component="h1" variant="h6" color="primary" gutterBottom>
+        Calendars
+      </Typography>
+      <Divider orientation="vertical" flexItem />
+      <CalendarViewSelector setIsShowListView={setIsShowListView} />
+    </Grid>
   )
 
   const hearingCalendarsTable = () => (
@@ -364,6 +371,26 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     />
   )
 
+  const calendarsShowCalendarView = () => (
+    <Grid container alignItems="center" columnGap={2}>
+      <Typography component="h1" variant="h6" color="primary" gutterBottom>
+        React Big Calendar Component
+      </Typography>
+      <Divider orientation="vertical" flexItem />
+    </Grid>
+  )
+
+  const calendarsShowListView = () => (
+    <>
+      <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        {hearingCalendarsTable()}
+      </Grid>
+      <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        {taskCalendarsTable()}
+      </Grid>
+    </>
+  )
+
   return courtCaseId ? (
     <>
       {hearingCalendarsTable()}
@@ -380,12 +407,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {calendarsPageTitle()}
         </Grid>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {hearingCalendarsTable()}
-        </Grid>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {taskCalendarsTable()}
-        </Grid>
+        {isShowListView && calendarsShowListView()}
+        {!isShowListView && calendarsShowCalendarView()}
       </Grid>
       {modal && showModal()}
     </Box>
