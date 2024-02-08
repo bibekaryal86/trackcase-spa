@@ -10,9 +10,9 @@ const localizer = dayjsLocalizer(dayjs)
 
 const Toolbar = (props: ToolbarProps) => {
   const isSmallScreen = useMediaQuery('(max-width: 600px)')
-  const goToDayView = () => props.onView('day')
-  const goToWeekView = () => props.onView('week')
-  const goToMonthView = () => props.onView('month')
+  // const goToDayView = () => props.onView('day')
+  // const goToWeekView = () => props.onView('week')
+  // const goToMonthView = () => props.onView('month')
   const goToBack = () => props.onNavigate(Navigate.PREVIOUS)
   const goToNext = () => props.onNavigate(Navigate.NEXT)
   const goToToday = () => props.onNavigate(Navigate.TODAY)
@@ -24,27 +24,28 @@ const Toolbar = (props: ToolbarProps) => {
           <Button className="rbc-btn" id="rbc-btn-previous" onClick={goToBack}>
             Previous
           </Button>
-          <Button className="rbc-btn rbc-today" id="rbc-btn-today" onClick={goToToday}>
-            Today
+        </Box>
+        <Box sx={{ justifyContent: 'center' }} className="rbc-toolbar-label rbc-date">
+          <Button className="rbc-btn" id="rbc-btn-week" onClick={goToToday}>
+            {props.label}
           </Button>
+        </Box>
+        <Box className="rbc-btn-group">
           <Button className="rbc-btn" id="rbc-btn-next" onClick={goToNext}>
             Next
           </Button>
         </Box>
-        <Box sx={{ margin: 1, justifyContent: 'center' }} className="rbc-toolbar-label rbc-date">
-          {props.label}
-        </Box>
-        <Box className="rbc-btn-group">
-          <Button className="rbc-btn" id="rbc-btn-month" onClick={goToMonthView}>
-            Month
-          </Button>
-          <Button className="rbc-btn" id="rbc-btn-week" onClick={goToWeekView}>
-            Week
-          </Button>
-          <Button className="rbc-btn" id="rbc-btn-day" onClick={goToDayView}>
-            Day
-          </Button>
-        </Box>
+        {/*<Box className="rbc-btn-group">*/}
+        {/*  <Button className="rbc-btn" id="rbc-btn-month" onClick={goToMonthView}>*/}
+        {/*    Month*/}
+        {/*  </Button>*/}
+        {/*  <Button className="rbc-btn" id="rbc-btn-week" onClick={goToWeekView}>*/}
+        {/*    Week*/}
+        {/*  </Button>*/}
+        {/*  <Button className="rbc-btn" id="rbc-btn-day" onClick={goToDayView}>*/}
+        {/*    Day*/}
+        {/*  </Button>*/}
+        {/*</Box>*/}
       </Box>
     </Box>
   )
