@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 
 import CalendarForm from './CalendarForm'
 import CalendarTable from './CalendarTable'
+import CalendarView from './CalendarView'
 import CalendarViewSelector from './CalendarViewSelector'
 import { getDayjsString, getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import { CourtCaseSchema, getCourtCase, getCourtCases } from '../../cases'
@@ -141,26 +142,30 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   useEffect(() => {
     if (isForceFetch.current) {
-      hearingCalendarsList.length === 0 && getHearingCalendars()
-      taskCalendarsList.length === 0 && getTaskCalendars()
-      statusList.calendars.all.length === 0 && getStatusesList()
-      hearingTypesList.length === 0 && getHearingTypesList()
-      taskTypesList.length === 0 && getTaskTypesList()
-      courtCasesList.length === 0 && getCourtCasesList()
-      formsList.length === 0 && getFormsList()
-      clientsList.length === 0 && getClientsList()
+      // TODO REMOVE THIS TEMP
+      const abcd = false
+      if (abcd) {
+        hearingCalendarsList.length === 0 && getHearingCalendars()
+        taskCalendarsList.length === 0 && getTaskCalendars()
+        statusList.calendars.all.length === 0 && getStatusesList()
+        hearingTypesList.length === 0 && getHearingTypesList()
+        taskTypesList.length === 0 && getTaskTypesList()
+        courtCasesList.length === 0 && getCourtCasesList()
+        formsList.length === 0 && getFormsList()
+        clientsList.length === 0 && getClientsList()
 
-      if (courtCaseId) {
-        setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
-        if (!selectedCourtCase) {
-          getCourtCase(getNumber(courtCaseId))
+        if (courtCaseId) {
+          setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
+          if (!selectedCourtCase) {
+            getCourtCase(getNumber(courtCaseId))
+          }
         }
-      }
 
-      if (formId) {
-        setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
-        if (!selectedForm) {
-          getForm(getNumber(formId))
+        if (formId) {
+          setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
+          if (!selectedForm) {
+            getForm(getNumber(formId))
+          }
         }
       }
     }
@@ -372,12 +377,11 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   )
 
   const calendarsShowCalendarView = () => (
-    <Grid container alignItems="center" columnGap={2}>
-      <Typography component="h1" variant="h6" color="primary" gutterBottom>
-        React Big Calendar Component
-      </Typography>
-      <Divider orientation="vertical" flexItem />
-    </Grid>
+    <>
+      <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        <CalendarView />
+      </Grid>
+    </>
   )
 
   const calendarsShowListView = () => (
