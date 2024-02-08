@@ -5,16 +5,16 @@ export const validateCourt = (court: CourtSchema) => {
   const errors: string[] = []
 
   if (!court.name.trim()) {
-    errors.push('Name is required')
+    errors.push('Name is required!')
   }
   if (!validateAddress(court.streetAddress, court.city, court.state, court.zipCode, true)) {
-    errors.push('Full address is incomplete/invalid')
+    errors.push('Full address is incomplete/invalid!')
   }
   if (!validatePhoneNumber(court.phoneNumber)) {
-    errors.push('Phone Number is incomplete/invalid')
+    errors.push('Phone Number is incomplete/invalid!')
   }
   if (!court.status.trim()) {
-    errors.push('Status is required')
+    errors.push('Status is required!')
   }
 
   return errors.length ? errors.join(', ') : ''

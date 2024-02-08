@@ -33,23 +33,22 @@ export const validateCalendar = (
   if (!validateCalendarType(calendarType)) {
     return 'Invalid Calendar Type!!!'
   }
-
   // common
   if (!calendar.status.trim()) {
-    errors.push('Status is required')
+    errors.push('Status is required!')
   }
   // hearing calendar
   if (isHearingCalendar(calendarType)) {
     const hearingCalendar = calendar as HearingCalendarSchema
     const hearingDate = getDayjs(hearingCalendar.hearingDate)
     if (!hearingDate || !hearingDate.isValid() || hearingDate.isBefore(dayjs(), 'day')) {
-      errors.push('Hearing Date is required and cannot be in the past')
+      errors.push('Hearing Date is required and cannot be in the past!')
     }
     if (getNumber(hearingCalendar.hearingTypeId) <= 0) {
-      errors.push('Hearing Type is required')
+      errors.push('Hearing Type is required!')
     }
     if (getNumber(hearingCalendar.courtCaseId) <= 0) {
-      errors.push('Case is required')
+      errors.push('Case is required!')
     }
   } else {
     // task calendar

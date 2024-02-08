@@ -5,19 +5,19 @@ export const validateClient = (client: ClientSchema) => {
   const errors: string[] = []
 
   if (!client.name.trim()) {
-    errors.push('Name is required')
+    errors.push('Name is required!')
   }
   if (!validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)) {
-    errors.push('Full address is incomplete/invalid')
+    errors.push('Full address is incomplete/invalid!')
   }
   if (!validatePhoneNumber(client.phoneNumber)) {
-    errors.push('Phone Number is incomplete/invalid')
+    errors.push('Phone Number is incomplete/invalid!')
   }
   if (!client.email.trim()) {
-    errors.push('Email is required')
+    errors.push('Email is required!')
   }
   if (!client.status.trim()) {
-    errors.push('Status is required')
+    errors.push('Status is required!')
   }
 
   return errors.length ? errors.join(', ') : ''

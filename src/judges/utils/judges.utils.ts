@@ -4,13 +4,13 @@ export const validateJudge = (judge: JudgeSchema) => {
   const errors: string[] = []
 
   if (!judge.name.trim()) {
-    errors.push('Name is required')
+    errors.push('Name is required!')
   }
   if (judge.courtId <= 0) {
-    errors.push('Court is required')
+    errors.push('Court is required!')
   }
   if (!judge.status.trim()) {
-    errors.push('Status is required')
+    errors.push('Status is required!')
   }
 
   return errors.length ? errors.join(', ') : ''

@@ -1,34 +1,79 @@
-import { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 
-import { getNumber } from '../../app'
+import { getDayjs, getNumber } from '../../app'
 import { FormSchema } from '../types/forms.data.types'
 
 export const validateForm = (form: FormSchema) => {
   const errors: string[] = []
 
   if (form.formTypeId <= 0) {
-    errors.push('Form Type is required')
+    errors.push('Form Type is required!')
   }
   if (form.courtCaseId <= 0) {
-    errors.push('Case is required')
+    errors.push('Case is required!')
   }
-  if (form.submitDate && !form.submitDate.isValid()) {
-    errors.push('Submit Date is invalid')
+  if (!form.status.trim()) {
+    errors.push('Status is required!')
   }
-  if (form.receiptDate && !form.receiptDate.isValid()) {
-    errors.push('Receipt Date is invalid')
+  const submitDate = getDayjs(form.submitDate)
+  if (submitDate) {
+    if (!submitDate.isValid() || submitDate.isBefore(dayjs(), 'day')) {
+      errors.push('Submit Date is invalid or in the past!')
+    }
   }
-  if (form.priorityDate && !form.priorityDate.isValid()) {
-    errors.push('Priority Date is invalid')
+  const receiptDate = getDayjs(form.receiptDate)
+  if (receiptDate) {
+    if (!receiptDate.isValid() || receiptDate.isBefore(dayjs(), 'day')) {
+      errors.push('Receipt Date is invalid or in the past!')
+    }
+    if (!submitDate || receiptDate.isBefore(submitDate, 'day')) {
+      errors.push('Submit Date is invalid or is after Receipt Date!')
+    }
   }
-  if (form.rfeDate && !form.rfeDate.isValid()) {
-    errors.push('RFE Date is invalid')
+  const priorityDate = getDayjs(form.priorityDate)
+  if (priorityDate) {
+    if (!priorityDate.isValid() || priorityDate.isBefore(dayjs(), 'day')) {
+      errors.push('Priority Date is invalid or in the past!')
+    }
+    if (!submitDate || priorityDate.isBefore(receiptDate, 'day')) {
+      errors.push('Receipt Date is invalid or is after Priority Date!')
+    }
   }
-  if (form.rfeSubmitDate && !form.rfeSubmitDate.isValid()) {
-    errors.push('RFE Submit Date is invalid')
+  const rfeDate = getDayjs(form.rfeDate)
+  if (rfeDate) {
+    if (!rfeDate.isValid() || rfeDate.isBefore(dayjs(), 'day')) {
+      errors.push('RFE Date is invalid or in the past!')
+    }
+    if (!priorityDate || priorityDate.isBefore(rfeDate, 'day')) {
+      errors.push('Priority Date is invalid or is after RFE Date!')
+    }
   }
-  if (form.decisionDate && !form.decisionDate.isValid()) {
-    errors.push('Decision Date is invalid')
+  const rfeSubmitDate = getDayjs(form.rfeSubmitDate)
+  if (rfeSubmitDate) {
+    if (!rfeSubmitDate.isValid() || rfeSubmitDate.isBefore(dayjs(), 'day')) {
+      errors.push('RFE Submit Date is invalid or in the past!')
+    }
+    if (!rfeDate || rfeSubmitDate.isBefore(rfeDate, 'day')) {
+      errors.push('RFE Date is invalid or is after RFE Submit Date!')
+    }
+  }
+  const decisionDate = getDayjs(form.decisionDate)
+  if (decisionDate) {
+    if (!decisionDate.isValid() || decisionDate.isBefore(dayjs(), 'day')) {
+      errors.push('Decision Date is invalid or in the past!')
+    }
+    if (!priorityDate) {
+      if (!rfeSubmitDate) {
+        errors.push('Priority Date or RFE Submit Date is required for Decision Date!')
+      } else if (rfeSubmitDate.isBefore(decisionDate)) {
+        errors.push('RFE Submit Date is after Decision Date!')
+      }
+    } else if (priorityDate.isBefore(decisionDate)) {
+      errors.push('Priority Date is after Decision Date!')
+    }
+  }
+  if (submitDate && ['OPEN', 'PROCESSING', 'PENDING'].includes(form.status)) {
+    errors.push('Invalid Status for submitted form!')
   }
 
   return errors.length ? errors.join(', ') : ''
