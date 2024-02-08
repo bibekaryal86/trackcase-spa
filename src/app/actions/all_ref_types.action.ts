@@ -39,7 +39,7 @@ export const getAllRefTypes = () => {
     try {
       const requestComponents: string[] = []
 
-      if (getStore().statuses.statuses.court.all.length === 0) {
+      if (getStore().statuses.statuses.court.all?.length === 0) {
         requestComponents.push('statuses')
       }
       if (getStore().caseTypes.caseTypes.length === 0) {
