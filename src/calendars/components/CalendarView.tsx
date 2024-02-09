@@ -156,9 +156,14 @@ const CalendarView = (): React.ReactElement => {
   const endAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
 
   const onSelectSlot = (slot: SlotInfo) => {
-    console.log('on select slot')
-    // check month, if on Feb calendar and clicking on Jan not allowed
-    console.log(slot)
+    const selectedSlotDate = getDayjs(slot.slots[0])?.month()
+    const currentMonth = dayjs().month()
+    if (selectedSlotDate !== currentMonth) {
+      console.log('Month not same as currently selected, returning...')
+      return
+    } else {
+      console.log('Same month, proceed...')
+    }
     return
   }
 

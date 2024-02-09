@@ -85,7 +85,7 @@ export const getNumber = (value: number | string | null | undefined): number => 
 
 export const getString = (value: string | number | Dayjs | null | undefined): string => (value ? value.toString() : '')
 
-export const getDayjs = (value: Dayjs | null | undefined) => {
+export const getDayjs = (value: Dayjs | Date | null | undefined) => {
   if (value) {
     return dayjs(value)
   }
