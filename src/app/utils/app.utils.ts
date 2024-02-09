@@ -1,10 +1,12 @@
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
-import { LocalStorage } from './storage.utils'
-import { DATE_FORMAT, ID_NUMBER, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { LocalStorage, SessionStorage } from './storage.utils'
+import { DATE_FORMAT, ID_NUMBER, IS_DARK_MODE, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
 import { AuthState, ErrorDetail, UserDetails } from '../types/app.data.types'
+
+export const isGetDarkMode = () => (SessionStorage.getItem(IS_DARK_MODE) as string) === 'true'
 
 export const unmountPage = (type: string) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {

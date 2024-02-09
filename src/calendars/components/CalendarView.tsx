@@ -7,7 +7,7 @@ import React, { SyntheticEvent } from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Calendar, DateLocalizer, dayjsLocalizer, Formats, Navigate, SlotInfo, ToolbarProps } from 'react-big-calendar'
 
-import { getDayjs } from '../../app'
+import { getDayjs, isGetDarkMode } from '../../app'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 
 interface CustomToolbarProps extends ToolbarProps {
@@ -29,8 +29,11 @@ const RbcCalendar = styled(Calendar)`
   .rbc-day-view {
     color: ${({ theme }) => theme.palette.primary.main};
   }
+  .rbc-header {
+    font-size: 100%;
+  }
   .rbc-row-content {
-      cursor: pointer;
+    cursor: pointer;
   }
   .rbc-off-range-bg {
     background: ${({ theme }) => theme.palette.action.selected};
@@ -114,7 +117,6 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClic
   const handleClick = () => {
     onClick(date)
   }
-
   return (
     <div className="custom-month-date-header" onClick={handleClick}>
       {label}
@@ -172,6 +174,36 @@ const CalendarView = (): React.ReactElement => {
     return
   }
 
+  const eventStyleGetter = (event: { date?: Dayjs; title?: string }) => {
+    const eventTime = getDayjs(event.date)
+    const currentTime = dayjs()
+    const isPastEvent = eventTime?.isBefore(currentTime, 'day')
+    const isDarkMode = isGetDarkMode()
+
+    let background: string
+    let color: string
+
+    if (isPastEvent && isDarkMode) {
+      background = '#90caf9'
+      color = '#737b7b'
+    } else if (isPastEvent && !isDarkMode) {
+      background = '#90caf9'
+      color = '#737b7b'
+    } else if (!isPastEvent && isDarkMode) {
+      background = '#1976d2'
+      color = '#ede8e8'
+    } else {
+      background = '#1976d2'
+      color = '#ede8e8'
+    }
+    return {
+      style: {
+        backgroundColor: background,
+        color: color,
+      },
+    }
+  }
+
   return (
     <div>
       <RbcCalendar
@@ -181,13 +213,14 @@ const CalendarView = (): React.ReactElement => {
         events={[]}
         startAccessor={startAccessor}
         endAccessor={endAccessor}
-        popup={true}
+        //popup={true}
         selectable={true}
         style={{ height: '100vh' }}
         components={components}
         formats={formats}
         onSelectSlot={onSelectSlot}
         onSelectEvent={onSelectEvent}
+        eventPropGetter={eventStyleGetter}
       />
     </div>
   )
