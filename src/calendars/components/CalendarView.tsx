@@ -174,7 +174,7 @@ const CalendarView = (): React.ReactElement => {
     return
   }
 
-  const eventStyleGetter = (event: { date?: Dayjs; title?: string }) => {
+  const eventStyleGetter = (event: { date?: Dayjs; title?: string; type?: string; isPastDue?: boolean }) => {
     const eventTime = getDayjs(event.date)
     const currentTime = dayjs()
     const isPastEvent = eventTime?.isBefore(currentTime, 'day')
