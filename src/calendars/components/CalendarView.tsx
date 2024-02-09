@@ -9,6 +9,11 @@ import { Calendar, DateLocalizer, dayjsLocalizer, Formats, Navigate, SlotInfo, T
 
 import { getDayjs, isGetDarkMode } from '../../app'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { CalendarEvents } from '../types/calendars.data.types'
+
+interface CalendarViewProps {
+  calendarEvents: CalendarEvents[]
+}
 
 interface CustomToolbarProps extends ToolbarProps {
   isSmallScreen: boolean
@@ -124,7 +129,9 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClic
   )
 }
 
-const CalendarView = (): React.ReactElement => {
+const CalendarView = (props: CalendarViewProps): React.ReactElement => {
+  const { calendarEvents } = props
+
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
   const onClickDateHeader = (date: Date) => {
@@ -211,24 +218,22 @@ const CalendarView = (): React.ReactElement => {
   }
 
   return (
-    <div>
-      <RbcCalendar
-        localizer={globalLocalizer}
-        defaultDate={dayjs().toDate()}
-        defaultView="month"
-        events={[]}
-        startAccessor={startAccessor}
-        endAccessor={endAccessor}
-        //popup={true}
-        selectable={true}
-        style={{ height: '100vh' }}
-        components={components}
-        formats={formats}
-        onSelectSlot={onSelectSlot}
-        onSelectEvent={onSelectEvent}
-        eventPropGetter={eventStyleGetter}
-      />
-    </div>
+    <RbcCalendar
+      localizer={globalLocalizer}
+      defaultDate={dayjs().toDate()}
+      defaultView="month"
+      events={calendarEvents}
+      startAccessor={startAccessor}
+      endAccessor={endAccessor}
+      //popup={true}
+      selectable={true}
+      style={{ height: '100vh' }}
+      components={components}
+      formats={formats}
+      onSelectSlot={onSelectSlot}
+      onSelectEvent={onSelectEvent}
+      eventPropGetter={eventStyleGetter}
+    />
   )
 }
 

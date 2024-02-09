@@ -9,6 +9,7 @@ import {
   UPDATE_SUCCESS,
 } from '../../constants'
 import {
+  CALENDARS_COMPLETE,
   CALENDARS_RETRIEVE_FAILURE,
   CALENDARS_RETRIEVE_REQUEST,
   CALENDARS_RETRIEVE_SUCCESS,
@@ -81,45 +82,52 @@ export const getCalendarsWithEvents = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(calendarsRequest(CALENDARS_RETRIEVE_REQUEST))
 
-    let calendarResponse: CalendarResponse
-    const options: Partial<FetchOptions> = {
-      method: 'GET',
-    }
+    try {
+      let calendarResponse: CalendarResponse
+      const options: Partial<FetchOptions> = {
+        method: 'GET',
+      }
 
-    const calendarEventsInStore = getStore().calendars.calendarEvents
-    const hearingCalendarsInStore = getStore().calendars.hearingCalendars
-    const taskCalendarsInStore = getStore().calendars.taskCalendars
+      const calendarEventsInStore = getStore().calendars.calendarEvents
+      const hearingCalendarsInStore = getStore().calendars.hearingCalendars
+      const taskCalendarsInStore = getStore().calendars.taskCalendars
 
-    if (
-      isForceFetch ||
-      calendarEventsInStore.length === 0 ||
-      hearingCalendarsInStore.length === 0 ||
-      taskCalendarsInStore.length === 0
-    ) {
-      const urlPath = getEndpoint(process.env.CALENDARS_WITH_EVENTS_ENDPOINT as string)
-      calendarResponse = (await Async.fetch(urlPath, options)) as CalendarResponse
+      if (
+        isForceFetch ||
+        calendarEventsInStore.length === 0 ||
+        hearingCalendarsInStore.length === 0 ||
+        taskCalendarsInStore.length === 0
+      ) {
+        const urlPath = getEndpoint(process.env.CALENDARS_WITH_EVENTS_ENDPOINT as string)
+        calendarResponse = (await Async.fetch(urlPath, options)) as CalendarResponse
 
-      if (calendarResponse.detail) {
-        dispatch(calendarsFailure(CALENDARS_RETRIEVE_FAILURE, getErrMsg(calendarResponse.detail)))
+        if (calendarResponse.detail) {
+          dispatch(calendarsFailure(CALENDARS_RETRIEVE_FAILURE, getErrMsg(calendarResponse.detail)))
+        } else {
+          dispatch(
+            calendarsWithEventsSuccess(
+              CALENDARS_RETRIEVE_SUCCESS,
+              calendarResponse.calendarEvents,
+              calendarResponse.hearingCalendars,
+              calendarResponse.taskCalendars,
+            ),
+          )
+        }
       } else {
         dispatch(
           calendarsWithEventsSuccess(
             CALENDARS_RETRIEVE_SUCCESS,
-            calendarResponse.calendarEvents,
-            calendarResponse.hearingCalendars,
-            calendarResponse.taskCalendars,
+            calendarEventsInStore,
+            hearingCalendarsInStore,
+            taskCalendarsInStore,
           ),
         )
       }
-    } else {
-      dispatch(
-        calendarsWithEventsSuccess(
-          CALENDARS_RETRIEVE_SUCCESS,
-          calendarEventsInStore,
-          hearingCalendarsInStore,
-          taskCalendarsInStore,
-        ),
-      )
+    } catch (error) {
+      console.log('Get Calendars with Events Error: ', error)
+      dispatch(calendarsFailure(CALENDARS_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+    } finally {
+      dispatch(calendarsComplete(CALENDARS_COMPLETE))
     }
   }
 }

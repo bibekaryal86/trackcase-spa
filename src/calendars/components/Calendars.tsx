@@ -375,11 +375,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   )
 
   const calendarsShowCalendarView = () => (
-    <>
-      <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-        <CalendarView />
-      </Grid>
-    </>
+    <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+      <CalendarView calendarEvents={calendarEventsList} />
+    </Grid>
   )
 
   const calendarsShowListView = () => (
