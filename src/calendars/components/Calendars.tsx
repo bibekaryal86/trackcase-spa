@@ -28,14 +28,20 @@ import { FormSchema, getForm, getForms } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { getHearingTypes } from '../../types/actions/hearingTypes.action'
 import { getTaskTypes } from '../../types/actions/taskTypes.action'
-import { addCalendar, deleteCalendar, editCalendar, getCalendars } from '../actions/calendars.action'
+import { addCalendar, deleteCalendar, editCalendar, getCalendarsWithEvents } from '../actions/calendars.action'
 import { CALENDARS_UNMOUNT } from '../types/calendars.action.types'
-import { DefaultCalendarSchema, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
+import {
+  CalendarEvents,
+  DefaultCalendarSchema,
+  HearingCalendarSchema,
+  TaskCalendarSchema,
+} from '../types/calendars.data.types'
 import { isAreTwoCalendarsSame, isHearingCalendar } from '../utils/calendars.utils'
 
 const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms, clients }: GlobalState) => {
   return {
     isCloseModal: calendars.isCloseModal,
+    calendarEventsList: calendars.calendarEvents,
     hearingCalendarsList: calendars.hearingCalendars,
     taskCalendarsList: calendars.taskCalendars,
     statusList: statuses.statuses,
@@ -50,8 +56,7 @@ const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCa
 }
 
 const mapDispatchToProps = {
-  getHearingCalendars: () => getCalendars(CALENDAR_OBJECT_TYPES.HEARING),
-  getTaskCalendars: () => getCalendars(CALENDAR_OBJECT_TYPES.TASK),
+  getCalendarsWithEvents: () => getCalendarsWithEvents(),
   addHearingCalendar: (calendar: HearingCalendarSchema) => addCalendar(calendar, CALENDAR_OBJECT_TYPES.HEARING),
   addTaskCalendar: (calendar: TaskCalendarSchema) => addCalendar(calendar, CALENDAR_OBJECT_TYPES.TASK),
   editHearingCalendar: (id: number, calendar: HearingCalendarSchema) =>
@@ -73,10 +78,10 @@ const mapDispatchToProps = {
 
 interface CalendarsProps {
   isCloseModal: boolean
+  calendarEventsList: CalendarEvents[]
   hearingCalendarsList: HearingCalendarSchema[]
-  getHearingCalendars: () => void
   taskCalendarsList: TaskCalendarSchema[]
-  getTaskCalendars: () => void
+  getCalendarsWithEvents: () => void
   addHearingCalendar: (calendar: HearingCalendarSchema) => void
   addTaskCalendar: (calendar: TaskCalendarSchema) => void
   editHearingCalendar: (id: number, calendar: HearingCalendarSchema) => void
@@ -109,10 +114,10 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const isForceFetch = useRef(true)
 
   const {
+    calendarEventsList,
     hearingCalendarsList,
     taskCalendarsList,
-    getHearingCalendars,
-    getTaskCalendars,
+    getCalendarsWithEvents,
     addHearingCalendar,
     addTaskCalendar,
     editHearingCalendar,
@@ -142,8 +147,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   useEffect(() => {
     if (isForceFetch.current) {
-      hearingCalendarsList.length === 0 && getHearingCalendars()
-      taskCalendarsList.length === 0 && getTaskCalendars()
+      calendarEventsList.length === 0 && getCalendarsWithEvents()
       statusList.calendars.all.length === 0 && getStatusesList()
       hearingTypesList.length === 0 && getHearingTypesList()
       taskTypesList.length === 0 && getTaskTypesList()
@@ -167,10 +171,6 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     }
     isForceFetch.current = false
   }, [
-    hearingCalendarsList.length,
-    getHearingCalendars,
-    taskCalendarsList.length,
-    getTaskCalendars,
     statusList.calendars.all,
     getStatusesList,
     hearingTypesList.length,
@@ -189,6 +189,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     getCourtCase,
     selectedForm,
     getForm,
+    calendarEventsList.length,
+    getCalendarsWithEvents,
   ])
 
   useEffect(() => {

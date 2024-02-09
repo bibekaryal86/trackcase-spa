@@ -8,8 +8,16 @@ import {
   SOMETHING_WENT_WRONG,
   UPDATE_SUCCESS,
 } from '../../constants'
-import { SET_SELECTED_HEARING_CALENDAR, SET_SELECTED_TASK_CALENDAR } from '../types/calendars.action.types'
 import {
+  CALENDARS_RETRIEVE_FAILURE,
+  CALENDARS_RETRIEVE_REQUEST,
+  CALENDARS_RETRIEVE_SUCCESS,
+  SET_SELECTED_HEARING_CALENDAR,
+  SET_SELECTED_TASK_CALENDAR,
+} from '../types/calendars.action.types'
+import {
+  CalendarEvents,
+  CalendarResponse,
   HearingCalendarResponse,
   HearingCalendarSchema,
   TaskCalendarResponse,
@@ -65,6 +73,53 @@ export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema
       dispatch(calendarsFailure(`${calendarType}_CREATE_FAILURE`, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(calendarsComplete(`${calendarType}S_COMPLETE`))
+    }
+  }
+}
+
+export const getCalendarsWithEvents = (isForceFetch: boolean = false) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+    dispatch(calendarsRequest(CALENDARS_RETRIEVE_REQUEST))
+
+    let calendarResponse: CalendarResponse
+    const options: Partial<FetchOptions> = {
+      method: 'GET',
+    }
+
+    const calendarEventsInStore = getStore().calendars.calendarEvents
+    const hearingCalendarsInStore = getStore().calendars.hearingCalendars
+    const taskCalendarsInStore = getStore().calendars.taskCalendars
+
+    if (
+      isForceFetch ||
+      calendarEventsInStore.length === 0 ||
+      hearingCalendarsInStore.length === 0 ||
+      taskCalendarsInStore.length === 0
+    ) {
+      const urlPath = getEndpoint(process.env.CALENDARS_WITH_EVENTS_ENDPOINT as string)
+      calendarResponse = (await Async.fetch(urlPath, options)) as CalendarResponse
+
+      if (calendarResponse.detail) {
+        dispatch(calendarsFailure(CALENDARS_RETRIEVE_FAILURE, getErrMsg(calendarResponse.detail)))
+      } else {
+        dispatch(
+          calendarsWithEventsSuccess(
+            CALENDARS_RETRIEVE_SUCCESS,
+            calendarResponse.calendarEvents,
+            calendarResponse.hearingCalendars,
+            calendarResponse.taskCalendars,
+          ),
+        )
+      }
+    } else {
+      dispatch(
+        calendarsWithEventsSuccess(
+          CALENDARS_RETRIEVE_SUCCESS,
+          calendarEventsInStore,
+          hearingCalendarsInStore,
+          taskCalendarsInStore,
+        ),
+      )
     }
   }
 }
@@ -296,6 +351,18 @@ const calendarsSuccess = (
     return calendarsFailure(type, 'Something went wrong! Went from Success to failure!!')
   }
 }
+
+const calendarsWithEventsSuccess = (
+  type: string,
+  calendarEvents: CalendarEvents[],
+  hearingCalendars: HearingCalendarSchema[],
+  taskCalendars: TaskCalendarSchema[],
+) => ({
+  type: type,
+  calendarEvents: calendarEvents,
+  hearingCalendars: hearingCalendars,
+  taskCalendars: taskCalendars,
+})
 
 const calendarsFailure = (type: string, errMsg: string) => ({
   type: type,
