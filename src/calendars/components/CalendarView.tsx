@@ -3,16 +3,28 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import dayjs, { Dayjs } from 'dayjs'
-import React from 'react'
+import React, { SyntheticEvent } from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { Calendar, DateLocalizer, dayjsLocalizer, Formats, Navigate, ToolbarProps } from 'react-big-calendar'
+import { Calendar, DateLocalizer, dayjsLocalizer, Formats, Navigate, SlotInfo, ToolbarProps } from 'react-big-calendar'
 
 import { getDayjs } from '../../app'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 
+interface CustomToolbarProps extends ToolbarProps {
+  isSmallScreen: boolean
+}
+
+interface CustomDateHeaderProps {
+  date: Date
+  label: string
+  onClick: (date: Date) => void
+}
+
 const globalLocalizer = dayjsLocalizer(dayjs)
 
 const RbcCalendar = styled(Calendar)`
+  cursor: pointer;
+
   .rbc-calendar,
   .rbc-month-view,
   .rbc-week-view,
@@ -45,10 +57,6 @@ const RbcButton = styled(Button)`
     font-size: 1.5rem;
   }
 `
-
-interface CustomToolbarProps extends ToolbarProps {
-  isSmallScreen: boolean
-}
 
 const CustomToolbar: React.FC<CustomToolbarProps> = ({ isSmallScreen, ...props }) => {
   // const goToDayView = () => props.onView('day')
@@ -97,11 +105,36 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({ isSmallScreen, ...props }
   )
 }
 
+const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClick }) => {
+  const handleClick = () => {
+    onClick(date)
+  }
+
+  return (
+    <div className="custom-month-date-header" onClick={handleClick}>
+      {label}
+    </div>
+  )
+}
+
 const CalendarView = (): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
-  const components: Partial<{ toolbar: (toolbarProps: ToolbarProps) => React.JSX.Element }> = {
+  // this function is created to disable navigating to day view when date is clicked
+  // so this function doesn't return or execute anything further
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const disableDateClickNavigate = (date: Date) => { return }
+
+  const components: Partial<{
+    toolbar: (toolbarProps: ToolbarProps<Event>) => React.ReactElement
+    month: {
+      dateHeader: (props: { date: Date; label: string }) => React.ReactElement
+    }
+  }> = {
     toolbar: (toolbarProps) => <CustomToolbar isSmallScreen={isSmallScreen} {...toolbarProps} />,
+    month: {
+      dateHeader: (props) => <CustomDateHeader {...props} onClick={disableDateClickNavigate} />,
+    },
   }
 
   const formats: Partial<Formats> = {
@@ -111,9 +144,21 @@ const CalendarView = (): React.ReactElement => {
       localizer.format(date, isSmallScreen ? 'ddd' : 'dddd', culture),
   }
 
-  // the events do not span multiple days, so use same date for begin/end
   const startAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
+  // this app's events do not span multiple days, so use same date for start/end
   const endAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
+
+  const onSelectSlot = (slot: SlotInfo) => {
+    console.log('on select slot')
+    console.log(slot)
+    return
+  }
+
+  const onSelectEvent = (event: object, e: SyntheticEvent<HTMLElement, Event>) => {
+    console.log('Selected event:', event)
+    console.log('Synthetic event: ', e)
+    return
+  }
 
   return (
     <div>
@@ -125,9 +170,12 @@ const CalendarView = (): React.ReactElement => {
         startAccessor={startAccessor}
         endAccessor={endAccessor}
         popup={true}
+        selectable={true}
         style={{ height: '100vh' }}
         components={components}
         formats={formats}
+        onSelectSlot={onSelectSlot}
+        onSelectEvent={onSelectEvent}
       />
     </div>
   )
