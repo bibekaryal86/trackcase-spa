@@ -23,16 +23,21 @@ interface CustomDateHeaderProps {
 const globalLocalizer = dayjsLocalizer(dayjs)
 
 const RbcCalendar = styled(Calendar)`
-  cursor: pointer;
-
   .rbc-calendar,
   .rbc-month-view,
   .rbc-week-view,
   .rbc-day-view {
     color: ${({ theme }) => theme.palette.primary.main};
   }
+    .rbc-month-row {
+        cursor: pointer;
+    }
   .rbc-off-range-bg {
     background: ${({ theme }) => theme.palette.action.selected};
+    cursor: default;
+  }
+    .rbc-off-range {
+    cursor: default;
   }
   .rbc-today {
     background: ${({ theme }) => (theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : '#eaf6ff')};
@@ -122,8 +127,10 @@ const CalendarView = (): React.ReactElement => {
 
   // this function is created to disable navigating to day view when date is clicked
   // so this function doesn't return or execute anything further
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const disableDateClickNavigate = (date: Date) => { return }
+  const disableDateClickNavigate = (date: Date) => {
+    console.log('Click on Date Text Disabled: ', date)
+    return
+  }
 
   const components: Partial<{
     toolbar: (toolbarProps: ToolbarProps<Event>) => React.ReactElement
@@ -150,6 +157,7 @@ const CalendarView = (): React.ReactElement => {
 
   const onSelectSlot = (slot: SlotInfo) => {
     console.log('on select slot')
+    // check month, if on Feb calendar and clicking on Jan not allowed
     console.log(slot)
     return
   }
