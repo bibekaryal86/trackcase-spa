@@ -16,6 +16,7 @@ import React, { isValidElement, useMemo, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
 import Switch from './Switch'
+import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { TableData, TableHeaderData, TableOrder } from '../types/app.data.types'
 
 const TABLE_EXPORT_KEYS_TO_AVOID = ['actions', 'Actions']
@@ -243,7 +244,7 @@ const TableHeader = (props: TableHeaderProps) => {
 const Table = (props: TableProps) => {
   const { tableData } = props
   const rowsPerPageOptions = [5, 10, 15, 20]
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
   const [order, setOrder] = useState<TableOrder>(props.defaultOrder || 'asc')
   const [orderBy, setOrderBy] = useState<keyof TableData>(props.defaultOrderBy || '')

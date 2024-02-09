@@ -14,6 +14,7 @@ import {
   getString,
   GridFormWrapper,
 } from '../../app'
+import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { JudgeSchema } from '../../judges'
 import { ClientSchema } from '../types/clients.data.types'
 import { handleClientFormOnChange, isClientFormFieldError } from '../utils/clients.utils'
@@ -27,7 +28,7 @@ interface ClientFormProps {
 }
 
 const ClientForm = (props: ClientFormProps): React.ReactElement => {
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList } = props
 
   const clientName = () => (

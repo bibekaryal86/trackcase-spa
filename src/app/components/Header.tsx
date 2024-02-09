@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Link from './Link'
 import Switch from './Switch'
-import { DRAWER_WIDTH } from '../../constants'
+import { DRAWER_WIDTH, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { isLoggedIn } from '../utils/app.utils'
 
 const drawerWidth = DRAWER_WIDTH
@@ -58,7 +58,7 @@ const Header = (props: HeaderProps) => {
     })
   }
 
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   return (
     <div id="app-header-id" style={{ marginBottom: '4rem' }}>
       <AppBar position="fixed" open={props.isOpenDrawer} sx={{ boxShadow: 'none' }}>

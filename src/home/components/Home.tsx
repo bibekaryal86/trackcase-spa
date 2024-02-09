@@ -25,7 +25,7 @@ const Home = (props: HomeProps): React.ReactElement => {
     // Provide an empty dependency array to run the effect only on mount
   }, [getAllRefTypes])
 
-    useEffect(() => {
+  useEffect(() => {
     return () => {
       isForceFetch.current = true
     }

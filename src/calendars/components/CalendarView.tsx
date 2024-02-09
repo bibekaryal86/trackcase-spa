@@ -2,12 +2,36 @@ import { useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { Calendar, dayjsLocalizer, Navigate, ToolbarProps } from 'react-big-calendar'
+import { Calendar, DateLocalizer, dayjsLocalizer, Formats, Navigate, ToolbarProps } from 'react-big-calendar'
 
-const localizer = dayjsLocalizer(dayjs)
+import { getDayjs } from '../../app'
+import { USE_MEDIA_QUERY_INPUT } from '../../constants'
+
+const globalLocalizer = dayjsLocalizer(dayjs)
+
+const RbcCalendar = styled(Calendar)`
+  .rbc-calendar,
+  .rbc-month-view,
+  .rbc-week-view,
+  .rbc-day-view {
+    color: ${({ theme }) => theme.palette.primary.main};
+  }
+  .rbc-off-range-bg {
+    background: ${({ theme }) => theme.palette.action.selected};
+  }
+  .rbc-today {
+    background: ${({ theme }) => (theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : '#eaf6ff')};
+  }
+  .rbc-now {
+    .rbc-button-link {
+      color: ${({ theme }) => (theme.palette.mode === 'dark' ? 'palevioletred' : 'red')};
+      font-weight: bolder;
+    }
+  }
+`
 
 const RbcToolbar = styled(Box)`
   button {
@@ -22,8 +46,11 @@ const RbcButton = styled(Button)`
   }
 `
 
-const Toolbar = (props: ToolbarProps) => {
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+interface CustomToolbarProps extends ToolbarProps {
+  isSmallScreen: boolean
+}
+
+const CustomToolbar: React.FC<CustomToolbarProps> = ({ isSmallScreen, ...props }) => {
   // const goToDayView = () => props.onView('day')
   // const goToWeekView = () => props.onView('week')
   // const goToMonthView = () => props.onView('month')
@@ -71,20 +98,36 @@ const Toolbar = (props: ToolbarProps) => {
 }
 
 const CalendarView = (): React.ReactElement => {
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+
+  const components: Partial<{ toolbar: (toolbarProps: ToolbarProps) => React.JSX.Element }> = {
+    toolbar: (toolbarProps) => <CustomToolbar isSmallScreen={isSmallScreen} {...toolbarProps} />,
+  }
+
+  const formats: Partial<Formats> = {
+    dateFormat: (date: Date, culture: string = 'en-US', localizer: DateLocalizer = globalLocalizer) =>
+      localizer.format(date, 'DD', culture),
+    weekdayFormat: (date: Date, culture: string = 'en-US', localizer: DateLocalizer = globalLocalizer) =>
+      localizer.format(date, isSmallScreen ? 'ddd' : 'dddd', culture),
+  }
+
+  // the events do not span multiple days, so use same date for begin/end
+  const startAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
+  const endAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
+
   return (
     <div>
-      <Calendar
-        localizer={localizer}
+      <RbcCalendar
+        localizer={globalLocalizer}
         defaultDate={dayjs().toDate()}
         defaultView="month"
         events={[]}
-        startAccessor="start"
-        endAccessor="end"
+        startAccessor={startAccessor}
+        endAccessor={endAccessor}
         popup={true}
         style={{ height: '100vh' }}
-        components={{
-          toolbar: Toolbar,
-        }}
+        components={components}
+        formats={formats}
       />
     </div>
   )

@@ -17,7 +17,7 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { ID_LIST } from '../../constants'
+import { ID_LIST, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { FormSchema } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
@@ -42,7 +42,7 @@ interface CalendarFormProps {
 }
 
 const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
   const { courtCasesList, formsList, clientsList, calendarStatusList, hearingCalendarList } = props
   const isHearingCalendarForm = isHearingCalendar(calendarType)
