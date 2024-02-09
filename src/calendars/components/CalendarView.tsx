@@ -29,14 +29,14 @@ const RbcCalendar = styled(Calendar)`
   .rbc-day-view {
     color: ${({ theme }) => theme.palette.primary.main};
   }
-    .rbc-month-row {
-        cursor: pointer;
-    }
+  .rbc-row-content {
+      cursor: pointer;
+  }
   .rbc-off-range-bg {
     background: ${({ theme }) => theme.palette.action.selected};
     cursor: default;
   }
-    .rbc-off-range {
+  .rbc-off-range {
     cursor: default;
   }
   .rbc-today {
@@ -125,10 +125,15 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClic
 const CalendarView = (): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
-  // this function is created to disable navigating to day view when date is clicked
-  // so this function doesn't return or execute anything further
-  const disableDateClickNavigate = (date: Date) => {
-    console.log('Click on Date Text Disabled: ', date)
+  const onClickDateHeader = (date: Date) => {
+    const selectedSlotDate = dayjs(date).month()
+    const currentMonth = dayjs().month()
+    if (selectedSlotDate !== currentMonth) {
+      console.log('Month not same as currently selected, returning...')
+      return
+    } else {
+      console.log('Same month, proceed...')
+    }
     return
   }
 
@@ -140,7 +145,7 @@ const CalendarView = (): React.ReactElement => {
   }> = {
     toolbar: (toolbarProps) => <CustomToolbar isSmallScreen={isSmallScreen} {...toolbarProps} />,
     month: {
-      dateHeader: (props) => <CustomDateHeader {...props} onClick={disableDateClickNavigate} />,
+      dateHeader: (props) => <CustomDateHeader {...props} onClick={onClickDateHeader} />,
     },
   }
 
@@ -155,15 +160,9 @@ const CalendarView = (): React.ReactElement => {
   // this app's events do not span multiple days, so use same date for start/end
   const endAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
 
+  // onSelectSlot is disabled, events handed with
   const onSelectSlot = (slot: SlotInfo) => {
-    const selectedSlotDate = getDayjs(slot.slots[0])?.month()
-    const currentMonth = dayjs().month()
-    if (selectedSlotDate !== currentMonth) {
-      console.log('Month not same as currently selected, returning...')
-      return
-    } else {
-      console.log('Same month, proceed...')
-    }
+    console.log('On Select Slot is Disabled: ', slot.action)
     return
   }
 

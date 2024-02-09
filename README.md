@@ -32,3 +32,4 @@ TODO
   * upon clicking on calendar date link, open a popup for that date
 * task calendars on hearing calendar popup
 
+* Maybe disable onSelectSlot and enable disableDateClickNavigate
