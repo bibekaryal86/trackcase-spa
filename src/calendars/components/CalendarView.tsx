@@ -2,6 +2,7 @@ import StarsIcon from '@mui/icons-material/Stars'
 import { useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { green, grey, red } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import dayjs, { Dayjs } from 'dayjs'
 import React, { SyntheticEvent } from 'react'
@@ -51,14 +52,7 @@ const RbcCalendar = styled(Calendar)`
   }
   .rbc-today {
     background: inherit;
-    // background: ${({ theme }) => (theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : '#eaf6ff')};
   }
-  // .rbc-now {
-  //   .rbc-button-link {
-  //     color: ${({ theme }) => (theme.palette.mode === 'dark' ? 'palevioletred' : 'red')};
-  //     font-weight: bolder;
-  //   }
-  // }
 `
 
 const RbcToolbar = styled(Box)`
@@ -134,7 +128,6 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClic
 
 const CalendarView = (props: CalendarViewProps): React.ReactElement => {
   const { calendarEvents } = props
-
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
   const onClickDateHeader = (date: Date) => {
@@ -172,9 +165,8 @@ const CalendarView = (props: CalendarViewProps): React.ReactElement => {
   // this app's events do not span multiple days, so use same date for start/end
   const endAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
 
-  // onSelectSlot is disabled, events handed with
   const onSelectSlot = (slot: SlotInfo) => {
-    console.log('On Select Slot is Disabled: ', slot.action)
+    console.log('onSelectSlot is disabled, events handled with onClickDateHeader: ', slot.action)
     return
   }
 
@@ -195,8 +187,14 @@ const CalendarView = (props: CalendarViewProps): React.ReactElement => {
     return {
       style: {
         backgroundColor: getCalendarEventBgColor(event.type),
-        color: '#ede8e8',
-        opacity: event.status && event.status === 'EXPIRED' ? 0.5 : 1,
+        color: event.status
+          ? ['PAST_DUE'].includes(event.status)
+            ? red.A100
+            : ['DONE', 'PAST_DONE'].includes(event.status)
+            ? green.A200
+            : grey.A200
+          : grey.A200,
+        opacity: event.status && ['PAST_DUE', 'PAST_DONE'].includes(event.status) ? 0.7 : 1,
       },
     }
   }
@@ -209,7 +207,7 @@ const CalendarView = (props: CalendarViewProps): React.ReactElement => {
       events={calendarEvents}
       startAccessor={startAccessor}
       endAccessor={endAccessor}
-      //popup={true}
+      popup={true}
       selectable={true}
       style={{ height: '100vh' }}
       components={components}
