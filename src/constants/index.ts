@@ -62,10 +62,10 @@ export const CALENDAR_OBJECT_TYPES = Object.freeze({
 
 // CALENDAR TYPE EVENTS BG-COLOR MAP
 export const CALENDAR_EVENT_BG_COLOR = new Map([
-  ["MASTER", '#1976d2'],
-  ["MERIT", '#1976d2'],
-  ["DUE AT HEARING", '#1976d2'],
-  ["DOCUMENT PREPARATION", '#1976d2'],
+  ['MASTER', '#1976d2'],
+  ['MERIT', '#1976d2'],
+  ['DUE AT HEARING', '#1976d2'],
+  ['DOCUMENT PREPARATION', '#1976d2'],
 ])
 
 // STATES

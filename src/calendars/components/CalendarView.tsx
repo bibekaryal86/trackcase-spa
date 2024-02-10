@@ -1,3 +1,4 @@
+import StarsIcon from '@mui/icons-material/Stars'
 import { useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -49,14 +50,15 @@ const RbcCalendar = styled(Calendar)`
     cursor: default;
   }
   .rbc-today {
-    background: ${({ theme }) => (theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : '#eaf6ff')};
+    background: inherit;
+    // background: ${({ theme }) => (theme.palette.mode === 'dark' ? 'rgba(25, 118, 210, 0.2)' : '#eaf6ff')};
   }
-  .rbc-now {
-    .rbc-button-link {
-      color: ${({ theme }) => (theme.palette.mode === 'dark' ? 'palevioletred' : 'red')};
-      font-weight: bolder;
-    }
-  }
+  // .rbc-now {
+  //   .rbc-button-link {
+  //     color: ${({ theme }) => (theme.palette.mode === 'dark' ? 'palevioletred' : 'red')};
+  //     font-weight: bolder;
+  //   }
+  // }
 `
 
 const RbcToolbar = styled(Box)`
@@ -120,12 +122,12 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({ isSmallScreen, ...props }
 }
 
 const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClick }) => {
-  const handleClick = () => {
-    onClick(date)
-  }
+  const isToday = new Date().toDateString() === date.toDateString()
+  const handleClick = () => onClick(date)
+
   return (
-    <div className="custom-month-date-header" onClick={handleClick}>
-      {label}
+    <div className="rbc-button-link" onClick={handleClick}>
+      {label} {isToday && <StarsIcon fontSize="inherit" />}
     </div>
   )
 }
@@ -194,7 +196,7 @@ const CalendarView = (props: CalendarViewProps): React.ReactElement => {
       style: {
         backgroundColor: getCalendarEventBgColor(event.type),
         color: '#ede8e8',
-        opacity: event.status && event.status === 'EXPIRED' ? 0.5 : 1
+        opacity: event.status && event.status === 'EXPIRED' ? 0.5 : 1,
       },
     }
   }

@@ -4,7 +4,8 @@ import { getDayjs, getNumber } from '../../app'
 import { CALENDAR_EVENT_BG_COLOR, CALENDAR_OBJECT_TYPES, DUE_AT_HEARING_ID } from '../../constants'
 import { CalendarTypeId, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 
-export const getCalendarEventBgColor = (type?: string): string => type ? CALENDAR_EVENT_BG_COLOR.get(type) || '#1976d2' : '#1976d2'
+export const getCalendarEventBgColor = (type?: string): string =>
+  type ? CALENDAR_EVENT_BG_COLOR.get(type) || '#1976d2' : '#1976d2'
 
 export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSchema): string | undefined => {
   if ('hearingDate' in calendar || 'hearingTypeId' in calendar) {

@@ -78,7 +78,8 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     </>
   )
 
-  const linkToWebex = (webex?: string) => (webex ? <Link text={webex} href={webex.toLowerCase()} target="_blank" /> : '')
+  const linkToWebex = (webex?: string) =>
+    webex ? <Link text={webex} href={webex.toLowerCase()} target="_blank" /> : ''
 
   const linkToCourt = (x?: CourtSchema) =>
     selectedCourt ? (
