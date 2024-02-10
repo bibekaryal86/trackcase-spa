@@ -189,12 +189,13 @@ const CalendarView = (props: CalendarViewProps): React.ReactElement => {
         backgroundColor: getCalendarEventBgColor(event.type),
         color: event.status
           ? ['PAST_DUE'].includes(event.status)
-            ? red.A100
+            ? red.A700
             : ['DONE', 'PAST_DONE'].includes(event.status)
             ? green.A200
             : grey.A200
           : grey.A200,
         opacity: event.status && ['PAST_DUE', 'PAST_DONE'].includes(event.status) ? 0.7 : 1,
+        fontWeight: event.status && ['PAST_DUE', 'PAST_DONE'].includes(event.status) ? 'bolder' : '',
       },
     }
   }

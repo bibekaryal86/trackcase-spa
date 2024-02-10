@@ -1,11 +1,20 @@
+import * as colors from '@mui/material/colors'
 import dayjs, { Dayjs } from 'dayjs'
 
 import { getDayjs, getNumber } from '../../app'
-import { CALENDAR_EVENT_BG_COLOR, CALENDAR_OBJECT_TYPES, DUE_AT_HEARING_ID } from '../../constants'
+import { CALENDAR_OBJECT_TYPES, DUE_AT_HEARING_ID } from '../../constants'
 import { CalendarTypeId, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 
+
 export const getCalendarEventBgColor = (type?: string): string =>
-  type ? CALENDAR_EVENT_BG_COLOR.get(type) || '#1976d2' : '#1976d2'
+  type ? CALENDAR_EVENT_BG_COLOR.get(type) || '' : ''
+
+export const CALENDAR_EVENT_BG_COLOR = new Map([
+  ['MASTER', colors.blue.A400],
+  ['MERIT', colors.deepPurple.A400],
+  ['DUE AT HEARING', colors.brown.A400],
+  ['DOCUMENT PREPARATION', colors.blueGrey.A400],
+])
 
 export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSchema): string | undefined => {
   if ('hearingDate' in calendar || 'hearingTypeId' in calendar) {
