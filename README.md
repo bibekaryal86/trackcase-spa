@@ -22,6 +22,7 @@
     * because reverted back to using useRef
     * eg: in court component, add first court, nothing happens
     * no issue when adding second row
+  * unify color palette, create a util module for it
 
 
 TODO
@@ -31,5 +32,3 @@ TODO
 * remove pages for hearing and task calendars
   * upon clicking on calendar date link, open a popup for that date
 * task calendars on hearing calendar popup
-
-* Maybe disable onSelectSlot and enable disableDateClickNavigate
