@@ -7,9 +7,10 @@ import React, { SyntheticEvent } from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Calendar, DateLocalizer, dayjsLocalizer, Formats, Navigate, SlotInfo, ToolbarProps } from 'react-big-calendar'
 
-import { getDayjs, isGetDarkMode } from '../../app'
+import { getDayjs } from '../../app'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CalendarEvents } from '../types/calendars.data.types'
+import { getCalendarEventBgColor } from '../utils/calendars.utils'
 
 interface CalendarViewProps {
   calendarEvents: CalendarEvents[]
@@ -183,36 +184,17 @@ const CalendarView = (props: CalendarViewProps): React.ReactElement => {
 
   const eventStyleGetter = (event: {
     id?: number
+    calendar?: string
+    type?: string
     date?: Dayjs
     title?: string
-    type?: string
-    isPastDue?: boolean
+    status?: string
   }) => {
-    const eventTime = getDayjs(event.date)
-    const currentTime = dayjs()
-    const isPastEvent = eventTime?.isBefore(currentTime, 'day')
-    const isDarkMode = isGetDarkMode()
-
-    let background: string
-    let color: string
-
-    if (isPastEvent && isDarkMode) {
-      background = '#90caf9'
-      color = '#737b7b'
-    } else if (isPastEvent && !isDarkMode) {
-      background = '#90caf9'
-      color = '#737b7b'
-    } else if (!isPastEvent && isDarkMode) {
-      background = '#1976d2'
-      color = '#ede8e8'
-    } else {
-      background = '#1976d2'
-      color = '#ede8e8'
-    }
     return {
       style: {
-        backgroundColor: background,
-        color: color,
+        backgroundColor: getCalendarEventBgColor(event.type),
+        color: '#ede8e8',
+        opacity: event.status && event.status === 'EXPIRED' ? 0.5 : 1
       },
     }
   }

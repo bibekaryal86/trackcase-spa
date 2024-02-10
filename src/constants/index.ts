@@ -60,6 +60,14 @@ export const CALENDAR_OBJECT_TYPES = Object.freeze({
   TASK: 'TASK_CALENDAR',
 })
 
+// CALENDAR TYPE EVENTS BG-COLOR MAP
+export const CALENDAR_EVENT_BG_COLOR = new Map([
+  ["MASTER", '#1976d2'],
+  ["MERIT", '#1976d2'],
+  ["DUE AT HEARING", '#1976d2'],
+  ["DOCUMENT PREPARATION", '#1976d2'],
+])
+
 // STATES
 export const STATES_LIST = [
   { name: 'Alabama', abbreviation: 'AL' },

@@ -8,10 +8,11 @@ import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 
 export interface CalendarEvents {
   id: number
-  type: 'HEARING_CALENDAR' | 'TASK_CALENDAR'
+  calendar: 'HEARING_CALENDAR' | 'TASK_CALENDAR'
+  type: string
   date: Dayjs
   title: string
-  isPastDue: boolean
+  status: string
 }
 
 export interface CalendarResponse extends ResponseBase {
