@@ -2,6 +2,7 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import dayjs from 'dayjs'
 import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
@@ -145,6 +146,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   )
   const [calendarStatusList, setCalendarStatusList] = useState<string[]>([])
 
+  const minCalendarDate = dayjs().subtract(1, 'month')
+  const maxCalendarDate = dayjs().add(1, 'year')
+
   useEffect(() => {
     if (isForceFetch.current) {
       calendarEventsList.length === 0 && getCalendarsWithEvents()
@@ -250,6 +254,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       calendarStatusList={calendarStatusList}
       hearingCalendarList={hearingCalendarsList}
       isShowOneCalendar={false}
+      minCalendarDate={minCalendarDate}
+      maxCalendarDate={maxCalendarDate}
     />
   )
 
@@ -376,7 +382,18 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   const calendarsShowCalendarView = () => (
     <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-      <CalendarCalendar calendarEvents={calendarEventsList} />
+      <CalendarCalendar
+        calendarEvents={calendarEventsList}
+        setModal={setModal}
+        setSelectedId={setSelectedId}
+        setSelectedType={setSelectedType}
+        setSelectedCalendar={setSelectedCalendar}
+        setSelectedCalendarForReset={setSelectedCalendarForReset}
+        hearingTypesList={hearingTypesList}
+        taskTypesList={taskTypesList}
+        minCalendarDate={minCalendarDate}
+        maxCalendarDate={maxCalendarDate}
+      />
     </Grid>
   )
 

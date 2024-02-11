@@ -5,17 +5,41 @@ import Button from '@mui/material/Button'
 import { green, grey, red } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import dayjs, { Dayjs } from 'dayjs'
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useState } from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { Calendar, DateLocalizer, dayjsLocalizer, Formats, Navigate, SlotInfo, ToolbarProps } from 'react-big-calendar'
+import {
+  Calendar,
+  DateHeaderProps,
+  DateLocalizer,
+  dayjsLocalizer,
+  Formats,
+  Navigate,
+  SlotInfo,
+  ToolbarProps,
+} from 'react-big-calendar'
 
-import { getDayjs } from '../../app'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { CalendarEvents } from '../types/calendars.data.types'
+import { getDayjs, Modal } from '../../app'
+import { ACTION_ADD, BUTTON_CANCEL, CALENDAR_OBJECT_TYPES, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { HearingTypeSchema, TaskTypeSchema } from '../../types'
+import {
+  CalendarEvents,
+  DefaultCalendarSchema,
+  HearingCalendarSchema,
+  TaskCalendarSchema,
+} from '../types/calendars.data.types'
 import { getCalendarEventBgColor } from '../utils/calendars.utils'
 
 interface CalendarViewProps {
   calendarEvents: CalendarEvents[]
+  setModal: (action: string) => void
+  setSelectedId: (id: number) => void
+  setSelectedType: (type: string) => void
+  setSelectedCalendar: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
+  setSelectedCalendarForReset: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
+  hearingTypesList: HearingTypeSchema[]
+  taskTypesList: TaskTypeSchema[]
+  minCalendarDate: Dayjs
+  maxCalendarDate: Dayjs
 }
 
 interface CustomToolbarProps extends ToolbarProps {
@@ -25,6 +49,7 @@ interface CustomToolbarProps extends ToolbarProps {
 interface CustomDateHeaderProps {
   date: Date
   label: string
+  isOffRange: boolean
   onClick: (date: Date) => void
 }
 
@@ -48,7 +73,9 @@ const RbcCalendar = styled(Calendar)`
     cursor: default;
   }
   .rbc-off-range {
-    cursor: default;
+      .rbc-button-link {
+          cursor: default;
+      }
   }
   .rbc-today {
     background: inherit;
@@ -115,9 +142,9 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({ isSmallScreen, ...props }
   )
 }
 
-const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClick }) => {
+const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, isOffRange, onClick }) => {
   const isToday = new Date().toDateString() === date.toDateString()
-  const handleClick = () => onClick(date)
+  const handleClick = () => !isOffRange && onClick(date)
 
   return (
     <div className="rbc-button-link" onClick={handleClick}>
@@ -127,30 +154,67 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClic
 }
 
 const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
-  const { calendarEvents } = props
+  const { calendarEvents, setModal, setSelectedType, setSelectedCalendar } = props
+  const { minCalendarDate, maxCalendarDate } = props
+  const [showAddModal, setShowAddModal] = useState<boolean>(false)
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null)
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
-  const onClickDateHeader = (date: Date) => {
-    const selectedSlotDate = dayjs(date).month()
-    const currentMonth = dayjs().month()
-    if (selectedSlotDate !== currentMonth) {
-      console.log('Month not same as currently selected, returning...')
-      return
-    } else {
-      console.log('Same month, proceed...')
+  const addCalendarModal = () => {
+    if (selectedDate?.isBefore(minCalendarDate, 'day') || selectedDate?.isAfter(maxCalendarDate, 'day')) {
+      return (
+        <Modal
+          isOpen={true}
+          setIsOpen={setShowAddModal}
+          title={'Add Calendar Event'}
+          primaryButtonText={BUTTON_CANCEL}
+          primaryButtonCallback={() => setShowAddModal(false)}
+          contentText={`Selected Date is not within the allowed range of between ${minCalendarDate.format(
+            DATE_FORMAT,
+          )} and ${maxCalendarDate.format(DATE_FORMAT)} to add a new event!`}
+        />
+      )
     }
-    return
+    return (
+      <Modal
+        isOpen={true}
+        setIsOpen={setShowAddModal}
+        title={'Add Calendar Event'}
+        primaryButtonText={CALENDAR_OBJECT_TYPES.HEARING.split('_')[0]}
+        primaryButtonCallback={() => {
+          setShowAddModal(false)
+          setSelectedCalendar({ ...DefaultCalendarSchema, hearingDate: dayjs() })
+          setSelectedType(CALENDAR_OBJECT_TYPES.HEARING)
+          setModal(ACTION_ADD)
+        }}
+        secondaryButtonText={CALENDAR_OBJECT_TYPES.TASK.split('_')[0]}
+        secondaryButtonCallback={() => {
+          setShowAddModal(false)
+          setSelectedCalendar({ ...DefaultCalendarSchema, taskDate: dayjs() })
+          setSelectedType(CALENDAR_OBJECT_TYPES.TASK)
+          setModal(ACTION_ADD)
+        }}
+        resetButtonText={BUTTON_CANCEL}
+        resetButtonCallback={() => setShowAddModal(false)}
+        contentText="Select Calendar Type to Add..."
+      />
+    )
+  }
+
+  const onClickDateHeader = (date: Date) => {
+    setSelectedDate(dayjs(date))
+    setShowAddModal(true)
   }
 
   const components: Partial<{
     toolbar: (toolbarProps: ToolbarProps<Event>) => React.ReactElement
     month: {
-      dateHeader: (props: { date: Date; label: string }) => React.ReactElement
+      dateHeader: (dateHeaderProps: DateHeaderProps) => React.ReactElement
     }
   }> = {
     toolbar: (toolbarProps) => <CustomToolbar isSmallScreen={isSmallScreen} {...toolbarProps} />,
     month: {
-      dateHeader: (props) => <CustomDateHeader {...props} onClick={onClickDateHeader} />,
+      dateHeader: (dateHeaderProps) => <CustomDateHeader {...dateHeaderProps} onClick={onClickDateHeader} />,
     },
   }
 
@@ -201,22 +265,25 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   }
 
   return (
-    <RbcCalendar
-      localizer={globalLocalizer}
-      defaultDate={dayjs().toDate()}
-      defaultView="month"
-      events={calendarEvents}
-      startAccessor={startAccessor}
-      endAccessor={endAccessor}
-      popup={true}
-      selectable={true}
-      style={{ height: '100vh' }}
-      components={components}
-      formats={formats}
-      onSelectSlot={onSelectSlot}
-      onSelectEvent={onSelectEvent}
-      eventPropGetter={eventStyleGetter}
-    />
+    <>
+      <RbcCalendar
+        localizer={globalLocalizer}
+        defaultDate={dayjs().toDate()}
+        defaultView="month"
+        events={calendarEvents}
+        startAccessor={startAccessor}
+        endAccessor={endAccessor}
+        popup={true}
+        selectable={true}
+        style={{ height: '100vh' }}
+        components={components}
+        formats={formats}
+        onSelectSlot={onSelectSlot}
+        onSelectEvent={onSelectEvent}
+        eventPropGetter={eventStyleGetter}
+      />
+      {showAddModal && addCalendarModal()}
+    </>
   )
 }
 
