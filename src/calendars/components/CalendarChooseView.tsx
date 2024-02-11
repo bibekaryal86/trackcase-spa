@@ -6,7 +6,7 @@ interface CalendarViewSelectorProps {
   setIsShowListView: (isShowListView: boolean) => void
 }
 
-const CalendarViewSelector = (props: CalendarViewSelectorProps): React.ReactElement => {
+const CalendarChooseView = (props: CalendarViewSelectorProps): React.ReactElement => {
   const { setIsShowListView } = props
 
   return (
@@ -34,4 +34,4 @@ const CalendarViewSelector = (props: CalendarViewSelectorProps): React.ReactElem
   )
 }
 
-export default CalendarViewSelector
+export default CalendarChooseView

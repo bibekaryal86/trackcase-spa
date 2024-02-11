@@ -6,9 +6,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
 import CalendarCalendar from './CalendarCalendar'
+import CalendarChooseView from './CalendarChooseView'
 import CalendarForm from './CalendarForm'
 import CalendarTable from './CalendarTable'
-import CalendarViewSelector from './CalendarViewSelector'
 import { getDayjsString, getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import { CourtCaseSchema, getCourtCase, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
@@ -335,7 +335,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         Calendars
       </Typography>
       <Divider orientation="vertical" flexItem />
-      <CalendarViewSelector setIsShowListView={setIsShowListView} />
+      <CalendarChooseView setIsShowListView={setIsShowListView} />
     </Grid>
   )
 
