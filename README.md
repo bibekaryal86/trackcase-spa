@@ -2,8 +2,13 @@
 
 * Things to ADD
   * react testing library
+  * Redo sidenav/header
+    * in mobile view, do not show sidenav by default
   * add pagination to service response
     * similar to check IG/TT API response
+    * for calendar view, get for selected month
+      * get for selected month as navigate
+      * for list view get all
   * add restrictions and filters
     * form can't be added to closed cases (filter court case dropdown in forms page)
     * form can't be added to task calendars in the past
@@ -23,12 +28,9 @@
     * eg: in court component, add first court, nothing happens
     * no issue when adding second row
   * unify color palette, create a util module for it
+  * Year/month selector in calendar view
 
 
 TODO
-* Move statuses in track case service to database
 * Add filing_type in form type
   * filing_type = form, motion, other
-* remove pages for hearing and task calendars
-  * upon clicking on calendar date link, open a popup for that date
-* task calendars on hearing calendar popup

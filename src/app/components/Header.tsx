@@ -86,7 +86,7 @@ const Header = (props: HeaderProps) => {
             <Link text="TrackCase Service" color="inherit" navigateToPage="/home" />
           </Typography>
           <Stack direction="row" spacing={1} alignItems="center">
-            <Tooltip title={props.isDarkMode ? 'Dark Mode ON' : 'Dark Mode'}>
+            <Tooltip title={props.isDarkMode ? 'Dark Mode ON' : 'Dark Mode [BETA]'}>
               <FormGroup>
                 <Switch isChecked={!props.isDarkMode} onChangeCallback={props.darkModeCallback} />
               </FormGroup>
