@@ -305,7 +305,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         endAccessor={endAccessor}
         popup={true}
         selectable={true}
-        style={{ height: '100vh' }}
+        style={{ height: '75vh' }}
         components={components}
         formats={formats}
         onSelectSlot={onSelectSlot}
