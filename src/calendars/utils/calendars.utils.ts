@@ -11,7 +11,7 @@ export const CALENDAR_EVENT_BG_COLOR = new Map([
   ['MASTER', colors.blue.A400],
   ['MERIT', colors.deepPurple.A400],
   ['DUE AT HEARING', colors.brown.A400],
-  ['DOCUMENT PREPARATION', colors.blueGrey.A400],
+  ['DOCUMENT PREPARATION', colors.deepOrange.A400],
 ])
 
 export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSchema): string | undefined => {
