@@ -5,9 +5,7 @@ import { getDayjs, getNumber } from '../../app'
 import { CALENDAR_OBJECT_TYPES, DUE_AT_HEARING_ID } from '../../constants'
 import { CalendarTypeId, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 
-
-export const getCalendarEventBgColor = (type?: string): string =>
-  type ? CALENDAR_EVENT_BG_COLOR.get(type) || '' : ''
+export const getCalendarEventBgColor = (type?: string): string => (type ? CALENDAR_EVENT_BG_COLOR.get(type) || '' : '')
 
 export const CALENDAR_EVENT_BG_COLOR = new Map([
   ['MASTER', colors.blue.A400],
