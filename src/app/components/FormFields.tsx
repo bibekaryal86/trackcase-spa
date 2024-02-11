@@ -5,7 +5,7 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import TextField, { TextFieldVariants } from '@mui/material/TextField'
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { DatePicker, DateView, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
@@ -99,6 +99,7 @@ interface DatePickerProps {
   maxDate?: Dayjs
   minDate?: Dayjs
   required?: boolean
+  views?: DateView[]
 }
 
 export const GridFormWrapper: React.FC<FormWrapperProps> = ({
@@ -299,6 +300,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   minDate,
   maxDate,
   required = false,
+  views
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
   const dayjsValue = getDayjs(value)
@@ -316,6 +318,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
         format={format}
         minDate={minDate}
         maxDate={maxDate}
+        views={views}
         slotProps={{
           textField: {
             helperText: helperText,
