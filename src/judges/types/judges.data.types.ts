@@ -33,7 +33,6 @@ export interface HistoryJudgeSchema extends BaseModelSchema {
 }
 
 export interface JudgesState {
-  isForceFetch: boolean
   isCloseModal: boolean
   judges: JudgeSchema[]
   selectedJudge: JudgeSchema
@@ -53,7 +52,6 @@ export const DefaultJudgeSchema: JudgeSchema = {
 }
 
 export const DefaultJudgeState: JudgesState = {
-  isForceFetch: true,
   isCloseModal: true,
   judges: [],
   selectedJudge: DefaultJudgeSchema,

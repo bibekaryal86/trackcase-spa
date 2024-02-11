@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
-import dayjs from 'dayjs'
+import { Dayjs } from 'dayjs'
 import React from 'react'
 
 import {
@@ -17,7 +17,7 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { ID_LIST } from '../../constants'
+import { ID_LIST, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { FormSchema } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
@@ -39,12 +39,15 @@ interface CalendarFormProps {
   calendarStatusList: string[]
   hearingCalendarList: HearingCalendarSchema[]
   isShowOneCalendar: boolean
+  minCalendarDate: Dayjs
+  maxCalendarDate: Dayjs
 }
 
 const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
   const { courtCasesList, formsList, clientsList, calendarStatusList, hearingCalendarList } = props
+  const { minCalendarDate, maxCalendarDate } = props
   const isHearingCalendarForm = isHearingCalendar(calendarType)
 
   const calendarDate = () => {
@@ -61,8 +64,8 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         componentLabel={label}
         value={value}
         onChange={(newValue) => handleCalendarDateOnChange(name, newValue, selectedCalendar, setSelectedCalendar)}
-        minDate={dayjs().subtract(1, 'month')}
-        maxDate={dayjs().add(1, 'year')}
+        minDate={minCalendarDate}
+        maxDate={maxCalendarDate}
         required
       />
     )
@@ -75,8 +78,8 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         componentLabel="Task Calendar--Due Date"
         value={value}
         onChange={(newValue) => handleCalendarDateOnChange('dueDate', newValue, selectedCalendar, setSelectedCalendar)}
-        minDate={dayjs().subtract(1, 'month')}
-        maxDate={dayjs().add(1, 'year')}
+        minDate={minCalendarDate}
+        maxDate={maxCalendarDate}
         required
       />
     )

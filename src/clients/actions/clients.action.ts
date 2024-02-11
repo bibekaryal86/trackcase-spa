@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
+import { Async, FetchOptions, getEndpoint, getErrMsg, getNumber, GlobalDispatch, GlobalState } from '../../app'
 import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
   CLIENT_CREATE_FAILURE,
@@ -223,7 +223,7 @@ const getRequestBody = (client: ClientSchema) => {
     name: client.name,
     a_number: client.aNumber,
     email: client.email,
-    judge_id: client.judgeId,
+    judge_id: getNumber(client.judgeId) > 0 ? client.judgeId : undefined,
     street_address: client.streetAddress,
     city: client.city,
     state: client.state,

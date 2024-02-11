@@ -1,9 +1,13 @@
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import dayjs from 'dayjs'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
+import CalendarCalendar from './CalendarCalendar'
+import CalendarChooseView from './CalendarChooseView'
 import CalendarForm from './CalendarForm'
 import CalendarTable from './CalendarTable'
 import { getDayjsString, getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
@@ -25,15 +29,20 @@ import { FormSchema, getForm, getForms } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { getHearingTypes } from '../../types/actions/hearingTypes.action'
 import { getTaskTypes } from '../../types/actions/taskTypes.action'
-import { addCalendar, deleteCalendar, editCalendar, getCalendars } from '../actions/calendars.action'
+import { addCalendar, deleteCalendar, editCalendar, getCalendarsWithEvents } from '../actions/calendars.action'
 import { CALENDARS_UNMOUNT } from '../types/calendars.action.types'
-import { DefaultCalendarSchema, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
+import {
+  CalendarEvents,
+  DefaultCalendarSchema,
+  HearingCalendarSchema,
+  TaskCalendarSchema,
+} from '../types/calendars.data.types'
 import { isAreTwoCalendarsSame, isHearingCalendar } from '../utils/calendars.utils'
 
 const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms, clients }: GlobalState) => {
   return {
-    isForceFetch: calendars.isForceFetch,
     isCloseModal: calendars.isCloseModal,
+    calendarEventsList: calendars.calendarEvents,
     hearingCalendarsList: calendars.hearingCalendars,
     taskCalendarsList: calendars.taskCalendars,
     statusList: statuses.statuses,
@@ -48,8 +57,7 @@ const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCa
 }
 
 const mapDispatchToProps = {
-  getHearingCalendars: () => getCalendars(CALENDAR_OBJECT_TYPES.HEARING),
-  getTaskCalendars: () => getCalendars(CALENDAR_OBJECT_TYPES.TASK),
+  getCalendarsWithEvents: () => getCalendarsWithEvents(),
   addHearingCalendar: (calendar: HearingCalendarSchema) => addCalendar(calendar, CALENDAR_OBJECT_TYPES.HEARING),
   addTaskCalendar: (calendar: TaskCalendarSchema) => addCalendar(calendar, CALENDAR_OBJECT_TYPES.TASK),
   editHearingCalendar: (id: number, calendar: HearingCalendarSchema) =>
@@ -70,12 +78,11 @@ const mapDispatchToProps = {
 }
 
 interface CalendarsProps {
-  isForceFetch: boolean
   isCloseModal: boolean
+  calendarEventsList: CalendarEvents[]
   hearingCalendarsList: HearingCalendarSchema[]
-  getHearingCalendars: () => void
   taskCalendarsList: TaskCalendarSchema[]
-  getTaskCalendars: () => void
+  getCalendarsWithEvents: () => void
   addHearingCalendar: (calendar: HearingCalendarSchema) => void
   addTaskCalendar: (calendar: TaskCalendarSchema) => void
   editHearingCalendar: (id: number, calendar: HearingCalendarSchema) => void
@@ -104,11 +111,14 @@ interface CalendarsProps {
 }
 
 const Calendars = (props: CalendarsProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const {
+    calendarEventsList,
     hearingCalendarsList,
     taskCalendarsList,
-    getHearingCalendars,
-    getTaskCalendars,
+    getCalendarsWithEvents,
     addHearingCalendar,
     addTaskCalendar,
     editHearingCalendar,
@@ -117,13 +127,14 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     deleteTaskCalendar,
   } = props
   const { unmountPage } = props
-  const { isCloseModal, isForceFetch } = props
+  const { isCloseModal } = props
   const { statusList, getStatusesList } = props
   const { hearingTypesList, getHearingTypesList, taskTypesList, getTaskTypesList } = props
   const { courtCasesList, getCourtCasesList, formsList, getFormsList, clientsList, getClientsList } = props
   const { courtCaseId, selectedCourtCase, getCourtCase } = props
   const { formId, selectedForm, getForm } = props
 
+  const [isShowListView, setIsShowListView] = useState<boolean>(false)
   const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
   const [selectedType, setSelectedType] = useState<string>('')
@@ -135,50 +146,35 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   )
   const [calendarStatusList, setCalendarStatusList] = useState<string[]>([])
 
-  useEffect(() => {
-    if (courtCaseId) {
-      setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
-      if (!selectedCourtCase) {
-        getCourtCase(getNumber(courtCaseId))
-      }
-    }
-  }, [courtCaseId, getCourtCase, selectedCourtCase])
+  const minCalendarDate = dayjs().subtract(1, 'month')
+  const maxCalendarDate = dayjs().add(1, 'year')
 
   useEffect(() => {
-    if (courtCaseId) {
-      setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
-      if (!selectedCourtCase) {
-        getCourtCase(getNumber(courtCaseId))
-      }
-    }
-  }, [courtCaseId, getCourtCase, selectedCourtCase])
-
-  useEffect(() => {
-    if (formId) {
-      setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
-      if (!selectedForm) {
-        getForm(getNumber(formId))
-      }
-    }
-  }, [formId, getForm, selectedForm])
-
-  useEffect(() => {
-    if (isForceFetch) {
-      hearingCalendarsList.length === 0 && getHearingCalendars()
-      taskCalendarsList.length === 0 && getTaskCalendars()
+    if (isForceFetch.current) {
+      calendarEventsList.length === 0 && getCalendarsWithEvents()
       statusList.calendars.all.length === 0 && getStatusesList()
       hearingTypesList.length === 0 && getHearingTypesList()
       taskTypesList.length === 0 && getTaskTypesList()
       courtCasesList.length === 0 && getCourtCasesList()
       formsList.length === 0 && getFormsList()
       clientsList.length === 0 && getClientsList()
+
+      if (courtCaseId) {
+        setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
+        if (!selectedCourtCase) {
+          getCourtCase(getNumber(courtCaseId))
+        }
+      }
+
+      if (formId) {
+        setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
+        if (!selectedForm) {
+          getForm(getNumber(formId))
+        }
+      }
     }
+    isForceFetch.current = false
   }, [
-    isForceFetch,
-    hearingCalendarsList.length,
-    getHearingCalendars,
-    taskCalendarsList.length,
-    getTaskCalendars,
     statusList.calendars.all,
     getStatusesList,
     hearingTypesList.length,
@@ -191,6 +187,14 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     getFormsList,
     clientsList.length,
     getClientsList,
+    courtCaseId,
+    formId,
+    selectedCourtCase,
+    getCourtCase,
+    selectedForm,
+    getForm,
+    calendarEventsList.length,
+    getCalendarsWithEvents,
   ])
 
   useEffect(() => {
@@ -207,11 +211,13 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])
 
   const primaryButtonCallback = (action: string, type: string, id?: number) => {
+    isForceFetch.current = true
     if (id && action === ACTION_DELETE) {
       type === CALENDAR_OBJECT_TYPES.HEARING && deleteHearingCalendar(id)
       type === CALENDAR_OBJECT_TYPES.TASK && deleteTaskCalendar(id)
@@ -232,7 +238,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   }
 
   const resetButtonCallback = (action: string) => {
-    action === ACTION_ADD && setSelectedCalendar(DefaultCalendarSchema)
+    action === ACTION_ADD && setSelectedCalendar(selectedCalendarForReset)
     action === ACTION_UPDATE && setSelectedCalendar(selectedCalendarForReset)
   }
 
@@ -248,6 +254,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       calendarStatusList={calendarStatusList}
       hearingCalendarList={hearingCalendarsList}
       isShowOneCalendar={false}
+      minCalendarDate={minCalendarDate}
+      maxCalendarDate={maxCalendarDate}
     />
   )
 
@@ -328,9 +336,13 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       : null
 
   const calendarsPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary" gutterBottom>
-      Calendars
-    </Typography>
+    <Grid container alignItems="center" columnGap={2}>
+      <Typography component="h1" variant="h6" color="primary" gutterBottom>
+        Calendars
+      </Typography>
+      <Divider orientation="vertical" flexItem />
+      <CalendarChooseView setIsShowListView={setIsShowListView} />
+    </Grid>
   )
 
   const hearingCalendarsTable = () => (
@@ -368,6 +380,34 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     />
   )
 
+  const calendarsShowCalendarView = () => (
+    <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+      <CalendarCalendar
+        calendarEvents={calendarEventsList}
+        setModal={setModal}
+        setSelectedId={setSelectedId}
+        setSelectedType={setSelectedType}
+        setSelectedCalendar={setSelectedCalendar}
+        setSelectedCalendarForReset={setSelectedCalendarForReset}
+        hearingCalendarsList={hearingCalendarsList}
+        taskCalendarsList={taskCalendarsList}
+        minCalendarDate={minCalendarDate}
+        maxCalendarDate={maxCalendarDate}
+      />
+    </Grid>
+  )
+
+  const calendarsShowListView = () => (
+    <>
+      <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        {hearingCalendarsTable()}
+      </Grid>
+      <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        {taskCalendarsTable()}
+      </Grid>
+    </>
+  )
+
   return courtCaseId ? (
     <>
       {hearingCalendarsTable()}
@@ -384,12 +424,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {calendarsPageTitle()}
         </Grid>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {hearingCalendarsTable()}
-        </Grid>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {taskCalendarsTable()}
-        </Grid>
+        {isShowListView && calendarsShowListView()}
+        {!isShowListView && calendarsShowCalendarView()}
       </Grid>
       {modal && showModal()}
     </Box>

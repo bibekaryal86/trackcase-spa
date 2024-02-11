@@ -27,7 +27,6 @@ export interface HistoryCourtSchema extends AddressBaseSchema, BaseModelSchema {
 }
 
 export interface CourtsState {
-  isForceFetch: boolean
   isCloseModal: boolean
   courts: CourtSchema[]
   selectedCourt: CourtSchema
@@ -50,7 +49,6 @@ export const DefaultCourtSchema: CourtSchema = {
 }
 
 export const DefaultCourtState: CourtsState = {
-  isForceFetch: true,
   isCloseModal: true,
   courts: [],
   selectedCourt: DefaultCourtSchema,

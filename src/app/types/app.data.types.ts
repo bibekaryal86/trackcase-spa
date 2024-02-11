@@ -28,7 +28,7 @@ export interface SessionStorageItem {
 
 export interface SpinnerState {
   isLoading: boolean
-  spinRequests: Set<string>
+  requestCount: number
 }
 
 export interface SpinnerAction {

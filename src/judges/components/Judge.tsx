@@ -2,7 +2,7 @@ import { Grid } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -17,7 +17,6 @@ import { isAreTwoJudgesSame } from '../utils/judges.utils'
 
 const mapStateToProps = ({ judges, statuses, courts }: GlobalState) => {
   return {
-    isForceFetch: judges.isForceFetch,
     selectedJudge: judges.selectedJudge,
     statusList: statuses.statuses,
     courtsList: courts.courts,
@@ -33,7 +32,6 @@ const mapDispatchToProps = {
 }
 
 interface JudgeProps {
-  isForceFetch: boolean
   selectedJudge: JudgeSchema
   getJudge: (judgeId: number) => void
   editJudge: (judgeId: number, judge: JudgeSchema) => void
@@ -45,9 +43,11 @@ interface JudgeProps {
 }
 
 const Judge = (props: JudgeProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
-  const { isForceFetch } = props
   const { getJudge, editJudge } = props
   const { courtsList, getCourts } = props
   const { statusList, getStatusesList } = props
@@ -58,18 +58,13 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   const [judgeStatusList, setJudgeStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (id) {
-      getJudge(getNumber(id))
-    }
-    // add selectedJudge.id to dependency array for note/history
-  }, [id, getJudge, selectedJudge.id])
-
-  useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
+      id && getJudge(getNumber(id))
       statusList.court_case.all.length === 0 && getStatusesList()
       courtsList.length === 0 && getCourts()
     }
-  }, [isForceFetch, statusList.court_case.all, getStatusesList, courtsList.length, getCourts])
+    isForceFetch.current = false
+  }, [id, getJudge, statusList.court_case.all.length, getStatusesList, courtsList.length, getCourts])
 
   useEffect(() => {
     if (statusList.judge.all.length > 0) {
@@ -84,6 +79,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])

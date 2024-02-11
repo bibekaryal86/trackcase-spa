@@ -16,7 +16,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Login from './Login'
 import Logout from './Logout'
 import NotFound from './NotFound'
-import { Calendar, Calendars } from '../../calendars'
+import { Calendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
 import { Collection, Collections } from '../../collections'
@@ -70,16 +70,6 @@ export const protectedRoutes: RoutesType[] = [
     display: 'Calendars',
     element: <Calendars />,
     icon: <TodayIcon />,
-  },
-  {
-    path: '/calendar',
-    element: <Calendar />,
-    subroutes: [
-      {
-        path: ':type/:id',
-        element: <Calendar />,
-      },
-    ],
   },
   {
     path: '/forms',

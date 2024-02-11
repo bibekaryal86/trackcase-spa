@@ -13,6 +13,7 @@ import {
   getString,
   GridFormWrapper,
 } from '../../app'
+import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CourtSchema } from '../../courts'
 import { JudgeSchema } from '../types/judges.data.types'
 import { handleJudgeFormOnChange } from '../utils/judges.utils'
@@ -26,7 +27,7 @@ interface JudgeFormProps {
 }
 
 const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { selectedJudge, courtsList, setSelectedJudge, judgeStatusList, isShowOneJudge } = props
 
   const judgeName = () => (

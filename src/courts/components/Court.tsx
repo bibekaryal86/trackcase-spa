@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -16,7 +16,6 @@ import { isAreTwoCourtsSame } from '../utils/courts.utils'
 
 const mapStateToProps = ({ courts, statuses }: GlobalState) => {
   return {
-    isForceFetch: courts.isForceFetch,
     selectedCourt: courts.selectedCourt,
     statusList: statuses.statuses,
   }
@@ -30,7 +29,6 @@ const mapDispatchToProps = {
 }
 
 interface CourtProps {
-  isForceFetch: boolean
   selectedCourt: CourtSchema
   getCourt: (courtId: number) => void
   editCourt: (id: number, court: CourtSchema) => void
@@ -40,9 +38,11 @@ interface CourtProps {
 }
 
 const Court = (props: CourtProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
-  const { isForceFetch } = props
   const { getCourt, editCourt } = props
   const { statusList, getStatusesList } = props
   const { unmountPage } = props
@@ -52,17 +52,12 @@ const Court = (props: CourtProps): React.ReactElement => {
   const [courtStatusList, setCourtStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (id) {
-      getCourt(getNumber(id))
-    }
-    // add selectedCourt.id to dependency array for note/history
-  }, [id, getCourt, selectedCourt.id])
-
-  useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
+      id && getCourt(getNumber(id))
       statusList.court.all.length === 0 && getStatusesList()
     }
-  }, [isForceFetch, statusList.court.all, getStatusesList])
+    isForceFetch.current = false
+  }, [id, getCourt, statusList.court.all.length, getStatusesList])
 
   useEffect(() => {
     if (statusList.court.all.length > 0) {
@@ -77,6 +72,7 @@ const Court = (props: CourtProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])

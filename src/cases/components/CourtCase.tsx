@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -20,7 +20,6 @@ import { isAreTwoCourtCasesSame } from '../utils/courtCases.utils'
 
 const mapStateToProps = ({ courtCases, statuses, caseTypes, clients }: GlobalState) => {
   return {
-    isForceFetch: courtCases.isForceFetch,
     selectedCourtCase: courtCases.selectedCourtCase,
     statusList: statuses.statuses,
     caseTypesList: caseTypes.caseTypes,
@@ -38,7 +37,6 @@ const mapDispatchToProps = {
 }
 
 interface CourtCaseProps {
-  isForceFetch: boolean
   selectedCourtCase: CourtCaseSchema
   getCourtCase: (courtCaseId: number) => void
   editCourtCase: (id: number, courtCase: CourtCaseSchema) => void
@@ -52,9 +50,11 @@ interface CourtCaseProps {
 }
 
 const CourtCase = (props: CourtCaseProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
-  const { isForceFetch } = props
   const { getCourtCase, editCourtCase } = props
   const { statusList, getStatusesList } = props
   const { unmountPage } = props
@@ -65,21 +65,17 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   const [courtCaseStatusList, setCourtCaseStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (id) {
-      getCourtCase(getNumber(id))
-    }
-    // add selectedCourtCase.id to dependency array for note/history
-  }, [id, getCourtCase, selectedCourtCase.id])
-
-  useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
+      id && getCourtCase(getNumber(id))
       statusList.court_case.all.length === 0 && getStatusesList()
       caseTypesList.length === 0 && getCaseTypes()
       clientsList.length === 0 && getClients()
     }
+    isForceFetch.current = false
   }, [
-    isForceFetch,
-    statusList.court_case.all,
+    id,
+    getCourtCase,
+    statusList.court_case.all.length,
     getStatusesList,
     caseTypesList.length,
     getCaseTypes,
@@ -100,6 +96,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])

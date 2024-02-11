@@ -6,6 +6,21 @@ import { ID_DEFAULT } from '../../constants'
 import { FormSchema } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 
+export interface CalendarEvents {
+  id: number
+  calendar: 'HEARING_CALENDAR' | 'TASK_CALENDAR'
+  type: string
+  date: Dayjs
+  title: string
+  status: 'PAST_DONE' | 'PAST_DUE' | 'DONE' | 'DUE'
+}
+
+export interface CalendarResponse extends ResponseBase {
+  calendarEvents: CalendarEvents[]
+  hearingCalendars: HearingCalendarSchema[]
+  taskCalendars: TaskCalendarSchema[]
+}
+
 export interface HearingCalendarSchema extends StatusBaseSchema, BaseModelSchema {
   hearingDate: Dayjs | undefined // set undefined for default object
   hearingTypeId: number
@@ -72,8 +87,8 @@ export interface HistoryTaskCalendarSchema extends BaseModelSchema {
 }
 
 export interface CalendarsState {
-  isForceFetch: boolean
   isCloseModal: boolean
+  calendarEvents: CalendarEvents[]
   hearingCalendars: HearingCalendarSchema[]
   taskCalendars: TaskCalendarSchema[]
   selectedHearingCalendar: HearingCalendarSchema
@@ -108,8 +123,8 @@ export const DefaultTaskCalendarSchema: TaskCalendarSchema = {
 }
 
 export const DefaultCalendarsState: CalendarsState = {
-  isForceFetch: true,
   isCloseModal: true,
+  calendarEvents: [],
   hearingCalendars: [],
   taskCalendars: [],
   selectedHearingCalendar: DefaultHearingCalendarSchema,

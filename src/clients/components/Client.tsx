@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -17,7 +17,6 @@ import { isAreTwoClientsSame } from '../utils/clients.utils'
 
 const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
   return {
-    isForceFetch: clients.isForceFetch,
     selectedClient: clients.selectedClient,
     statusList: statuses.statuses,
     judgesList: judges.judges,
@@ -33,7 +32,6 @@ const mapDispatchToProps = {
 }
 
 interface ClientProps {
-  isForceFetch: boolean
   selectedClient: ClientSchema
   getClient: (clientId: number) => void
   editClient: (id: number, client: ClientSchema) => void
@@ -45,9 +43,11 @@ interface ClientProps {
 }
 
 const Client = (props: ClientProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
-  const { isForceFetch } = props
   const { getClient, editClient } = props
   const { statusList, getStatusesList } = props
   const { unmountPage } = props
@@ -65,11 +65,12 @@ const Client = (props: ClientProps): React.ReactElement => {
   }, [id, getClient, selectedClient.id])
 
   useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
       statusList.court_case.all.length === 0 && getStatusesList()
       judgesList.length === 0 && getJudges()
     }
-  }, [isForceFetch, statusList.court_case.all, getStatusesList, judgesList.length, getJudges])
+    isForceFetch.current = false
+  }, [statusList.court_case.all, getStatusesList, judgesList.length, getJudges])
 
   useEffect(() => {
     if (statusList.court.all.length > 0) {
@@ -84,6 +85,7 @@ const Client = (props: ClientProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])

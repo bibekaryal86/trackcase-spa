@@ -3,13 +3,13 @@ import { SpinnerAction, SpinnerState } from '../types/app.data.types'
 
 const initialState: SpinnerState = {
   isLoading: false,
-  spinRequests: new Set<string>(),
+  requestCount: 0,
 }
 
 export default function spinner(state = initialState, action: SpinnerAction): SpinnerState {
   const { type } = action
   const matchesRequest = /(.*)_(REQUEST)/.exec(type)
-  const matchesResponse = /(.*)_(SUCCESS|FAILURE|COMPLETE)/.exec(type)
+  const matchesComplete = /(.*)_(COMPLETE)/.exec(type)
 
   if (type === SET_SPINNER) {
     return {
@@ -26,23 +26,21 @@ export default function spinner(state = initialState, action: SpinnerAction): Sp
   }
 
   if (matchesRequest) {
-    const requestModule: string = type.split('_')[0]
-    const spinRequests = new Set(state.spinRequests)
-    spinRequests.add(requestModule)
+    const requestCount = state.requestCount
     return {
       isLoading: true,
-      spinRequests: spinRequests,
+      requestCount: requestCount + 1,
     }
   }
 
-  if (matchesResponse) {
-    const responseModule: string = type.split('_')[0]
-    const spinRequests = new Set(state.spinRequests)
-    spinRequests.delete(responseModule)
-
+  if (matchesComplete) {
+    let requestCount = state.requestCount
+    if (requestCount > 0) {
+      requestCount = requestCount - 1
+    }
     return {
-      isLoading: spinRequests.size > 0,
-      spinRequests: spinRequests,
+      isLoading: requestCount > 0,
+      requestCount: requestCount,
     }
   }
 

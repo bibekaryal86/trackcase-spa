@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
 import FormForm from './FormForm'
@@ -20,7 +20,7 @@ import {
   ID_DEFAULT,
 } from '../../constants'
 import { FormTypeSchema } from '../../types'
-import { getFormTypes } from '../../types/actions/formTypes'
+import { getFormTypes } from '../../types/actions/formTypes.action'
 import { addForm, deleteForm, editForm, getForms } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
@@ -28,7 +28,6 @@ import { isAreTwoFormsSame } from '../utils/forms.utils'
 
 const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
   return {
-    isForceFetch: forms.isForceFetch,
     isCloseModal: forms.isCloseModal,
     formsList: forms.forms,
     statusList: statuses.statuses,
@@ -51,7 +50,6 @@ const mapDispatchToProps = {
 }
 
 interface FormsProps {
-  isForceFetch: boolean
   isCloseModal: boolean
   formsList: FormSchema[]
   getForms: () => void
@@ -71,9 +69,12 @@ interface FormsProps {
 }
 
 const Forms = (props: FormsProps): React.ReactElement => {
+  // to avoid multiple api calls
+  const isForceFetch = useRef(true)
+
   const { formsList, getForms, addForm, editForm, deleteForm } = props
   const { unmountPage } = props
-  const { isCloseModal, isForceFetch } = props
+  const { isCloseModal } = props
   const { statusList, getStatusesList } = props
   const { formTypesList, getFormTypesList, courtCasesList, getCourtCasesList } = props
   const { courtCaseId, selectedCourtCase, getCourtCase } = props
@@ -85,23 +86,21 @@ const Forms = (props: FormsProps): React.ReactElement => {
   const [formStatusList, setFormStatusList] = useState<string[]>([])
 
   useEffect(() => {
-    if (courtCaseId) {
-      setSelectedForm({ ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) })
-      if (!selectedCourtCase) {
-        getCourtCase(getNumber(courtCaseId))
-      }
-    }
-  }, [courtCaseId, getCourtCase, selectedCourtCase])
-
-  useEffect(() => {
-    if (isForceFetch) {
+    if (isForceFetch.current) {
       formsList.length === 0 && getForms()
       statusList.form.all.length === 0 && getStatusesList()
       formTypesList.length === 0 && getFormTypesList()
       courtCasesList.length === 0 && getCourtCasesList()
+
+      if (courtCaseId) {
+        setSelectedForm({ ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) })
+        if (!selectedCourtCase) {
+          getCourtCase(getNumber(courtCaseId))
+        }
+      }
     }
+    isForceFetch.current = false
   }, [
-    isForceFetch,
     formsList.length,
     getForms,
     statusList.form.all,
@@ -110,6 +109,9 @@ const Forms = (props: FormsProps): React.ReactElement => {
     getFormTypesList,
     courtCasesList.length,
     getCourtCasesList,
+    courtCaseId,
+    selectedCourtCase,
+    getCourtCase,
   ])
 
   useEffect(() => {
@@ -126,11 +128,13 @@ const Forms = (props: FormsProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
+      isForceFetch.current = true
       unmountPage()
     }
   }, [unmountPage])
 
   const primaryButtonCallback = (action: string, id?: number) => {
+    isForceFetch.current = true
     if (id && action === ACTION_DELETE) {
       deleteForm(id)
     } else if (id && action === ACTION_UPDATE) {

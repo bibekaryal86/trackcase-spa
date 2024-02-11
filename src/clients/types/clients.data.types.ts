@@ -35,7 +35,6 @@ export interface HistoryClientSchema extends AddressBaseSchema, BaseModelSchema 
 }
 
 export interface ClientsState {
-  isForceFetch: boolean
   isCloseModal: boolean
   clients: ClientSchema[]
   selectedClient: ClientSchema
@@ -60,7 +59,6 @@ export const DefaultClientSchema: ClientSchema = {
 }
 
 export const DefaultClientState: ClientsState = {
-  isForceFetch: true,
   isCloseModal: true,
   clients: [],
   selectedClient: DefaultClientSchema,

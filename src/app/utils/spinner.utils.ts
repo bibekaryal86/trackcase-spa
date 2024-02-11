@@ -10,7 +10,7 @@ export const setSpinner = () => {
       type: SET_SPINNER,
       spinner: {
         isLoading: true,
-        spinRequests: getStore().spinner.spinRequests,
+        requestCount: getStore().spinner.requestCount,
       },
     })
   }
@@ -22,7 +22,7 @@ export const resetSpinner = () => {
       type: RESET_SPINNER,
       spinner: {
         isLoading: false,
-        spinRequests: getStore().spinner.spinRequests,
+        requestCount: getStore().spinner.requestCount,
       },
     })
   }

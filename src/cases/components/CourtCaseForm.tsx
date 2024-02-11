@@ -13,7 +13,7 @@ import {
   GridFormWrapper,
 } from '../../app'
 import { ClientSchema } from '../../clients'
-import { ID_DEFAULT } from '../../constants'
+import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CaseTypeSchema } from '../../types'
 import { CourtCaseSchema } from '../types/courtCases.data.types'
 import { handleCourtCaseFormOnChange, isCourtCaseFormFieldError } from '../utils/courtCases.utils'
@@ -28,7 +28,7 @@ interface CourtCaseFormProps {
 }
 
 const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { selectedCourtCase, setSelectedCourtCase, courtCaseStatusList, isShowOneCourtCase } = props
   const { caseTypesList, clientsList } = props
 

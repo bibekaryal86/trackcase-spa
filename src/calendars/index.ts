@@ -1,6 +1,5 @@
 // actions
 // components
-import Calendar from './components/Calendar'
 import Calendars from './components/Calendars'
 // reducers
 import calendars from './reducers/calendars.reducer'
@@ -15,7 +14,7 @@ import {
   TaskCalendarSchema,
 } from './types/calendars.data.types'
 
-export { Calendar, Calendars }
+export { Calendars }
 export { calendars }
 export type {
   HearingCalendarResponse,

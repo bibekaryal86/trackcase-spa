@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
-import { addFormType, deleteFormType, editFormType, getFormTypes } from '../actions/formTypes'
+import { addFormType, deleteFormType, editFormType, getFormTypes } from '../actions/formTypes.action'
 import { FORM_TYPES_UNMOUNT } from '../types/refTypes.action.types'
 import { FormTypeSchema } from '../types/refTypes.data.types'
 

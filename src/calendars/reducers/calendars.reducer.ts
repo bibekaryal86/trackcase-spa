@@ -1,4 +1,6 @@
 import {
+  CALENDARS_RETRIEVE_REQUEST,
+  CALENDARS_RETRIEVE_SUCCESS,
   HEARING_CALENDARS_RETRIEVE_REQUEST,
   HEARING_CALENDARS_RETRIEVE_SUCCESS,
   HEARING_CALENDARS_UNMOUNT,
@@ -22,7 +24,9 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
   if (
     matchesRequestHc ||
     matchesRequestTc ||
-    [HEARING_CALENDARS_RETRIEVE_REQUEST, TASK_CALENDARS_RETRIEVE_REQUEST].includes(action.type)
+    [CALENDARS_RETRIEVE_REQUEST, HEARING_CALENDARS_RETRIEVE_REQUEST, TASK_CALENDARS_RETRIEVE_REQUEST].includes(
+      action.type,
+    )
   ) {
     return {
       ...state,
@@ -36,8 +40,8 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
   if (matchesSuccessHc || matchesSuccessTc) {
     return {
       ...state,
-      isForceFetch: true,
       isCloseModal: true,
+      calendarEvents: [],
       hearingCalendars: [],
       taskCalendars: [],
       selectedHearingCalendar: DefaultHearingCalendarSchema,
@@ -46,37 +50,40 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
   }
 
   switch (action.type) {
+    case CALENDARS_RETRIEVE_SUCCESS:
+      return {
+        ...state,
+        isCloseModal: true,
+        calendarEvents: action.calendarEvents,
+        hearingCalendars: action.hearingCalendars,
+        taskCalendars: action.taskCalendars,
+      }
     case HEARING_CALENDARS_RETRIEVE_SUCCESS:
       return {
         ...state,
-        isForceFetch: false,
         isCloseModal: true,
         hearingCalendars: action.hearingCalendars,
       }
     case TASK_CALENDARS_RETRIEVE_SUCCESS:
       return {
         ...state,
-        isForceFetch: false,
         isCloseModal: true,
         taskCalendars: action.taskCalendars,
       }
     case SET_SELECTED_HEARING_CALENDAR:
       return {
         ...state,
-        isForceFetch: false,
         selectedHearingCalendar: action.selectedHearingCalendar,
       }
     case SET_SELECTED_TASK_CALENDAR:
       return {
         ...state,
-        isForceFetch: false,
         selectedTaskCalendar: action.selectedTaskCalendar,
       }
     case TASK_CALENDARS_UNMOUNT:
     case HEARING_CALENDARS_UNMOUNT:
       return {
         ...state,
-        isForceFetch: true,
         selectedHearingCalendar: DefaultHearingCalendarSchema,
         selectedTaskCalendar: DefaultTaskCalendarSchema,
       }

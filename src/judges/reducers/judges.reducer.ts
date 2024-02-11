@@ -23,7 +23,6 @@ export default function judges(state = DefaultJudgeState, action: JudgesAction):
     case JUDGES_RETRIEVE_SUCCESS:
       return {
         ...state,
-        isForceFetch: false,
         isCloseModal: true,
         judges: action.judges,
       }
@@ -31,7 +30,6 @@ export default function judges(state = DefaultJudgeState, action: JudgesAction):
     case JUDGE_UPDATE_SUCCESS:
     case JUDGE_DELETE_SUCCESS:
       return {
-        isForceFetch: true,
         isCloseModal: true,
         judges: [],
         selectedJudge: DefaultJudgeSchema,
@@ -39,7 +37,6 @@ export default function judges(state = DefaultJudgeState, action: JudgesAction):
     case SET_SELECTED_JUDGE:
       return {
         ...state,
-        isForceFetch: false,
         selectedJudge: action.selectedJudge,
       }
     case CLIENT_CREATE_SUCCESS:
@@ -47,13 +44,11 @@ export default function judges(state = DefaultJudgeState, action: JudgesAction):
     case CLIENT_DELETE_SUCCESS:
       return {
         ...state,
-        isForceFetch: true,
         selectedJudge: DefaultJudgeSchema,
       }
     case JUDGES_UNMOUNT:
       return {
         ...state,
-        isForceFetch: true,
         selectedJudge: DefaultJudgeSchema,
       }
     default:

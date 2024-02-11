@@ -16,7 +16,7 @@ import {
   GridFormWrapper,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
-import { ID_DEFAULT } from '../../constants'
+import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { FormTypeSchema } from '../../types'
 import { FormSchema } from '../types/forms.data.types'
 import { handleFormDateOnChange, handleFormFormOnChange, isFormFormFieldError } from '../utils/forms.utils'
@@ -31,7 +31,7 @@ interface FormFormProps {
 }
 
 const FormForm = (props: FormFormProps): React.ReactElement => {
-  const isSmallScreen = useMediaQuery('(max-width: 600px)')
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { selectedForm, setSelectedForm, formStatusList, isShowOneForm } = props
   const { formTypesList, courtCasesList } = props
 

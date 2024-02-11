@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
+import { Async, FetchOptions, getEndpoint, getErrMsg, getNumber, GlobalDispatch, GlobalState } from '../../app'
 import {
   CALENDAR_OBJECT_TYPES,
   CREATE_SUCCESS,
@@ -8,8 +8,17 @@ import {
   SOMETHING_WENT_WRONG,
   UPDATE_SUCCESS,
 } from '../../constants'
-import { SET_SELECTED_HEARING_CALENDAR, SET_SELECTED_TASK_CALENDAR } from '../types/calendars.action.types'
 import {
+  CALENDARS_COMPLETE,
+  CALENDARS_RETRIEVE_FAILURE,
+  CALENDARS_RETRIEVE_REQUEST,
+  CALENDARS_RETRIEVE_SUCCESS,
+  SET_SELECTED_HEARING_CALENDAR,
+  SET_SELECTED_TASK_CALENDAR,
+} from '../types/calendars.action.types'
+import {
+  CalendarEvents,
+  CalendarResponse,
   HearingCalendarResponse,
   HearingCalendarSchema,
   TaskCalendarResponse,
@@ -65,6 +74,60 @@ export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema
       dispatch(calendarsFailure(`${calendarType}_CREATE_FAILURE`, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(calendarsComplete(`${calendarType}S_COMPLETE`))
+    }
+  }
+}
+
+export const getCalendarsWithEvents = (isForceFetch: boolean = false) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+    dispatch(calendarsRequest(CALENDARS_RETRIEVE_REQUEST))
+
+    try {
+      let calendarResponse: CalendarResponse
+      const options: Partial<FetchOptions> = {
+        method: 'GET',
+      }
+
+      const calendarEventsInStore = getStore().calendars.calendarEvents
+      const hearingCalendarsInStore = getStore().calendars.hearingCalendars
+      const taskCalendarsInStore = getStore().calendars.taskCalendars
+
+      if (
+        isForceFetch ||
+        calendarEventsInStore.length === 0 ||
+        hearingCalendarsInStore.length === 0 ||
+        taskCalendarsInStore.length === 0
+      ) {
+        const urlPath = getEndpoint(process.env.CALENDARS_WITH_EVENTS_ENDPOINT as string)
+        calendarResponse = (await Async.fetch(urlPath, options)) as CalendarResponse
+
+        if (calendarResponse.detail) {
+          dispatch(calendarsFailure(CALENDARS_RETRIEVE_FAILURE, getErrMsg(calendarResponse.detail)))
+        } else {
+          dispatch(
+            calendarsWithEventsSuccess(
+              CALENDARS_RETRIEVE_SUCCESS,
+              calendarResponse.calendarEvents,
+              calendarResponse.hearingCalendars,
+              calendarResponse.taskCalendars,
+            ),
+          )
+        }
+      } else {
+        dispatch(
+          calendarsWithEventsSuccess(
+            CALENDARS_RETRIEVE_SUCCESS,
+            calendarEventsInStore,
+            hearingCalendarsInStore,
+            taskCalendarsInStore,
+          ),
+        )
+      }
+    } catch (error) {
+      console.log('Get Calendars with Events Error: ', error)
+      dispatch(calendarsFailure(CALENDARS_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+    } finally {
+      dispatch(calendarsComplete(CALENDARS_COMPLETE))
     }
   }
 }
@@ -297,6 +360,18 @@ const calendarsSuccess = (
   }
 }
 
+const calendarsWithEventsSuccess = (
+  type: string,
+  calendarEvents: CalendarEvents[],
+  hearingCalendars: HearingCalendarSchema[],
+  taskCalendars: TaskCalendarSchema[],
+) => ({
+  type: type,
+  calendarEvents: calendarEvents,
+  hearingCalendars: hearingCalendars,
+  taskCalendars: taskCalendars,
+})
+
 const calendarsFailure = (type: string, errMsg: string) => ({
   type: type,
   error: errMsg,
@@ -349,15 +424,10 @@ const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, is
     task_type_id: !isHearingCalendarRequest && 'taskTypeId' in calendar ? calendar.taskTypeId : undefined,
     due_date: !isHearingCalendarRequest && 'dueDate' in calendar ? calendar.dueDate : undefined,
     hearing_calendar_id:
-      !isHearingCalendarRequest &&
-      'hearingCalendarId' in calendar &&
-      calendar.hearingCalendarId &&
-      calendar.hearingCalendarId > 0
+      !isHearingCalendarRequest && 'hearingCalendarId' in calendar && getNumber(calendar.hearingCalendarId) > 0
         ? calendar.hearingCalendarId
         : undefined,
     form_id:
-      !isHearingCalendarRequest && 'formId' in calendar && calendar.formId && calendar.formId > 0
-        ? calendar.formId
-        : undefined,
+      !isHearingCalendarRequest && 'formId' in calendar && getNumber(calendar.formId) > 0 ? calendar.formId : undefined,
   }
 }
