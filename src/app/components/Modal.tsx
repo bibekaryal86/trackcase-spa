@@ -60,7 +60,7 @@ const Modal = (props: ModalProps) => {
               {props.secondaryButtonText}
             </Button>
           )}
-          <Button disabled={props.primaryButtonDisabled} onClick={handlePrimaryButtonCallback} autoFocus>
+          <Button disabled={props.primaryButtonDisabled} onClick={handlePrimaryButtonCallback}>
             {props.primaryButtonText}
           </Button>
         </DialogActions>
