@@ -16,6 +16,7 @@ import {
   Navigate,
   SlotInfo,
   ToolbarProps,
+  Views,
 } from 'react-big-calendar'
 
 import { getDayjs, getNumber, getString, Modal } from '../../app'
@@ -48,11 +49,11 @@ interface CalendarViewProps {
   taskCalendarsList: TaskCalendarSchema[]
 }
 
-interface CustomToolbarProps extends ToolbarProps {
+interface RbcToolbarProps extends ToolbarProps {
   isSmallScreen: boolean
 }
 
-interface CustomDateHeaderProps {
+interface RbcDateHeaderProps {
   date: Date
   label: string
   isOffRange: boolean
@@ -70,7 +71,7 @@ interface SelectEvent {
 
 const globalLocalizer = dayjsLocalizer(dayjs)
 
-const RbcCalendar = styled(Calendar)`
+const StyledRbcCalendar = styled(Calendar)`
   .rbc-calendar,
   .rbc-month-view,
   .rbc-week-view,
@@ -97,67 +98,68 @@ const RbcCalendar = styled(Calendar)`
   }
 `
 
-const RbcToolbar = styled(Box)`
+const StyledRbcToolbar = styled(Box)`
   button {
     font-size: 1rem;
     color: ${({ theme }) => theme.palette.primary.main};
   }
 `
 
-const RbcButton = styled(Button)`
+const StyledRbcButton = styled(Button)`
   && {
     font-size: 1.5rem;
   }
 `
 
-const CustomToolbar: React.FC<CustomToolbarProps> = ({ isSmallScreen, ...props }) => {
-  // const goToDayView = () => props.onView('day')
-  // const goToWeekView = () => props.onView('week')
-  // const goToMonthView = () => props.onView('month')
+const RbcToolbar: React.FC<RbcToolbarProps> = ({ ...props }) => {
+  //const goToDay = () => props.onView(Views.DAY)
+  //const goToWeek = () => props.onView(Views.WEEK)
+  const goToMonth = () => props.onView(Views.MONTH)
+  const goToAgenda = () => props.onView(Views.AGENDA)
   const goToBack = () => props.onNavigate(Navigate.PREVIOUS)
   const goToNext = () => props.onNavigate(Navigate.NEXT)
   const goToToday = () => props.onNavigate(Navigate.TODAY)
 
+  const selectedDateMonth = props.date.getMonth()
+  const actualDateMonth = new Date().getMonth()
+
   return (
-    <RbcToolbar className="rbc-toolbar">
-      <Box
-        className="rbc-toolbar-flex-box"
-        display="flex"
-        flexDirection={isSmallScreen ? 'column' : 'row'}
-        alignItems="center"
-      >
+    <StyledRbcToolbar className="rbc-toolbar">
         <Box className="rbc-btn-group">
           <Button className="rbc-btn" id="rbc-btn-previous" onClick={goToBack}>
-            Previous
+            Prev
           </Button>
-        </Box>
-        <Box sx={{ justifyContent: 'center' }} className="rbc-toolbar-label rbc-date">
-          <RbcButton className="rbc-btn" id="rbc-btn-label" onClick={goToToday}>
-            {props.label}
-          </RbcButton>
-        </Box>
-        <Box className="rbc-btn-group">
+          <Button className="rbc-btn" id="rbc-btn-today" onClick={goToToday} disabled={selectedDateMonth===actualDateMonth}>
+            Today
+          </Button>
           <Button className="rbc-btn" id="rbc-btn-next" onClick={goToNext}>
             Next
           </Button>
         </Box>
-        {/*<Box className="rbc-btn-group">*/}
-        {/*  <Button className="rbc-btn" id="rbc-btn-month" onClick={goToMonthView}>*/}
-        {/*    Month*/}
-        {/*  </Button>*/}
-        {/*  <Button className="rbc-btn" id="rbc-btn-week" onClick={goToWeekView}>*/}
-        {/*    Week*/}
-        {/*  </Button>*/}
-        {/*  <Button className="rbc-btn" id="rbc-btn-day" onClick={goToDayView}>*/}
-        {/*    Day*/}
-        {/*  </Button>*/}
-        {/*</Box>*/}
-      </Box>
-    </RbcToolbar>
+        <Box sx={{ justifyContent: 'center' }} className="rbc-toolbar-label rbc-date">
+          <StyledRbcButton className="rbc-btn" id="rbc-btn-label" onClick={goToToday} variant="text">
+            {props.label}
+          </StyledRbcButton>
+        </Box>
+        <Box className="rbc-btn-group">
+          {/*<Button className="rbc-btn" id="rbc-btn-day" onClick={goToDay}>*/}
+          {/*  Day*/}
+          {/*</Button>*/}
+          {/*<Button className="rbc-btn" id="rbc-btn-week" onClick={goToWeek}>*/}
+          {/*  Week*/}
+          {/*</Button>*/}
+          <Button className="rbc-btn" id="rbc-btn-month" onClick={goToMonth}>
+            Month View
+          </Button>
+          <Button className="rbc-btn" id="rbc-btn-agenda" onClick={goToAgenda}>
+            Events View
+          </Button>
+        </Box>
+    </StyledRbcToolbar>
   )
 }
 
-const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, isOffRange, onClick }) => {
+const RbcDateHeader: React.FC<RbcDateHeaderProps> = ({ date, label, isOffRange, onClick }) => {
   const isToday = new Date().toDateString() === date.toDateString()
   const handleClick = () => !isOffRange && onClick(date)
 
@@ -232,9 +234,9 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
       dateHeader: (dateHeaderProps: DateHeaderProps) => React.ReactElement
     }
   }> = {
-    toolbar: (toolbarProps) => <CustomToolbar isSmallScreen={isSmallScreen} {...toolbarProps} />,
+    toolbar: (toolbarProps) => <RbcToolbar isSmallScreen={isSmallScreen} {...toolbarProps} />,
     month: {
-      dateHeader: (dateHeaderProps) => <CustomDateHeader {...dateHeaderProps} onClick={onClickDateHeader} />,
+      dateHeader: (dateHeaderProps) => <RbcDateHeader {...dateHeaderProps} onClick={onClickDateHeader} />,
     },
   }
 
@@ -296,7 +298,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
 
   return (
     <>
-      <RbcCalendar
+      <StyledRbcCalendar
         localizer={globalLocalizer}
         defaultDate={dayjs().toDate()}
         defaultView="month"
