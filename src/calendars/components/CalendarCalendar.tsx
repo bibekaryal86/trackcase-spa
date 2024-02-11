@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import { green, grey, red } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import dayjs, { Dayjs } from 'dayjs'
-import React, { SyntheticEvent, useState } from 'react'
+import React, { useState } from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import {
   Calendar,
@@ -18,9 +18,15 @@ import {
   ToolbarProps,
 } from 'react-big-calendar'
 
-import { getDayjs, Modal } from '../../app'
-import { ACTION_ADD, BUTTON_CANCEL, CALENDAR_OBJECT_TYPES, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { HearingTypeSchema, TaskTypeSchema } from '../../types'
+import { getDayjs, getNumber, getString, Modal } from '../../app'
+import {
+  ACTION_ADD,
+  ACTION_UPDATE,
+  BUTTON_CANCEL,
+  CALENDAR_OBJECT_TYPES,
+  DATE_FORMAT,
+  USE_MEDIA_QUERY_INPUT,
+} from '../../constants'
 import {
   CalendarEvents,
   DefaultCalendarSchema,
@@ -36,10 +42,10 @@ interface CalendarViewProps {
   setSelectedType: (type: string) => void
   setSelectedCalendar: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
   setSelectedCalendarForReset: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
-  hearingTypesList: HearingTypeSchema[]
-  taskTypesList: TaskTypeSchema[]
   minCalendarDate: Dayjs
   maxCalendarDate: Dayjs
+  hearingCalendarsList: HearingCalendarSchema[]
+  taskCalendarsList: TaskCalendarSchema[]
 }
 
 interface CustomToolbarProps extends ToolbarProps {
@@ -51,6 +57,15 @@ interface CustomDateHeaderProps {
   label: string
   isOffRange: boolean
   onClick: (date: Date) => void
+}
+
+interface SelectEvent {
+  id?: number
+  calendar?: string
+  type?: string
+  date?: Dayjs
+  title?: string
+  status?: string
 }
 
 const globalLocalizer = dayjsLocalizer(dayjs)
@@ -73,9 +88,9 @@ const RbcCalendar = styled(Calendar)`
     cursor: default;
   }
   .rbc-off-range {
-      .rbc-button-link {
-          cursor: default;
-      }
+    .rbc-button-link {
+      cursor: default;
+    }
   }
   .rbc-today {
     background: inherit;
@@ -154,7 +169,9 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, isOffR
 }
 
 const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
-  const { calendarEvents, setModal, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
+  const { calendarEvents, setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } =
+    props
+  const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null)
@@ -237,20 +254,30 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     return
   }
 
-  const onSelectEvent = (event: object, e: SyntheticEvent<HTMLElement, Event>) => {
-    console.log('Selected event:', event)
-    console.log('Synthetic event: ', e)
+  const getSelectedCalendar = (id: number, type: string) => {
+    let calendar: HearingCalendarSchema | TaskCalendarSchema | undefined
+    if (type === CALENDAR_OBJECT_TYPES.HEARING) {
+      calendar = hearingCalendarsList.find((h) => h.id === id)
+    } else if (type === CALENDAR_OBJECT_TYPES.TASK) {
+      calendar = taskCalendarsList.find((t) => t.id === id)
+    }
+    return calendar || DefaultCalendarSchema
+  }
+  const onSelectEvent = (event: SelectEvent) => {
+    console.log('Selected event:', event.calendar)
+    const id = getNumber(event.id)
+    const calendarType = getString(event.calendar)
+    const calendar = getSelectedCalendar(id, calendarType)
+    setSelectedId(id)
+    setSelectedType(calendarType)
+    setSelectedCalendar(calendar)
+    setSelectedCalendarForReset(calendar)
+    setModal(ACTION_UPDATE)
+    // prevent default action, return nothing
     return
   }
 
-  const eventStyleGetter = (event: {
-    id?: number
-    calendar?: string
-    type?: string
-    date?: Dayjs
-    title?: string
-    status?: string
-  }) => {
+  const eventStyleGetter = (event: SelectEvent) => {
     return {
       style: {
         backgroundColor: getCalendarEventBgColor(event.type),

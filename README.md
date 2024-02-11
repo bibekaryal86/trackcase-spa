@@ -10,11 +10,8 @@
       * get for selected month as navigate
       * for list view get all
   * add restrictions and filters
-    * form can't be added to closed cases (filter court case dropdown in forms page)
-    * form can't be added to task calendars in the past
-    * task calendars can't be added to closed cases
-    * task calendars can't be updated if in the past
-    * no deleting after cases close
+    * form can't be added/updated/deleted in closed cases
+    * calendars can't be added/updated/deleted in closed cases
     * etc
   * client report
     * when opening case page or client page, show cases, formsReducer, collections, etc all in one

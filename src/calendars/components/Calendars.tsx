@@ -389,8 +389,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         setSelectedType={setSelectedType}
         setSelectedCalendar={setSelectedCalendar}
         setSelectedCalendarForReset={setSelectedCalendarForReset}
-        hearingTypesList={hearingTypesList}
-        taskTypesList={taskTypesList}
+        hearingCalendarsList={hearingCalendarsList}
+        taskCalendarsList={taskCalendarsList}
         minCalendarDate={minCalendarDate}
         maxCalendarDate={maxCalendarDate}
       />
