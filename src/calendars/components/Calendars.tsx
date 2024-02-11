@@ -238,7 +238,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   }
 
   const resetButtonCallback = (action: string) => {
-    action === ACTION_ADD && setSelectedCalendar(DefaultCalendarSchema)
+    action === ACTION_ADD && setSelectedCalendar(selectedCalendarForReset)
     action === ACTION_UPDATE && setSelectedCalendar(selectedCalendarForReset)
   }
 

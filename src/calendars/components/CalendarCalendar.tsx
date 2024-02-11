@@ -154,11 +154,24 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, isOffR
 }
 
 const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
-  const { calendarEvents, setModal, setSelectedType, setSelectedCalendar } = props
+  const { calendarEvents, setModal, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
   const { minCalendarDate, maxCalendarDate } = props
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null)
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+
+  const addCalendarModalCallback = (type: string) => {
+    setShowAddModal(false)
+    if (type === CALENDAR_OBJECT_TYPES.HEARING) {
+      setSelectedCalendar({ ...DefaultCalendarSchema, hearingDate: selectedDate || dayjs() })
+      setSelectedCalendarForReset({ ...DefaultCalendarSchema, hearingDate: selectedDate || dayjs() })
+    } else {
+      setSelectedCalendar({ ...DefaultCalendarSchema, taskDate: selectedDate || dayjs() })
+      setSelectedCalendarForReset({ ...DefaultCalendarSchema, taskDate: selectedDate || dayjs() })
+    }
+    setSelectedType(type)
+    setModal(ACTION_ADD)
+  }
 
   const addCalendarModal = () => {
     if (selectedDate?.isBefore(minCalendarDate, 'day') || selectedDate?.isAfter(maxCalendarDate, 'day')) {
@@ -181,19 +194,9 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         setIsOpen={setShowAddModal}
         title={'Add Calendar Event'}
         primaryButtonText={CALENDAR_OBJECT_TYPES.HEARING.split('_')[0]}
-        primaryButtonCallback={() => {
-          setShowAddModal(false)
-          setSelectedCalendar({ ...DefaultCalendarSchema, hearingDate: dayjs() })
-          setSelectedType(CALENDAR_OBJECT_TYPES.HEARING)
-          setModal(ACTION_ADD)
-        }}
+        primaryButtonCallback={() => addCalendarModalCallback(CALENDAR_OBJECT_TYPES.HEARING)}
         secondaryButtonText={CALENDAR_OBJECT_TYPES.TASK.split('_')[0]}
-        secondaryButtonCallback={() => {
-          setShowAddModal(false)
-          setSelectedCalendar({ ...DefaultCalendarSchema, taskDate: dayjs() })
-          setSelectedType(CALENDAR_OBJECT_TYPES.TASK)
-          setModal(ACTION_ADD)
-        }}
+        secondaryButtonCallback={() => addCalendarModalCallback(CALENDAR_OBJECT_TYPES.TASK)}
         resetButtonText={BUTTON_CANCEL}
         resetButtonCallback={() => setShowAddModal(false)}
         contentText="Select Calendar Type to Add..."
