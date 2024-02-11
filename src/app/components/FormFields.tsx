@@ -300,7 +300,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   minDate,
   maxDate,
   required = false,
-  views
+  views,
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
   const dayjsValue = getDayjs(value)
