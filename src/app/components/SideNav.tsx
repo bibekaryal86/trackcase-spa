@@ -88,9 +88,7 @@ const SideNav = (props: SideNavProps) => {
         <Divider />
         <ListItemButton onClick={handleRefTypesOpen}>
           <Tooltip title="Ref Types" placement="right">
-            <ListItemIcon>
-              {isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItemIcon>
+            <ListItemIcon>{isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
           </Tooltip>
         </ListItemButton>
         <Collapse in={isRefTypesOpen} timeout="auto" unmountOnExit>
