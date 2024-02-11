@@ -1,4 +1,3 @@
-import AllInclusiveIcon from '@mui/icons-material/AllInclusive'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import Collapse from '@mui/material/Collapse'
@@ -70,15 +69,12 @@ const SideNav = (props: SideNavProps) => {
                 <ListItemButton
                   selected={isSelected(protectedRoute.path)}
                   sx={{
-                    minHeight: 48,
                     justifyContent: 'center',
-                    px: 2.5,
                   }}
                 >
                   <Tooltip title={protectedRoute.display} placement="right">
                     <ListItemIcon
                       sx={{
-                        minWidth: 0,
                         justifyContent: 'center',
                       }}
                     >
@@ -93,10 +89,9 @@ const SideNav = (props: SideNavProps) => {
         <ListItemButton onClick={handleRefTypesOpen}>
           <Tooltip title="Ref Types" placement="right">
             <ListItemIcon>
-              <AllInclusiveIcon />
+              {isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemIcon>
           </Tooltip>
-          {isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse in={isRefTypesOpen} timeout="auto" unmountOnExit>
           {refTypesRoutes.map(
@@ -111,15 +106,12 @@ const SideNav = (props: SideNavProps) => {
                   <ListItemButton
                     selected={isSelected(refTypesRoute.path)}
                     sx={{
-                      minHeight: 48,
                       justifyContent: 'center',
-                      px: 2.5,
                     }}
                   >
                     <Tooltip title={refTypesRoute.display} placement="right">
                       <ListItemIcon
                         sx={{
-                          minWidth: 0,
                           justifyContent: 'center',
                         }}
                       >

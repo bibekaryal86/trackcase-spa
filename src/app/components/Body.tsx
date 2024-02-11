@@ -1,4 +1,4 @@
-import { Container, Grid } from '@mui/material'
+import { Container } from '@mui/material'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from '@mui/material/Toolbar'
@@ -34,12 +34,8 @@ const Body = (props: BodyProps) => {
         {isLoggedIn() && <SideNav {...props} />}
         <Toolbar />
         <Container maxWidth="xl" sx={{ mt: 2, mb: 2 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <AppRoutes />
-              <Footer />
-            </Grid>
-          </Grid>
+          <AppRoutes />
+          <Footer />
         </Container>
       </Box>
     </Box>
