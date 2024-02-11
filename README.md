@@ -31,3 +31,5 @@
 TODO
 * Add filing_type in form type
   * filing_type = form, motion, other
+* Update to this free template
+  * https://flatlogic.github.io/react-material-admin-full
