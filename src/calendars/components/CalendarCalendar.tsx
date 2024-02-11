@@ -108,6 +108,7 @@ const StyledRbcToolbar = styled(Box)`
 const StyledRbcButton = styled(Button)`
   && {
     font-size: 1.5rem;
+    border: 0;
   }
 `
 
@@ -176,7 +177,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null)
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
   const addCalendarModalCallback = (type: string) => {
@@ -300,7 +301,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     <>
       <StyledRbcCalendar
         localizer={globalLocalizer}
-        defaultDate={dayjs().toDate()}
+        date={selectedDate.toDate()}
         defaultView="month"
         events={calendarEvents}
         startAccessor={startAccessor}
@@ -313,6 +314,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         onSelectSlot={onSelectSlot}
         onSelectEvent={onSelectEvent}
         eventPropGetter={eventStyleGetter}
+        onNavigate={(newDate) => setSelectedDate(dayjs(newDate))}
       />
       {showAddModal && addCalendarModal()}
     </>
