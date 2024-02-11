@@ -5,9 +5,9 @@ import Typography from '@mui/material/Typography'
 import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
+import CalendarCalendar from './CalendarCalendar'
 import CalendarForm from './CalendarForm'
 import CalendarTable from './CalendarTable'
-import CalendarView from './CalendarView'
 import CalendarViewSelector from './CalendarViewSelector'
 import { getDayjsString, getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import { CourtCaseSchema, getCourtCase, getCourtCases } from '../../cases'
@@ -376,7 +376,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   const calendarsShowCalendarView = () => (
     <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-      <CalendarView calendarEvents={calendarEventsList} />
+      <CalendarCalendar calendarEvents={calendarEventsList} />
     </Grid>
   )
 

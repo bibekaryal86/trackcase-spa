@@ -126,7 +126,7 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, onClic
   )
 }
 
-const CalendarView = (props: CalendarViewProps): React.ReactElement => {
+const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   const { calendarEvents } = props
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
@@ -220,4 +220,4 @@ const CalendarView = (props: CalendarViewProps): React.ReactElement => {
   )
 }
 
-export default CalendarView
+export default CalendarCalendar
