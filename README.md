@@ -8,6 +8,7 @@
       * get for selected month as navigate
       * for list view get all
   * add restrictions and filters
+    * ADD USERS AND ROLES
     * form can't be added/updated/deleted in closed cases
     * calendars can't be added/updated/deleted in closed cases
     * etc
