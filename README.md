@@ -29,3 +29,11 @@ TODO
   * filing_type = form, motion, other
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
+
+COLLECTIONS:
+  * add collapsible table for case collection
+    * enable collapse if there are cash collections
+    * will need to modify Table
+
+make either collection amount or waived amount mandatory
+in DB both are mandatory, so send 1 as 0

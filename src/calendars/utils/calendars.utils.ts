@@ -153,7 +153,7 @@ export const isCalendarFormFieldError = (
     case 'status':
       return !value || value.toString().trim() === ''
     case 'hearingDate':
-    case 'taskValue':
+    case 'taskDate':
       return !dateValue || !dateValue.isValid()
   }
   return false

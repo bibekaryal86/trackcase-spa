@@ -1,9 +1,12 @@
+import { Dayjs } from 'dayjs'
+
 import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { CourtCaseSchema } from '../../cases'
+import { AMOUNT_DEFAULT, ID_DEFAULT } from '../../constants'
 import { CollectionMethodSchema } from '../../types'
 
 export interface CaseCollectionSchema extends StatusBaseSchema, BaseModelSchema {
-  quoteDate: Date
+  quoteDate: Dayjs | undefined // set undefined for default object
   quoteAmount: number
   courtCaseId: number
   // orm_mode
@@ -18,10 +21,10 @@ export interface CaseCollectionResponse extends ResponseBase {
 }
 
 export interface CashCollectionSchema extends StatusBaseSchema, BaseModelSchema {
-  collectionDate: Date
+  collectionDate: Dayjs | undefined // set undefined for default object
   collectedAmount: number
   waivedAmount: number
-  memo?: string
+  memo: string
   caseCollectionId: number
   collectionMethodId: number
   // orm_mode
@@ -41,7 +44,7 @@ export interface HistoryCaseCollectionSchema extends BaseModelSchema {
   // from case collection schema, need everything optional here so can't extend
   status?: string
   comments?: string
-  quoteDate?: Date
+  quoteDate?: Dayjs
   quoteAmount?: number
   courtCaseId?: number
   // orm mode
@@ -55,7 +58,7 @@ export interface HistoryCashCollectionSchema extends BaseModelSchema {
   // from cash collection schema, need everything optional here so can't extend
   status?: string
   comments?: string
-  collection_date?: Date
+  collection_date?: Dayjs
   collectedAmount?: number
   waivedAmount?: number
   memo?: string
@@ -65,4 +68,42 @@ export interface HistoryCashCollectionSchema extends BaseModelSchema {
   cashCollection?: CashCollectionSchema
   caseCollection?: CaseCollectionSchema
   collectionMethod?: CollectionMethodSchema
+}
+
+export interface CollectionsState {
+  isCloseModal: boolean
+  caseCollections: CaseCollectionSchema[]
+  cashCollections: CashCollectionSchema[]
+  selectedCaseCollection: CaseCollectionSchema
+  selectedCashCollection: CashCollectionSchema
+}
+
+export interface CollectionsAction extends CollectionsState {
+  type: string
+}
+
+export const DefaultCaseCollectionSchema: CaseCollectionSchema = {
+  quoteDate: undefined,
+  quoteAmount: AMOUNT_DEFAULT,
+  courtCaseId: ID_DEFAULT,
+  status: '',
+  comments: '',
+}
+
+export const DefaultCashCollectionSchema: CashCollectionSchema = {
+  caseCollectionId: ID_DEFAULT,
+  collectedAmount: AMOUNT_DEFAULT,
+  waivedAmount: AMOUNT_DEFAULT,
+  collectionDate: undefined,
+  collectionMethodId: ID_DEFAULT,
+  memo: '',
+  status: '',
+}
+
+export const DefaultCollectionsState: CollectionsState = {
+  isCloseModal: true,
+  caseCollections: [],
+  cashCollections: [],
+  selectedCaseCollection: DefaultCaseCollectionSchema,
+  selectedCashCollection: DefaultCashCollectionSchema,
 }

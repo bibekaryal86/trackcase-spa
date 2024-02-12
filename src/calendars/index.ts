@@ -6,6 +6,7 @@ import calendars from './reducers/calendars.reducer'
 // action types
 // data types
 import {
+  CalendarsState,
   HearingCalendarResponse,
   HearingCalendarSchema,
   HistoryHearingCalendarSchema,
@@ -17,6 +18,7 @@ import {
 export { Calendars }
 export { calendars }
 export type {
+  CalendarsState,
   HearingCalendarResponse,
   HearingCalendarSchema,
   HistoryHearingCalendarSchema,

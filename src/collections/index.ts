@@ -1,18 +1,23 @@
 // components
-import Collection from './components/Collection'
 import Collections from './components/Collections'
-// types
+// reducers
+import collections from './reducers/collections.reducer'
+// action types
+// data types
 import {
   CaseCollectionResponse,
   CaseCollectionSchema,
   CashCollectionResponse,
   CashCollectionSchema,
+  CollectionsState,
   HistoryCaseCollectionSchema,
   HistoryCashCollectionSchema,
 } from './types/collections.data.types'
 
-export { Collection, Collections }
+export { Collections }
+export { collections }
 export type {
+  CollectionsState,
   CashCollectionSchema,
   CashCollectionResponse,
   CaseCollectionSchema,
