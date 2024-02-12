@@ -6,6 +6,7 @@ import { green, grey, red } from '@mui/material/colors'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
@@ -189,8 +190,8 @@ const RbcDateHeader: React.FC<RbcDateHeaderProps> = ({ date, label, isOffRange, 
 const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
-  const { calendarEvents} = props
-  const {setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
+  const { calendarEvents } = props
+  const { setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
   const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
 
@@ -253,6 +254,8 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
       <div>
         <Dialog open={showDatePicker} onClose={() => setShowDatePicker(false)}>
           <DialogContent>
+            <Typography variant="overline">Select year/month:</Typography>
+            <br />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 openTo="month"

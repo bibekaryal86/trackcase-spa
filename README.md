@@ -21,7 +21,6 @@
     * eg: in court component, add first court, nothing happens
     * no issue when adding second row
   * unify color palette, create a util module for it
-  * Year/month selector in calendar view
 
 
 TODO
