@@ -3,7 +3,12 @@ import { useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { green, grey, red } from '@mui/material/colors'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
 import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 import React, { useState } from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -16,6 +21,7 @@ import {
   Navigate,
   SlotInfo,
   ToolbarProps,
+  Views,
 } from 'react-big-calendar'
 
 import { getDayjs, getNumber, getString, Modal } from '../../app'
@@ -48,11 +54,12 @@ interface CalendarViewProps {
   taskCalendarsList: TaskCalendarSchema[]
 }
 
-interface CustomToolbarProps extends ToolbarProps {
+interface RbcToolbarProps extends ToolbarProps {
   isSmallScreen: boolean
+  setShowDatePicker: (show: boolean) => void
 }
 
-interface CustomDateHeaderProps {
+interface RbcDateHeaderProps {
   date: Date
   label: string
   isOffRange: boolean
@@ -70,7 +77,7 @@ interface SelectEvent {
 
 const globalLocalizer = dayjsLocalizer(dayjs)
 
-const RbcCalendar = styled(Calendar)`
+const StyledRbcCalendar = styled(Calendar)`
   .rbc-calendar,
   .rbc-month-view,
   .rbc-week-view,
@@ -97,67 +104,79 @@ const RbcCalendar = styled(Calendar)`
   }
 `
 
-const RbcToolbar = styled(Box)`
+const StyledRbcToolbar = styled(Box)`
   button {
     font-size: 1rem;
     color: ${({ theme }) => theme.palette.primary.main};
   }
 `
 
-const RbcButton = styled(Button)`
+const StyledRbcButton = styled(Button)`
   && {
     font-size: 1.5rem;
+    border: 0;
   }
 `
 
-const CustomToolbar: React.FC<CustomToolbarProps> = ({ isSmallScreen, ...props }) => {
-  // const goToDayView = () => props.onView('day')
-  // const goToWeekView = () => props.onView('week')
-  // const goToMonthView = () => props.onView('month')
+const RbcToolbar: React.FC<RbcToolbarProps> = ({ ...props }) => {
+  //const goToDay = () => props.onView(Views.DAY)
+  //const goToWeek = () => props.onView(Views.WEEK)
+  const goToMonth = () => props.onView(Views.MONTH)
+  const goToAgenda = () => props.onView(Views.AGENDA)
   const goToBack = () => props.onNavigate(Navigate.PREVIOUS)
   const goToNext = () => props.onNavigate(Navigate.NEXT)
   const goToToday = () => props.onNavigate(Navigate.TODAY)
 
+  const selectedDateMonth = props.date.getMonth()
+  const actualDateMonth = new Date().getMonth()
+
   return (
-    <RbcToolbar className="rbc-toolbar">
-      <Box
-        className="rbc-toolbar-flex-box"
-        display="flex"
-        flexDirection={isSmallScreen ? 'column' : 'row'}
-        alignItems="center"
-      >
-        <Box className="rbc-btn-group">
-          <Button className="rbc-btn" id="rbc-btn-previous" onClick={goToBack}>
-            Previous
-          </Button>
-        </Box>
-        <Box sx={{ justifyContent: 'center' }} className="rbc-toolbar-label rbc-date">
-          <RbcButton className="rbc-btn" id="rbc-btn-label" onClick={goToToday}>
-            {props.label}
-          </RbcButton>
-        </Box>
-        <Box className="rbc-btn-group">
-          <Button className="rbc-btn" id="rbc-btn-next" onClick={goToNext}>
-            Next
-          </Button>
-        </Box>
-        {/*<Box className="rbc-btn-group">*/}
-        {/*  <Button className="rbc-btn" id="rbc-btn-month" onClick={goToMonthView}>*/}
-        {/*    Month*/}
-        {/*  </Button>*/}
-        {/*  <Button className="rbc-btn" id="rbc-btn-week" onClick={goToWeekView}>*/}
-        {/*    Week*/}
-        {/*  </Button>*/}
-        {/*  <Button className="rbc-btn" id="rbc-btn-day" onClick={goToDayView}>*/}
-        {/*    Day*/}
-        {/*  </Button>*/}
-        {/*</Box>*/}
+    <StyledRbcToolbar className="rbc-toolbar">
+      <Box className="rbc-btn-group">
+        <Button className="rbc-btn" id="rbc-btn-previous" onClick={goToBack}>
+          Prev
+        </Button>
+        <Button
+          className="rbc-btn"
+          id="rbc-btn-today"
+          onClick={goToToday}
+          disabled={selectedDateMonth === actualDateMonth}
+        >
+          Today
+        </Button>
+        <Button className="rbc-btn" id="rbc-btn-next" onClick={goToNext}>
+          Next
+        </Button>
       </Box>
-    </RbcToolbar>
+      <Box sx={{ justifyContent: 'center' }} className="rbc-toolbar-label rbc-date">
+        <StyledRbcButton
+          className="rbc-btn"
+          id="rbc-btn-label"
+          onClick={() => props.setShowDatePicker(true)}
+          variant="text"
+        >
+          {props.label}
+        </StyledRbcButton>
+      </Box>
+      <Box className="rbc-btn-group">
+        {/*<Button className="rbc-btn" id="rbc-btn-day" onClick={goToDay}>*/}
+        {/*  Day*/}
+        {/*</Button>*/}
+        {/*<Button className="rbc-btn" id="rbc-btn-week" onClick={goToWeek}>*/}
+        {/*  Week*/}
+        {/*</Button>*/}
+        <Button className="rbc-btn" id="rbc-btn-month" onClick={goToMonth}>
+          Month View
+        </Button>
+        <Button className="rbc-btn" id="rbc-btn-agenda" onClick={goToAgenda}>
+          Events View
+        </Button>
+      </Box>
+    </StyledRbcToolbar>
   )
 }
 
-const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, isOffRange, onClick }) => {
+const RbcDateHeader: React.FC<RbcDateHeaderProps> = ({ date, label, isOffRange, onClick }) => {
   const isToday = new Date().toDateString() === date.toDateString()
   const handleClick = () => !isOffRange && onClick(date)
 
@@ -169,13 +188,17 @@ const CustomDateHeader: React.FC<CustomDateHeaderProps> = ({ date, label, isOffR
 }
 
 const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
-  const { calendarEvents, setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } =
-    props
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+
+  const { calendarEvents } = props
+  const { setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
   const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
+
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null)
-  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
+  //const [selectedDatePickerDate, setSelectedDatePickerDate] = useState(dayjs())
 
   const addCalendarModalCallback = (type: string) => {
     setShowAddModal(false)
@@ -221,39 +244,61 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     )
   }
 
+  const handleDateChange = (date: Dayjs | null) => {
+    setSelectedDate(dayjs(date))
+    setShowDatePicker(false)
+  }
+
+  const datePickerModal = () => {
+    return (
+      <div>
+        <Dialog open={showDatePicker} onClose={() => setShowDatePicker(false)}>
+          <DialogContent>
+            <Typography variant="overline">Select year/month:</Typography>
+            <br />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                openTo="month"
+                views={['year', 'month']}
+                value={dayjs(selectedDate)}
+                onChange={(newDate) => handleDateChange(newDate)}
+              />
+            </LocalizationProvider>
+          </DialogContent>
+        </Dialog>
+      </div>
+    )
+  }
+
   const onClickDateHeader = (date: Date) => {
     setSelectedDate(dayjs(date))
     setShowAddModal(true)
   }
-
   const components: Partial<{
     toolbar: (toolbarProps: ToolbarProps<Event>) => React.ReactElement
     month: {
       dateHeader: (dateHeaderProps: DateHeaderProps) => React.ReactElement
     }
   }> = {
-    toolbar: (toolbarProps) => <CustomToolbar isSmallScreen={isSmallScreen} {...toolbarProps} />,
+    toolbar: (toolbarProps) => (
+      <RbcToolbar isSmallScreen={isSmallScreen} setShowDatePicker={setShowDatePicker} {...toolbarProps} />
+    ),
     month: {
-      dateHeader: (dateHeaderProps) => <CustomDateHeader {...dateHeaderProps} onClick={onClickDateHeader} />,
+      dateHeader: (dateHeaderProps) => <RbcDateHeader {...dateHeaderProps} onClick={onClickDateHeader} />,
     },
   }
-
   const formats: Partial<Formats> = {
     dateFormat: (date: Date, culture: string = 'en-US', localizer: DateLocalizer = globalLocalizer) =>
       localizer.format(date, 'DD', culture),
     weekdayFormat: (date: Date, culture: string = 'en-US', localizer: DateLocalizer = globalLocalizer) =>
       localizer.format(date, isSmallScreen ? 'ddd' : 'dddd', culture),
   }
-
   const startAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
-  // this app's events do not span multiple days, so use same date for start/end
   const endAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
-
   const onSelectSlot = (slot: SlotInfo) => {
     console.log('onSelectSlot is disabled, events handled with onClickDateHeader: ', slot.action)
     return
   }
-
   const getSelectedCalendar = (id: number, type: string) => {
     let calendar: HearingCalendarSchema | TaskCalendarSchema | undefined
     if (type === CALENDAR_OBJECT_TYPES.HEARING) {
@@ -276,7 +321,6 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     // prevent default action, return nothing
     return
   }
-
   const eventStyleGetter = (event: SelectEvent) => {
     return {
       style: {
@@ -296,23 +340,25 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
 
   return (
     <>
-      <RbcCalendar
+      <StyledRbcCalendar
         localizer={globalLocalizer}
-        defaultDate={dayjs().toDate()}
+        date={selectedDate.toDate()}
         defaultView="month"
         events={calendarEvents}
         startAccessor={startAccessor}
         endAccessor={endAccessor}
         popup={true}
         selectable={true}
-        style={{ height: '100vh' }}
+        style={{ height: '75vh' }}
         components={components}
         formats={formats}
         onSelectSlot={onSelectSlot}
         onSelectEvent={onSelectEvent}
         eventPropGetter={eventStyleGetter}
+        onNavigate={(newDate) => setSelectedDate(dayjs(newDate))}
       />
       {showAddModal && addCalendarModal()}
+      {showDatePicker && datePickerModal()}
     </>
   )
 }

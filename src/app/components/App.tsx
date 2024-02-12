@@ -1,4 +1,3 @@
-import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
@@ -8,7 +7,7 @@ import Alerts from './Alerts'
 import Body from './Body'
 import SessionTimeout from './SessionTimeout'
 import Spinner from './Spinner'
-import { IS_DARK_MODE, IS_OPEN_DRAWER } from '../../constants'
+import { IS_DARK_MODE } from '../../constants'
 import { userLogout } from '../actions/logout.action'
 import { SessionStorage } from '../utils/storage.utils'
 
@@ -29,13 +28,9 @@ type AppProps = {
 }
 
 function App(props: AppProps): React.ReactElement {
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [isDarkMode, setIsDarkMode] = useState(false)
 
-  const openDrawerCallback = () => {
-    setIsOpenDrawer((prevState) => !prevState)
-    SessionStorage.setItem(IS_OPEN_DRAWER, String(!isOpenDrawer))
-  }
   const darkModeCallback = () => {
     setIsDarkMode((prevState) => !prevState)
     SessionStorage.setItem(IS_DARK_MODE, String(!isDarkMode))
@@ -52,29 +47,19 @@ function App(props: AppProps): React.ReactElement {
 
   // when page is reloaded, set drawer and dark mode
   useEffect(() => {
-    const isOpenDrawerSession = SessionStorage.getItem(IS_OPEN_DRAWER) as string
-    const isDarkModeSession = SessionStorage.getItem(IS_DARK_MODE) as string
-
-    if (isOpenDrawerSession) {
-      setIsOpenDrawer(isOpenDrawerSession === 'true')
-    }
-
-    if (isDarkModeSession) {
-      setIsDarkMode(isDarkModeSession === 'true')
-    }
+    setIsDarkMode((SessionStorage.getItem(IS_DARK_MODE) as string) === 'true')
   }, [])
 
   const theApp = () => (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-      <CssBaseline />
       <SessionTimeout />
       <Spinner />
       <Alerts />
       <Body
         isDarkMode={isDarkMode}
         darkModeCallback={darkModeCallback}
-        isOpenDrawer={isOpenDrawer}
-        openDrawerCallback={openDrawerCallback}
+        anchorEl={anchorEl}
+        setAnchorEl={setAnchorEl}
         userLogoutCallback={userLogoutCallback}
       />
     </ThemeProvider>
