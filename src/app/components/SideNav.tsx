@@ -25,7 +25,6 @@ const SideNav = (props: SideNavProps) => {
   const handleRefTypesOpen = () => {
     setIsRefTypesOpen(!isRefTypesOpen)
   }
-  const open = Boolean(props.anchorEl)
   const handleClose = () => {
     props.setAnchorEl(null)
   }
@@ -55,7 +54,7 @@ const SideNav = (props: SideNavProps) => {
   }, [pathname])
 
   return (
-    <Menu anchorEl={props.anchorEl} open={open} onClose={handleClose}>
+    <Menu anchorEl={props.anchorEl} open={Boolean(props.anchorEl)} onClose={handleClose}>
       <List sx={{ backgroundColor: 'inherit' }}>
         {protectedRoutes.map(
           (protectedRoute) =>
