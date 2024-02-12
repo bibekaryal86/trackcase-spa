@@ -4,9 +4,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { green, grey, red } from '@mui/material/colors'
 import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
 import { styled } from '@mui/material/styles'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -189,14 +187,17 @@ const RbcDateHeader: React.FC<RbcDateHeaderProps> = ({ date, label, isOffRange, 
 }
 
 const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
-  const { calendarEvents, setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } =
-    props
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+
+  const { calendarEvents} = props
+  const {setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
   const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
+
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
-  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+  //const [selectedDatePickerDate, setSelectedDatePickerDate] = useState(dayjs())
 
   const addCalendarModalCallback = (type: string) => {
     setShowAddModal(false)
@@ -242,14 +243,8 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     )
   }
 
-  const [selectedDatePickerDate, setSelectedDatePickerDate] = useState(dayjs())
   const handleDateChange = (date: Dayjs | null) => {
-    console.log('in handle date change, ', date)
-    setSelectedDatePickerDate(dayjs(date))
-  }
-
-  const handleConfirm = () => {
-    console.log('Selected date:', selectedDatePickerDate)
+    setSelectedDate(dayjs(date))
     setShowDatePicker(false)
   }
 
@@ -257,25 +252,16 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     return (
       <div>
         <Dialog open={showDatePicker} onClose={() => setShowDatePicker(false)}>
-          <DialogTitle>Select Month and Year</DialogTitle>
           <DialogContent>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 openTo="month"
                 views={['year', 'month']}
-                value={dayjs(selectedDatePickerDate)}
+                value={dayjs(selectedDate)}
                 onChange={(newDate) => handleDateChange(newDate)}
               />
             </LocalizationProvider>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setShowDatePicker(false)} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirm} color="primary">
-              Confirm
-            </Button>
-          </DialogActions>
         </Dialog>
       </div>
     )
@@ -285,7 +271,6 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     setSelectedDate(dayjs(date))
     setShowAddModal(true)
   }
-
   const components: Partial<{
     toolbar: (toolbarProps: ToolbarProps<Event>) => React.ReactElement
     month: {
@@ -299,23 +284,18 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
       dateHeader: (dateHeaderProps) => <RbcDateHeader {...dateHeaderProps} onClick={onClickDateHeader} />,
     },
   }
-
   const formats: Partial<Formats> = {
     dateFormat: (date: Date, culture: string = 'en-US', localizer: DateLocalizer = globalLocalizer) =>
       localizer.format(date, 'DD', culture),
     weekdayFormat: (date: Date, culture: string = 'en-US', localizer: DateLocalizer = globalLocalizer) =>
       localizer.format(date, isSmallScreen ? 'ddd' : 'dddd', culture),
   }
-
   const startAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
-  // this app's events do not span multiple days, so use same date for start/end
   const endAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
-
   const onSelectSlot = (slot: SlotInfo) => {
     console.log('onSelectSlot is disabled, events handled with onClickDateHeader: ', slot.action)
     return
   }
-
   const getSelectedCalendar = (id: number, type: string) => {
     let calendar: HearingCalendarSchema | TaskCalendarSchema | undefined
     if (type === CALENDAR_OBJECT_TYPES.HEARING) {
@@ -338,7 +318,6 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     // prevent default action, return nothing
     return
   }
-
   const eventStyleGetter = (event: SelectEvent) => {
     return {
       style: {
