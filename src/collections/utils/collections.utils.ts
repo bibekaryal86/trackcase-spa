@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { getDayjs, getNumber } from '../../app'
+import { getDayjs, getNumber, getNumericOnly } from '../../app'
 import { COLLECTION_OBJECT_TYPES } from '../../constants'
 import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
 
@@ -129,6 +129,9 @@ export const handleCollectionFormOnChange = (
   setSelectedCollection: (updatedCollection: CaseCollectionSchema | CashCollectionSchema) => void,
   getValue: (value: string | number) => string | number,
 ) => {
+  if (name.includes('Amount')) {
+    value = getNumericOnly(value.toString(), 10)
+  }
   const updatedCollection = {
     ...selectedCollection,
     [name]: getValue(value),

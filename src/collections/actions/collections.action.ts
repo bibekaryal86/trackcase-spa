@@ -35,7 +35,7 @@ export const addCollection = (collection: CaseCollectionSchema | CashCollectionS
         requestBody: getRequestBody(collection, isCaseCollectionRequest),
       }
       if (isCaseCollectionRequest) {
-        const urlPath = getEndpoint(process.env.HEARING_COLLECTION_CREATE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.CASE_COLLECTION_CREATE_ENDPOINT as string)
         collectionResponse = (await Async.fetch(urlPath, options)) as CaseCollectionResponse
       } else {
         const urlPath = getEndpoint(process.env.CASH_COLLECTION_CREATE_ENDPOINT as string)
@@ -74,7 +74,7 @@ export const getCollections = (collectionType: string, isForceFetch: boolean = f
 
       if (isForceFetch || collectionsInStore.length === 0) {
         if (isCaseCollectionRequest) {
-          const urlPath = getEndpoint(process.env.HEARING_COLLECTIONS_RETRIEVE_ENDPOINT as string)
+          const urlPath = getEndpoint(process.env.CASE_COLLECTIONS_RETRIEVE_ENDPOINT as string)
           collectionResponse = (await Async.fetch(urlPath, options)) as CaseCollectionResponse
         } else {
           const urlPath = getEndpoint(process.env.CASH_COLLECTIONS_RETRIEVE_ENDPOINT as string)
@@ -186,7 +186,7 @@ export const editCollection = (
         requestBody: getRequestBody(collection, isCaseCollectionRequest),
       }
       if (isCaseCollectionRequest) {
-        const urlPath = getEndpoint(process.env.HEARING_COLLECTION_UPDATE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.CASE_COLLECTION_UPDATE_ENDPOINT as string)
         options['pathParams'] = { case_collection_id: id }
         collectionResponse = (await Async.fetch(urlPath, options)) as CaseCollectionResponse
       } else {
@@ -314,11 +314,11 @@ const getRequestBody = (collection: CaseCollectionSchema | CashCollectionSchema,
     // common
     status: collection.status,
     comments: collection.comments,
-    // hearing calendar
+    // case collection
     court_case_id: isCaseCollectionRequest && 'courtCaseId' in collection ? collection.courtCaseId : undefined,
     quote_date: isCaseCollectionRequest && 'quoteDate' in collection ? collection.quoteDate : undefined,
     quote_amount: isCaseCollectionRequest && 'quoteAmount' in collection ? collection.quoteAmount : undefined,
-    // task calendar
+    // cash collection
     collection_date: !isCaseCollectionRequest && 'collectionDate' in collection ? collection.collectionDate : undefined,
     collectedAmount: !isCaseCollectionRequest && 'collectedAmount' in collection ? collection.collectedAmount : 0,
     waivedAmount: !isCaseCollectionRequest && 'waivedAmount' in collection ? collection.waivedAmount : 0,

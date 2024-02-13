@@ -107,3 +107,8 @@ export const DefaultCollectionsState: CollectionsState = {
   selectedCaseCollection: DefaultCaseCollectionSchema,
   selectedCashCollection: DefaultCashCollectionSchema,
 }
+
+export const DefaultCollectionSchema = {
+  ...DefaultCaseCollectionSchema,
+  ...DefaultCashCollectionSchema,
+}

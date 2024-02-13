@@ -69,7 +69,7 @@ interface CourtCasesProps {
 }
 
 const CourtCases = (props: CourtCasesProps): React.ReactElement => {
-  // to avoid multiple api calls
+  // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
 
   const { courtCasesList, getCourtCases, addCourtCase, editCourtCase, deleteCourtCase, clientsList, getClients } = props
