@@ -4,7 +4,6 @@ import Grid, { GridDirection } from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
-import { styled } from '@mui/material/styles'
 import TextField, { TextFieldVariants } from '@mui/material/TextField'
 import { DatePicker, DateView, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -289,12 +288,6 @@ export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
   />
 )
 
-const StyledDatePicker = styled(DatePicker)`
-    fieldset {
-        border-width: 0 0 1px 0;
-    }
-`
-
 export const FormDatePickerField: React.FC<DatePickerProps> = ({
   componentLabel,
   value,
@@ -314,7 +307,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   const isError = dayjsValue ? !dayjsValue.isValid() : required
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StyledDatePicker
+      <DatePicker
         name={id}
         label={label}
         value={dayjsValue}
