@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button'
-import { Dayjs } from 'dayjs'
 import React from 'react'
 
 import { getDayjsString, getNumber, Link, Table, TableData, TableHeaderData } from '../../app'
@@ -10,7 +9,6 @@ import {
   ACTION_UPDATE,
   BUTTON_DELETE,
   BUTTON_UPDATE,
-  CALENDAR_OBJECT_TYPES,
   ID_ACTION_BUTTON,
 } from '../../constants'
 import { FormSchema } from '../../forms'
@@ -124,13 +122,6 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       </Button>
     </>
   )
-
-  const linkToCalendar = (calendarTypePage: string, calendarDate?: Dayjs, calendarId?: number) =>
-    calendarDate && calendarId ? (
-      <Link text={getDayjsString(calendarDate)} navigateToPage={`/calendar/${calendarTypePage}/${calendarId}`} />
-    ) : (
-      ''
-    )
 
   const linkToClientHc = (x: HearingCalendarSchema) => {
     if (selectedCourtCase) {
@@ -255,7 +246,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     if (isHearingCalendarTable) {
       const hearingCalendar = x as HearingCalendarSchema
       return {
-        calendarDate: linkToCalendar(CALENDAR_OBJECT_TYPES.HEARING, hearingCalendar.hearingDate, hearingCalendar.id),
+        calendarDate: getDayjsString(hearingCalendar.hearingDate),
         calendarType: getHearingType(x as HearingCalendarSchema),
         client: linkToClientHc(hearingCalendar),
         case: linkToCourtCaseHc(hearingCalendar),
@@ -264,15 +255,11 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     } else {
       const taskCalendar = x as TaskCalendarSchema
       return {
-        calendarDate: linkToCalendar(CALENDAR_OBJECT_TYPES.TASK, taskCalendar.taskDate, x.id),
+        calendarDate: getDayjsString(taskCalendar.taskDate),
         calendarType: getTaskType(taskCalendar),
         client: linkToClientTc(taskCalendar),
         case: linkToCourtCaseTc(taskCalendar),
-        hearingCalendar: linkToCalendar(
-          CALENDAR_OBJECT_TYPES.HEARING,
-          taskCalendar.hearingCalendar?.hearingDate,
-          taskCalendar.hearingCalendarId,
-        ),
+        hearingCalendar: getDayjsString(taskCalendar.hearingCalendar?.hearingDate),
         form: linkToForm(taskCalendar),
         dueDate: getDayjsString(taskCalendar.dueDate),
         status: taskCalendar.status,
