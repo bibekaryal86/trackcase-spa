@@ -116,9 +116,6 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       maxCollectionDate={maxCollectionDate}
     />
   )
-  // TODO
-  console.log(collectionForm(COLLECTION_OBJECT_TYPES.CASE).type)
-
   const collectionTable = (collectionType: string) => (
     <CollectionTable
       collectionType={collectionType}
@@ -128,12 +125,14 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       clientsList={clientsList}
     />
   )
+  // TODO
+  console.log(typeof collectionForm(COLLECTION_OBJECT_TYPES.CASE))
+  // TODO
+  console.log(typeof collectionTable(COLLECTION_OBJECT_TYPES.CASH))
 
   const pageText = () => (
     <>
       <h5>This is the Collections!</h5>
-      {collectionTable(COLLECTION_OBJECT_TYPES.CASE)}
-      {collectionTable(COLLECTION_OBJECT_TYPES.CASH)}
     </>
   )
 
