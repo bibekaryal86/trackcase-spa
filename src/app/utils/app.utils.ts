@@ -109,17 +109,25 @@ export const getComments = (value: string | number): string => {
   return valueString
 }
 
-export const getCurrency = (value: string | number | null | undefined) => {
+export const getCurrency = (
+  value: string | number | null | undefined,
+  isFormatted: boolean = true,
+  isDefault: boolean = false,
+) => {
   if (!value) {
-    return '$0.00'
+    value = 0
   }
   const roundedValue = Number(Math.round(Number(value + 'e2')) + 'e-2')
-  return roundedValue.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
+  if (isFormatted) {
+    return roundedValue.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  } else {
+    return value === 0 && isDefault ? ID_DEFAULT.toFixed(2) : roundedValue.toFixed(2)
+  }
 }
 
 export const validateAddress = (

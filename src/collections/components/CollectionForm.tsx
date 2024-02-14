@@ -69,7 +69,7 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
     return (
       <FormTextField
         componentLabel="Case Collection--Quote Amount"
-        maxLength={8}
+        maxLength={5}
         value={value ? String(value) : undefined}
         onChange={(e) =>
           handleCollectionFormOnChange(
@@ -136,7 +136,7 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
     return (
       <FormTextField
         componentLabel="Case Collection--Collected Amount"
-        maxLength={8}
+        maxLength={5}
         value={value ? String(value) : undefined}
         onChange={(e) =>
           handleCollectionFormOnChange(
@@ -158,7 +158,7 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
     return (
       <FormTextField
         componentLabel="Cash Collection--Waived Amount"
-        maxLength={8}
+        maxLength={5}
         value={value ? String(value) : undefined}
         onChange={(e) =>
           handleCollectionFormOnChange(

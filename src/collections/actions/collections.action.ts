@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
+import { Async, FetchOptions, getCurrency, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
 import {
   COLLECTION_OBJECT_TYPES,
   CREATE_SUCCESS,
@@ -68,6 +68,13 @@ export const getCollections = (collectionType: string, isForceFetch: boolean = f
       const options: Partial<FetchOptions> = {
         method: 'GET',
       }
+
+      if (isCaseCollectionRequest) {
+        options['extraParams'] = {
+          isIncludeExtra: true,
+        }
+      }
+
       const collectionsInStore: CaseCollectionSchema[] | CashCollectionSchema[] = isCaseCollectionRequest
         ? getStore().collections.caseCollections
         : getStore().collections.cashCollections
@@ -317,11 +324,20 @@ const getRequestBody = (collection: CaseCollectionSchema | CashCollectionSchema,
     // case collection
     court_case_id: isCaseCollectionRequest && 'courtCaseId' in collection ? collection.courtCaseId : undefined,
     quote_date: isCaseCollectionRequest && 'quoteDate' in collection ? collection.quoteDate : undefined,
-    quote_amount: isCaseCollectionRequest && 'quoteAmount' in collection ? collection.quoteAmount : undefined,
+    quote_amount:
+      isCaseCollectionRequest && 'quoteAmount' in collection
+        ? getCurrency(collection.quoteAmount, false, true)
+        : undefined,
     // cash collection
     collection_date: !isCaseCollectionRequest && 'collectionDate' in collection ? collection.collectionDate : undefined,
-    collectedAmount: !isCaseCollectionRequest && 'collectedAmount' in collection ? collection.collectedAmount : 0,
-    waivedAmount: !isCaseCollectionRequest && 'waivedAmount' in collection ? collection.waivedAmount : 0,
+    collectedAmount:
+      !isCaseCollectionRequest && 'collectedAmount' in collection
+        ? getCurrency(collection.collectedAmount, false, true)
+        : undefined,
+    waivedAmount:
+      !isCaseCollectionRequest && 'waivedAmount' in collection
+        ? getCurrency(collection.waivedAmount, false, true)
+        : undefined,
     memo: !isCaseCollectionRequest && 'memo' in collection ? collection.memo : undefined,
     case_collection_id:
       !isCaseCollectionRequest && 'caseCollectionId' in collection ? collection.caseCollectionId : undefined,
