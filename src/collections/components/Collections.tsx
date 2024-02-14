@@ -115,12 +115,12 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       maxCollectionDate={maxCollectionDate}
     />
   )
+  // TODO
+  console.log(collectionForm(COLLECTION_OBJECT_TYPES.CASE).type)
 
   const pageText = () => (
     <>
       <h5>This is the Collections!</h5>
-      {collectionForm(COLLECTION_OBJECT_TYPES.CASE)}
-      {collectionForm(COLLECTION_OBJECT_TYPES.CASH)}
     </>
   )
 
