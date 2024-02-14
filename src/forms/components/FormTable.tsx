@@ -111,7 +111,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
   const linkToForm = (x: FormSchema) => {
     let formType = x.formType
     if (!formType) {
-      formType = formTypesList.find((y) => x.formTypeId === y.id)
+      formType = formTypesList.find(y => y.id === x.formTypeId)
     }
     return <Link text={formType?.name} navigateToPage={`/form/${x.id}`} />
   }
@@ -120,7 +120,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     if (selectedCourtCase) {
       return selectedCourtCase?.client?.name
     }
-    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+    const courtCase = courtCasesList.find(y => y.id === x.courtCaseId)
     return (
       <Link
         text={courtCase?.client?.name}
@@ -133,7 +133,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     if (selectedCourtCase) {
       return selectedCourtCase?.caseType?.name
     }
-    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+    const courtCase = courtCasesList.find(y => y.id === x.courtCaseId)
     return (
       <Link
         text={courtCase?.caseType?.name}

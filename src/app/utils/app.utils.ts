@@ -114,7 +114,7 @@ export const getCurrency = (
   isFormatted: boolean = true,
   isDefault: boolean = false,
 ) => {
-  if (!value) {
+  if (!value || Number(value) < 0) {
     value = 0
   }
   const roundedValue = Number(Math.round(Number(value + 'e2')) + 'e-2')

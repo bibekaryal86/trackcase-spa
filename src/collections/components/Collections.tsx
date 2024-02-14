@@ -133,6 +133,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
     <>
       <h5>This is the Collections!</h5>
       {collectionTable(COLLECTION_OBJECT_TYPES.CASE)}
+      {collectionTable(COLLECTION_OBJECT_TYPES.CASH)}
     </>
   )
 

@@ -14,6 +14,7 @@ import {
 } from '../../constants'
 import { CollectionMethodSchema } from '../../types'
 import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
+import { isCaseCollection } from '../utils/collections.utils'
 
 interface CollectionTableProps {
   collectionType: string
@@ -31,26 +32,56 @@ interface CollectionTableProps {
 const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
   const { collectionType, caseCollectionsList } = props
   const { setModal, setSelectedId, setSelectedType, setSelectedCollection, setSelectedCollectionForReset } = props
-  const { clientsList, courtCasesList } = props
+  const { collectionMethodsList, clientsList, courtCasesList } = props
+
+  const isCaseCollectionTable = isCaseCollection(collectionType)
 
   const collectionsTableHeaderData = (): TableHeaderData[] => {
-    return [
-      {
-        id: 'client',
-        label: 'Client',
-      },
-      {
-        id: 'case',
-        label: 'Case',
-      },
-      {
-        id: 'quoteDate',
-        label: 'Date',
-      },
-      {
-        id: 'quoteAmount',
-        label: 'Amount',
-      },
+    const tableHeaderData: TableHeaderData[] = []
+    if (isCaseCollectionTable) {
+      tableHeaderData.push(
+        {
+          id: 'client',
+          label: 'Client',
+        },
+        {
+          id: 'case',
+          label: 'Case',
+        },
+        {
+          id: 'quoteDate',
+          label: 'Date',
+        },
+        {
+          id: 'quoteAmount',
+          label: 'Amount',
+        },
+      )
+    } else {
+      tableHeaderData.push(
+        {
+          id: 'collectionDate',
+          label: 'Collection Date',
+        },
+        {
+          id: 'collectedAmount',
+          label: 'Collection Amount',
+        },
+        {
+          id: 'waivedAmount',
+          label: 'Waived Amount',
+        },
+        {
+          id: 'collectionMethod',
+          label: 'Collection Method',
+        },
+        {
+          id: 'collectionMemo',
+          label: 'Collection Memo',
+        },
+      )
+    }
+    tableHeaderData.push(
       {
         id: 'status',
         label: 'Status',
@@ -61,7 +92,9 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         align: 'center' as const,
         isDisableSorting: true,
       },
-    ]
+    )
+
+    return tableHeaderData
   }
 
   const actionButtons = (id: number, collection: CaseCollectionSchema | CashCollectionSchema) => (
@@ -91,7 +124,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
   )
 
   const linkToClient = (x: CaseCollectionSchema) => {
-    const client = clientsList.find((y) => y.id === x.courtCase?.clientId)
+    const client = clientsList.find(y => y.id === x.courtCase?.clientId)
     return (
       <Link
         text={client?.name}
@@ -101,7 +134,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
   }
 
   const linkToCase = (x: CaseCollectionSchema) => {
-    const courtCase = courtCasesList.find((cc) => cc.id === x.courtCaseId)
+    const courtCase = courtCasesList.find(y => y.id === x.courtCaseId)
     return (
       <Link
         text={courtCase?.caseType?.name}
@@ -110,23 +143,51 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     )
   }
 
-  const collectionsTableDataCommon = (x: CaseCollectionSchema) => {
-    return {
-      client: linkToClient(x),
-      case: linkToCase(x),
-      quoteDate: getDayjsString(x.quoteDate),
-      quoteAmount: getCurrency(x.quoteAmount),
-      status: x.status,
+  const collectionMethodName = (x: CashCollectionSchema) => {
+    const collectionMethod = collectionMethodsList.find(y => y.id === x.collectionMethodId)
+    return collectionMethod?.name
+  }
+
+  const collectionsTableDataCommon = (x: CaseCollectionSchema | CashCollectionSchema) => {
+    if (isCaseCollectionTable) {
+      const y = x as CaseCollectionSchema
+       return {
+          client: linkToClient(y),
+          case: linkToCase(y),
+          quoteDate: getDayjsString(y.quoteDate),
+          quoteAmount: getCurrency(y.quoteAmount),
+          status: x.status,
+        }
+    } else {
+      const y = x as CashCollectionSchema
+      return {
+          collectionDate: getDayjsString(y.collectionDate),
+          collectedAmount: getCurrency(y.collectedAmount),
+          waivedAmount: getCurrency(y.waivedAmount),
+          collectionMethod: collectionMethodName(y),
+          collectionMemo: y.memo,
+          status: y.status,
+        }
     }
   }
 
   const collectionsTableData = (): TableData[] => {
-    return Array.from(caseCollectionsList, (x: CaseCollectionSchema) => {
-      return {
-        ...collectionsTableDataCommon(x),
-        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
-      }
-    })
+    if (isCaseCollectionTable) {
+      return Array.from(caseCollectionsList, (x: CaseCollectionSchema) => {
+        return {
+          ...collectionsTableDataCommon(x),
+          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+        }
+      })
+    } else {
+      const cashCollectionsList = caseCollectionsList.flatMap(objA => objA.cashCollections || [])
+      return Array.from(cashCollectionsList, (x: CashCollectionSchema) => {
+        return {
+          ...collectionsTableDataCommon(x),
+          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+        }
+      })
+    }
   }
 
   const addButton = () => (

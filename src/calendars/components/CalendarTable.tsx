@@ -127,7 +127,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     if (selectedCourtCase) {
       return selectedCourtCase?.client?.name
     }
-    const courtCase = courtCasesList.find((cc) => cc.id === x.courtCaseId)
+    const courtCase = courtCasesList.find(y => y.id === x.courtCaseId)
     return (
       <Link
         text={courtCase?.client?.name}
@@ -140,7 +140,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     if (selectedCourtCase) {
       return selectedCourtCase?.caseType?.name
     }
-    const courtCase = courtCasesList.find((cc) => cc.id === x.courtCaseId)
+    const courtCase = courtCasesList.find(y => y.id === x.courtCaseId)
     return (
       <Link
         text={courtCase?.caseType?.name}
@@ -153,16 +153,13 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     if (selectedForm) {
       return selectedForm.formType?.name
     }
-    const form = formsList.find((f) => f.id === x.formId)
-    if (form) {
-      return (
+    const form = formsList.find(y => y.id === x.formId)
+    return (
         <Link
-          text={form.formType?.name}
+          text={form?.formType?.name}
           navigateToPage={`/form/${form?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
         />
       )
-    }
-    return ''
   }
 
   const linkToClientTc = (x: TaskCalendarSchema) => {
@@ -170,9 +167,9 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       return selectedForm.courtCase?.client?.name
     }
     if (getNumber(x.formId) > 0) {
-      const form = formsList.find((f) => f.id === x.formId)
+      const form = formsList.find(y => y.id === x.formId)
       if (form) {
-        const courtCase = courtCasesList.find((cc) => cc.id === form.courtCaseId)
+        const courtCase = courtCasesList.find(z => z.id === form.courtCaseId)
         return (
           <Link
             text={courtCase?.client?.name}
@@ -181,9 +178,9 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         )
       }
     } else if (getNumber(x.hearingCalendarId) > 0) {
-      const hearingCalendar = hearingCalendarsList?.find((h) => h.id === x.hearingCalendarId)
+      const hearingCalendar = hearingCalendarsList?.find(y => y.id === x.hearingCalendarId)
       if (hearingCalendar) {
-        const courtCase = courtCasesList.find((cc) => cc.id === hearingCalendar.courtCaseId)
+        const courtCase = courtCasesList.find(z => z.id === hearingCalendar.courtCaseId)
         return (
           <Link
             text={courtCase?.client?.name}
@@ -200,9 +197,9 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       return selectedForm.courtCase?.client?.name
     }
     if (getNumber(x.formId) > 0) {
-      const form = formsList.find((f) => f.id === x.formId)
+      const form = formsList.find(y => y.id === x.formId)
       if (form) {
-        const courtCase = courtCasesList.find((cc) => cc.id === form.courtCaseId)
+        const courtCase = courtCasesList.find(z => z.id === form.courtCaseId)
         return (
           <Link
             text={courtCase?.caseType?.name}
@@ -211,9 +208,9 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         )
       }
     } else if (getNumber(x.hearingCalendarId) > 0) {
-      const hearingCalendar = hearingCalendarsList?.find((h) => h.id === x.hearingCalendarId)
+      const hearingCalendar = hearingCalendarsList?.find(y => y.id === x.hearingCalendarId)
       if (hearingCalendar) {
-        const courtCase = courtCasesList.find((cc) => cc.id === hearingCalendar.courtCaseId)
+        const courtCase = courtCasesList.find(z => z.id === hearingCalendar.courtCaseId)
         return (
           <Link
             text={courtCase?.caseType?.name}
@@ -222,14 +219,13 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         )
       }
     }
-
     return ''
   }
 
   const getHearingType = (x: HearingCalendarSchema) => {
     let hearingType = x.hearingType
     if (!hearingType) {
-      hearingType = hearingTypesList?.find((y) => y.id === x.hearingTypeId)
+      hearingType = hearingTypesList?.find(y => y.id === x.hearingTypeId)
     }
     return hearingType?.name
   }
@@ -237,7 +233,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   const getTaskType = (x: TaskCalendarSchema) => {
     let taskType = x.taskType
     if (!taskType) {
-      taskType = taskTypesList?.find((y) => y.id === x.taskTypeId)
+      taskType = taskTypesList?.find(y => y.id === x.taskTypeId)
     }
     return taskType?.name
   }
