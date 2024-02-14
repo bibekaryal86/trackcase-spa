@@ -99,8 +99,7 @@ export const validateCalendar = (
     } else if (taskCalendar.taskTypeId === DUE_AT_HEARING_ID && getNumber(taskCalendar.formId) > 0) {
       errors.push('For Due at Hearing task type Form is not allowed!')
     }
-    if (getNumber(taskCalendar.formId) <= 0 && getNumber(taskCalendar.formId) <= 0)
-    {
+    if (getNumber(taskCalendar.formId) <= 0 && getNumber(taskCalendar.formId) <= 0) {
       errors.push('Either Hearing Calendar OR Form is required!')
     }
   }

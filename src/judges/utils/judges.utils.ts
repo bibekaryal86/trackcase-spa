@@ -1,5 +1,5 @@
-import { JudgeSchema } from '../types/judges.data.types'
 import { getNumber } from '../../app'
+import { JudgeSchema } from '../types/judges.data.types'
 
 export const validateJudge = (judge: JudgeSchema) => {
   const errors: string[] = []
