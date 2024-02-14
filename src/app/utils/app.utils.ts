@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
 import { LocalStorage, SessionStorage } from './storage.utils'
-import { DATE_FORMAT, ID_NUMBER, IS_DARK_MODE, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
 import { AuthState, ErrorDetail, UserDetails } from '../types/app.data.types'
 
@@ -83,7 +83,7 @@ export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-0
 export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
   streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
 
-export const getNumber = (value: number | string | null | undefined): number => (value ? Number(value) : ID_NUMBER)
+export const getNumber = (value: number | string | null | undefined): number => (value ? Number(value) : ID_DEFAULT)
 
 export const getString = (value: string | number | Dayjs | null | undefined): string => (value ? value.toString() : '')
 

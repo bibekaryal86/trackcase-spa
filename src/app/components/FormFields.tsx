@@ -231,11 +231,7 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   const { label, id } = getComponentLabelAndId(componentLabel)
   const isTypeString = typeof value === 'string'
 
-  const defaultMenuItem = (
-    <MenuItem key={ID_DEFAULT} value={ID_DEFAULT}>
-      PLEASE SELECT
-    </MenuItem>
-  )
+  const defaultMenuItem = <MenuItem key={ID_DEFAULT} value={ID_DEFAULT} />
   const selectMenuItems = isTypeString ? menuItems : [defaultMenuItem, ...menuItems]
   return (
     <FormControl sx={formControlSx} required={required} error={error}>

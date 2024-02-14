@@ -17,7 +17,7 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { ID_LIST, USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { FormSchema } from '../../forms'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
@@ -99,7 +99,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         ? selectedCalendar.hearingTypeId
         : !isHearingCalendarForm && 'taskTypeId' in selectedCalendar
         ? selectedCalendar.taskTypeId
-        : ID_LIST
+        : ID_DEFAULT
     const name = isHearingCalendarForm ? 'hearingTypeId' : 'taskTypeId'
     return (
       <FormSelectField
@@ -123,7 +123,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarCourtCasesList = () => {
-    const value = 'courtCaseId' in selectedCalendar ? selectedCalendar.courtCaseId : ID_LIST
+    const value = 'courtCaseId' in selectedCalendar ? selectedCalendar.courtCaseId : ID_DEFAULT
     return (
       <FormSelectField
         componentLabel="Hearing Calendar--Court Case"
@@ -152,8 +152,8 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarHearingCalendarList = () => {
-    const value = 'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_LIST
-    const formId = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_LIST
+    const value = 'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_DEFAULT
+    const formId = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_DEFAULT
     return (
       <FormSelectField
         componentLabel="Task Calendar--Hearing Calendar"
@@ -187,9 +187,9 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarFormList = () => {
-    const value = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_LIST
+    const value = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_DEFAULT
     const hearingCalendarId =
-      'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_LIST
+      'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_DEFAULT
     return (
       <FormSelectField
         componentLabel="Task Calendar--Form"

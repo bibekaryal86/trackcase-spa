@@ -16,7 +16,7 @@ import {
   GridFormWrapper,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
-import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { FormTypeSchema } from '../../types'
 import { FormSchema } from '../types/forms.data.types'
 import { handleFormDateOnChange, handleFormFormOnChange, isFormFormFieldError } from '../utils/forms.utils'
@@ -53,7 +53,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormSelectField
       componentLabel="Form--Form Type"
       required={true}
-      value={selectedForm.formTypeId || ID_DEFAULT}
+      value={selectedForm.formTypeId}
       onChange={(e) => handleFormFormOnChange('formTypeId', e.target.value, selectedForm, setSelectedForm, getNumber)}
       error={isFormFormFieldError('formTypeId', selectedForm.formTypeId)}
       menuItems={formTypesListForSelect()}
@@ -64,7 +64,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
     <FormSelectField
       componentLabel="Form--Client, Case"
       required={true}
-      value={selectedForm.courtCaseId || ID_DEFAULT}
+      value={selectedForm.courtCaseId}
       onChange={(e) => handleFormFormOnChange('courtCaseId', e.target.value, selectedForm, setSelectedForm, getNumber)}
       error={isFormFormFieldError('courtCaseId', selectedForm.courtCaseId)}
       menuItems={courtCasesListForSelect()}
