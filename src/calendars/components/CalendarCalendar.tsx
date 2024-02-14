@@ -309,7 +309,6 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     return calendar || DefaultCalendarSchema
   }
   const onSelectEvent = (event: SelectEvent) => {
-    console.log('Selected event:', event.calendar)
     const id = getNumber(event.id)
     const calendarType = getString(event.calendar)
     const calendar = getSelectedCalendar(id, calendarType)
