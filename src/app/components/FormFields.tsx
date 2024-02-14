@@ -10,7 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
-import { DATE_FORMAT, STATES_LIST } from '../../constants'
+import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '../../constants'
 import { getDayjs } from '../utils/app.utils'
 
 interface FormWrapperProps {
@@ -229,11 +229,19 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   disabled = false,
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
+  const isTypeString = typeof value === 'string'
+
+  const defaultMenuItem = (
+    <MenuItem key={ID_DEFAULT} value={ID_DEFAULT}>
+      PLEASE SELECT
+    </MenuItem>
+  )
+  const selectMenuItems = isTypeString ? menuItems : [defaultMenuItem, ...menuItems]
   return (
     <FormControl sx={formControlSx} required={required} error={error}>
       <InputLabel sx={inputLabelSx}>{label}</InputLabel>
       <Select labelId={id} id={id} variant={variant} value={value.toString()} onChange={onChange} disabled={disabled}>
-        {menuItems}
+        {selectMenuItems}
       </Select>
     </FormControl>
   )

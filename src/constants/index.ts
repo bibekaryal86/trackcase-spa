@@ -28,7 +28,7 @@ export const ALERT_TYPE_FAILURE = 'error'
 export const ALERT_TYPE_INFO = 'info'
 export const ALERT_TYPE_WARNING = 'warning'
 
-export const AMOUNT_DEFAULT = -1.0
+export const AMOUNT_DEFAULT = 0.0
 export const ID_DEFAULT = -1
 export const ID_ACTION_BUTTON = -2
 export const ID_LIST = -3

@@ -98,6 +98,7 @@ export const DefaultCashCollectionSchema: CashCollectionSchema = {
   collectionMethodId: ID_DEFAULT,
   memo: '',
   status: '',
+  comments: '',
 }
 
 export const DefaultCollectionsState: CollectionsState = {

@@ -13,7 +13,6 @@ import { getCollections } from '../actions/collections.action'
 import { COLLECTIONS_UNMOUNT } from '../types/collections.action.types'
 import { CaseCollectionSchema, CashCollectionSchema, DefaultCollectionSchema } from '../types/collections.data.types'
 
-
 const mapStateToProps = ({ collections, statuses, collectionMethods, courtCases, clients }: GlobalState) => {
   return {
     isCloseModal: collections.isCloseModal,
@@ -54,15 +53,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
 
-  const {
-    caseCollectionsList,
-    getCaseCollections,
-    statusList,
-    getStatusesList,
-    unmountPage,
-  } = props
-  const { collectionMethodsList, getCollectionMethodsList, } = props
-  const { courtCasesList, getCourtCasesList, clientsList, getClientsList, } = props
+  const { caseCollectionsList, getCaseCollections, statusList, getStatusesList, unmountPage } = props
+  const { collectionMethodsList, getCollectionMethodsList } = props
+  const { courtCasesList, getCourtCasesList, clientsList, getClientsList } = props
 
   const [selectedCollection, setSelectedCollection] = useState<CaseCollectionSchema | CashCollectionSchema>(
     DefaultCollectionSchema,
@@ -80,8 +73,19 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       courtCasesList.length === 0 && getCourtCasesList()
       clientsList.length === 0 && getClientsList()
     }
-      isForceFetch.current = false
-  }, [caseCollectionsList.length, clientsList.length, collectionMethodsList.length, courtCasesList.length, getCaseCollections, getClientsList, getCollectionMethodsList, getCourtCasesList, getStatusesList, statusList.collections.all.length])
+    isForceFetch.current = false
+  }, [
+    caseCollectionsList.length,
+    clientsList.length,
+    collectionMethodsList.length,
+    courtCasesList.length,
+    getCaseCollections,
+    getClientsList,
+    getCollectionMethodsList,
+    getCourtCasesList,
+    getStatusesList,
+    statusList.collections.all.length,
+  ])
 
   useEffect(() => {
     if (statusList.collections.all.length > 0) {
@@ -96,7 +100,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
     }
   }, [unmountPage])
 
-  const collectionForm = (collectionType: string) =>
+  const collectionForm = (collectionType: string) => (
     <CollectionForm
       collectionType={collectionType}
       selectedCollection={selectedCollection}
@@ -108,9 +112,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       collectionStatusList={collectionStatusList}
       isShowOneCollection={false}
       minCollectionDate={minCollectionDate}
-      maxCollectionDate={maxCollectionDate} />
-
-
+      maxCollectionDate={maxCollectionDate}
+    />
+  )
 
   const pageText = () => (
     <>
