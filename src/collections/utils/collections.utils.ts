@@ -40,7 +40,7 @@ export const validateCollection = (collectionType: string, collection: CaseColle
     if (!caseCollection.quoteAmount || getNumber(caseCollection.quoteAmount) <= 0) {
       errors.push('Quote Amount is required!')
     }
-    if (!caseCollection.courtCaseId || getNumber(caseCollection.courtCaseId) <= 0) {
+    if (getNumber(caseCollection.courtCaseId) <= 0) {
       errors.push('Case is required!')
     }
   } else {
@@ -50,11 +50,7 @@ export const validateCollection = (collectionType: string, collection: CaseColle
     if (!collectionDate || !collectionDate.isValid()) {
       errors.push('Collection Date is required!')
     }
-    // either collection amount or waived amount is required
-    if (
-      !(cashCollection.collectedAmount || getNumber(cashCollection.collectedAmount) <= 0) &&
-      !(cashCollection.waivedAmount || getNumber(cashCollection.waivedAmount) <= 0)
-    ) {
+    if (getNumber(cashCollection.collectedAmount) <= 0 && getNumber(cashCollection.waivedAmount) <= 0) {
       errors.push('Collected Amount or Waived Amount is required!')
     }
     if (!cashCollection.memo.trim()) {

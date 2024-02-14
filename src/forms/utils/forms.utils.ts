@@ -6,10 +6,10 @@ import { FormSchema } from '../types/forms.data.types'
 export const validateForm = (form: FormSchema) => {
   const errors: string[] = []
 
-  if (form.formTypeId <= 0) {
+  if (getNumber(form.formTypeId) <= 0) {
     errors.push('Form Type is required!')
   }
-  if (form.courtCaseId <= 0) {
+  if (getNumber(form.courtCaseId) <= 0) {
     errors.push('Case is required!')
   }
   if (!form.status.trim()) {

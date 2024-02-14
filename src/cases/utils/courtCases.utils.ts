@@ -4,10 +4,10 @@ import { CourtCaseSchema } from '../types/courtCases.data.types'
 export const validateCourtCase = (courtCase: CourtCaseSchema) => {
   const errors: string[] = []
 
-  if (courtCase.caseTypeId <= 0) {
+  if (getNumber(courtCase.caseTypeId) <= 0) {
     errors.push('Case Type is required')
   }
-  if (courtCase.clientId <= 0) {
+  if (getNumber(courtCase.clientId) <= 0) {
     errors.push('Client is required')
   }
   if (!courtCase.status.trim()) {
