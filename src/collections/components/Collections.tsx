@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 
 import CollectionForm from './CollectionForm'
+import CollectionTable from './CollectionTable'
 import { getStatusesList, GlobalState, StatusSchema, unmountPage } from '../../app'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
@@ -118,9 +119,20 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
   // TODO
   console.log(collectionForm(COLLECTION_OBJECT_TYPES.CASE).type)
 
+  const collectionTable = (collectionType: string) => (
+    <CollectionTable
+      collectionType={collectionType}
+      caseCollectionsList={caseCollectionsList}
+      collectionMethodsList={collectionMethodsList}
+      courtCasesList={courtCasesList}
+      clientsList={clientsList}
+    />
+  )
+
   const pageText = () => (
     <>
       <h5>This is the Collections!</h5>
+      {collectionTable(COLLECTION_OBJECT_TYPES.CASE)}
     </>
   )
 
