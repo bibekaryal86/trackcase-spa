@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import dayjs from 'dayjs'
@@ -293,7 +292,6 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       <Typography component="h1" variant="h6" color="primary" gutterBottom>
         Collections
       </Typography>
-      <Divider orientation="vertical" flexItem />
     </Grid>
   )
 
@@ -318,8 +316,10 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {collectionsPageTitle()}
         </Grid>
+        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          {collectionTable()}
+        </Grid>
       </Grid>
-      {collectionTable()}
       {modal && showModal()}
     </Box>
   )

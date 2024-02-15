@@ -17,6 +17,7 @@
     * maybe like campaign report, utilize tabs in the page to navigate without leaving page
   * check table sort, some working, some not working
     * likely the element ones not working (?)
+  * make table header sticky
   * the issue of not re-rendering after adding first row is probably back
     * because reverted back to using useRef
     * eg: in court component, add first court, nothing happens
