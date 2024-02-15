@@ -124,7 +124,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
   )
 
   const linkToClient = (x: CaseCollectionSchema) => {
-    const client = clientsList.find(y => y.id === x.courtCase?.clientId)
+    const client = clientsList.find((y) => y.id === x.courtCase?.clientId)
     return (
       <Link
         text={client?.name}
@@ -134,7 +134,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
   }
 
   const linkToCase = (x: CaseCollectionSchema) => {
-    const courtCase = courtCasesList.find(y => y.id === x.courtCaseId)
+    const courtCase = courtCasesList.find((y) => y.id === x.courtCaseId)
     return (
       <Link
         text={courtCase?.caseType?.name}
@@ -144,30 +144,30 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
   }
 
   const collectionMethodName = (x: CashCollectionSchema) => {
-    const collectionMethod = collectionMethodsList.find(y => y.id === x.collectionMethodId)
+    const collectionMethod = collectionMethodsList.find((y) => y.id === x.collectionMethodId)
     return collectionMethod?.name
   }
 
   const collectionsTableDataCommon = (x: CaseCollectionSchema | CashCollectionSchema) => {
     if (isCaseCollectionTable) {
       const y = x as CaseCollectionSchema
-       return {
-          client: linkToClient(y),
-          case: linkToCase(y),
-          quoteDate: getDayjsString(y.quoteDate),
-          quoteAmount: getCurrency(y.quoteAmount),
-          status: x.status,
-        }
+      return {
+        client: linkToClient(y),
+        case: linkToCase(y),
+        quoteDate: getDayjsString(y.quoteDate),
+        quoteAmount: getCurrency(y.quoteAmount),
+        status: x.status,
+      }
     } else {
       const y = x as CashCollectionSchema
       return {
-          collectionDate: getDayjsString(y.collectionDate),
-          collectedAmount: getCurrency(y.collectedAmount),
-          waivedAmount: getCurrency(y.waivedAmount),
-          collectionMethod: collectionMethodName(y),
-          collectionMemo: y.memo,
-          status: y.status,
-        }
+        collectionDate: getDayjsString(y.collectionDate),
+        collectedAmount: getCurrency(y.collectedAmount),
+        waivedAmount: getCurrency(y.waivedAmount),
+        collectionMethod: collectionMethodName(y),
+        collectionMemo: y.memo,
+        status: y.status,
+      }
     }
   }
 
@@ -180,7 +180,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         }
       })
     } else {
-      const cashCollectionsList = caseCollectionsList.flatMap(objA => objA.cashCollections || [])
+      const cashCollectionsList = caseCollectionsList.flatMap((objA) => objA.cashCollections || [])
       return Array.from(cashCollectionsList, (x: CashCollectionSchema) => {
         return {
           ...collectionsTableDataCommon(x),

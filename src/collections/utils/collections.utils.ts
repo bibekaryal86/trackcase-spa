@@ -67,6 +67,15 @@ export const validateCollection = (collectionType: string, collection: CaseColle
   return errors.length ? errors.join(', ') : ''
 }
 
+export const isAreTwoCollectionsSame = (
+  collectionType: string,
+  one: CaseCollectionSchema | CashCollectionSchema,
+  two: CaseCollectionSchema | CashCollectionSchema,
+) =>
+  isCaseCollection(collectionType)
+    ? isAreTwoCaseCollectionsSame(one as CaseCollectionSchema, two as CaseCollectionSchema)
+    : isAreTwoCashCollectionsSame(one as CashCollectionSchema, two as CashCollectionSchema)
+
 export const isAreTwoCaseCollectionsSame = (one: CaseCollectionSchema, two: CaseCollectionSchema) =>
   one &&
   two &&
