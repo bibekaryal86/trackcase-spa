@@ -19,7 +19,7 @@ import NotFound from './NotFound'
 import { Calendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
-import { Collection, Collections } from '../../collections'
+import { Collections } from '../../collections'
 import { Court, Courts } from '../../courts'
 import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
@@ -55,22 +55,32 @@ export const protectedRoutes: RoutesType[] = [
     element: <Collections />,
     icon: <CurrencyExchangeIcon />,
   },
-  {
-    path: '/collection',
-    element: <Collection />,
-    subroutes: [
-      {
-        path: ':type/:id',
-        element: <Collection />,
-      },
-    ],
-  },
+  // {
+  //   path: '/collection',
+  //   element: <Collection />,
+  //   subroutes: [
+  //     {
+  //       path: ':type/:id',
+  //       element: <Collection />,
+  //     },
+  //   ],
+  // },
   {
     path: '/calendars',
     display: 'Calendars',
     element: <Calendars />,
     icon: <TodayIcon />,
   },
+  // {
+  //   path: '/calendar',
+  //   element: <Calendar />,
+  //   subroutes: [
+  //     {
+  //       path: ':type/:id',
+  //       element: <Calendar />,
+  //     },
+  //   ],
+  // },
   {
     path: '/forms',
     display: 'Forms',

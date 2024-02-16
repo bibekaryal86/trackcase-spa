@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
 import { LocalStorage, SessionStorage } from './storage.utils'
-import { DATE_FORMAT, ID_NUMBER, IS_DARK_MODE, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
 import { AuthState, ErrorDetail, UserDetails } from '../types/app.data.types'
 
@@ -83,7 +83,7 @@ export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-0
 export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
   streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
 
-export const getNumber = (value: number | string | null | undefined): number => (value ? Number(value) : ID_NUMBER)
+export const getNumber = (value: number | string | null | undefined): number => (value ? Number(value) : ID_DEFAULT)
 
 export const getString = (value: string | number | Dayjs | null | undefined): string => (value ? value.toString() : '')
 
@@ -107,6 +107,27 @@ export const getComments = (value: string | number): string => {
     return valueString.substring(0, 8888)
   }
   return valueString
+}
+
+export const getCurrency = (
+  value: string | number | null | undefined,
+  isFormatted: boolean = true,
+  isDefault: boolean = false,
+) => {
+  if (!value || Number(value) < 0) {
+    value = 0
+  }
+  const roundedValue = Number(Math.round(Number(value + 'e2')) + 'e-2')
+  if (isFormatted) {
+    return roundedValue.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  } else {
+    return value === 0 && isDefault ? ID_DEFAULT.toFixed(2) : roundedValue.toFixed(2)
+  }
 }
 
 export const validateAddress = (

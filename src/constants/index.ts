@@ -28,10 +28,9 @@ export const ALERT_TYPE_FAILURE = 'error'
 export const ALERT_TYPE_INFO = 'info'
 export const ALERT_TYPE_WARNING = 'warning'
 
+export const AMOUNT_DEFAULT = 0.0
 export const ID_DEFAULT = -1
 export const ID_ACTION_BUTTON = -2
-export const ID_LIST = -3
-export const ID_NUMBER = -4
 
 export const CHECK_BOX_OPTIONS_YES_NO = [
   { value: 'YES', text: 'YES' },
@@ -58,6 +57,12 @@ export const DELETE_SUCCESS = (what: string) => `Delete ${what} Success!`
 export const CALENDAR_OBJECT_TYPES = Object.freeze({
   HEARING: 'HEARING_CALENDAR',
   TASK: 'TASK_CALENDAR',
+})
+
+// COLLECTION TYPES
+export const COLLECTION_OBJECT_TYPES = Object.freeze({
+  CASE: 'CASE_COLLECTION',
+  CASH: 'CASH_COLLECTION',
 })
 
 // STATES

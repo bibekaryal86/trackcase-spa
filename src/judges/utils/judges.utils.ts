@@ -1,3 +1,4 @@
+import { getNumber } from '../../app'
 import { JudgeSchema } from '../types/judges.data.types'
 
 export const validateJudge = (judge: JudgeSchema) => {
@@ -6,7 +7,7 @@ export const validateJudge = (judge: JudgeSchema) => {
   if (!judge.name.trim()) {
     errors.push('Name is required!')
   }
-  if (judge.courtId <= 0) {
+  if (getNumber(judge.courtId) <= 0) {
     errors.push('Court is required!')
   }
   if (!judge.status.trim()) {

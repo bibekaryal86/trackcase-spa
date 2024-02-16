@@ -14,7 +14,7 @@ import {
   getString,
   GridFormWrapper,
 } from '../../app'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { JudgeSchema } from '../../judges'
 import { ClientSchema } from '../types/clients.data.types'
 import { handleClientFormOnChange, isClientFormFieldError } from '../utils/clients.utils'
@@ -137,7 +137,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const clientJudgesList = () => (
     <FormSelectField
       componentLabel="Client--Judge"
-      value={!selectedClient.judgeId || selectedClient.judgeId <= 0 ? '' : selectedClient.judgeId}
+      value={selectedClient.judgeId || ID_DEFAULT}
       onChange={(e) =>
         handleClientFormOnChange('judgeId', e.target.value.toString(), selectedClient, setSelectedClient, getNumber)
       }

@@ -8,6 +8,7 @@
       * get for selected month as navigate
       * for list view get all
   * add restrictions and filters
+    * ADD USERS AND ROLES
     * form can't be added/updated/deleted in closed cases
     * calendars can't be added/updated/deleted in closed cases
     * etc
@@ -21,6 +22,9 @@
     * eg: in court component, add first court, nothing happens
     * no issue when adding second row
   * unify color palette, create a util module for it
+  * Add collapsible table for collections
+    * enable collapse if there are cash collections
+    * will need to modify Table
 
 
 TODO

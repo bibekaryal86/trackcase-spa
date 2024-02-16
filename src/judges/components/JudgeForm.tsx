@@ -59,9 +59,10 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   const judgeCourtsList = () => (
     <FormSelectField
       componentLabel="Judge--Court"
-      value={selectedJudge.courtId <= 0 ? -1 : selectedJudge.courtId}
+      value={selectedJudge.courtId}
       onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge, getNumber)}
       menuItems={courtsListForSelect()}
+      error={selectedJudge.courtId <= 0}
     />
   )
 

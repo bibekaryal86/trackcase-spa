@@ -13,7 +13,7 @@ import {
   GridFormWrapper,
 } from '../../app'
 import { ClientSchema } from '../../clients'
-import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CaseTypeSchema } from '../../types'
 import { CourtCaseSchema } from '../types/courtCases.data.types'
 import { handleCourtCaseFormOnChange, isCourtCaseFormFieldError } from '../utils/courtCases.utils'
@@ -50,7 +50,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
     <FormSelectField
       componentLabel="Court Case--Case Type"
       required={true}
-      value={selectedCourtCase.caseTypeId || ID_DEFAULT}
+      value={selectedCourtCase.caseTypeId}
       onChange={(e) =>
         handleCourtCaseFormOnChange('caseTypeId', e.target.value, selectedCourtCase, setSelectedCourtCase, getNumber)
       }
@@ -63,7 +63,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
     <FormSelectField
       componentLabel="Court Case--Client"
       required={true}
-      value={selectedCourtCase.clientId || ID_DEFAULT}
+      value={selectedCourtCase.clientId}
       onChange={(e) =>
         handleCourtCaseFormOnChange('clientId', e.target.value, selectedCourtCase, setSelectedCourtCase, getNumber)
       }
