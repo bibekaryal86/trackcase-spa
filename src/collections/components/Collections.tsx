@@ -318,6 +318,8 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {collectionTable(COLLECTION_OBJECT_TYPES.CASE)}
+        </Grid>
+        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {collectionTable(COLLECTION_OBJECT_TYPES.CASH)}
         </Grid>
       </Grid>
