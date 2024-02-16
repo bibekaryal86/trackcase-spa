@@ -17,12 +17,14 @@
     * maybe like campaign report, utilize tabs in the page to navigate without leaving page
   * check table sort, some working, some not working
     * likely the element ones not working (?)
-  * make table header sticky
   * the issue of not re-rendering after adding first row is probably back
     * because reverted back to using useRef
     * eg: in court component, add first court, nothing happens
     * no issue when adding second row
   * unify color palette, create a util module for it
+  * Add collapsible table for collections
+    * enable collapse if there are cash collections
+    * will need to modify Table
 
 
 TODO
@@ -30,11 +32,3 @@ TODO
   * filing_type = form, motion, other
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
-
-COLLECTIONS:
-  * add collapsible table for case collection
-    * enable collapse if there are cash collections
-    * will need to modify Table
-
-make either collection amount or waived amount mandatory
-in DB both are mandatory, so send 1 as 0
