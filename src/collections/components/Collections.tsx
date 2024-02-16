@@ -295,9 +295,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
     </Grid>
   )
 
-  const collectionTable = () => (
+  const collectionTable = (collectionType: string) => (
     <CollectionTable
-      collectionType={COLLECTION_OBJECT_TYPES.CASE}
+      collectionType={collectionType}
       caseCollectionsList={caseCollectionsList}
       collectionMethodsList={collectionMethodsList}
       courtCasesList={courtCasesList}
@@ -317,7 +317,8 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
           {collectionsPageTitle()}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {collectionTable()}
+          {collectionTable(COLLECTION_OBJECT_TYPES.CASE)}
+          {collectionTable(COLLECTION_OBJECT_TYPES.CASH)}
         </Grid>
       </Grid>
       {modal && showModal()}
