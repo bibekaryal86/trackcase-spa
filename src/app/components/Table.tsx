@@ -403,10 +403,10 @@ const Table = (props: TableProps) => {
           </TableBody>
         </MuiTable>
       </TableContainer>
-      {props.isDisablePagination
-        ? null
-        : tableData.length === 0
+      {tableData.length === 0
         ? emptyTableMessage(props.componentName)
+        : props.isDisablePagination
+        ? null
         : tablePagination(
             rowsPerPageOptions,
             tableData.length,
