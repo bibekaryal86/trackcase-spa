@@ -178,8 +178,8 @@ export const Async = {
             responseBody.includes('server closed the connection unexpectedly')) &&
           retryCount <= 3
         ) {
-          console.log('Retrying in 3 seconds due to CONNECTIONS... Attempt: ', retryCount)
-          await new Promise((resolve) => setTimeout(resolve, 3000))
+          console.log('Retrying in 1 seconds due to CONNECTIONS... Attempt: ', retryCount)
+          await new Promise((resolve) => setTimeout(resolve, 1111))
           return Async.fetch(url, requestInit, retryCount + 1)
         } else {
           console.log('Error Response non 401: ', response)
