@@ -10,6 +10,7 @@ import {
   ACTION_UPDATE,
   BUTTON_DELETE,
   BUTTON_UPDATE,
+  COLLECTION_OBJECT_TYPES,
   ID_ACTION_BUTTON,
 } from '../../constants'
 import { CollectionMethodSchema } from '../../types'
@@ -36,9 +37,10 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
   const isCaseCollectionTable = isCaseCollection(collectionType)
 
-  const collectionsTableHeaderData = (): TableHeaderData[] => {
+  const collectionsTableHeaderData = (collectionTypeOverride?: string): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = []
-    if (isCaseCollectionTable) {
+
+    if (isCaseCollectionTable && !(collectionTypeOverride === COLLECTION_OBJECT_TYPES.CASH)) {
       tableHeaderData.push(
         {
           id: 'client',
@@ -148,8 +150,11 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     return collectionMethod?.name
   }
 
-  const collectionsTableDataCommon = (x: CaseCollectionSchema | CashCollectionSchema) => {
-    if (isCaseCollectionTable) {
+  const collectionsTableDataCommon = (
+    x: CaseCollectionSchema | CashCollectionSchema,
+    collectionTypeOverride?: string,
+  ) => {
+    if (isCaseCollectionTable && !(collectionTypeOverride === COLLECTION_OBJECT_TYPES.CASH)) {
       const y = x as CaseCollectionSchema
       return {
         client: linkToClient(y),
@@ -171,11 +176,34 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     }
   }
 
+  const getCashCollectionsTable = (x: CaseCollectionSchema) => {
+    const cashCollectionsList = x.cashCollections || []
+    const cashCollectionsHeaderData = collectionsTableHeaderData(COLLECTION_OBJECT_TYPES.CASH)
+    const cashCollectionsTableData = Array.from(cashCollectionsList, (y: CashCollectionSchema) => {
+      return {
+        ...collectionsTableDataCommon(y, COLLECTION_OBJECT_TYPES.CASH),
+        actions: actionButtons(y.id || ID_ACTION_BUTTON, y),
+      }
+    })
+
+    return (
+      <Table
+        componentName="Cash Collections"
+        headerData={cashCollectionsHeaderData}
+        tableData={cashCollectionsTableData}
+        addModelComponent={addButton(COLLECTION_OBJECT_TYPES.CASH)}
+        defaultDense={true}
+        isDisablePagination={true}
+      />
+    )
+  }
+
   const collectionsTableData = (): TableData[] => {
     if (isCaseCollectionTable) {
       return Array.from(caseCollectionsList, (x: CaseCollectionSchema) => {
         return {
           ...collectionsTableDataCommon(x),
+          cashCollections: getCashCollectionsTable(x),
           actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
         }
       })
@@ -190,11 +218,11 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     }
   }
 
-  const addButton = () => (
+  const addButton = (collectionTypeOverride?: string) => (
     <Button
       onClick={() => {
         setModal && setModal(ACTION_ADD)
-        setSelectedType && setSelectedType(collectionType)
+        setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
       }}
     >
       Add New Collection

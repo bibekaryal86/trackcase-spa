@@ -22,9 +22,6 @@
     * eg: in court component, add first court, nothing happens
     * no issue when adding second row
   * unify color palette, create a util module for it
-  * Add collapsible table for collections
-    * enable collapse if there are cash collections
-    * will need to modify Table
 
 
 TODO
@@ -32,3 +29,10 @@ TODO
   * filing_type = form, motion, other
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
+
+COLLAPSIBLE TABLE
+* when one is opened, collapse all
+
+REDUX
+* when logout, do not empty ref states
+* all ref types action not storing to redux

@@ -295,7 +295,7 @@ const TableRow = (props: TableRowProps) => {
             colSpan={(Object.keys(props.tableData[0]) as Array<keyof TableData>).length}
           >
             <Collapse in={openCollapse} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>{props.tableData[0][props.collapseRowKey]}</Box>
+              <Box sx={{ margin: 1 }}>{props.row[props.collapseRowKey]}</Box>
             </Collapse>
           </TableCell>
         </MuiTableRow>
