@@ -21,6 +21,7 @@ import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CollectionMethodSchema } from '../../types'
 import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
 import {
+  getAmountForDisplay,
   handleCollectionDateOnChange,
   handleCollectionFormOnChange,
   isCaseCollection,
@@ -70,7 +71,7 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
       <FormTextField
         componentLabel="Case Collection--Quote Amount"
         maxLength={5}
-        value={value ? String(value) : undefined}
+        value={getAmountForDisplay(value)}
         onChange={(e) =>
           handleCollectionFormOnChange(
             'quoteAmount',
@@ -137,7 +138,7 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
       <FormTextField
         componentLabel="Case Collection--Collected Amount"
         maxLength={5}
-        value={value ? String(value) : undefined}
+        value={getAmountForDisplay(value)}
         onChange={(e) =>
           handleCollectionFormOnChange(
             'collectedAmount',
@@ -159,7 +160,7 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
       <FormTextField
         componentLabel="Cash Collection--Waived Amount"
         maxLength={5}
-        value={value ? String(value) : undefined}
+        value={getAmountForDisplay(value)}
         onChange={(e) =>
           handleCollectionFormOnChange(
             'waivedAmount',

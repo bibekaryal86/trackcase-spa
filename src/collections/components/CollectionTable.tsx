@@ -99,13 +99,17 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     return tableHeaderData
   }
 
-  const actionButtons = (id: number, collection: CaseCollectionSchema | CashCollectionSchema) => (
+  const actionButtons = (
+    id: number,
+    collection: CaseCollectionSchema | CashCollectionSchema,
+    collectionTypeOverride?: string,
+  ) => (
     <>
       <Button
         onClick={() => {
           setModal && setModal(ACTION_UPDATE)
           setSelectedId && setSelectedId(id)
-          setSelectedType && setSelectedType(collectionType)
+          setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
           setSelectedCollection && setSelectedCollection(collection)
           setSelectedCollectionForReset && setSelectedCollectionForReset(collection)
         }}
@@ -116,7 +120,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         onClick={() => {
           setModal && setModal(ACTION_DELETE)
           setSelectedId && setSelectedId(id)
-          setSelectedType && setSelectedType(collectionType)
+          setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
           setSelectedCollection && setSelectedCollection(collection)
         }}
       >
@@ -182,7 +186,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     const cashCollectionsTableData = Array.from(cashCollectionsList, (y: CashCollectionSchema) => {
       return {
         ...collectionsTableDataCommon(y, COLLECTION_OBJECT_TYPES.CASH),
-        actions: actionButtons(y.id || ID_ACTION_BUTTON, y),
+        actions: actionButtons(y.id || ID_ACTION_BUTTON, y, COLLECTION_OBJECT_TYPES.CASH),
       }
     })
 

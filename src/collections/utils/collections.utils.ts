@@ -1,8 +1,19 @@
 import { Dayjs } from 'dayjs'
 
 import { getDayjs, getNumber, getNumericOnly } from '../../app'
-import { COLLECTION_OBJECT_TYPES } from '../../constants'
+import { AMOUNT_DEFAULT, COLLECTION_OBJECT_TYPES } from '../../constants'
 import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
+
+export const getAmountForDisplay = (value: number) => {
+  if (value) {
+    if (Number(value) === AMOUNT_DEFAULT) {
+      return undefined
+    } else {
+      return String(value)
+    }
+  }
+  return undefined
+}
 
 export const isCaseCollection = (type: string) => COLLECTION_OBJECT_TYPES.CASE === type
 
