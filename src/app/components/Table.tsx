@@ -267,7 +267,7 @@ const TableRow = (props: TableRowProps) => {
       <MuiTableRow sx={{ verticalAlign: props.verticalAlign ? props.verticalAlign : '' }}>
         {!!props.collapseRowKey && (
           <TableCell>
-            <IconButton aria-label="expand row" size="small" onClick={() => setOpenCollapse(!openCollapse)}>
+            <IconButton size="small" onClick={() => setOpenCollapse(!openCollapse)}>
               {openCollapse ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>

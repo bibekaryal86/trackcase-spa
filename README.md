@@ -30,9 +30,3 @@ TODO
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
 
-COLLAPSIBLE TABLE
-* when one is opened, collapse all
-
-REDUX
-* when logout, do not empty ref states
-* all ref types action not storing to redux
