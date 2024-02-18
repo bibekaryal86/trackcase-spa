@@ -71,26 +71,28 @@ export const getAllRefTypes = () => {
         if (allRefTypes.statuses) {
           dispatch(allRefTypesSuccess(STATUSES_RETRIEVE_SUCCESS, 'statuses', allRefTypes.statuses))
         }
-        if (allRefTypes.case_types?.length) {
-          dispatch(allRefTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, 'caseTypes', allRefTypes.case_types))
+        if (allRefTypes.case_types.caseTypes.length) {
+          dispatch(allRefTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, 'caseTypes', allRefTypes.case_types.caseTypes))
         }
-        if (allRefTypes.collection_methods?.length) {
+        if (allRefTypes.collection_methods.collectionMethods.length) {
           dispatch(
             allRefTypesSuccess(
               COLLECTION_METHODS_RETRIEVE_SUCCESS,
               'collectionMethods',
-              allRefTypes.collection_methods,
+              allRefTypes.collection_methods.collectionMethods,
             ),
           )
         }
-        if (allRefTypes.form_types?.length) {
-          dispatch(allRefTypesSuccess(FORM_TYPES_RETRIEVE_SUCCESS, 'formTypes', allRefTypes.form_types))
+        if (allRefTypes.form_types.formTypes.length) {
+          dispatch(allRefTypesSuccess(FORM_TYPES_RETRIEVE_SUCCESS, 'formTypes', allRefTypes.form_types.formTypes))
         }
-        if (allRefTypes.hearing_types?.length) {
-          dispatch(allRefTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, 'hearingTypes', allRefTypes.hearing_types))
+        if (allRefTypes.hearing_types.hearingTypes.length) {
+          dispatch(
+            allRefTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, 'hearingTypes', allRefTypes.hearing_types.hearingTypes),
+          )
         }
-        if (allRefTypes.task_types?.length) {
-          dispatch(allRefTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, 'taskTypes', allRefTypes.task_types))
+        if (allRefTypes.task_types.taskTypes.length) {
+          dispatch(allRefTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, 'taskTypes', allRefTypes.task_types.taskTypes))
         }
       }
     } catch (error) {
