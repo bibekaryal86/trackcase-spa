@@ -289,7 +289,7 @@ const TableRow = (props: TableRowProps) => {
         })}
       </MuiTableRow>
       {!!props.collapseRowKey && (
-        <MuiTableRow sx={{ verticalAlign: props.verticalAlign ? props.verticalAlign : '' }}>
+        <MuiTableRow>
           <TableCell
             style={{ paddingBottom: 0, paddingTop: 0 }}
             colSpan={(Object.keys(props.tableData[0]) as Array<keyof TableData>).length}
