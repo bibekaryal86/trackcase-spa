@@ -51,12 +51,12 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
           label: 'Case',
         },
         {
-          id: 'quoteDate',
-          label: 'Date',
-        },
-        {
           id: 'quoteAmount',
           label: 'Amount',
+        },
+        {
+          id: 'status',
+          label: 'Status',
         },
       )
     } else {
@@ -84,10 +84,6 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       )
     }
     tableHeaderData.push(
-      {
-        id: 'status',
-        label: 'Status',
-      },
       {
         id: 'actions',
         label: 'Actions',
@@ -163,9 +159,8 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       return {
         client: linkToClient(y),
         case: linkToCase(y),
-        quoteDate: getDayjsString(y.quoteDate),
         quoteAmount: getCurrency(y.quoteAmount),
-        status: x.status,
+        status: y.status,
       }
     } else {
       const y = x as CashCollectionSchema
@@ -175,7 +170,6 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         waivedAmount: getCurrency(y.waivedAmount),
         collectionMethod: collectionMethodName(y),
         collectionMemo: y.memo,
-        status: y.status,
       }
     }
   }

@@ -37,22 +37,18 @@ export const validateCollection = (collectionType: string, collection: CaseColle
   if (!validateCollectionType(collectionType)) {
     return 'Invalid Collection Type!!!'
   }
-  // common
-  if (!collection.status.trim()) {
-    errors.push('Status is required!')
-  }
   // case collection
   if (collectionType === COLLECTION_OBJECT_TYPES.CASE) {
     const caseCollection = collection as CaseCollectionSchema
-    const quoteDate = getDayjs(caseCollection.quoteDate)
-    if (!quoteDate || !quoteDate.isValid()) {
-      errors.push('Quote Date is required!')
-    }
+
     if (!caseCollection.quoteAmount || getNumber(caseCollection.quoteAmount) <= 0) {
       errors.push('Quote Amount is required!')
     }
     if (getNumber(caseCollection.courtCaseId) <= 0) {
       errors.push('Case is required!')
+    }
+    if (!caseCollection.status.trim()) {
+      errors.push('Status is required!')
     }
   } else {
     // cash collection
@@ -90,9 +86,10 @@ export const isAreTwoCollectionsSame = (
 export const isAreTwoCaseCollectionsSame = (one: CaseCollectionSchema, two: CaseCollectionSchema) =>
   one &&
   two &&
-  one.quoteDate === two.quoteDate &&
   one.quoteAmount === two.quoteAmount &&
-  one.courtCaseId === two.courtCaseId
+  one.courtCaseId === two.courtCaseId &&
+  one.status === two.status &&
+  one.comments === two.comments
 
 export const isAreTwoCashCollectionsSame = (one: CashCollectionSchema, two: CashCollectionSchema) =>
   one &&
@@ -118,7 +115,6 @@ export const isCollectionFormFieldError = (
     case 'status':
     case 'memo':
       return !value || value.toString().trim() === ''
-    case 'quoteDate':
     case 'collectionDate':
       return !dateValue || !dateValue.isValid()
   }
@@ -145,7 +141,7 @@ export const handleCollectionFormOnChange = (
   setSelectedCollection: (updatedCollection: CaseCollectionSchema | CashCollectionSchema) => void,
   getValue: (value: string | number) => string | number,
 ) => {
-  if (name.includes('Amount')) {
+  if (name.toLowerCase().includes('amount')) {
     value = getNumericOnly(value.toString(), 10)
   }
   const updatedCollection = {

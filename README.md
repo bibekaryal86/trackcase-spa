@@ -30,3 +30,7 @@ TODO
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
 
+Default to selected case collection when adding cash collection
+show calculated collection amount remaining
+
+add collections to single case page
