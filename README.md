@@ -34,3 +34,5 @@ Default to selected case collection when adding cash collection
 show calculated collection amount remaining
 
 add collections to single case page
+also add calendarcalendar to single case page replacing the hearing calendar table
+  make calendar calendar half the page
