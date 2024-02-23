@@ -103,26 +103,36 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
 
   const caseCollectionStatus = () => {
     const value = 'status' in selectedCollection ? selectedCollection.status : ''
-    return <FormSelectStatusField
-      componentLabel="Collection--Status"
-      value={value}
-      onChange={(e) =>
-        handleCollectionFormOnChange('status', e.target.value, selectedCollection, setSelectedCollection, getString)
-      }
-      statusList={collectionStatusList}
-      error={isCollectionFormFieldError('status', value, undefined)}
-    />
+    return (
+      <FormSelectStatusField
+        componentLabel="Collection--Status"
+        value={value}
+        onChange={(e) =>
+          handleCollectionFormOnChange('status', e.target.value, selectedCollection, setSelectedCollection, getString)
+        }
+        statusList={collectionStatusList}
+        error={isCollectionFormFieldError('status', value, undefined)}
+      />
+    )
   }
 
   const caseCollectionComments = () => {
     const value = 'comments' in selectedCollection ? selectedCollection.comments : ''
-    return <FormCommentsField
-      componentLabel="Collection--Comments"
-      value={value}
-      onChange={(e) =>
-        handleCollectionFormOnChange('comments', e.target.value, selectedCollection, setSelectedCollection, getComments)
-      }
-    />
+    return (
+      <FormCommentsField
+        componentLabel="Collection--Comments"
+        value={value}
+        onChange={(e) =>
+          handleCollectionFormOnChange(
+            'comments',
+            e.target.value,
+            selectedCollection,
+            setSelectedCollection,
+            getComments,
+          )
+        }
+      />
+    )
   }
 
   // cash collections

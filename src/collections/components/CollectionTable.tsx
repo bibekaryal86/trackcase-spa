@@ -12,9 +12,14 @@ import {
   BUTTON_UPDATE,
   COLLECTION_OBJECT_TYPES,
   ID_ACTION_BUTTON,
+  ID_DEFAULT,
 } from '../../constants'
 import { CollectionMethodSchema } from '../../types'
-import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
+import {
+  CaseCollectionSchema,
+  CashCollectionSchema,
+  DefaultCashCollectionSchema,
+} from '../types/collections.data.types'
 import { isCaseCollection } from '../utils/collections.utils'
 
 interface CollectionTableProps {
@@ -83,14 +88,12 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         },
       )
     }
-    tableHeaderData.push(
-      {
-        id: 'actions',
-        label: 'Actions',
-        align: 'center' as const,
-        isDisableSorting: true,
-      },
-    )
+    tableHeaderData.push({
+      id: 'actions',
+      label: 'Actions',
+      align: 'center' as const,
+      isDisableSorting: true,
+    })
 
     return tableHeaderData
   }
@@ -189,7 +192,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         componentName="Cash Collections"
         headerData={cashCollectionsHeaderData}
         tableData={cashCollectionsTableData}
-        addModelComponent={addButton(COLLECTION_OBJECT_TYPES.CASH)}
+        addModelComponent={addButton(COLLECTION_OBJECT_TYPES.CASH, x.id)}
         defaultDense={true}
         isDisablePagination={true}
       />
@@ -216,11 +219,17 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     }
   }
 
-  const addButton = (collectionTypeOverride?: string) => (
+  const addButton = (collectionTypeOverride?: string, caseCollectionId?: number) => (
     <Button
       onClick={() => {
         setModal && setModal(ACTION_ADD)
         setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
+        setSelectedId && setSelectedId(caseCollectionId || ID_DEFAULT)
+        setSelectedCollection &&
+          setSelectedCollection({
+            ...DefaultCashCollectionSchema,
+            caseCollectionId: caseCollectionId || ID_ACTION_BUTTON,
+          })
       }}
     >
       Add New Collection
