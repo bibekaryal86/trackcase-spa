@@ -206,13 +206,21 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       setModal('')
       setSelectedId(ID_DEFAULT)
       setSelectedCalendar(
-        courtCaseId ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) } : DefaultCalendarSchema,
+        courtCaseId
+          ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) }
+          : formId
+          ? { ...DefaultCalendarSchema, formId: getNumber(formId) }
+          : DefaultCalendarSchema,
       )
       setSelectedCalendarForReset(
-        courtCaseId ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) } : DefaultCalendarSchema,
+        courtCaseId
+          ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) }
+          : formId
+          ? { ...DefaultCalendarSchema, formId: getNumber(formId) }
+          : DefaultCalendarSchema,
       )
     }
-  }, [courtCaseId, isCloseModal])
+  }, [courtCaseId, formId, isCloseModal])
 
   useEffect(() => {
     return () => {
@@ -239,10 +247,18 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     setModal('')
     setSelectedId(ID_DEFAULT)
     setSelectedCalendar(
-      courtCaseId ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) } : DefaultCalendarSchema,
+      courtCaseId
+        ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) }
+        : formId
+        ? { ...DefaultCalendarSchema, formId: getNumber(formId) }
+        : DefaultCalendarSchema,
     )
     setSelectedCalendarForReset(
-      courtCaseId ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) } : DefaultCalendarSchema,
+      courtCaseId
+        ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) }
+        : formId
+        ? { ...DefaultCalendarSchema, formId: getNumber(formId) }
+        : DefaultCalendarSchema,
     )
   }
 
