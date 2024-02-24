@@ -35,7 +35,8 @@ TODO
   * https://flatlogic.github.io/react-material-admin-full
 
 
-
+single court case - on forms table client/case has no links
+single court case - on hearing calendar table, client/case has no links
 add collections to single case page
 add task calendar to single case page
 When adding stuffs from single stuff page, disable stuff selection

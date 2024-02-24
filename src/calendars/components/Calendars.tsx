@@ -422,6 +422,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   return courtCaseId ? (
     <>
       {hearingCalendarsTable()}
+      {taskCalendarsTable()}
       {modal && showModal()}
     </>
   ) : formId ? (
