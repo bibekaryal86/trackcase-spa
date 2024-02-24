@@ -26,9 +26,7 @@ import {
   ID_DEFAULT,
 } from '../../constants'
 import { FormSchema, getForm, getForms } from '../../forms'
-import { HearingTypeSchema, TaskTypeSchema } from '../../types'
-import { getHearingTypes } from '../../types/actions/hearingTypes.action'
-import { getTaskTypes } from '../../types/actions/taskTypes.action'
+import { getHearingTypes, getTaskTypes, HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { addCalendar, deleteCalendar, editCalendar, getCalendarsWithEvents } from '../actions/calendars.action'
 import { CALENDARS_UNMOUNT } from '../types/calendars.action.types'
 import {

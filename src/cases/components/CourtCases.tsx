@@ -19,8 +19,7 @@ import {
   BUTTON_UPDATE,
   ID_DEFAULT,
 } from '../../constants'
-import { CaseTypeSchema } from '../../types'
-import { getCaseTypes } from '../../types/actions/caseTypes.action'
+import { CaseTypeSchema, getCaseTypes } from '../../types'
 import { addCourtCase, deleteCourtCase, editCourtCase, getCourtCases } from '../actions/courtCases.action'
 import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
 import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'

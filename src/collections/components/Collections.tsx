@@ -7,8 +7,8 @@ import { connect } from 'react-redux'
 
 import CollectionForm from './CollectionForm'
 import CollectionTable from './CollectionTable'
-import { getCurrency, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
-import { CourtCaseSchema, getCourtCases } from '../../cases'
+import { getCurrency, getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
+import { CourtCaseSchema, getCourtCase, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
 import {
   ACTION_ADD,
@@ -22,9 +22,7 @@ import {
   COLLECTION_OBJECT_TYPES,
   ID_DEFAULT,
 } from '../../constants'
-import { CaseTypeSchema, CollectionMethodSchema } from '../../types'
-import { getCaseTypes } from '../../types/actions/caseTypes.action'
-import { getCollectionMethods } from '../../types/actions/collectionMethods.action'
+import { CaseTypeSchema, CollectionMethodSchema, getCaseTypes, getCollectionMethods } from '../../types'
 import { addCollection, deleteCollection, editCollection, getCollections } from '../actions/collections.action'
 import { COLLECTIONS_UNMOUNT } from '../types/collections.action.types'
 import { CaseCollectionSchema, CashCollectionSchema, DefaultCollectionSchema } from '../types/collections.data.types'
@@ -39,6 +37,7 @@ const mapStateToProps = ({ collections, statuses, collectionMethods, caseTypes, 
     caseTypesList: caseTypes.caseTypes,
     courtCasesList: courtCases.courtCases,
     clientsList: clients.clients,
+    selectedCourtCase: courtCases.selectedCourtCase,
   }
 }
 
@@ -58,6 +57,7 @@ const mapDispatchToProps = {
   getCaseTypesList: () => getCaseTypes(),
   getCourtCasesList: () => getCourtCases(),
   getClientsList: () => getClients(),
+  getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId),
 }
 
 interface CollectionsProps {
@@ -81,6 +81,9 @@ interface CollectionsProps {
   getCourtCasesList: () => void
   clientsList: ClientSchema[]
   getClientsList: () => void
+  courtCaseId?: string
+  selectedCourtCase?: CourtCaseSchema
+  getCourtCase: (courtCaseId: number) => void
 }
 
 const Collections = (props: CollectionsProps): React.ReactElement => {
@@ -103,6 +106,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
   const { collectionMethodsList, getCollectionMethodsList } = props
   const { caseTypesList, getCaseTypesList } = props
   const { courtCasesList, getCourtCasesList, clientsList, getClientsList } = props
+  const { courtCaseId, selectedCourtCase, getCourtCase } = props
 
   const [modal, setModal] = useState<string>('')
   const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
@@ -126,6 +130,13 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       caseTypesList.length === 0 && getCaseTypesList()
       courtCasesList.length === 0 && getCourtCasesList()
       clientsList.length === 0 && getClientsList()
+
+      if (courtCaseId) {
+        setSelectedCollection({ ...DefaultCollectionSchema, courtCaseId: getNumber(courtCaseId) })
+        if (!selectedCourtCase) {
+          getCourtCase(getNumber(courtCaseId))
+        }
+      }
     }
     isForceFetch.current = false
   }, [
@@ -141,6 +152,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
     getCourtCasesList,
     getStatusesList,
     statusList.collections.all.length,
+    courtCaseId,
+    selectedCourtCase,
+    getCourtCase,
   ])
 
   useEffect(() => {
@@ -310,7 +324,12 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
     />
   )
 
-  return (
+  return courtCaseId ? (
+    <>
+      {collectionTable(COLLECTION_OBJECT_TYPES.CASE)}
+      {modal && showModal()}
+    </>
+  ) : (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>

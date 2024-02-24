@@ -1,3 +1,9 @@
+// actions
+import { getCaseTypes } from './actions/caseTypes.action'
+import { getCollectionMethods } from './actions/collectionMethods.action'
+import { getFormTypes } from './actions/formTypes.action'
+import { getHearingTypes } from './actions/hearingTypes.action'
+import { getTaskTypes } from './actions/taskTypes.action'
 // components
 import CaseTypes from './components/CaseTypes'
 import CollectionMethods from './components/CollectionMethods'
@@ -55,6 +61,7 @@ import {
   TaskTypeState,
 } from './types/refTypes.data.types'
 
+export { getCaseTypes, getCollectionMethods, getFormTypes, getHearingTypes, getTaskTypes }
 export { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes }
 export { caseTypes, collectionMethods, formTypes, hearingTypes, refTypes, taskTypes }
 export {

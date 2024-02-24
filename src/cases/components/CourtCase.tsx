@@ -10,9 +10,9 @@ import CourtCaseForm from './CourtCaseForm'
 import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
 import { Calendars } from '../../calendars'
 import { ClientSchema, getClients } from '../../clients'
+import { Collections } from '../../collections'
 import { Forms } from '../../forms'
-import { CaseTypeSchema } from '../../types'
-import { getCaseTypes } from '../../types/actions/caseTypes.action'
+import { CaseTypeSchema, getCaseTypes } from '../../types'
 import { editCourtCase, getCourtCase } from '../actions/courtCases.action'
 import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
 import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
@@ -186,6 +186,12 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
                 Calendars in Case:
               </Typography>
               <Calendars courtCaseId={id} />
+            </Grid>
+            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Typography component="h1" variant="h6" color="primary">
+                Collections in Case:
+              </Typography>
+              <Collections courtCaseId={id} />
             </Grid>
           </>
         )}
