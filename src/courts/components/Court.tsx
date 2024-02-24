@@ -79,15 +79,14 @@ const Court = (props: CourtProps): React.ReactElement => {
 
   const inPageTopLinks = () => {
     const backToPage = searchQueryParams.get('backTo') || ''
-    const prevPage = searchQueryParams.get('prevPage') || ''
     return (
       <Box sx={{ display: 'flex' }}>
-        <Link text="View All Courts" navigateToPage="/courts/" color="primary" />
         {backToPage && (
           <Box sx={{ ml: 2 }}>
-            <Link text={`Back to ${prevPage}`} navigateToPage={backToPage} color="primary" />
+            <Link text='Back to Prev Page' navigateToPage={backToPage} color="primary" />
           </Box>
         )}
+        <Link text="View All Courts" navigateToPage="/courts/" color="primary" />
       </Box>
     )
   }

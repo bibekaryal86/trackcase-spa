@@ -35,9 +35,6 @@ TODO
   * https://flatlogic.github.io/react-material-admin-full
 
 
-replace `back to xxx` with `Go Back`, place it before `View All xxx`
-  search by `&prevPage` to remove the links
-
 add collections to single case page
 When adding stuffs from single stuff page, disable stuff selection
   for eg: when adding judge from court page, court is selected by default -> now disable it

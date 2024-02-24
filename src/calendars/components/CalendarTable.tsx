@@ -132,7 +132,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     return (
       <Link
         text={courtCase?.client?.name}
-        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}`}
       />
     )
   }
@@ -145,7 +145,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     return (
       <Link
         text={courtCase?.caseType?.name}
-        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
       />
     )
   }
@@ -158,7 +158,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     return form ? (
       <Link
         text={form?.formType?.name}
-        navigateToPage={`/form/${form?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+        navigateToPage={`/form/${form?.id}?backTo=${window.location.pathname}`}
       />
     ) : (
       ''
@@ -167,10 +167,8 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
 
   const linkToClientTc = (x: TaskCalendarSchema) => {
     let formId = x.formId
-    let prevPage = 'Calendars'
     if (selectedForm) {
       formId = selectedForm.id
-      prevPage = 'Form'
     }
     if (getNumber(formId) > 0) {
       const form = formsList.find((y) => y.id === x.formId)
@@ -179,7 +177,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         return (
           <Link
             text={courtCase?.client?.name}
-            navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=${prevPage}`}
+            navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}`}
           />
         )
       }
@@ -190,7 +188,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         return (
           <Link
             text={courtCase?.client?.name}
-            navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+            navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}`}
           />
         )
       }
@@ -200,10 +198,8 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
 
   const linkToCourtCaseTc = (x: TaskCalendarSchema) => {
     let formId = x.formId
-    let prevPage = 'Calendars'
     if (selectedForm) {
       formId = selectedForm.id
-      prevPage = 'Form'
     }
     if (getNumber(formId) > 0) {
       const form = formsList.find((y) => y.id === x.formId)
@@ -212,7 +208,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         return (
           <Link
             text={courtCase?.caseType?.name}
-            navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=${prevPage}`}
+            navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
           />
         )
       }
@@ -223,7 +219,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         return (
           <Link
             text={courtCase?.caseType?.name}
-            navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+            navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
           />
         )
       }

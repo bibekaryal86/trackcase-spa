@@ -125,7 +125,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     return (
       <Link
         text={courtCase?.client?.name}
-        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=Forms`}
+        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}`}
       />
     )
   }
@@ -138,7 +138,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     return (
       <Link
         text={courtCase?.caseType?.name}
-        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Forms`}
+        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
       />
     )
   }

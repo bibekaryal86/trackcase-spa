@@ -133,7 +133,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     return (
       <Link
         text={client?.name}
-        navigateToPage={`/client/${client?.id}?backTo=${window.location.pathname}&prevPage=Collections`}
+        navigateToPage={`/client/${client?.id}?backTo=${window.location.pathname}`}
       />
     )
   }
@@ -143,7 +143,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     return (
       <Link
         text={courtCase?.caseType?.name}
-        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Collections`}
+        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
       />
     )
   }

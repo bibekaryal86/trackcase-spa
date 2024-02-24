@@ -87,7 +87,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     ) : (
       <Link
         text={`${x?.name}, ${x?.state}`}
-        navigateToPage={`/court/${x?.id}?backTo=${window.location.pathname}&prevPage=Judges`}
+        navigateToPage={`/court/${x?.id}?backTo=${window.location.pathname}`}
       />
     )
 
