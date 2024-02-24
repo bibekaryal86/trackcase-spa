@@ -124,10 +124,11 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   )
 
   const linkToClientHc = (x: HearingCalendarSchema) => {
+    let courtCaseId = x.courtCaseId
     if (selectedCourtCase) {
-      return selectedCourtCase?.client?.name
+      courtCaseId = getNumber(selectedCourtCase.id)
     }
-    const courtCase = courtCasesList.find((y) => y.id === x.courtCaseId)
+    const courtCase = courtCasesList.find((y) => y.id === courtCaseId)
     return (
       <Link
         text={courtCase?.client?.name}

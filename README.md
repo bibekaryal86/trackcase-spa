@@ -35,9 +35,9 @@ TODO
   * https://flatlogic.github.io/react-material-admin-full
 
 
-single court case - on forms table client has no links
-single court case - on hearing calendar table client has no links
 single court case - only show task calendar for the case or form in the case
+replace `back to xxx` with `Go Back`, place it before `View All xxx`
+  search by `&prevPage` to remove the links
 
 add collections to single case page
 When adding stuffs from single stuff page, disable stuff selection

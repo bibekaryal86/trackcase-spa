@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import React from 'react'
 
-import { convertDateToLocaleString, Link, Table, TableData, TableHeaderData } from '../../app'
+import { convertDateToLocaleString, getNumber, Link, Table, TableData, TableHeaderData } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import {
   ACTION_ADD,
@@ -117,10 +117,11 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
   }
 
   const linkToClient = (x: FormSchema) => {
+    let courtCaseId = x.courtCaseId
     if (selectedCourtCase) {
-      return selectedCourtCase?.client?.name
+      courtCaseId = getNumber(selectedCourtCase.id)
     }
-    const courtCase = courtCasesList.find((y) => y.id === x.courtCaseId)
+    const courtCase = courtCasesList.find((y) => y.id === courtCaseId)
     return (
       <Link
         text={courtCase?.client?.name}
