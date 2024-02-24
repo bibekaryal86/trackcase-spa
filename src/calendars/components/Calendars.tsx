@@ -374,10 +374,24 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     />
   )
 
+  const getTaskCalendarsList = (taskCalendarsList: TaskCalendarSchema[]) => {
+    if (getNumber(courtCaseId) > 0) {
+      return taskCalendarsList.filter((taskCalendar) => {
+        return (
+          taskCalendar.hearingCalendar?.courtCaseId === Number(courtCaseId) ||
+          taskCalendar.form?.courtCaseId === Number(courtCaseId)
+        )
+      })
+    }
+    return taskCalendarsList
+  }
+
   const taskCalendarsTable = () => (
     <CalendarTable
       calendarType={CALENDAR_OBJECT_TYPES.TASK}
-      calendarsList={!(formId && selectedForm) ? taskCalendarsList : selectedForm.taskCalendars || []}
+      calendarsList={
+        !(formId && selectedForm) ? getTaskCalendarsList(taskCalendarsList) : selectedForm.taskCalendars || []
+      }
       setModal={setModal}
       setSelectedType={setSelectedType}
       setSelectedId={setSelectedId}
