@@ -22,17 +22,23 @@
     * eg: in court component, add first court, nothing happens
     * no issue when adding second row
   * unify color palette, create a util module for it
+  * reduce code duplication
+    * eg: table headers and body
+  * adding a case, combine option to add client/form/etc
 
 
 TODO
 * Add filing_type in form type
   * filing_type = form, motion, other
+* show calculated collection amount remaining
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
 
-Default to selected case collection when adding cash collection
-show calculated collection amount remaining
+
 
 add collections to single case page
-also add calendarcalendar to single case page replacing the hearing calendar table
-  make calendar calendar half the page
+add task calendar to single case page
+When adding stuffs from single stuff page, disable stuff selection
+  for eg: when adding judge from court page, court is selected by default -> now disable it
+  in case of task calendar (which could be form or hearing calendar) -> only allow from the selected case
+replace hearing and task calendar with calendarcalendar in single case

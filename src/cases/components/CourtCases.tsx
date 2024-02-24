@@ -122,9 +122,16 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
 
   useEffect(() => {
     if (isCloseModal) {
-      secondaryButtonCallback()
+      setModal('')
+      setSelectedId(ID_DEFAULT)
+      setSelectedCourtCase(
+        clientId ? { ...DefaultCourtCaseSchema, clientId: getNumber(clientId) } : DefaultCourtCaseSchema,
+      )
+      setSelectedCourtCaseForReset(
+        clientId ? { ...DefaultCourtCaseSchema, clientId: getNumber(clientId) } : DefaultCourtCaseSchema,
+      )
     }
-  }, [isCloseModal])
+  }, [clientId, isCloseModal])
 
   useEffect(() => {
     return () => {
@@ -147,8 +154,12 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedCourtCase(DefaultCourtCaseSchema)
-    setSelectedCourtCaseForReset(DefaultCourtCaseSchema)
+    setSelectedCourtCase(
+      clientId ? { ...DefaultCourtCaseSchema, clientId: getNumber(clientId) } : DefaultCourtCaseSchema,
+    )
+    setSelectedCourtCaseForReset(
+      clientId ? { ...DefaultCourtCaseSchema, clientId: getNumber(clientId) } : DefaultCourtCaseSchema,
+    )
   }
 
   const resetButtonCallback = (action: string) => {
