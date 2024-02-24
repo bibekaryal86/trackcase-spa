@@ -309,10 +309,21 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
     </Grid>
   )
 
+  const getCourtCaseCollections = (courtCaseCollectionsList?: CaseCollectionSchema[]) => {
+    if (courtCaseCollectionsList && courtCaseCollectionsList.length > 0) {
+      const courtCaseCollection = courtCaseCollectionsList[0]
+      const caseCollection = caseCollectionsList.find(x => x.id === courtCaseCollection.id)
+      if (caseCollection) {
+        return [caseCollection]
+      }
+    }
+    return caseCollectionsList
+  }
+
   const collectionTable = (collectionType: string) => (
     <CollectionTable
       collectionType={collectionType}
-      caseCollectionsList={caseCollectionsList}
+      caseCollectionsList={!(courtCaseId && selectedCourtCase) ? caseCollectionsList : getCourtCaseCollections(selectedCourtCase.caseCollections) || []}
       collectionMethodsList={collectionMethodsList}
       courtCasesList={courtCasesList}
       clientsList={clientsList}
