@@ -35,10 +35,12 @@ TODO
   * https://flatlogic.github.io/react-material-admin-full
 
 
-single court case - on forms table client/case has no links
-single court case - on hearing calendar table, client/case has no links
+single court case - on forms table client has no links
+single court case - on hearing calendar table client has no links
+single court case - only show task calendar for the case or form in the case
+single form - on task calendar table, client/case not displaying
+
 add collections to single case page
-add task calendar to single case page
 When adding stuffs from single stuff page, disable stuff selection
   for eg: when adding judge from court page, court is selected by default -> now disable it
   in case of task calendar (which could be form or hearing calendar) -> only allow from the selected case
