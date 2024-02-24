@@ -21,6 +21,7 @@ import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CollectionMethodSchema } from '../../types'
 import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
 import {
+  getAmountForDisplay,
   handleCollectionDateOnChange,
   handleCollectionFormOnChange,
   isCaseCollection,
@@ -49,28 +50,13 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
   const isCaseCollectionForm = isCaseCollection(collectionType)
 
   // case collection
-  const caseCollectionQuoteDate = () => {
-    return (
-      <FormDatePickerField
-        componentLabel="Case Collection--Quote Date"
-        value={(selectedCollection as CaseCollectionSchema).quoteDate}
-        onChange={(newValue) =>
-          handleCollectionDateOnChange('quoteDate', newValue, selectedCollection, setSelectedCollection)
-        }
-        minDate={minCollectionDate}
-        maxDate={maxCollectionDate}
-        required
-      />
-    )
-  }
-
   const caseCollectionQuoteAmount = () => {
     const value = (selectedCollection as CaseCollectionSchema).quoteAmount
     return (
       <FormTextField
         componentLabel="Case Collection--Quote Amount"
         maxLength={5}
-        value={value ? String(value) : undefined}
+        value={getAmountForDisplay(value)}
         onChange={(e) =>
           handleCollectionFormOnChange(
             'quoteAmount',
@@ -115,6 +101,40 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
     )
   }
 
+  const caseCollectionStatus = () => {
+    const value = 'status' in selectedCollection ? selectedCollection.status : ''
+    return (
+      <FormSelectStatusField
+        componentLabel="Collection--Status"
+        value={value}
+        onChange={(e) =>
+          handleCollectionFormOnChange('status', e.target.value, selectedCollection, setSelectedCollection, getString)
+        }
+        statusList={collectionStatusList}
+        error={isCollectionFormFieldError('status', value, undefined)}
+      />
+    )
+  }
+
+  const caseCollectionComments = () => {
+    const value = 'comments' in selectedCollection ? selectedCollection.comments : ''
+    return (
+      <FormCommentsField
+        componentLabel="Collection--Comments"
+        value={value}
+        onChange={(e) =>
+          handleCollectionFormOnChange(
+            'comments',
+            e.target.value,
+            selectedCollection,
+            setSelectedCollection,
+            getComments,
+          )
+        }
+      />
+    )
+  }
+
   // cash collections
   const cashCollectionCollectionDate = () => {
     return (
@@ -137,7 +157,7 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
       <FormTextField
         componentLabel="Case Collection--Collected Amount"
         maxLength={5}
-        value={value ? String(value) : undefined}
+        value={getAmountForDisplay(value)}
         onChange={(e) =>
           handleCollectionFormOnChange(
             'collectedAmount',
@@ -159,7 +179,7 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
       <FormTextField
         componentLabel="Cash Collection--Waived Amount"
         maxLength={5}
-        value={value ? String(value) : undefined}
+        value={getAmountForDisplay(value)}
         onChange={(e) =>
           handleCollectionFormOnChange(
             'waivedAmount',
@@ -254,29 +274,6 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
     )
   }
 
-  // common
-  const collectionStatus = () => (
-    <FormSelectStatusField
-      componentLabel="Collection--Status"
-      value={selectedCollection.status}
-      onChange={(e) =>
-        handleCollectionFormOnChange('status', e.target.value, selectedCollection, setSelectedCollection, getString)
-      }
-      statusList={collectionStatusList}
-      error={isCollectionFormFieldError('status', selectedCollection.status, undefined)}
-    />
-  )
-
-  const collectionComments = () => (
-    <FormCommentsField
-      componentLabel="Collection--Comments"
-      value={selectedCollection.comments}
-      onChange={(e) =>
-        handleCollectionFormOnChange('comments', e.target.value, selectedCollection, setSelectedCollection, getComments)
-      }
-    />
-  )
-
   return (
     <GridFormWrapper
       isSmallScreen={isSmallScreen}
@@ -286,22 +283,25 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
       {isCaseCollectionForm ? (
         <>
           <Grid item xs={6}>
-            {caseCollectionQuoteDate()}
+            {caseCollectionCourtCasesList()}
           </Grid>
           <Grid item xs={6}>
             {caseCollectionQuoteAmount()}
           </Grid>
           <Grid item xs={6}>
-            {caseCollectionCourtCasesList()}
+            {caseCollectionStatus()}
+          </Grid>
+          <Grid item xs={12}>
+            {caseCollectionComments()}
           </Grid>
         </>
       ) : (
         <>
           <Grid item xs={6}>
-            {cashCollectionCollectionDate()}
+            {cashCollectionCaseCollectionList()}
           </Grid>
           <Grid item xs={6}>
-            {cashCollectionCaseCollectionList()}
+            {cashCollectionCollectionDate()}
           </Grid>
           <Grid item xs={6}>
             {cashCollectionCollectedAmount()}
@@ -312,17 +312,11 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
           <Grid item xs={6}>
             {cashCollectionWaivedAmount()}
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             {cashCollectionMemo()}
           </Grid>
         </>
       )}
-      <Grid item xs={6}>
-        {collectionStatus()}
-      </Grid>
-      <Grid item xs={12}>
-        {collectionComments()}
-      </Grid>
     </GridFormWrapper>
   )
 }

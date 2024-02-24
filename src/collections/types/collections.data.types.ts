@@ -6,7 +6,6 @@ import { AMOUNT_DEFAULT, ID_DEFAULT } from '../../constants'
 import { CollectionMethodSchema } from '../../types'
 
 export interface CaseCollectionSchema extends StatusBaseSchema, BaseModelSchema {
-  quoteDate: Dayjs | undefined // set undefined for default object
   quoteAmount: number
   courtCaseId: number
   // orm_mode
@@ -20,7 +19,7 @@ export interface CaseCollectionResponse extends ResponseBase {
   caseCollections: CaseCollectionSchema[]
 }
 
-export interface CashCollectionSchema extends StatusBaseSchema, BaseModelSchema {
+export interface CashCollectionSchema extends BaseModelSchema {
   collectionDate: Dayjs | undefined // set undefined for default object
   collectedAmount: number
   waivedAmount: number
@@ -44,7 +43,6 @@ export interface HistoryCaseCollectionSchema extends BaseModelSchema {
   // from case collection schema, need everything optional here so can't extend
   status?: string
   comments?: string
-  quoteDate?: Dayjs
   quoteAmount?: number
   courtCaseId?: number
   // orm mode
@@ -56,7 +54,6 @@ export interface HistoryCashCollectionSchema extends BaseModelSchema {
   userName: string
   cashCollectionId: number
   // from cash collection schema, need everything optional here so can't extend
-  status?: string
   comments?: string
   collection_date?: Dayjs
   collectedAmount?: number
@@ -83,7 +80,6 @@ export interface CollectionsAction extends CollectionsState {
 }
 
 export const DefaultCaseCollectionSchema: CaseCollectionSchema = {
-  quoteDate: undefined,
   quoteAmount: AMOUNT_DEFAULT,
   courtCaseId: ID_DEFAULT,
   status: '',
@@ -97,8 +93,6 @@ export const DefaultCashCollectionSchema: CashCollectionSchema = {
   collectionDate: undefined,
   collectionMethodId: ID_DEFAULT,
   memo: '',
-  status: '',
-  comments: '',
 }
 
 export const DefaultCollectionsState: CollectionsState = {

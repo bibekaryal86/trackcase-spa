@@ -205,9 +205,16 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   useEffect(() => {
     if (isCloseModal) {
-      secondaryButtonCallback()
+      setModal('')
+      setSelectedId(ID_DEFAULT)
+      setSelectedCalendar(
+        courtCaseId ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) } : DefaultCalendarSchema,
+      )
+      setSelectedCalendarForReset(
+        courtCaseId ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) } : DefaultCalendarSchema,
+      )
     }
-  }, [isCloseModal])
+  }, [courtCaseId, isCloseModal])
 
   useEffect(() => {
     return () => {
@@ -233,8 +240,12 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedCalendar(DefaultCalendarSchema)
-    setSelectedCalendarForReset(DefaultCalendarSchema)
+    setSelectedCalendar(
+      courtCaseId ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) } : DefaultCalendarSchema,
+    )
+    setSelectedCalendarForReset(
+      courtCaseId ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) } : DefaultCalendarSchema,
+    )
   }
 
   const resetButtonCallback = (action: string) => {
@@ -411,6 +422,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   return courtCaseId ? (
     <>
       {hearingCalendarsTable()}
+      {taskCalendarsTable()}
       {modal && showModal()}
     </>
   ) : formId ? (

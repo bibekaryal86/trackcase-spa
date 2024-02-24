@@ -184,7 +184,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
             </Grid>
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               <Typography component="h1" variant="h6" color="primary">
-                Case Hearing Calendar:
+                Calendars in Case:
               </Typography>
               <Calendars courtCaseId={id} />
             </Grid>

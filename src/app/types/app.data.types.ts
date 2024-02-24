@@ -170,9 +170,9 @@ export interface StatusAction extends StatusState {
 
 export interface AllRefTypesSchema {
   statuses: StatusSchema<string>
-  case_types: CaseTypeSchema[]
-  collection_methods: CollectionMethodSchema[]
-  form_types: FormTypeSchema[]
-  hearing_types: HearingTypeSchema[]
-  task_types: TaskTypeSchema[]
+  case_types: { caseTypes: CaseTypeSchema[] }
+  collection_methods: { collectionMethods: CollectionMethodSchema[] }
+  form_types: { formTypes: FormTypeSchema[] }
+  hearing_types: { hearingTypes: HearingTypeSchema[] }
+  task_types: { taskTypes: TaskTypeSchema[] }
 }

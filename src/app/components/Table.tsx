@@ -1,14 +1,16 @@
-import { Table as MuiTable, useMediaQuery } from '@mui/material'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import { Table as MuiTable, TableRow as MuiTableRow, useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Collapse from '@mui/material/Collapse'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { styled } from '@mui/material/styles'
+import IconButton from '@mui/material/IconButton'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
-import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import Typography from '@mui/material/Typography'
 import { visuallyHidden } from '@mui/utils'
@@ -19,15 +21,16 @@ import Switch from './Switch'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { TableData, TableHeaderData, TableOrder } from '../types/app.data.types'
 
-const TABLE_EXPORT_KEYS_TO_AVOID = ['actions', 'Actions']
+const TABLE_EXPORT_KEYS_TO_AVOID = ['actions', 'Actions', 'collapsed']
 const TABLE_EXPORT_KEY_FOR_TITLE = 'title'
 // props
 interface TableHeaderProps {
   headerData: TableHeaderData[]
   order: TableOrder
-  orderBy: string
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof TableData) => void
+  orderBy?: string
+  onRequestSort?: (event: React.MouseEvent<unknown>, property: keyof TableData) => void
   isSortDisabledInTable?: boolean
+  isCollapse?: boolean
 }
 interface TableProps {
   componentName: string
@@ -43,6 +46,14 @@ interface TableProps {
   defaultDense?: boolean
   addModelComponent?: React.JSX.Element
   tableLayout?: string
+  isDisablePagination?: boolean
+}
+interface TableRowProps {
+  row: TableData
+  tableData: TableData[]
+  headerData: TableHeaderData[]
+  verticalAlign?: string
+  collapseRowKey?: string
 }
 // csv export
 type CsvData = Record<string, string>
@@ -55,12 +66,6 @@ interface CsvReport {
   data: CsvData[]
   filename: string
 }
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-}))
 
 function getProperty<T>(value: T, property: keyof T): string {
   const propertyValue = value[property] as unknown
@@ -153,6 +158,19 @@ function getDataItemValue(dataItem: string | number | boolean | React.JSX.Elemen
   return dataItemValue
 }
 
+function isTable(element: React.ReactNode): element is React.ReactElement<unknown> {
+  return isValidElement(element) && (element.type as unknown) === Table
+}
+
+function getCollapseRowKey(tableData: TableData): string | undefined {
+  for (const key in tableData) {
+    if (isTable(tableData[key])) {
+      return key
+    }
+  }
+  return undefined
+}
+
 const emptyTableMessage = (componentName: string): React.JSX.Element => {
   const messageText =
     'Table is empty! If an error message was not displayed, then there are likely no ' +
@@ -208,12 +226,13 @@ const tablePagination = (
 const TableHeader = (props: TableHeaderProps) => {
   const { headerData, order, orderBy, onRequestSort } = props
   const createSortHandler = (property: keyof TableData) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property)
+    onRequestSort && onRequestSort(event, property)
   }
 
   return (
     <TableHead>
-      <TableRow>
+      <MuiTableRow>
+        {props.isCollapse && <TableCell />}
         {headerData.map((data) => (
           <TableCell
             key={data.id}
@@ -236,8 +255,52 @@ const TableHeader = (props: TableHeaderProps) => {
             </TableSortLabel>
           </TableCell>
         ))}
-      </TableRow>
+      </MuiTableRow>
     </TableHead>
+  )
+}
+
+const TableRow = (props: TableRowProps) => {
+  const [openCollapse, setOpenCollapse] = useState(false)
+  return (
+    <React.Fragment>
+      <MuiTableRow sx={{ verticalAlign: props.verticalAlign ? props.verticalAlign : '' }}>
+        {!!props.collapseRowKey && (
+          <TableCell>
+            <IconButton size="small" onClick={() => setOpenCollapse(!openCollapse)}>
+              {openCollapse ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+        )}
+        {(Object.keys(props.tableData[0]) as Array<keyof TableData>).map((key) => {
+          if (isTable(props.row[key])) {
+            return null
+          }
+          const column = props.headerData.find((item) => item.id === key)
+          return (
+            <TableCell
+              sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
+              key={key.toString()}
+              align={(column && column.align) || 'left'}
+            >
+              {props.row[key]}
+            </TableCell>
+          )
+        })}
+      </MuiTableRow>
+      {!!props.collapseRowKey && (
+        <MuiTableRow>
+          <TableCell
+            style={{ paddingBottom: 0, paddingTop: 0 }}
+            colSpan={(Object.keys(props.tableData[0]) as Array<keyof TableData>).length}
+          >
+            <Collapse in={openCollapse} timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1 }}>{props.row[props.collapseRowKey]}</Box>
+            </Collapse>
+          </TableCell>
+        </MuiTableRow>
+      )}
+    </React.Fragment>
   )
 }
 
@@ -245,6 +308,7 @@ const Table = (props: TableProps) => {
   const { tableData } = props
   const rowsPerPageOptions = [5, 10, 15, 20]
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+  const collapseRowKey = getCollapseRowKey(tableData[0])
 
   const [order, setOrder] = useState<TableOrder>(props.defaultOrder || 'asc')
   const [orderBy, setOrderBy] = useState<keyof TableData>(props.defaultOrderBy || '')
@@ -315,40 +379,34 @@ const Table = (props: TableProps) => {
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
             isSortDisabledInTable={props.isSortDisabledInTable}
+            isCollapse={!!collapseRowKey}
           />
           <TableBody>
-            {visibleRows.map((row: TableData, index: number) => {
-              return (
-                <StyledTableRow key={index} sx={{ verticalAlign: props.verticalAlign ? props.verticalAlign : '' }}>
-                  {(Object.keys(tableData[0]) as Array<keyof TableData>).map((key) => {
-                    const column = props.headerData.find((item) => item.id === key)
-                    return (
-                      <TableCell
-                        sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
-                        key={key.toString()}
-                        align={(column && column.align) || 'left'}
-                      >
-                        {row[key]}
-                      </TableCell>
-                    )
-                  })}
-                </StyledTableRow>
-              )
-            })}
-            {emptyRows > 0 && (
+            {visibleRows.map((row: TableData, index: number) => (
               <TableRow
+                key={index}
+                row={row}
+                tableData={tableData}
+                headerData={props.headerData}
+                collapseRowKey={collapseRowKey}
+              />
+            ))}
+            {emptyRows > 0 && (
+              <MuiTableRow
                 style={{
                   height: (dense ? 33 : 53) * emptyRows,
                 }}
               >
                 <TableCell colSpan={6} />
-              </TableRow>
+              </MuiTableRow>
             )}
           </TableBody>
         </MuiTable>
       </TableContainer>
       {tableData.length === 0
         ? emptyTableMessage(props.componentName)
+        : props.isDisablePagination
+        ? null
         : tablePagination(
             rowsPerPageOptions,
             tableData.length,

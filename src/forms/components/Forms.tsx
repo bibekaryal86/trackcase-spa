@@ -122,9 +122,14 @@ const Forms = (props: FormsProps): React.ReactElement => {
 
   useEffect(() => {
     if (isCloseModal) {
-      secondaryButtonCallback()
+      setModal('')
+      setSelectedId(ID_DEFAULT)
+      setSelectedForm(courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema)
+      setSelectedFormForReset(
+        courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema,
+      )
     }
-  }, [isCloseModal])
+  }, [courtCaseId, isCloseModal])
 
   useEffect(() => {
     return () => {
@@ -147,8 +152,10 @@ const Forms = (props: FormsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedForm(DefaultFormSchema)
-    setSelectedFormForReset(DefaultFormSchema)
+    setSelectedForm(courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema)
+    setSelectedFormForReset(
+      courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema,
+    )
   }
 
   const resetButtonCallback = (action: string) => {

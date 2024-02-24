@@ -318,12 +318,10 @@ const setSelectedCollectionFromStore = (
 
 const getRequestBody = (collection: CaseCollectionSchema | CashCollectionSchema, isCaseCollectionRequest: boolean) => {
   return {
-    // common
-    status: collection.status,
-    comments: collection.comments,
     // case collection
+    status: isCaseCollectionRequest && 'status' in collection ? collection.status : undefined,
+    comments: isCaseCollectionRequest && 'comments' in collection ? collection.comments : undefined,
     court_case_id: isCaseCollectionRequest && 'courtCaseId' in collection ? collection.courtCaseId : undefined,
-    quote_date: isCaseCollectionRequest && 'quoteDate' in collection ? collection.quoteDate : undefined,
     quote_amount:
       isCaseCollectionRequest && 'quoteAmount' in collection
         ? getCurrency(collection.quoteAmount, false, true)

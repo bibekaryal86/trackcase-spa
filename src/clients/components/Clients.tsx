@@ -112,9 +112,12 @@ const Clients = (props: ClientsProps): React.ReactElement => {
 
   useEffect(() => {
     if (isCloseModal) {
-      secondaryButtonCallback()
+      setModal('')
+      setSelectedId(ID_DEFAULT)
+      setSelectedClient(judgeId ? { ...DefaultClientSchema, judgeId: getNumber(judgeId) } : DefaultClientSchema)
+      setSelectedClientForReset(judgeId ? { ...DefaultClientSchema, judgeId: getNumber(judgeId) } : DefaultClientSchema)
     }
-  }, [isCloseModal])
+  }, [isCloseModal, judgeId])
 
   useEffect(() => {
     return () => {
@@ -137,8 +140,8 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedClient(DefaultClientSchema)
-    setSelectedClientForReset(DefaultClientSchema)
+    setSelectedClient(judgeId ? { ...DefaultClientSchema, judgeId: getNumber(judgeId) } : DefaultClientSchema)
+    setSelectedClientForReset(judgeId ? { ...DefaultClientSchema, judgeId: getNumber(judgeId) } : DefaultClientSchema)
   }
 
   const resetButtonCallback = (action: string) => {
