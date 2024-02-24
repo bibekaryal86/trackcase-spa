@@ -130,12 +130,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
   const linkToClient = (x: CaseCollectionSchema) => {
     const client = clientsList.find((y) => y.id === x.courtCase?.clientId)
-    return (
-      <Link
-        text={client?.name}
-        navigateToPage={`/client/${client?.id}?backTo=${window.location.pathname}`}
-      />
-    )
+    return <Link text={client?.name} navigateToPage={`/client/${client?.id}?backTo=${window.location.pathname}`} />
   }
 
   const linkToCase = (x: CaseCollectionSchema) => {

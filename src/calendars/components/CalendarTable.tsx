@@ -156,10 +156,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     }
     const form = formsList.find((y) => y.id === x.formId)
     return form ? (
-      <Link
-        text={form?.formType?.name}
-        navigateToPage={`/form/${form?.id}?backTo=${window.location.pathname}`}
-      />
+      <Link text={form?.formType?.name} navigateToPage={`/form/${form?.id}?backTo=${window.location.pathname}`} />
     ) : (
       ''
     )

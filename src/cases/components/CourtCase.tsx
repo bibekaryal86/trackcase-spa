@@ -106,8 +106,8 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
     return (
       <Box sx={{ display: 'flex' }}>
         {backToPage && (
-          <Box sx={{ ml: 2 }}>
-            <Link text='Back to Prev Page' navigateToPage={backToPage} color="primary" />
+          <Box sx={{ mr: 2 }}>
+            <Link text="Back to Prev Page" navigateToPage={backToPage} color="primary" />
           </Box>
         )}
         <Link text="View All Cases" navigateToPage="/court_cases/" color="primary" />
