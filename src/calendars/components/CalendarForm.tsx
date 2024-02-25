@@ -53,8 +53,6 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const { formId, courtCaseId } = props
   const isHearingCalendarForm = isHearingCalendar(calendarType)
 
-  console.log(courtCaseId)
-
   const calendarDate = () => {
     const label = isHearingCalendarForm ? 'Hearing Calendar--Hearing Date' : 'Task Calendar--Task Date'
     const value =
@@ -120,12 +118,25 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     )
   }
 
-  const calendarCourtCasesListForSelect = () =>
-    courtCasesList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.client?.name}, {x.caseType?.name}
-      </MenuItem>
-    ))
+  const calendarCourtCasesListForSelect = () => {
+    if (getNumber(courtCaseId) > 0) {
+      const selectedCourtCase = courtCasesList.find((x) => x.id === Number(courtCaseId))
+      if (selectedCourtCase) {
+        return [
+          <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
+            {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
+          </MenuItem>,
+        ]
+      }
+    } else {
+      return courtCasesList.map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.client?.name}, {x.caseType?.name}
+        </MenuItem>
+      ))
+    }
+    return []
+  }
 
   const calendarCourtCasesList = () => {
     const value = 'courtCaseId' in selectedCalendar ? selectedCalendar.courtCaseId : ID_DEFAULT
@@ -149,12 +160,25 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     return `${client?.name}, ${courtCase?.caseType?.name} [${getDayjsString(x.hearingDate)}]`
   }
 
-  const calendarHearingCalendarListForSelect = () =>
-    hearingCalendarList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {calendarHearingCalendarForSelect(x)}
-      </MenuItem>
-    ))
+  const calendarHearingCalendarListForSelect = () => {
+    if (getNumber(courtCaseId) > 0) {
+      const selectedHearingCalendar = hearingCalendarList.find((x) => x.courtCaseId === Number(courtCaseId))
+      if (selectedHearingCalendar) {
+        return [
+          <MenuItem key={selectedHearingCalendar.id} value={selectedHearingCalendar.id}>
+            {calendarHearingCalendarForSelect(selectedHearingCalendar)}
+          </MenuItem>,
+        ]
+      }
+    } else {
+      return hearingCalendarList.map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {calendarHearingCalendarForSelect(x)}
+        </MenuItem>
+      ))
+    }
+    return []
+  }
 
   const calendarHearingCalendarList = () => {
     const value = 'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_DEFAULT
@@ -194,6 +218,13 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
           </MenuItem>,
         ]
       }
+    } else if (getNumber(courtCaseId) > 0) {
+      const selectedForms = formsList.filter((x) => x.courtCaseId === Number(courtCaseId))
+      return selectedForms.map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {calendarFormForSelect(x)}
+        </MenuItem>
+      ))
     } else {
       return formsList.map((x) => (
         <MenuItem key={x.id} value={x.id}>
