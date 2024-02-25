@@ -203,11 +203,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     if (isCloseModal) {
       setModal('')
       setSelectedId(ID_DEFAULT)
-      setSelectedCalendar(
-        DefaultCalendarSchema,
-      )
-      setSelectedCalendarForReset( DefaultCalendarSchema,
-      )
+      setSelectedCalendar(DefaultCalendarSchema)
+      setSelectedCalendarForReset(DefaultCalendarSchema)
     }
   }, [courtCaseId, formId, isCloseModal])
 
@@ -235,11 +232,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedCalendar(DefaultCalendarSchema,
-    )
-    setSelectedCalendarForReset(
-      DefaultCalendarSchema,
-    )
+    setSelectedCalendar(DefaultCalendarSchema)
+    setSelectedCalendarForReset(DefaultCalendarSchema)
   }
 
   const resetButtonCallback = (action: string) => {

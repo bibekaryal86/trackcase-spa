@@ -186,20 +186,20 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
 
   const calendarFormListForSelect = () => {
     if (getNumber(formId) > 0) {
-      const selectedForm = formsList.find(x => x.id === Number(formId))
+      const selectedForm = formsList.find((x) => x.id === Number(formId))
       if (selectedForm) {
         return [
           <MenuItem key={selectedForm.id} value={selectedForm.id}>
             {calendarFormForSelect(selectedForm)}
-          </MenuItem>
+          </MenuItem>,
         ]
       }
     } else {
       return formsList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {calendarFormForSelect(x)}
-      </MenuItem>
-    ))
+        <MenuItem key={x.id} value={x.id}>
+          {calendarFormForSelect(x)}
+        </MenuItem>
+      ))
     }
     return []
   }

@@ -123,9 +123,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
       setModal('')
       setSelectedId(ID_DEFAULT)
       setSelectedForm(DefaultFormSchema)
-      setSelectedFormForReset(
-        DefaultFormSchema,
-      )
+      setSelectedFormForReset(DefaultFormSchema)
     }
   }, [courtCaseId, isCloseModal])
 
@@ -151,9 +149,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
     setModal('')
     setSelectedId(ID_DEFAULT)
     setSelectedForm(DefaultFormSchema)
-    setSelectedFormForReset(
-      DefaultFormSchema,
-    )
+    setSelectedFormForReset(DefaultFormSchema)
   }
 
   const resetButtonCallback = (action: string) => {

@@ -40,12 +40,14 @@ interface CollectionFormProps {
   isShowOneCollection: boolean
   minCollectionDate: Dayjs
   maxCollectionDate: Dayjs
+  courtCaseId?: string
 }
 
 const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { collectionType, selectedCollection, setSelectedCollection, isShowOneCollection } = props
-  const { collectionMethodsList, courtCasesList, caseCollectionList, clientsList, collectionStatusList } = props
+  const { collectionMethodsList, courtCasesList, caseCollectionList, clientsList, collectionStatusList, courtCaseId } =
+    props
   const { minCollectionDate, maxCollectionDate } = props
   const isCaseCollectionForm = isCaseCollection(collectionType)
 
@@ -245,12 +247,25 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
     return `${client?.name}, ${courtCase?.caseType?.name}`
   }
 
-  const cashCollectionCaseCollectionListForSelect = () =>
-    caseCollectionList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {cashCollectionCaseCollectionForSelect(x)}
-      </MenuItem>
-    ))
+  const cashCollectionCaseCollectionListForSelect = () => {
+    if (getNumber(courtCaseId) > 0) {
+      const selectedCaseCollection = caseCollectionList.find((x) => x.courtCaseId === Number(courtCaseId))
+      if (selectedCaseCollection) {
+        return [
+          <MenuItem key={selectedCaseCollection.id} value={selectedCaseCollection.id}>
+            {cashCollectionCaseCollectionForSelect(selectedCaseCollection)}
+          </MenuItem>,
+        ]
+      }
+    } else {
+      return caseCollectionList.map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {cashCollectionCaseCollectionForSelect(x)}
+        </MenuItem>
+      ))
+    }
+    return []
+  }
 
   const cashCollectionCaseCollectionList = () => {
     const value = 'caseCollectionId' in selectedCollection ? selectedCollection.caseCollectionId : ID_DEFAULT

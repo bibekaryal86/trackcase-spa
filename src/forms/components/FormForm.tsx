@@ -55,10 +55,10 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       }
     } else {
       return courtCasesList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.client?.name}, {x.caseType?.name}
-      </MenuItem>
-    ))
+        <MenuItem key={x.id} value={x.id}>
+          {x.client?.name}, {x.caseType?.name}
+        </MenuItem>
+      ))
     }
     return []
   }
