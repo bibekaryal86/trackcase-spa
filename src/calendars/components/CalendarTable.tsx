@@ -124,14 +124,15 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   )
 
   const linkToClientHc = (x: HearingCalendarSchema) => {
+    let courtCaseId = x.courtCaseId
     if (selectedCourtCase) {
-      return selectedCourtCase?.client?.name
+      courtCaseId = getNumber(selectedCourtCase.id)
     }
-    const courtCase = courtCasesList.find((y) => y.id === x.courtCaseId)
+    const courtCase = courtCasesList.find((y) => y.id === courtCaseId)
     return (
       <Link
         text={courtCase?.client?.name}
-        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}`}
       />
     )
   }
@@ -144,7 +145,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     return (
       <Link
         text={courtCase?.caseType?.name}
-        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
       />
     )
   }
@@ -155,27 +156,25 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     }
     const form = formsList.find((y) => y.id === x.formId)
     return form ? (
-      <Link
-        text={form?.formType?.name}
-        navigateToPage={`/form/${form?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
-      />
+      <Link text={form?.formType?.name} navigateToPage={`/form/${form?.id}?backTo=${window.location.pathname}`} />
     ) : (
       ''
     )
   }
 
   const linkToClientTc = (x: TaskCalendarSchema) => {
+    let formId = x.formId
     if (selectedForm) {
-      return selectedForm.courtCase?.client?.name
+      formId = selectedForm.id
     }
-    if (getNumber(x.formId) > 0) {
+    if (getNumber(formId) > 0) {
       const form = formsList.find((y) => y.id === x.formId)
       if (form) {
         const courtCase = courtCasesList.find((z) => z.id === form.courtCaseId)
         return (
           <Link
             text={courtCase?.client?.name}
-            navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+            navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}`}
           />
         )
       }
@@ -186,7 +185,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         return (
           <Link
             text={courtCase?.client?.name}
-            navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+            navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}`}
           />
         )
       }
@@ -195,17 +194,18 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   }
 
   const linkToCourtCaseTc = (x: TaskCalendarSchema) => {
+    let formId = x.formId
     if (selectedForm) {
-      return selectedForm.courtCase?.client?.name
+      formId = selectedForm.id
     }
-    if (getNumber(x.formId) > 0) {
+    if (getNumber(formId) > 0) {
       const form = formsList.find((y) => y.id === x.formId)
       if (form) {
         const courtCase = courtCasesList.find((z) => z.id === form.courtCaseId)
         return (
           <Link
             text={courtCase?.caseType?.name}
-            navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+            navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
           />
         )
       }
@@ -216,7 +216,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         return (
           <Link
             text={courtCase?.caseType?.name}
-            navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Calendars`}
+            navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
           />
         )
       }

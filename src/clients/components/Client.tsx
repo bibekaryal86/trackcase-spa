@@ -92,15 +92,14 @@ const Client = (props: ClientProps): React.ReactElement => {
 
   const inPageTopLinks = () => {
     const backToPage = searchQueryParams.get('backTo') || ''
-    const prevPage = searchQueryParams.get('prevPage') || ''
     return (
       <Box sx={{ display: 'flex' }}>
-        <Link text="View All Clients" navigateToPage="/clients/" color="primary" />
         {backToPage && (
-          <Box sx={{ ml: 2 }}>
-            <Link text={`Back to ${prevPage}`} navigateToPage={backToPage} color="primary" />
+          <Box sx={{ mr: 2 }}>
+            <Link text="Back to Prev Page" navigateToPage={backToPage} color="primary" />
           </Box>
         )}
+        <Link text="View All Clients" navigateToPage="/clients/" color="primary" />
       </Box>
     )
   }

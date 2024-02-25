@@ -28,11 +28,12 @@ interface FormFormProps {
   isShowOneForm: boolean
   formTypesList: FormTypeSchema[]
   courtCasesList: CourtCaseSchema[]
+  courtCaseId?: string
 }
 
 const FormForm = (props: FormFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedForm, setSelectedForm, formStatusList, isShowOneForm } = props
+  const { selectedForm, setSelectedForm, formStatusList, isShowOneForm, courtCaseId } = props
   const { formTypesList, courtCasesList } = props
 
   const formTypesListForSelect = () =>
@@ -42,12 +43,25 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
       </MenuItem>
     ))
 
-  const courtCasesListForSelect = () =>
-    courtCasesList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.client?.name}, {x.caseType?.name}
-      </MenuItem>
-    ))
+  const courtCasesListForSelect = () => {
+    if (getNumber(courtCaseId) > 0) {
+      const selectedClient = courtCasesList.find((x) => x.id === Number(courtCaseId))
+      if (selectedClient) {
+        return [
+          <MenuItem key={selectedClient.id} value={selectedClient.id}>
+            {selectedClient.client?.name}, {selectedClient.caseType?.name}
+          </MenuItem>,
+        ]
+      }
+    } else {
+      return courtCasesList.map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.client?.name}, {x.caseType?.name}
+        </MenuItem>
+      ))
+    }
+    return []
+  }
 
   const formType = () => (
     <FormSelectField

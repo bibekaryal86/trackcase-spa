@@ -33,6 +33,7 @@ interface CollectionTableProps {
   collectionMethodsList: CollectionMethodSchema[]
   courtCasesList: CourtCaseSchema[]
   clientsList: ClientSchema[]
+  isAddModelComponent: boolean
 }
 
 const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
@@ -130,12 +131,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
   const linkToClient = (x: CaseCollectionSchema) => {
     const client = clientsList.find((y) => y.id === x.courtCase?.clientId)
-    return (
-      <Link
-        text={client?.name}
-        navigateToPage={`/client/${client?.id}?backTo=${window.location.pathname}&prevPage=Collections`}
-      />
-    )
+    return <Link text={client?.name} navigateToPage={`/client/${client?.id}?backTo=${window.location.pathname}`} />
   }
 
   const linkToCase = (x: CaseCollectionSchema) => {
@@ -143,7 +139,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     return (
       <Link
         text={courtCase?.caseType?.name}
-        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}&prevPage=Collections`}
+        navigateToPage={`/court_case/${courtCase?.id}?backTo=${window.location.pathname}`}
       />
     )
   }
@@ -219,22 +215,23 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     }
   }
 
-  const addButton = (collectionTypeOverride?: string, caseCollectionId?: number) => (
-    <Button
-      onClick={() => {
-        setModal && setModal(ACTION_ADD)
-        setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
-        setSelectedId && setSelectedId(caseCollectionId || ID_DEFAULT)
-        setSelectedCollection &&
-          setSelectedCollection({
-            ...DefaultCashCollectionSchema,
-            caseCollectionId: caseCollectionId || ID_ACTION_BUTTON,
-          })
-      }}
-    >
-      Add New Collection
-    </Button>
-  )
+  const addButton = (collectionTypeOverride?: string, caseCollectionId?: number) =>
+    props.isAddModelComponent || collectionTypeOverride === COLLECTION_OBJECT_TYPES.CASH ? (
+      <Button
+        onClick={() => {
+          setModal && setModal(ACTION_ADD)
+          setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
+          setSelectedId && setSelectedId(caseCollectionId || ID_DEFAULT)
+          setSelectedCollection &&
+            setSelectedCollection({
+              ...DefaultCashCollectionSchema,
+              caseCollectionId: caseCollectionId || ID_ACTION_BUTTON,
+            })
+        }}
+      >
+        Add New Collection
+      </Button>
+    ) : undefined
 
   return (
     <Table

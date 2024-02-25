@@ -1,6 +1,8 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
 import Typography from '@mui/material/Typography'
 import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
@@ -10,9 +12,10 @@ import CourtCaseForm from './CourtCaseForm'
 import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
 import { Calendars } from '../../calendars'
 import { ClientSchema, getClients } from '../../clients'
+import { Collections } from '../../collections'
+import { CASE_TABS } from '../../constants'
 import { Forms } from '../../forms'
-import { CaseTypeSchema } from '../../types'
-import { getCaseTypes } from '../../types/actions/caseTypes.action'
+import { CaseTypeSchema, getCaseTypes } from '../../types'
 import { editCourtCase, getCourtCase } from '../actions/courtCases.action'
 import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
 import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
@@ -63,6 +66,8 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   const [selectedCourtCase, setSelectedCourtCase] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
   const [selectedCourtCaseForReset, setSelectedCourtCaseForReset] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
   const [courtCaseStatusList, setCourtCaseStatusList] = useState<string[]>([])
+  const [tabValue, setTabValue] = useState(CASE_TABS.FORMS.toString())
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => setTabValue(newValue)
 
   useEffect(() => {
     if (isForceFetch.current) {
@@ -103,15 +108,14 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
 
   const inPageTopLinks = () => {
     const backToPage = searchQueryParams.get('backTo') || ''
-    const prevPage = searchQueryParams.get('prevPage') || ''
     return (
       <Box sx={{ display: 'flex' }}>
-        <Link text="View All Cases" navigateToPage="/court_cases/" color="primary" />
         {backToPage && (
-          <Box sx={{ ml: 2 }}>
-            <Link text={`Back to ${prevPage}`} navigateToPage={backToPage} color="primary" />
+          <Box sx={{ mr: 2 }}>
+            <Link text="Back to Prev Page" navigateToPage={backToPage} color="primary" />
           </Box>
         )}
+        <Link text="View All Cases" navigateToPage="/court_cases/" color="primary" />
       </Box>
     )
   }
@@ -159,6 +163,16 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
     />
   )
 
+  const showTabs = () => {
+    return (
+      <Tabs value={tabValue} onChange={handleTabChange} textColor="primary" indicatorColor="primary">
+        <Tab value={CASE_TABS.FORMS.toString()} label={CASE_TABS.FORMS.toString()} />
+        <Tab value={CASE_TABS.CALENDARS.toString()} label={CASE_TABS.CALENDARS.toString()} />
+        <Tab value={CASE_TABS.COLLECTIONS.toString()} label={CASE_TABS.COLLECTIONS.toString()} />
+      </Tabs>
+    )
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
@@ -177,17 +191,32 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
               {courtCaseButtons()}
             </Grid>
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-              <Typography component="h1" variant="h6" color="primary">
-                Forms in Case:
-              </Typography>
-              <Forms courtCaseId={id} />
+              {showTabs()}
             </Grid>
-            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-              <Typography component="h1" variant="h6" color="primary">
-                Calendars in Case:
-              </Typography>
-              <Calendars courtCaseId={id} />
-            </Grid>
+            {tabValue === CASE_TABS.FORMS.toString() && (
+              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+                <Typography component="h1" variant="h6" color="primary">
+                  Forms in Case:
+                </Typography>
+                <Forms courtCaseId={id} />
+              </Grid>
+            )}
+            {tabValue === CASE_TABS.CALENDARS.toString() && (
+              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+                <Typography component="h1" variant="h6" color="primary">
+                  Calendars in Case:
+                </Typography>
+                <Calendars courtCaseId={id} />
+              </Grid>
+            )}
+            {tabValue === CASE_TABS.COLLECTIONS.toString() && (
+              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+                <Typography component="h1" variant="h6" color="primary">
+                  Collections in Case:
+                </Typography>
+                <Collections courtCaseId={id} />
+              </Grid>
+            )}
           </>
         )}
       </Grid>

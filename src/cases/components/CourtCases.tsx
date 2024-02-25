@@ -19,8 +19,7 @@ import {
   BUTTON_UPDATE,
   ID_DEFAULT,
 } from '../../constants'
-import { CaseTypeSchema } from '../../types'
-import { getCaseTypes } from '../../types/actions/caseTypes.action'
+import { CaseTypeSchema, getCaseTypes } from '../../types'
 import { addCourtCase, deleteCourtCase, editCourtCase, getCourtCases } from '../actions/courtCases.action'
 import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
 import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
@@ -93,7 +92,6 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       statusList.court_case.all.length === 0 && getStatusesList()
 
       if (clientId) {
-        setSelectedCourtCase({ ...DefaultCourtCaseSchema, clientId: getNumber(clientId) })
         if (!selectedClient) {
           getClient(getNumber(clientId))
         }
@@ -124,12 +122,8 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
     if (isCloseModal) {
       setModal('')
       setSelectedId(ID_DEFAULT)
-      setSelectedCourtCase(
-        clientId ? { ...DefaultCourtCaseSchema, clientId: getNumber(clientId) } : DefaultCourtCaseSchema,
-      )
-      setSelectedCourtCaseForReset(
-        clientId ? { ...DefaultCourtCaseSchema, clientId: getNumber(clientId) } : DefaultCourtCaseSchema,
-      )
+      setSelectedCourtCase(DefaultCourtCaseSchema)
+      setSelectedCourtCaseForReset(DefaultCourtCaseSchema)
     }
   }, [clientId, isCloseModal])
 
@@ -154,12 +148,8 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedCourtCase(
-      clientId ? { ...DefaultCourtCaseSchema, clientId: getNumber(clientId) } : DefaultCourtCaseSchema,
-    )
-    setSelectedCourtCaseForReset(
-      clientId ? { ...DefaultCourtCaseSchema, clientId: getNumber(clientId) } : DefaultCourtCaseSchema,
-    )
+    setSelectedCourtCase(DefaultCourtCaseSchema)
+    setSelectedCourtCaseForReset(DefaultCourtCaseSchema)
   }
 
   const resetButtonCallback = (action: string) => {
@@ -175,6 +165,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       isShowOneCourtCase={false}
       caseTypesList={caseTypesList}
       clientsList={clientsList}
+      clientId={clientId}
     />
   )
 

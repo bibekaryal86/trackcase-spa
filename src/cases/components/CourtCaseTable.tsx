@@ -85,10 +85,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     selectedClient ? (
       selectedClient.name
     ) : (
-      <Link
-        text={x.client?.name}
-        navigateToPage={`/client/${x.id}?backTo=${window.location.pathname}&prevPage=Court Cases`}
-      />
+      <Link text={x.client?.name} navigateToPage={`/client/${x.id}?backTo=${window.location.pathname}`} />
     )
 
   const courtCasesTableDataCommon = (x: CourtCaseSchema) => {

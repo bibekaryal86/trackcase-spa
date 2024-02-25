@@ -19,8 +19,7 @@ import {
   BUTTON_UPDATE,
   ID_DEFAULT,
 } from '../../constants'
-import { FormTypeSchema } from '../../types'
-import { getFormTypes } from '../../types/actions/formTypes.action'
+import { FormTypeSchema, getFormTypes } from '../../types'
 import { addForm, deleteForm, editForm, getForms } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
@@ -93,7 +92,6 @@ const Forms = (props: FormsProps): React.ReactElement => {
       courtCasesList.length === 0 && getCourtCasesList()
 
       if (courtCaseId) {
-        setSelectedForm({ ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) })
         if (!selectedCourtCase) {
           getCourtCase(getNumber(courtCaseId))
         }
@@ -124,10 +122,8 @@ const Forms = (props: FormsProps): React.ReactElement => {
     if (isCloseModal) {
       setModal('')
       setSelectedId(ID_DEFAULT)
-      setSelectedForm(courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema)
-      setSelectedFormForReset(
-        courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema,
-      )
+      setSelectedForm(DefaultFormSchema)
+      setSelectedFormForReset(DefaultFormSchema)
     }
   }, [courtCaseId, isCloseModal])
 
@@ -152,10 +148,8 @@ const Forms = (props: FormsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedForm(courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema)
-    setSelectedFormForReset(
-      courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema,
-    )
+    setSelectedForm(DefaultFormSchema)
+    setSelectedFormForReset(DefaultFormSchema)
   }
 
   const resetButtonCallback = (action: string) => {
@@ -171,6 +165,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
       isShowOneForm={false}
       formTypesList={formTypesList}
       courtCasesList={courtCasesList}
+      courtCaseId={courtCaseId}
     />
   )
 

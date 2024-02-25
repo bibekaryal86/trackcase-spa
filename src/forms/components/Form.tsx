@@ -10,8 +10,7 @@ import FormForm from './FormForm'
 import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
 import { Calendars } from '../../calendars'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
-import { FormTypeSchema } from '../../types'
-import { getFormTypes } from '../../types/actions/formTypes.action'
+import { FormTypeSchema, getFormTypes } from '../../types'
 import { editForm, getForm } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
@@ -102,15 +101,14 @@ const Form = (props: FormProps): React.ReactElement => {
 
   const inPageTopLinks = () => {
     const backToPage = searchQueryParams.get('backTo') || ''
-    const prevPage = searchQueryParams.get('prevPage') || ''
     return (
       <Box sx={{ display: 'flex' }}>
-        <Link text="View All Forms" navigateToPage="/forms/" color="primary" />
         {backToPage && (
-          <Box sx={{ ml: 2 }}>
-            <Link text={`Back to ${prevPage}`} navigateToPage={backToPage} color="primary" />
+          <Box sx={{ mr: 2 }}>
+            <Link text="Back to Prev Page" navigateToPage={backToPage} color="primary" />
           </Box>
         )}
+        <Link text="View All Forms" navigateToPage="/forms/" color="primary" />
       </Box>
     )
   }

@@ -24,6 +24,7 @@
   * unify color palette, create a util module for it
   * reduce code duplication
     * eg: table headers and body
+    * eg: links up top of page (view all/back to)
   * adding a case, combine option to add client/form/etc
 
 
@@ -33,13 +34,3 @@ TODO
 * show calculated collection amount remaining
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
-
-
-single court case - on forms table client/case has no links
-single court case - on hearing calendar table, client/case has no links
-add collections to single case page
-add task calendar to single case page
-When adding stuffs from single stuff page, disable stuff selection
-  for eg: when adding judge from court page, court is selected by default -> now disable it
-  in case of task calendar (which could be form or hearing calendar) -> only allow from the selected case
-replace hearing and task calendar with calendarcalendar in single case

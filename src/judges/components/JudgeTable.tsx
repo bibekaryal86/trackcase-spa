@@ -85,10 +85,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     selectedCourt ? (
       selectedCourt.name
     ) : (
-      <Link
-        text={`${x?.name}, ${x?.state}`}
-        navigateToPage={`/court/${x?.id}?backTo=${window.location.pathname}&prevPage=Judges`}
-      />
+      <Link text={`${x?.name}, ${x?.state}`} navigateToPage={`/court/${x?.id}?backTo=${window.location.pathname}`} />
     )
 
   const linkToJudge = (x: JudgeSchema) => <Link text={x.name} navigateToPage={`/judge/${x.id}`} />

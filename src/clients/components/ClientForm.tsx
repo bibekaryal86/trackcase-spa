@@ -25,11 +25,12 @@ interface ClientFormProps {
   clientStatusList: string[]
   isShowOneClient: boolean
   judgesList: JudgeSchema[]
+  judgeId?: string
 }
 
 const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList } = props
+  const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList, judgeId } = props
 
   const clientName = () => (
     <FormTextField
@@ -127,12 +128,25 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     />
   )
 
-  const judgesListForSelect = () =>
-    judgesList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.name}
-      </MenuItem>
-    ))
+  const judgesListForSelect = () => {
+    if (getNumber(judgeId) > 0) {
+      const selectedJudge = judgesList.find((x) => x.id === Number(judgeId))
+      if (selectedJudge) {
+        return [
+          <MenuItem key={selectedJudge.id} value={selectedJudge.id}>
+            {selectedJudge.name}
+          </MenuItem>,
+        ]
+      }
+    } else {
+      return judgesList.map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.name}
+        </MenuItem>
+      ))
+    }
+    return []
+  }
 
   const clientJudgesList = () => (
     <FormSelectField
