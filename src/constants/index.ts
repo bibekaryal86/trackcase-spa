@@ -65,6 +65,13 @@ export const COLLECTION_OBJECT_TYPES = Object.freeze({
   CASH: 'CASH_COLLECTION',
 })
 
+// CASE PAGE TABS
+export const CASE_TABS = Object.freeze({
+  FORMS: 'FORMS',
+  CALENDARS: 'CALENDARS',
+  COLLECTIONS: 'COLLECTIONS',
+})
+
 // STATES
 export const STATES_LIST = [
   { name: 'Alabama', abbreviation: 'AL' },

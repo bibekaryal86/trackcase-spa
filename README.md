@@ -35,7 +35,4 @@ TODO
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
 
-When adding stuffs from single stuff page, disable stuff selection
-  for eg: when adding judge from court page, court is selected by default -> now disable it
-  in case of task calendar (which could be form or hearing calendar) -> only allow from the selected case
 replace hearing and task calendar with calendarcalendar in single case

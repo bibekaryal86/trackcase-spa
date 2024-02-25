@@ -336,6 +336,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       setSelectedType={setSelectedType}
       setSelectedCollection={setSelectedCollection}
       setSelectedCollectionForReset={setSelectedCollectionForReset}
+      isAddModelComponent={!(courtCaseId && selectedCourtCase)}
     />
   )
 
