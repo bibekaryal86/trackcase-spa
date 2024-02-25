@@ -92,7 +92,6 @@ const Forms = (props: FormsProps): React.ReactElement => {
       courtCasesList.length === 0 && getCourtCasesList()
 
       if (courtCaseId) {
-        setSelectedForm({ ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) })
         if (!selectedCourtCase) {
           getCourtCase(getNumber(courtCaseId))
         }
@@ -123,9 +122,9 @@ const Forms = (props: FormsProps): React.ReactElement => {
     if (isCloseModal) {
       setModal('')
       setSelectedId(ID_DEFAULT)
-      setSelectedForm(courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema)
+      setSelectedForm(DefaultFormSchema)
       setSelectedFormForReset(
-        courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema,
+        DefaultFormSchema,
       )
     }
   }, [courtCaseId, isCloseModal])
@@ -151,9 +150,9 @@ const Forms = (props: FormsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedForm(courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema)
+    setSelectedForm(DefaultFormSchema)
     setSelectedFormForReset(
-      courtCaseId ? { ...DefaultFormSchema, courtCaseId: getNumber(courtCaseId) } : DefaultFormSchema,
+      DefaultFormSchema,
     )
   }
 
@@ -170,6 +169,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
       isShowOneForm={false}
       formTypesList={formTypesList}
       courtCasesList={courtCasesList}
+      courtCaseId={courtCaseId}
     />
   )
 
