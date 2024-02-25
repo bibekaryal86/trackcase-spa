@@ -360,13 +360,15 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       ? deleteModal()
       : null
 
+  const calendarViewChooser = () => <CalendarChooseView setIsShowListView={setIsShowListView} />
+
   const calendarsPageTitle = () => (
     <Grid container alignItems="center" columnGap={2}>
       <Typography component="h1" variant="h6" color="primary" gutterBottom>
         Calendars
       </Typography>
       <Divider orientation="vertical" flexItem />
-      <CalendarChooseView setIsShowListView={setIsShowListView} />
+      {calendarViewChooser()}
     </Grid>
   )
 
@@ -419,10 +421,17 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     />
   )
 
+  const getCourtCaseCalendarEvents = (calendarEvents: CalendarEvents[]) => {
+    if (getNumber(courtCaseId) > 0) {
+      return calendarEvents.filter((calendarEvent) => calendarEvent.courtCaseId === Number(courtCaseId))
+    }
+    return calendarEvents
+  }
+
   const calendarsShowCalendarView = () => (
     <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
       <CalendarCalendar
-        calendarEvents={calendarEventsList}
+        calendarEvents={getCourtCaseCalendarEvents(calendarEventsList)}
         setModal={setModal}
         setSelectedId={setSelectedId}
         setSelectedType={setSelectedType}
@@ -449,8 +458,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   return courtCaseId ? (
     <>
-      {hearingCalendarsTable()}
-      {taskCalendarsTable()}
+      {calendarViewChooser()}
+      {isShowListView && calendarsShowListView()}
+      {!isShowListView && calendarsShowCalendarView()}
       {modal && showModal()}
     </>
   ) : formId ? (

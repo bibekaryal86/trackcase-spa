@@ -34,5 +34,3 @@ TODO
 * show calculated collection amount remaining
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full
-
-replace hearing and task calendar with calendarcalendar in single case

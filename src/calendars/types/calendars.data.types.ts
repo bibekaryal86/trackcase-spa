@@ -13,6 +13,7 @@ export interface CalendarEvents {
   date: Dayjs
   title: string
   status: 'PAST_DONE' | 'PAST_DUE' | 'DONE' | 'DUE'
+  courtCaseId: number
 }
 
 export interface CalendarResponse extends ResponseBase {
