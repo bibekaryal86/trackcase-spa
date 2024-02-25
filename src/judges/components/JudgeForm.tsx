@@ -24,11 +24,12 @@ interface JudgeFormProps {
   setSelectedJudge: (selectedJudge: JudgeSchema) => void
   judgeStatusList: string[]
   isShowOneJudge: boolean
+  courtId?: string
 }
 
 const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedJudge, courtsList, setSelectedJudge, judgeStatusList, isShowOneJudge } = props
+  const { selectedJudge, courtsList, setSelectedJudge, judgeStatusList, isShowOneJudge, courtId } = props
 
   const judgeName = () => (
     <FormTextField
@@ -49,12 +50,25 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     />
   )
 
-  const courtsListForSelect = () =>
-    courtsList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.name}
-      </MenuItem>
-    ))
+  const courtsListForSelect = () => {
+    if (getNumber(courtId) > 0) {
+      const selectedCourt = courtsList.find((x) => x.id === Number(courtId))
+      if (selectedCourt) {
+        return [
+          <MenuItem key={selectedCourt.id} value={selectedCourt.id}>
+            {selectedCourt.name}
+          </MenuItem>,
+        ]
+      }
+    } else {
+      return courtsList.map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.name}
+        </MenuItem>
+      ))
+    }
+    return []
+  }
 
   const judgeCourtsList = () => (
     <FormSelectField

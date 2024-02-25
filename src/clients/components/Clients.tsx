@@ -85,7 +85,6 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       statusList.court_case.all.length === 0 && getStatusesList()
 
       if (judgeId) {
-        setSelectedClient({ ...DefaultClientSchema, judgeId: getNumber(judgeId) })
         if (!selectedJudge) {
           getJudge(getNumber(judgeId))
         }
@@ -114,8 +113,8 @@ const Clients = (props: ClientsProps): React.ReactElement => {
     if (isCloseModal) {
       setModal('')
       setSelectedId(ID_DEFAULT)
-      setSelectedClient(judgeId ? { ...DefaultClientSchema, judgeId: getNumber(judgeId) } : DefaultClientSchema)
-      setSelectedClientForReset(judgeId ? { ...DefaultClientSchema, judgeId: getNumber(judgeId) } : DefaultClientSchema)
+      setSelectedClient(DefaultClientSchema)
+      setSelectedClientForReset(DefaultClientSchema)
     }
   }, [isCloseModal, judgeId])
 
@@ -140,8 +139,8 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedClient(judgeId ? { ...DefaultClientSchema, judgeId: getNumber(judgeId) } : DefaultClientSchema)
-    setSelectedClientForReset(judgeId ? { ...DefaultClientSchema, judgeId: getNumber(judgeId) } : DefaultClientSchema)
+    setSelectedClient(DefaultClientSchema)
+    setSelectedClientForReset(DefaultClientSchema)
   }
 
   const resetButtonCallback = (action: string) => {
@@ -156,6 +155,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       clientStatusList={clientStatusList}
       isShowOneClient={false}
       judgesList={judgesList}
+      judgeId={judgeId}
     />
   )
 

@@ -158,14 +158,12 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       clientsList.length === 0 && getClientsList()
 
       if (courtCaseId) {
-        setSelectedCalendar({ ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) })
         if (!selectedCourtCase) {
           getCourtCase(getNumber(courtCaseId))
         }
       }
 
       if (formId) {
-        setSelectedCalendar({ ...DefaultCalendarSchema, formId: getNumber(formId) })
         if (!selectedForm) {
           getForm(getNumber(formId))
         }
@@ -206,18 +204,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       setModal('')
       setSelectedId(ID_DEFAULT)
       setSelectedCalendar(
-        courtCaseId
-          ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) }
-          : formId
-          ? { ...DefaultCalendarSchema, formId: getNumber(formId) }
-          : DefaultCalendarSchema,
+        DefaultCalendarSchema,
       )
-      setSelectedCalendarForReset(
-        courtCaseId
-          ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) }
-          : formId
-          ? { ...DefaultCalendarSchema, formId: getNumber(formId) }
-          : DefaultCalendarSchema,
+      setSelectedCalendarForReset( DefaultCalendarSchema,
       )
     }
   }, [courtCaseId, formId, isCloseModal])
@@ -246,24 +235,15 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const secondaryButtonCallback = () => {
     setModal('')
     setSelectedId(ID_DEFAULT)
-    setSelectedCalendar(
-      courtCaseId
-        ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) }
-        : formId
-        ? { ...DefaultCalendarSchema, formId: getNumber(formId) }
-        : DefaultCalendarSchema,
+    setSelectedCalendar(DefaultCalendarSchema,
     )
     setSelectedCalendarForReset(
-      courtCaseId
-        ? { ...DefaultCalendarSchema, courtCaseId: getNumber(courtCaseId) }
-        : formId
-        ? { ...DefaultCalendarSchema, formId: getNumber(formId) }
-        : DefaultCalendarSchema,
+      DefaultCalendarSchema,
     )
   }
 
   const resetButtonCallback = (action: string) => {
-    action === ACTION_ADD && setSelectedCalendar(selectedCalendarForReset)
+    action === ACTION_ADD && setSelectedCalendar(DefaultCalendarSchema)
     action === ACTION_UPDATE && setSelectedCalendar(selectedCalendarForReset)
   }
 
@@ -281,6 +261,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       isShowOneCalendar={false}
       minCalendarDate={minCalendarDate}
       maxCalendarDate={maxCalendarDate}
+      formId={formId}
+      courtCaseId={courtCaseId}
     />
   )
 

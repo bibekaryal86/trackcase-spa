@@ -41,6 +41,8 @@ interface CalendarFormProps {
   isShowOneCalendar: boolean
   minCalendarDate: Dayjs
   maxCalendarDate: Dayjs
+  formId?: string
+  courtCaseId?: string
 }
 
 const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
@@ -48,7 +50,10 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
   const { courtCasesList, formsList, clientsList, calendarStatusList, hearingCalendarList } = props
   const { minCalendarDate, maxCalendarDate } = props
+  const { formId, courtCaseId } = props
   const isHearingCalendarForm = isHearingCalendar(calendarType)
+
+  console.log(courtCaseId)
 
   const calendarDate = () => {
     const label = isHearingCalendarForm ? 'Hearing Calendar--Hearing Date' : 'Task Calendar--Task Date'
@@ -153,7 +158,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
 
   const calendarHearingCalendarList = () => {
     const value = 'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_DEFAULT
-    const formId = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_DEFAULT
+    const tcFormId = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_DEFAULT
     return (
       <FormSelectField
         componentLabel="Task Calendar--Hearing Calendar"
@@ -168,7 +173,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
           )
         }
         menuItems={calendarHearingCalendarListForSelect()}
-        disabled={formId > 0}
+        disabled={tcFormId > 0 || Number(formId) > 0}
       />
     )
   }
@@ -179,12 +184,25 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     return `${client?.name}, ${courtCase?.caseType?.name} [${x.formType?.name}]`
   }
 
-  const calendarFormListForSelect = () =>
-    formsList.map((x) => (
+  const calendarFormListForSelect = () => {
+    if (getNumber(formId) > 0) {
+      const selectedForm = formsList.find(x => x.id === Number(formId))
+      if (selectedForm) {
+        return [
+          <MenuItem key={selectedForm.id} value={selectedForm.id}>
+            {calendarFormForSelect(selectedForm)}
+          </MenuItem>
+        ]
+      }
+    } else {
+      return formsList.map((x) => (
       <MenuItem key={x.id} value={x.id}>
         {calendarFormForSelect(x)}
       </MenuItem>
     ))
+    }
+    return []
+  }
 
   const calendarFormList = () => {
     const value = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_DEFAULT

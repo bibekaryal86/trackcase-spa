@@ -25,12 +25,13 @@ interface CourtCaseFormProps {
   isShowOneCourtCase: boolean
   caseTypesList: CaseTypeSchema[]
   clientsList: ClientSchema[]
+  clientId?: string
 }
 
 const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { selectedCourtCase, setSelectedCourtCase, courtCaseStatusList, isShowOneCourtCase } = props
-  const { caseTypesList, clientsList } = props
+  const { caseTypesList, clientsList, clientId } = props
 
   const caseTypesListForSelect = () =>
     caseTypesList.map((x) => (
@@ -39,12 +40,25 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       </MenuItem>
     ))
 
-  const clientsListForSelect = () =>
-    clientsList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.name}
-      </MenuItem>
-    ))
+  const clientsListForSelect = () => {
+    if (getNumber(clientId) > 0) {
+      const selectedClient = clientsList.find((x) => x.id === Number(clientId))
+      if (selectedClient) {
+        return [
+          <MenuItem key={selectedClient.id} value={selectedClient.id}>
+            {selectedClient.name}
+          </MenuItem>,
+        ]
+      }
+    } else {
+      return clientsList.map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.name}
+        </MenuItem>
+      ))
+    }
+    return []
+  }
 
   const courtCaseType = () => (
     <FormSelectField
