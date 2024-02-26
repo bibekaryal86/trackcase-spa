@@ -166,6 +166,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       caseTypesList={caseTypesList}
       clientsList={clientsList}
       clientId={clientId}
+      statusList={statusList}
     />
   )
 

@@ -257,6 +257,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       maxCalendarDate={maxCalendarDate}
       formId={formId}
       courtCaseId={courtCaseId}
+      statusList={statusList}
     />
   )
 

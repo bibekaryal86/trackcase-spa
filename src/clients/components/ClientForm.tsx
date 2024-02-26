@@ -13,6 +13,7 @@ import {
   getNumber,
   getString,
   GridFormWrapper,
+  StatusSchema,
 } from '../../app'
 import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { JudgeSchema } from '../../judges'
@@ -26,11 +27,13 @@ interface ClientFormProps {
   isShowOneClient: boolean
   judgesList: JudgeSchema[]
   judgeId?: string
+  statusList: StatusSchema<string>
 }
 
 const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList, judgeId } = props
+  const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList } = props
+  const { judgeId, statusList } = props
 
   const clientName = () => (
     <FormTextField
@@ -139,11 +142,13 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
         ]
       }
     } else {
-      return judgesList.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {x.name}
-        </MenuItem>
-      ))
+      return judgesList
+        .filter((x) => selectedClient.judgeId === x.id || statusList.judge.active.includes(x.status))
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {x.name}
+          </MenuItem>
+        ))
     }
     return []
   }

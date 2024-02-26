@@ -166,6 +166,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
       formTypesList={formTypesList}
       courtCasesList={courtCasesList}
       courtCaseId={courtCaseId}
+      statusList={statusList}
     />
   )
 

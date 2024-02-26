@@ -160,6 +160,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
       isShowOneCourtCase={true}
       caseTypesList={caseTypesList}
       clientsList={clientsList}
+      statusList={statusList}
     />
   )
 

@@ -14,6 +14,7 @@ import {
   getNumber,
   getString,
   GridFormWrapper,
+  StatusSchema,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
@@ -41,13 +42,14 @@ interface CollectionFormProps {
   minCollectionDate: Dayjs
   maxCollectionDate: Dayjs
   courtCaseId?: string
+  statusList: StatusSchema<string>
 }
 
 const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { collectionType, selectedCollection, setSelectedCollection, isShowOneCollection } = props
-  const { collectionMethodsList, courtCasesList, caseCollectionList, clientsList, collectionStatusList, courtCaseId } =
-    props
+  const { collectionMethodsList, courtCasesList, caseCollectionList, clientsList, collectionStatusList } = props
+  const { courtCaseId, statusList } = props
   const { minCollectionDate, maxCollectionDate } = props
   const isCaseCollectionForm = isCaseCollection(collectionType)
 
@@ -75,11 +77,17 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
   }
 
   const caseCollectionCourtCasesListForSelect = () =>
-    courtCasesList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.client?.name}, {x.caseType?.name}
-      </MenuItem>
-    ))
+    courtCasesList
+      .filter(
+        (x) =>
+          ('courtCaseId' in selectedCollection && selectedCollection.courtCaseId === x.id) ||
+          statusList.court_case.active.includes(x.status),
+      )
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.client?.name}, {x.caseType?.name}
+        </MenuItem>
+      ))
 
   const caseCollectionCourtCasesList = () => {
     const value = 'courtCaseId' in selectedCollection ? selectedCollection.courtCaseId : ID_DEFAULT
@@ -258,11 +266,17 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
         ]
       }
     } else {
-      return caseCollectionList.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {cashCollectionCaseCollectionForSelect(x)}
-        </MenuItem>
-      ))
+      return caseCollectionList
+        .filter(
+          (x) =>
+            ('caseCollectionId' in selectedCollection && selectedCollection.caseCollectionId === x.id) ||
+            statusList.collections.active.includes(x.status),
+        )
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {cashCollectionCaseCollectionForSelect(x)}
+          </MenuItem>
+        ))
     }
     return []
   }

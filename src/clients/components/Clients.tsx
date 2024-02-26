@@ -156,6 +156,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       isShowOneClient={false}
       judgesList={judgesList}
       judgeId={judgeId}
+      statusList={statusList}
     />
   )
 

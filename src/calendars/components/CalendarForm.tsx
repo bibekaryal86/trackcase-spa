@@ -14,6 +14,7 @@ import {
   getNumber,
   getString,
   GridFormWrapper,
+  StatusSchema,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
@@ -43,6 +44,7 @@ interface CalendarFormProps {
   maxCalendarDate: Dayjs
   formId?: string
   courtCaseId?: string
+  statusList: StatusSchema<string>
 }
 
 const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
@@ -50,7 +52,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
   const { courtCasesList, formsList, clientsList, calendarStatusList, hearingCalendarList } = props
   const { minCalendarDate, maxCalendarDate } = props
-  const { formId, courtCaseId } = props
+  const { formId, courtCaseId, statusList } = props
   const isHearingCalendarForm = isHearingCalendar(calendarType)
 
   const calendarDate = () => {
@@ -129,11 +131,17 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         ]
       }
     } else {
-      return courtCasesList.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {x.client?.name}, {x.caseType?.name}
-        </MenuItem>
-      ))
+      return courtCasesList
+        .filter(
+          (x) =>
+            ('courtCaseId' in selectedCalendar && selectedCalendar.courtCaseId === x.id) ||
+            statusList.court_case.active.includes(x.status),
+        )
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {x.client?.name}, {x.caseType?.name}
+          </MenuItem>
+        ))
     }
     return []
   }
@@ -171,11 +179,17 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
         ]
       }
     } else {
-      return hearingCalendarList.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {calendarHearingCalendarForSelect(x)}
-        </MenuItem>
-      ))
+      return hearingCalendarList
+        .filter(
+          (x) =>
+            ('hearingCalendarId' in selectedCalendar && selectedCalendar.hearingCalendarId === x.id) ||
+            statusList.calendars.active.includes(x.status),
+        )
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {calendarHearingCalendarForSelect(x)}
+          </MenuItem>
+        ))
     }
     return []
   }
@@ -220,17 +234,29 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
       }
     } else if (getNumber(courtCaseId) > 0) {
       const selectedForms = formsList.filter((x) => x.courtCaseId === Number(courtCaseId))
-      return selectedForms.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {calendarFormForSelect(x)}
-        </MenuItem>
-      ))
+      return selectedForms
+        .filter(
+          (x) =>
+            ('formId' in selectedCalendar && selectedCalendar.formId === x.id) ||
+            statusList.form.active.includes(x.status),
+        )
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {calendarFormForSelect(x)}
+          </MenuItem>
+        ))
     } else {
-      return formsList.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {calendarFormForSelect(x)}
-        </MenuItem>
-      ))
+      return formsList
+        .filter(
+          (x) =>
+            ('formId' in selectedCalendar && selectedCalendar.formId === x.id) ||
+            statusList.form.active.includes(x.status),
+        )
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {calendarFormForSelect(x)}
+          </MenuItem>
+        ))
     }
     return []
   }
