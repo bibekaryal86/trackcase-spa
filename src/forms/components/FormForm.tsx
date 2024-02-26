@@ -65,7 +65,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formType = () => (
     <FormSelectField
-      componentLabel="Form--Form Type"
+      componentLabel="Form--Filing Type"
       required={true}
       value={selectedForm.formTypeId}
       onChange={(e) => handleFormFormOnChange('formTypeId', e.target.value, selectedForm, setSelectedForm, getNumber)}

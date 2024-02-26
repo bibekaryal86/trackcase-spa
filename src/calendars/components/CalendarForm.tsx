@@ -241,7 +241,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
       'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_DEFAULT
     return (
       <FormSelectField
-        componentLabel="Task Calendar--Form"
+        componentLabel="Task Calendar--Filing"
         value={value}
         onChange={(e) =>
           handleCalendarFormOnChange('formId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)

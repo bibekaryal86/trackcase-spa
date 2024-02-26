@@ -76,7 +76,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         },
         {
           id: 'form',
-          label: 'Form',
+          label: 'Filing',
         },
         {
           id: 'dueDate',

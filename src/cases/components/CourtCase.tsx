@@ -196,7 +196,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
             {tabValue === CASE_TABS.FORMS.toString() && (
               <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
                 <Typography component="h1" variant="h6" color="primary">
-                  Forms in Case:
+                  Filings in Case:
                 </Typography>
                 <Forms courtCaseId={id} />
               </Grid>
