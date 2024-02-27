@@ -33,7 +33,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     return [
       {
         id: 'type',
-        label: 'Form',
+        label: 'Filing',
       },
       {
         id: 'client',
@@ -168,7 +168,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
     })
   }
 
-  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Form</Button>
+  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Filing</Button>
 
   return (
     <Table

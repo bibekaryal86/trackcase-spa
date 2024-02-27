@@ -29,8 +29,6 @@
 
 
 TODO
-* Add filing_type in form type
-  * filing_type = form, motion, other
 * show calculated collection amount remaining
 * Update to this free template
   * https://flatlogic.github.io/react-material-admin-full

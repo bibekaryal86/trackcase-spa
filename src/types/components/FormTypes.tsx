@@ -42,7 +42,7 @@ const FormTypes = (props: FormTypesProps): React.ReactElement => {
   const refTypes = () => (
     <RefTypes
       refTypeId="form_type"
-      refTypeName="Form Type"
+      refTypeName="Filing Type"
       refTypesList={props.formTypesList}
       getRefTypes={props.getFormTypes}
       addRefType={props.addFormType}

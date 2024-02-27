@@ -158,6 +158,7 @@ const Form = (props: FormProps): React.ReactElement => {
       isShowOneForm={true}
       formTypesList={formTypesList}
       courtCasesList={courtCasesList}
+      statusList={statusList}
     />
   )
 

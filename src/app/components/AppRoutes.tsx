@@ -83,7 +83,7 @@ export const protectedRoutes: RoutesType[] = [
   // },
   {
     path: '/forms',
-    display: 'Forms',
+    display: 'Filings',
     element: <Forms />,
     icon: <FileOpenIcon />,
   },
@@ -178,7 +178,7 @@ export const refTypesRoutes: RoutesType[] = [
   },
   {
     path: '/form_types',
-    display: 'Form Types',
+    display: 'Filing Types',
     element: <FormTypes />,
     icon: <FilePresentRoundedIcon />,
   },

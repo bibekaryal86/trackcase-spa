@@ -11,6 +11,7 @@ import {
   getNumber,
   getString,
   GridFormWrapper,
+  StatusSchema,
 } from '../../app'
 import { ClientSchema } from '../../clients'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
@@ -26,12 +27,14 @@ interface CourtCaseFormProps {
   caseTypesList: CaseTypeSchema[]
   clientsList: ClientSchema[]
   clientId?: string
+  statusList: StatusSchema<string>
 }
 
 const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { selectedCourtCase, setSelectedCourtCase, courtCaseStatusList, isShowOneCourtCase } = props
-  const { caseTypesList, clientsList, clientId } = props
+  const { caseTypesList, clientsList } = props
+  const { clientId, statusList } = props
 
   const caseTypesListForSelect = () =>
     caseTypesList.map((x) => (
@@ -51,11 +54,13 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
         ]
       }
     } else {
-      return clientsList.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {x.name}
-        </MenuItem>
-      ))
+      return clientsList
+        .filter((x) => selectedCourtCase.clientId === x.id || statusList.client.active.includes(x.status))
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {x.name}
+          </MenuItem>
+        ))
     }
     return []
   }

@@ -216,6 +216,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       minCollectionDate={minCollectionDate}
       maxCollectionDate={maxCollectionDate}
       courtCaseId={courtCaseId}
+      statusList={statusList}
     />
   )
 

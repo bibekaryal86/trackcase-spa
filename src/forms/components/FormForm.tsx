@@ -14,6 +14,7 @@ import {
   getNumber,
   getString,
   GridFormWrapper,
+  StatusSchema,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
@@ -29,11 +30,13 @@ interface FormFormProps {
   formTypesList: FormTypeSchema[]
   courtCasesList: CourtCaseSchema[]
   courtCaseId?: string
+  statusList: StatusSchema<string>
 }
 
 const FormForm = (props: FormFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedForm, setSelectedForm, formStatusList, isShowOneForm, courtCaseId } = props
+  const { selectedForm, setSelectedForm, formStatusList, isShowOneForm } = props
+  const { courtCaseId, statusList } = props
   const { formTypesList, courtCasesList } = props
 
   const formTypesListForSelect = () =>
@@ -54,18 +57,20 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
         ]
       }
     } else {
-      return courtCasesList.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {x.client?.name}, {x.caseType?.name}
-        </MenuItem>
-      ))
+      return courtCasesList
+        .filter((x) => selectedForm.courtCaseId === x.id || statusList.court_case.active.includes(x.status))
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {x.client?.name}, {x.caseType?.name}
+          </MenuItem>
+        ))
     }
     return []
   }
 
   const formType = () => (
     <FormSelectField
-      componentLabel="Form--Form Type"
+      componentLabel="Form--Filing Type"
       required={true}
       value={selectedForm.formTypeId}
       onChange={(e) => handleFormFormOnChange('formTypeId', e.target.value, selectedForm, setSelectedForm, getNumber)}

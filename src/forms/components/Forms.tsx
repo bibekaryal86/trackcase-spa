@@ -166,6 +166,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
       formTypesList={formTypesList}
       courtCasesList={courtCasesList}
       courtCaseId={courtCaseId}
+      statusList={statusList}
     />
   )
 
@@ -174,7 +175,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
       isOpen={true}
       setIsOpenExtra={setModal}
       cleanupOnClose={secondaryButtonCallback}
-      title="Add New Form"
+      title="Add New Filing"
       primaryButtonText={BUTTON_ADD}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_ADD, undefined)}
       primaryButtonDisabled={isAreTwoFormsSame(selectedForm, selectedFormForReset)}
@@ -194,7 +195,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
         isOpen={true}
         setIsOpenExtra={setModal}
         cleanupOnClose={secondaryButtonCallback}
-        title="Update Form"
+        title="Update Filing"
         primaryButtonText={BUTTON_UPDATE}
         primaryButtonCallback={() => primaryButtonCallback(ACTION_UPDATE, selectedId)}
         primaryButtonDisabled={isAreTwoFormsSame(selectedForm, selectedFormForReset)}
@@ -215,12 +216,12 @@ const Forms = (props: FormsProps): React.ReactElement => {
         isOpen={true}
         setIsOpenExtra={setModal}
         cleanupOnClose={secondaryButtonCallback}
-        title="Delete Form"
+        title="Delete Filing"
         primaryButtonText={BUTTON_DELETE}
         primaryButtonCallback={() => primaryButtonCallback(ACTION_DELETE, selectedId)}
         secondaryButtonText={BUTTON_CANCEL}
         secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to delete Form: '${selectedForm.formType?.name}'?!?`}
+        contentText={`Are you sure you want to delete Filing: '${selectedForm.formType?.name}'?!?`}
       />
     )
   }
@@ -236,7 +237,7 @@ const Forms = (props: FormsProps): React.ReactElement => {
 
   const formsPageTitle = () => (
     <Typography component="h1" variant="h6" color="primary" gutterBottom>
-      Forms
+      Filings
     </Typography>
   )
 

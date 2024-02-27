@@ -137,6 +137,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
       judgeStatusList={judgeStatusList}
       isShowOneJudge={true}
       courtsList={courtsList}
+      statusList={statusList}
     />
   )
 

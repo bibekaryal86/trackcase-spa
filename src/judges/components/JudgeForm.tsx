@@ -12,6 +12,7 @@ import {
   getNumber,
   getString,
   GridFormWrapper,
+  StatusSchema,
 } from '../../app'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CourtSchema } from '../../courts'
@@ -25,11 +26,13 @@ interface JudgeFormProps {
   judgeStatusList: string[]
   isShowOneJudge: boolean
   courtId?: string
+  statusList: StatusSchema<string>
 }
 
 const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedJudge, courtsList, setSelectedJudge, judgeStatusList, isShowOneJudge, courtId } = props
+  const { selectedJudge, courtsList, setSelectedJudge, judgeStatusList, isShowOneJudge } = props
+  const { courtId, statusList } = props
 
   const judgeName = () => (
     <FormTextField
@@ -61,11 +64,13 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
         ]
       }
     } else {
-      return courtsList.map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {x.name}
-        </MenuItem>
-      ))
+      return courtsList
+        .filter((x) => selectedJudge.courtId === x.id || statusList.court.active.includes(x.status))
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {x.name}
+          </MenuItem>
+        ))
     }
     return []
   }
