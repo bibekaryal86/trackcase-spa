@@ -1,6 +1,5 @@
 import { LocalStorage } from './storage.utils'
 import { FORCE_LOGOUT } from '../../constants'
-import { UserDetails } from '../types/app.data.types'
 
 type FetchParamObjects = { [key: string]: string | number | boolean }
 
@@ -21,8 +20,6 @@ interface FetchRequestOptions {
   requestBody: unknown
   requestHeaders: FetchParamObjects
   noAuth: boolean
-  withBasicAuth: boolean
-  isIncludeUsernameHeader: boolean
 }
 
 export interface FetchOptions extends FetchUrlOptions, FetchRequestOptions {}
@@ -76,31 +73,15 @@ const getUrl = ({ path = '', queryParams = {}, pathParams = {}, extraParams = {}
 }
 
 const getHeaders = (
-  withBasicAuth: boolean,
   withAuth: boolean,
   requestHeaders: FetchParamObjects,
   token: string,
-  username: string,
 ) => {
   const headers: HeadersInit = {}
   headers['Accept'] = 'application/json'
   headers['Content-Type'] = 'application/json'
-  if (username) {
-    headers['X-User-Name'] = username
-  }
 
-  if (withBasicAuth) {
-    const username = process.env.BASIC_AUTH_USR as string
-    const password = process.env.BASIC_AUTH_PWD as string
-    if (username && password) {
-      headers['Authorization'] = 'Basic ' + btoa(`${username}:${password}`)
-    }
-  } else if (withAuth) {
-    const appData = ''
-    if (appData) {
-      headers['App_data'] = appData
-    }
-
+  if (withAuth) {
     headers['Authorization'] = `Bearer ${token}`
   }
 
@@ -126,18 +107,7 @@ export const Async = {
       requestBody = {},
       requestHeaders = {},
       noAuth = false,
-      withBasicAuth = false,
-      isIncludeUsernameHeader = true,
     } = options
-
-    let username = ''
-    if (isIncludeUsernameHeader) {
-      const userDetails = LocalStorage.getItem('userDetails') as UserDetails
-      if (!userDetails || !userDetails.username) {
-        throw new Error('User not found! Please refresh the page and try again!')
-      }
-      username = userDetails.username
-    }
 
     const token = LocalStorage.getItem('token') as string
 
@@ -148,7 +118,7 @@ export const Async = {
     }
 
     const url = getUrl({ path: urlPath, queryParams, pathParams, extraParams })
-    const headers = getHeaders(withBasicAuth, !noAuth, requestHeaders, token, username)
+    const headers = getHeaders(!noAuth, requestHeaders, token)
     const body = getBody(method, requestBody)
 
     const requestInit: RequestInit = {

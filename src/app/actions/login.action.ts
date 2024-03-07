@@ -9,8 +9,6 @@ export const userLogin = async (username: string, password: string): Promise<Log
     const options: Partial<FetchOptions> = {
       method: 'POST',
       noAuth: true,
-      withBasicAuth: true,
-      isIncludeUsernameHeader: false,
       requestBody: {
         username,
         password,
