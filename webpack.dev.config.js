@@ -81,7 +81,7 @@ module.exports = (env) => {
         path: './variables.env',
       }),
       new webpack.EnvironmentPlugin({
-        BASE_URL: env.base_url || 'http://10.0.0.29:9090/',
+        BASE_URL: env.base_url || 'http://10.0.0.29:9090',
       }),
     ],
   }
