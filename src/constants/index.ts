@@ -4,7 +4,8 @@ export const DUE_AT_HEARING_ID = 1
 
 export const USE_MEDIA_QUERY_INPUT = '(max-width: 600px)'
 
-export const REGEX_LOGIN_INPUT_PATTERN = /^[A-Za-z0-9]+$/
+export const REGEX_LOGIN_INPUT_PATTERN =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/
 export const REGEX_DATE_FORMAT = new RegExp('[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}')
 export const REGEX_CURRENCY_FORMAT = new RegExp('^\\$|\\-\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{1,2})?$')
 
@@ -43,6 +44,9 @@ export const SOMETHING_WENT_WRONG = 'Something Went Wrong! Please Try Again!!'
 export const INVALID_SIGNIN = 'Invalid Input! Please Try Again!!'
 export const SIGNIN_FIRST = 'Please Sign In First!'
 export const INVALID_SESSION = 'Session Invalidated Due To Inactivity/Expiry! Please Sign In Again to Continue!!'
+export const SIGNUP_SUCCESS =
+  'Signup Successful! Please check your inbox to validate your account!! ' +
+  'Account can be used only after validation!!!'
 
 export const CREATE_SUCCESS = (what: string) => `Add ${what} Success!`
 export const UPDATE_SUCCESS = (what: string) => `Edit ${what} Success!`

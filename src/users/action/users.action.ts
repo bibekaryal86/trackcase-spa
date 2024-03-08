@@ -3,6 +3,7 @@ import React from 'react'
 import {
   Async,
   FetchOptions,
+  FetchResponse,
   getEndpoint,
   GlobalDispatch,
   isGetDarkMode,
@@ -14,24 +15,29 @@ import { IS_DARK_MODE, SOMETHING_WENT_WRONG } from '../../constants'
 import {
   AppUserLoginRequest,
   AppUserLoginResponse,
-  AppUserRequest,
   AppUserResponse,
   DefaultAppUserLoginResponse,
   DefaultAppUserResponse,
 } from '../types/users.data.types'
 
-export const signup = async (appUserRequest: AppUserRequest): Promise<AppUserResponse> => {
+export const signup = async (username: string, password: string, fullName: string): Promise<AppUserResponse> => {
   try {
     const signupEndpoint = getEndpoint(process.env.APP_USER_CREATE as string)
     const options: Partial<FetchOptions> = {
       method: 'POST',
       noAuth: true,
-      requestBody: appUserRequest,
+      requestBody: {
+        email: username,
+        password: password,
+        fullName: fullName,
+        componentStatusId: 1,
+        isValidated: false,
+      },
     }
 
     return (await Async.fetch(signupEndpoint, options)) as AppUserResponse
   } catch (error) {
-    console.log('Login Action Error: ', error)
+    console.log('SignUp Action Error: ', error)
     return { ...DefaultAppUserResponse, detail: { error: SOMETHING_WENT_WRONG } }
   }
 }
@@ -65,5 +71,39 @@ export const logout = () => {
     dispatch({
       type: USER_LOGOUT,
     })
+  }
+}
+
+export const validateInit = async (username: string): Promise<FetchResponse> => {
+  try {
+    const validateInitEndpoint = getEndpoint(process.env.USER_VALIDATE_INIT as string)
+    const options: Partial<FetchOptions> = {
+        method: 'GET',
+        noAuth: true,
+        queryParams: {
+            to_validate: username
+        }
+      }
+    return (await Async.fetch(validateInitEndpoint, options))
+  } catch (error) {
+    console.log('Validate Init Action Error: ', error)
+    return { detail: { error: SOMETHING_WENT_WRONG } }
+  }
+}
+
+export const resetInit = async (username: string): Promise<FetchResponse> => {
+  try {
+    const resetInitEndpoint = getEndpoint(process.env.USER_RESET_INIT as string)
+    const options: Partial<FetchOptions> = {
+        method: 'GET',
+        noAuth: true,
+        queryParams: {
+            to_reset: username
+        }
+      }
+    return (await Async.fetch(resetInitEndpoint, options))
+  } catch (error) {
+    console.log('Reset Init Action Error: ', error)
+    return { detail: { error: SOMETHING_WENT_WRONG } }
   }
 }

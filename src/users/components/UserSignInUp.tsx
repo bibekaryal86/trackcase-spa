@@ -1,18 +1,28 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { Alert } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { getErrMsg, isLoggedIn, LocalStorage, resetAlert, resetSpinner, setAlert, setSpinner } from '../../app'
-import { ALERT_TYPE_FAILURE, ALERT_TYPE_INFO, ALERT_TYPE_WARNING, INVALID_SIGNIN, SIGNIN_FIRST } from '../../constants'
-import { login } from '../action/users.action'
+import {
+  ALERT_TYPE_FAILURE,
+  ALERT_TYPE_INFO,
+  ALERT_TYPE_SUCCESS,
+  ALERT_TYPE_WARNING,
+  INVALID_SIGNIN,
+  SIGNIN_FIRST,
+  SIGNUP_SUCCESS,
+  SOMETHING_WENT_WRONG,
+} from '../../constants'
+import { login, resetInit, signup, validateInit } from '../action/users.action'
 import { AppUserLoginResponse } from '../types/users.data.types'
-import { validateLoginInput } from '../utils/users.utils'
+import { SHOW_FORM_TYPE, validateSignInUpInput } from '../utils/users.utils'
 
 interface LoginProps {
   setAlert: (type: string, messageText: string) => void
@@ -30,9 +40,8 @@ const mapDispatchToProps = {
 
 const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const { setAlert, resetAlert, setSpinner, resetSpinner } = props
-
-  const [isShowSignin, setIsShowSignin] = useState(true)
-  const [isShowReset, setIsShowReset] = useState(false)
+  const formRef = useRef(null)
+  const [showFormType, setShowFormType] = useState(SHOW_FORM_TYPE.SIGNIN.toString())
 
   const userLoginSuccessLocalStorageActions = (appUserLoginResponse: AppUserLoginResponse) => {
     LocalStorage.setItem('token', appUserLoginResponse.token)
@@ -43,6 +52,17 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   // redirect to home or selected page upon successful sign in
   const { state } = useLocation() as { state: { redirect: string; message: string } }
   const navigate = useNavigate()
+  const [searchQueryParams] = useSearchParams()
+  const isValidatedQp = searchQueryParams.get('is_validated')
+  const isResetExitQp = searchQueryParams.get('is_reset')
+
+  useEffect(() => {
+    !!(isValidatedQp && isValidatedQp === 'false') && setShowFormType(SHOW_FORM_TYPE.VALIDATE)
+  }, [isValidatedQp])
+
+  useEffect(() => {
+    !!(isResetExitQp && isResetExitQp === 'true') && setShowFormType(SHOW_FORM_TYPE.RESET_EXIT)
+  }, [isResetExitQp])
 
   useEffect(() => {
     if (state?.message?.length) {
@@ -54,31 +74,202 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
     // state.message = ''
   }, [setAlert, state])
 
+  const resetFormRef = () => formRef && formRef.current && (formRef.current as HTMLFormElement).reset()
+
+  const handleRevalidateSubmit = async (username: string) => {
+    const revalidateResponse = await validateInit(username)
+    if (revalidateResponse.detail) {
+      setAlert(ALERT_TYPE_FAILURE, getErrMsg(revalidateResponse.detail))
+    } else {
+      setShowFormType(SHOW_FORM_TYPE.SIGNIN)
+      resetFormRef()
+      setAlert(ALERT_TYPE_SUCCESS, SIGNUP_SUCCESS)
+    }
+  }
+
+  const handleResetInitSubmit = async (username: string) => {
+    const resetResponse = await resetInit(username)
+    if (resetResponse.detail) {
+      setAlert(ALERT_TYPE_FAILURE, getErrMsg(resetResponse.detail))
+    } else {
+      setShowFormType(SHOW_FORM_TYPE.SIGNIN)
+      resetFormRef()
+      setAlert(ALERT_TYPE_SUCCESS, SIGNUP_SUCCESS)
+    }
+  }
+
+  const handleSigninSubmit = async (username: string, password: string) => {
+    const loginResponse = await login(username, password)
+    if (loginResponse.detail) {
+      setAlert(ALERT_TYPE_FAILURE, getErrMsg(loginResponse.detail))
+    } else {
+      setShowFormType(SHOW_FORM_TYPE.SIGNIN)
+      resetFormRef()
+      resetAlert()
+      userLoginSuccessLocalStorageActions(loginResponse)
+      navigate(state?.redirect || '/home', {
+        replace: true,
+        state: { redirect: '' },
+      })
+    }
+  }
+
+  const handleSignupSubmit = async (username: string, password: string, fullName: string) => {
+    const signupResponse = await signup(username, password, fullName)
+    if (signupResponse.detail) {
+      setAlert(ALERT_TYPE_FAILURE, getErrMsg(signupResponse.detail))
+    } else {
+      setShowFormType(SHOW_FORM_TYPE.SIGNIN)
+      resetFormRef()
+      setAlert(ALERT_TYPE_SUCCESS, SIGNUP_SUCCESS)
+    }
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setSpinner()
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const username = data.get('username') as string
     const password = data.get('password') as string
-    const isInputValid = validateLoginInput(username, password)
+    const fullName = data.get('fullName') as string
+    const isInputValid = validateSignInUpInput(username, password, fullName, showFormType)
 
     if (isInputValid) {
-      const loginResponse = await login(username, password)
-
-      if (loginResponse.detail) {
-        setAlert(ALERT_TYPE_FAILURE, getErrMsg(loginResponse.detail))
+      if (showFormType === SHOW_FORM_TYPE.VALIDATE) {
+        await handleRevalidateSubmit(username)
+      } else if (showFormType === SHOW_FORM_TYPE.RESET_INIT) {
+        await handleResetInitSubmit(username)
+      } else if (showFormType === SHOW_FORM_TYPE.SIGNUP) {
+        await handleSigninSubmit(username, password)
+      } else if (showFormType === SHOW_FORM_TYPE.SIGNIN) {
+        await handleSignupSubmit(username, password, fullName)
       } else {
-        resetAlert()
-        userLoginSuccessLocalStorageActions(loginResponse)
-        navigate(state?.redirect || '/home', {
-          replace: true,
-          state: { redirect: '' },
-        })
+        setAlert(ALERT_TYPE_FAILURE, `Oops! ${SOMETHING_WENT_WRONG}`)
       }
     } else {
       setAlert(ALERT_TYPE_FAILURE, INVALID_SIGNIN)
     }
     resetSpinner()
+  }
+
+  const formHeader = () => {
+    if (showFormType === SHOW_FORM_TYPE.VALIDATE) {
+      return 'Resend validation'
+    } else if (showFormType === SHOW_FORM_TYPE.RESET_INIT) {
+      return 'Reset password'
+    } else if (showFormType === SHOW_FORM_TYPE.SIGNUP) {
+      return 'Sign up'
+    } else if (showFormType === SHOW_FORM_TYPE.SIGNIN) {
+      return 'Sign in'
+    } else {
+      return 'Form Header'
+    }
+  }
+
+  const formBody = () => {
+    if (showFormType === SHOW_FORM_TYPE.VALIDATE || showFormType === SHOW_FORM_TYPE.RESET_INIT) {
+      return (
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="Email"
+          name="username"
+          placeholder="Your Email is your username"
+          autoFocus
+        />
+      )
+    } else if (showFormType === SHOW_FORM_TYPE.SIGNUP) {
+      return (
+        <>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Email"
+            name="username"
+            placeholder="Your Email is your username"
+            autoFocus
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            id="confirmPassword"
+          />
+          <TextField margin="normal" required fullWidth id="fullName" label="Full Name" name="fullName" />
+        </>
+      )
+    } else {
+      return (
+        <>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Email"
+            name="username"
+            placeholder="Your Email is your username"
+            autoFocus
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+          />
+        </>
+      )
+    }
+  }
+
+  const formFooter = () => {
+    if (
+      showFormType === SHOW_FORM_TYPE.VALIDATE ||
+      showFormType === SHOW_FORM_TYPE.RESET_INIT ||
+      showFormType === SHOW_FORM_TYPE.SIGNUP
+    ) {
+      return (
+        <Button fullWidth variant="text" sx={{ mt: 3 }} onClick={() => setShowFormType(SHOW_FORM_TYPE.SIGNIN)}>
+          Have account? Click here to sign in
+        </Button>
+      )
+    } else if (showFormType === SHOW_FORM_TYPE.SIGNIN) {
+      return (
+        <>
+          <Button fullWidth variant="text" sx={{ mt: 3 }} onClick={() => setShowFormType(SHOW_FORM_TYPE.SIGNUP)}>
+            No account? Click here to sign up
+          </Button>
+          <Button fullWidth variant="text" onClick={() => setShowFormType(SHOW_FORM_TYPE.RESET_INIT)}>
+            Forgot password? Click here to reset
+          </Button>
+        </>
+      )
+    } else {
+      return (
+        <Button fullWidth variant="text" sx={{ mt: 3 }}>
+          Form Footer
+        </Button>
+      )
+    }
   }
 
   const signInUpForm = () => {
@@ -95,51 +286,37 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {isShowSignin ? `Sign in` : isShowReset ? `Reset Password` : `Sign up`}
+          {formHeader()}
         </Typography>
         <Box
           component="form"
           onSubmit={handleSubmit}
           noValidate
-          sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '25%' }}
+          sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+          ref={formRef}
         >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Email"
-            name="username"
-            placeholder="Your Email is your username"
-            autoFocus
-          />
-          {!isShowReset && <><TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-          />
-          {!isShowSignin && (
-            <TextField margin="normal" required fullWidth id="fullName" label="Full Name" name="fullName" />
-          )}</>}
+          {formBody()}
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            {isShowSignin ? `Submit Sign in` : isShowReset ? `Submit Password Reset` : `Submit Sign up`}
+            Submit
           </Button>
-          <Button fullWidth variant="text" sx={{ mt: 3 }} onClick={() => {
-            setIsShowSignin(!isShowSignin)
-            setIsShowReset(false)
-          }}>
-            {isShowSignin ? `Don't have account? Click here to Sign up` : `Have account? Click here to sign in`}
-          </Button>
-          {!isShowReset && <Button fullWidth variant="text" onClick={() => {
-            setIsShowReset(!isShowReset)
-            setIsShowSignin(false)
-          }}>
-            Forgot Password? Click here to reset
-          </Button>}
+          {formFooter()}
+          {isValidatedQp && isValidatedQp === 'true' && (
+            <Alert variant="filled" severity="success">
+              Email validation successful. Please login to continue...
+            </Alert>
+          )}
+          {showFormType === SHOW_FORM_TYPE.VALIDATE && (
+            <>
+              <Alert variant="filled" severity="error">
+                Email validation failure! Link expired!! Submit Again!!!
+              </Alert>
+            </>
+          )}
+          {isResetExitQp && isResetExitQp === 'true' && (
+            <Alert variant="filled" severity="success">
+              Enter new...
+            </Alert>
+          )}
         </Box>
       </Box>
     )

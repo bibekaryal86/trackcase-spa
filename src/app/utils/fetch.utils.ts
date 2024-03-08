@@ -2,6 +2,7 @@ import { Dayjs } from 'dayjs'
 
 import { LocalStorage } from './storage.utils'
 import { FORCE_LOGOUT } from '../../constants'
+import { ErrorDetail } from '../types/app.data.types'
 
 type FetchParamObjects = { [key: string]: string | number | boolean }
 
@@ -52,6 +53,7 @@ export interface FetchOptions extends FetchUrlOptions, FetchRequestOptions {}
 
 export interface FetchResponse {
   data?: unknown
+  detail?: ErrorDetail
 }
 
 const addPathParams = (path: string, pathParams: FetchParamObjects) => {
