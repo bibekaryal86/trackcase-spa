@@ -1,4 +1,4 @@
-import { REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { REGEX_LOGIN_INPUT_PATTERN, REGEX_LOGIN_PASSWORD_PATTERN } from '../../constants'
 
 export const SHOW_FORM_TYPE = Object.freeze({
   SIGNIN: 'SIGNIN',
@@ -7,6 +7,8 @@ export const SHOW_FORM_TYPE = Object.freeze({
   RESET_EXIT: 'RESET_EXIT',
   VALIDATE: 'VALIDATE',
 })
+
+export const validatePassword = (password: string, confirmPassword: string) => password === confirmPassword
 
 export const validateSignInUpInput = (
   username: string,
@@ -25,7 +27,7 @@ export const validateSignInUpInput = (
       username.length < 49 &&
       password.length < 21 &&
       REGEX_LOGIN_INPUT_PATTERN.test(username) &&
-      REGEX_LOGIN_INPUT_PATTERN.test(password)
+      REGEX_LOGIN_PASSWORD_PATTERN.test(password)
     )
   } else {
     return !!(
@@ -39,7 +41,7 @@ export const validateSignInUpInput = (
       password.length < 21 &&
       fullName.length < 49 &&
       REGEX_LOGIN_INPUT_PATTERN.test(username) &&
-      REGEX_LOGIN_INPUT_PATTERN.test(password)
+      REGEX_LOGIN_PASSWORD_PATTERN.test(password)
     )
   }
 }

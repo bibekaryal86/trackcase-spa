@@ -78,13 +78,13 @@ export const validateInit = async (username: string): Promise<FetchResponse> => 
   try {
     const validateInitEndpoint = getEndpoint(process.env.USER_VALIDATE_INIT as string)
     const options: Partial<FetchOptions> = {
-        method: 'GET',
-        noAuth: true,
-        queryParams: {
-            to_validate: username
-        }
-      }
-    return (await Async.fetch(validateInitEndpoint, options))
+      method: 'GET',
+      noAuth: true,
+      queryParams: {
+        to_validate: username,
+      },
+    }
+    return await Async.fetch(validateInitEndpoint, options)
   } catch (error) {
     console.log('Validate Init Action Error: ', error)
     return { detail: { error: SOMETHING_WENT_WRONG } }
@@ -95,15 +95,33 @@ export const resetInit = async (username: string): Promise<FetchResponse> => {
   try {
     const resetInitEndpoint = getEndpoint(process.env.USER_RESET_INIT as string)
     const options: Partial<FetchOptions> = {
-        method: 'GET',
-        noAuth: true,
-        queryParams: {
-            to_reset: username
-        }
-      }
-    return (await Async.fetch(resetInitEndpoint, options))
+      method: 'GET',
+      noAuth: true,
+      queryParams: {
+        to_reset: username,
+      },
+    }
+    return await Async.fetch(resetInitEndpoint, options)
   } catch (error) {
     console.log('Reset Init Action Error: ', error)
+    return { detail: { error: SOMETHING_WENT_WRONG } }
+  }
+}
+
+export const resetExit = async (username: string, password: string): Promise<FetchResponse> => {
+  try {
+    const resetExitEndpoint = getEndpoint(process.env.USER_RESET_EXIT as string)
+    const options: Partial<FetchOptions> = {
+      method: 'POST',
+      noAuth: true,
+      queryParams: {
+        username,
+        password,
+      },
+    }
+    return await Async.fetch(resetExitEndpoint, options)
+  } catch (error) {
+    console.log('Reset Exit Action Error: ', error)
     return { detail: { error: SOMETHING_WENT_WRONG } }
   }
 }
