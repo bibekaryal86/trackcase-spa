@@ -1,6 +1,5 @@
 // actions
 import { getAllRefTypes } from './actions/all_ref_types.action'
-import { userLogout } from './actions/logout.action'
 import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
@@ -69,7 +68,6 @@ import { resetSpinner, setSpinner } from './utils/spinner.utils'
 import { LocalStorage, SessionStorage } from './utils/storage.utils'
 
 // EXPORTS
-export { userLogout }
 export { getAllRefTypes }
 export { getStatusesList }
 export { testDatabase }

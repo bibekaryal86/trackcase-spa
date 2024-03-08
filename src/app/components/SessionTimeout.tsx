@@ -3,16 +3,20 @@ import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { INVALID_SESSION } from '../../constants'
-import { userLogout } from '../actions/logout.action'
+import { logout } from '../../users'
 import { LocalStorage } from '../utils/storage.utils'
 
 interface SessionTimeoutProps {
-  userLogout: () => void
+  logout: () => void
+}
+
+const mapDispatchToProps = {
+  logout: () => logout(),
 }
 
 const SessionTimeout = (props: SessionTimeoutProps) => {
   // log out when inactive
-  const { userLogout } = props
+  const { logout } = props
   // redirect to home page when log out
   const navigate = useNavigate()
 
@@ -25,14 +29,14 @@ const SessionTimeout = (props: SessionTimeoutProps) => {
       console.log('SessionTimeout: ', msg)
       clearInterval(warningInactiveInterval.current)
       clearTimeout(startTimerInterval.current)
-      userLogout()
+      logout()
 
       navigate('/', {
         replace: true,
         state: { message: INVALID_SESSION },
       })
     },
-    [navigate, userLogout],
+    [navigate, logout],
   )
 
   const warningInactive = useCallback(() => {
@@ -89,10 +93,6 @@ const SessionTimeout = (props: SessionTimeoutProps) => {
 
   // change fragment to modal and handleClose func to close
   return <Fragment />
-}
-
-const mapDispatchToProps = {
-  userLogout: () => userLogout(),
 }
 
 export default connect(null, mapDispatchToProps)(SessionTimeout)

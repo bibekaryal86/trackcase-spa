@@ -79,7 +79,7 @@ const getQueryString = (queryParams: FetchParamObjects) => {
 }
 
 const getMetadataQueryString = (hasNoQueryParams: boolean, metadata: Partial<FetchRequestMetadata>) => {
-  if (metadata) {
+  if (metadata && Object.keys(metadata).length) {
     const jsonString = JSON.stringify(metadata, (_, value) => {
       if (value === null || value === undefined) {
         return undefined

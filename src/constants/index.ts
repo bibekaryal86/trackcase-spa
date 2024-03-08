@@ -10,8 +10,6 @@ export const REGEX_CURRENCY_FORMAT = new RegExp('^\\$|\\-\\$(\\d{1,3}(\\,\\d{3})
 
 export const DATE_FORMAT = 'YYYY-MM-DD'
 
-export const DRAWER_WIDTH: number = 240
-
 export const ACTION_ADD = 'add'
 export const ACTION_UPDATE = 'update'
 export const ACTION_DELETE = 'delete'
@@ -21,7 +19,6 @@ export const BUTTON_UPDATE = 'Update'
 export const BUTTON_DELETE = 'Delete'
 export const BUTTON_CANCEL = 'Cancel'
 export const BUTTON_RESET = 'Reset'
-export const BUTTON_CLOSE = 'Close'
 
 export const ALERT_TYPE_SUCCESS = 'success'
 export const ALERT_TYPE_FAILURE = 'error'
@@ -39,13 +36,11 @@ export const CHECK_BOX_OPTIONS_YES_NO = [
 
 // BROWSER STORAGE
 export const IS_DARK_MODE = 'isDarkMode'
-export const IS_OPEN_DRAWER = 'isOpenDrawer'
 export const FORCE_LOGOUT = 'forceLogout'
 
 // ALERT MESSAGES
 export const SOMETHING_WENT_WRONG = 'Something Went Wrong! Please Try Again!!'
 export const INVALID_SIGNIN = 'Invalid Input! Please Try Again!!'
-export const FAIL_SIGNIN = 'Invalid Username and/or Password! Please Try Again!!'
 export const SIGNIN_FIRST = 'Please Sign In First!'
 export const INVALID_SESSION = 'Session Invalidated Due To Inactivity/Expiry! Please Sign In Again to Continue!!'
 

@@ -14,7 +14,7 @@ interface BodyProps {
   darkModeCallback: () => void
   anchorEl: HTMLElement | null
   setAnchorEl: (anchorEl: HTMLElement | null) => void
-  userLogoutCallback: () => void
+  logoutCallback: () => void
 }
 
 const Body = (props: BodyProps) => {

@@ -10,7 +10,7 @@ import {
   SessionStorage,
 } from '../../app'
 import { USER_LOGOUT } from '../../app/types/app.action.types'
-import { FAIL_SIGNIN, IS_DARK_MODE, SOMETHING_WENT_WRONG } from '../../constants'
+import { IS_DARK_MODE, SOMETHING_WENT_WRONG } from '../../constants'
 import {
   AppUserLoginRequest,
   AppUserLoginResponse,
@@ -20,7 +20,7 @@ import {
   DefaultAppUserResponse,
 } from '../types/users.data.types'
 
-export const signUp = async (appUserRequest: AppUserRequest): Promise<AppUserResponse> => {
+export const signup = async (appUserRequest: AppUserRequest): Promise<AppUserResponse> => {
   try {
     const signupEndpoint = getEndpoint(process.env.APP_USER_CREATE as string)
     const options: Partial<FetchOptions> = {
@@ -49,14 +49,7 @@ export const login = async (username: string, password: string): Promise<AppUser
       requestBody: loginRequest,
     }
 
-    const login = (await Async.fetch(loginEndpoint, options)) as AppUserLoginResponse
-
-    if (login?.token?.length) {
-      return login
-    } else {
-      console.log('Login Action Failed: ', login)
-      return { ...DefaultAppUserLoginResponse, detail: { error: FAIL_SIGNIN } }
-    }
+    return (await Async.fetch(loginEndpoint, options)) as AppUserLoginResponse
   } catch (error) {
     console.log('Login Action Error: ', error)
     return { ...DefaultAppUserLoginResponse, detail: { error: SOMETHING_WENT_WRONG } }

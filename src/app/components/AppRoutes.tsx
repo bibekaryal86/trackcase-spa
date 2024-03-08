@@ -13,8 +13,6 @@ import WorkIcon from '@mui/icons-material/Work'
 import React from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
-import Login from './Login'
-import Logout from './Logout'
 import NotFound from './NotFound'
 import { Calendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
@@ -25,6 +23,7 @@ import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
 import { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes } from '../../types'
+import { UserSignInUp } from '../../users'
 import { RoutesType } from '../types/app.data.types'
 import { isLoggedIn } from '../utils/app.utils'
 
@@ -35,11 +34,7 @@ const publicRoutes: RoutesType[] = [
   },
   {
     path: '/',
-    element: <Login />,
-  },
-  {
-    path: '/logout',
-    element: <Logout />,
+    element: <UserSignInUp />,
   },
 ]
 

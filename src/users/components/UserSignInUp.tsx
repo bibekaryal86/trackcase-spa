@@ -29,7 +29,7 @@ const mapDispatchToProps = {
   resetSpinner: () => resetSpinner(),
 }
 
-const Login = (props: LoginProps): React.ReactElement => {
+const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const { setAlert, resetAlert, setSpinner, resetSpinner } = props
 
   const userLoginSuccessLocalStorageActions = (appUserLoginResponse: AppUserLoginResponse) => {
@@ -135,4 +135,4 @@ const Login = (props: LoginProps): React.ReactElement => {
   return <>{isLoggedIn() ? redirect() : loginForm()}</>
 }
 
-export default connect(null, mapDispatchToProps)(Login)
+export default connect(null, mapDispatchToProps)(UserSignInUp)

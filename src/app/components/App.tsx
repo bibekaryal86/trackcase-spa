@@ -8,7 +8,7 @@ import Body from './Body'
 import SessionTimeout from './SessionTimeout'
 import Spinner from './Spinner'
 import { IS_DARK_MODE } from '../../constants'
-import { userLogout } from '../actions/logout.action'
+import { logout } from '../../users'
 import { SessionStorage } from '../utils/storage.utils'
 
 const lightTheme = createTheme({
@@ -24,7 +24,11 @@ const darkTheme = createTheme({
 })
 
 type AppProps = {
-  userLogout: () => void
+  logout: () => void
+}
+
+const mapDispatchToProps = {
+  logout: () => logout(),
 }
 
 function App(props: AppProps): React.ReactElement {
@@ -38,8 +42,8 @@ function App(props: AppProps): React.ReactElement {
 
   // redirect to sign in page when log out
   const navigate = useNavigate()
-  const userLogoutCallback = () => {
-    props.userLogout()
+  const logoutCallback = () => {
+    props.logout()
     navigate('/', {
       replace: true,
     })
@@ -60,16 +64,12 @@ function App(props: AppProps): React.ReactElement {
         darkModeCallback={darkModeCallback}
         anchorEl={anchorEl}
         setAnchorEl={setAnchorEl}
-        userLogoutCallback={userLogoutCallback}
+        logoutCallback={logoutCallback}
       />
     </ThemeProvider>
   )
 
   return <>{theApp()}</>
-}
-
-const mapDispatchToProps = {
-  userLogout: () => userLogout(),
 }
 
 export default connect(null, mapDispatchToProps)(App)
