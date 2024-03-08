@@ -69,6 +69,13 @@ export interface AuthState {
   userDetails: UserDetails
 }
 
+export interface ResponseMetadata {
+  totalItems: number
+  totalPages: number
+  pageNumber: number
+  perPage: number
+}
+
 export interface ErrorDetail {
   error: string
 }
@@ -122,6 +129,8 @@ export interface BaseModelSchema {
   id?: number
   created?: Dayjs
   modified?: Dayjs
+  isDeleted?: boolean
+  deletedDate?: boolean
 }
 
 export interface NameDescBaseSchema {
@@ -145,6 +154,7 @@ export interface AddressBaseSchema {
 export interface ResponseBase {
   deleteCount?: number
   detail?: ErrorDetail
+  metadata?: ResponseMetadata
 }
 
 export interface ErrorSuccessSchema {

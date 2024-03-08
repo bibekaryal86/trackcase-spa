@@ -24,9 +24,12 @@ import { RESET_ALERT, RESET_SPINNER, SET_ALERT, SET_SPINNER } from './types/app.
 import {
   AddressBaseSchema,
   BaseModelSchema,
+  DefaultErrorDetail,
+  ErrorDetail,
   ErrorSuccessSchema,
   NameDescBaseSchema,
   ResponseBase,
+  ResponseMetadata,
   StatusBaseSchema,
   StatusSchema,
   TableData,
@@ -88,9 +91,11 @@ export { RESET_ALERT, RESET_SPINNER, SET_ALERT, SET_SPINNER }
 export type {
   AddressBaseSchema,
   BaseModelSchema,
+  ErrorDetail,
   ErrorSuccessSchema,
   NameDescBaseSchema,
   ResponseBase,
+  ResponseMetadata,
   StatusBaseSchema,
   StatusSchema,
   TableData,
@@ -99,6 +104,7 @@ export type {
   TableRowsPerPage,
   UserDetails,
 }
+export { DefaultErrorDetail }
 export { resetAlert, setAlert }
 export { useStateData }
 export {

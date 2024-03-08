@@ -3,7 +3,6 @@ import { Dayjs } from 'dayjs'
 import { LocalStorage } from './storage.utils'
 import { FORCE_LOGOUT } from '../../constants'
 
-
 type FetchParamObjects = { [key: string]: string | number | boolean }
 
 interface FetchUrlOptions {
@@ -16,13 +15,13 @@ interface FetchUrlOptions {
 
 interface SortConfig {
   column: string
-  direction: "asc" | "desc"
+  direction: 'asc' | 'desc'
 }
 
 interface FilterConfig {
-    column: string
-    value: string | number | Dayjs
-    operation: "eq" | "gt" | "lt" | "gte" | "lte"
+  column: string
+  value: string | number | Dayjs
+  operation: 'eq' | 'gt' | 'lt' | 'gte' | 'lte'
 }
 
 interface FetchRequestMetadata {
@@ -83,13 +82,13 @@ const getMetadataQueryString = (hasNoQueryParams: boolean, metadata: Partial<Fet
   if (metadata) {
     const jsonString = JSON.stringify(metadata, (_, value) => {
       if (value === null || value === undefined) {
-        return undefined;
+        return undefined
       }
-      return value;
-    });
+      return value
+    })
     return hasNoQueryParams ? `?metadata=${jsonString}` : `&metadata=${jsonString}`
   }
-  return '';
+  return ''
 }
 
 const getUrl = (urlPath: string, options: Partial<FetchUrlOptions>) => {

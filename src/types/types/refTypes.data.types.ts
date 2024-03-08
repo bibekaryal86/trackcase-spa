@@ -4,6 +4,17 @@ import { CourtCaseSchema } from '../../cases'
 import { CashCollectionSchema } from '../../collections'
 import { FormSchema } from '../../forms'
 
+export interface ComponentStatusSchema extends BaseModelSchema {
+  componentName: string
+  statusName: string
+  isActive: boolean
+  // no orm_mode for this
+}
+
+export interface ComponentStatusResponse extends ResponseBase {
+  componentStatuses: ComponentStatusSchema[]
+}
+
 export interface CaseTypeSchema extends BaseModelSchema, NameDescBaseSchema {
   // orm_mode
   courtCases?: CourtCaseSchema[]

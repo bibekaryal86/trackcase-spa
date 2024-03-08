@@ -50,12 +50,9 @@ export const isLoggedIn = (): AuthState | undefined => {
   return undefined
 }
 
-export const getEndpoint = (endpoint: string, isIncludeTrailingSlash: boolean = true): string => {
+export const getEndpoint = (endpoint: string): string => {
   const baseUrl = process.env.BASE_URL as string
   const baseUrlClean = baseUrl.replaceAll('"', '').trim()
-  if (isIncludeTrailingSlash && !endpoint.endsWith('/')) {
-    return baseUrlClean.concat(endpoint).concat('/')
-  }
   return baseUrlClean.concat(endpoint)
 }
 
