@@ -1,5 +1,4 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import { Alert } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -26,9 +25,14 @@ import {
   ALERT_TYPE_WARNING,
   INVALID_PASSWORD,
   INVALID_SIGNIN,
+  RESET_EXIT_SUCCESS,
+  RESET_INIT_FAILURE,
+  RESET_INIT_SUCCESS,
   SIGNIN_FIRST,
   SIGNUP_SUCCESS,
   SOMETHING_WENT_WRONG,
+  VALIDATE_FAILURE,
+  VALIDATE_SUCCESS,
 } from '../../constants'
 import { login, resetExit, resetInit, signup, validateInit } from '../action/users.action'
 import { AppUserLoginResponse } from '../types/users.data.types'
@@ -69,13 +73,29 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const userToResetQp = searchQueryParams.get('to_reset')
 
   useEffect(() => {
-    !!(isValidatedQp && isValidatedQp === 'false') && setShowFormType(SHOW_FORM_TYPE.VALIDATE)
-  }, [isValidatedQp])
+    if (isValidatedQp) {
+      if (isValidatedQp === 'true') {
+        setAlert(ALERT_TYPE_SUCCESS, VALIDATE_SUCCESS)
+      } else {
+        setShowFormType(SHOW_FORM_TYPE.VALIDATE)
+        setAlert(ALERT_TYPE_WARNING, VALIDATE_FAILURE)
+      }
+    }
+  }, [isValidatedQp, setAlert])
 
   useEffect(() => {
-    !!(isResetExitQp && isResetExitQp === 'true') && setShowFormType(SHOW_FORM_TYPE.RESET_EXIT)
-    userToResetQp && setUserToReset(getString(userToResetQp))
-  }, [isResetExitQp, userToResetQp])
+    if (isResetExitQp) {
+      if (isResetExitQp === 'true') {
+        setShowFormType(SHOW_FORM_TYPE.RESET_EXIT)
+        if (userToResetQp) {
+          setUserToReset(getString(userToResetQp).toLowerCase())
+        }
+      } else if (isResetExitQp === 'false') {
+        setShowFormType(SHOW_FORM_TYPE.RESET_EXIT)
+        setAlert(ALERT_TYPE_WARNING, RESET_INIT_FAILURE)
+      }
+    }
+  }, [isResetExitQp, setAlert, userToResetQp])
 
   useEffect(() => {
     if (state?.message?.length) {
@@ -109,7 +129,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
       setAlert(ALERT_TYPE_FAILURE, getErrMsg(resetInitResponse.detail))
     } else {
       resetState()
-      setAlert(ALERT_TYPE_SUCCESS, SIGNUP_SUCCESS)
+      setAlert(ALERT_TYPE_SUCCESS, RESET_INIT_SUCCESS)
     }
   }
 
@@ -119,7 +139,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
       setAlert(ALERT_TYPE_FAILURE, getErrMsg(resetExitResponse.detail))
     } else {
       resetState()
-      setAlert(ALERT_TYPE_SUCCESS, SIGNUP_SUCCESS)
+      setAlert(ALERT_TYPE_SUCCESS, RESET_EXIT_SUCCESS)
     }
   }
 
@@ -171,12 +191,12 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
         }
       } else if (showFormType === SHOW_FORM_TYPE.SIGNUP) {
         if (validatePassword(password, confirmPassword)) {
-          await handleSigninSubmit(username, password)
+          await handleSignupSubmit(username, password, fullName)
         } else {
           setAlert(ALERT_TYPE_FAILURE, INVALID_PASSWORD)
         }
       } else if (showFormType === SHOW_FORM_TYPE.SIGNIN) {
-        await handleSignupSubmit(username, password, fullName)
+        await handleSigninSubmit(username, password)
       } else {
         setAlert(ALERT_TYPE_FAILURE, `Oops! ${SOMETHING_WENT_WRONG}`)
       }
@@ -359,20 +379,6 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
             Submit
           </Button>
           {formFooter()}
-          {showFormType === SHOW_FORM_TYPE.VALIDATE && isValidatedQp === 'false' && (
-            <>
-              <Alert variant="filled" severity="error">
-                Email validation failure! Link expired!! Submit Again!!!
-              </Alert>
-            </>
-          )}
-          {showFormType === SHOW_FORM_TYPE.RESET_EXIT && isResetExitQp === 'false' && (
-            <>
-              <Alert variant="filled" severity="error">
-                Reset password failure! Link expired!! Submit Again!!!
-              </Alert>
-            </>
-          )}
         </Box>
       </Box>
     )

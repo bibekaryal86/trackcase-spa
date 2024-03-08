@@ -114,7 +114,7 @@ export const resetExit = async (username: string, password: string): Promise<Fet
     const options: Partial<FetchOptions> = {
       method: 'POST',
       noAuth: true,
-      queryParams: {
+      requestBody: {
         username,
         password,
       },

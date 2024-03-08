@@ -41,14 +41,18 @@ export const IS_DARK_MODE = 'isDarkMode'
 export const FORCE_LOGOUT = 'forceLogout'
 
 // ALERT MESSAGES
-export const SOMETHING_WENT_WRONG = 'Something Went Wrong! Please Try Again!!'
-export const INVALID_SIGNIN = 'Invalid Input! Please Try Again!!'
-export const INVALID_PASSWORD = 'Passwords do not match! Please Try Again!!'
-export const SIGNIN_FIRST = 'Please Sign In First!'
-export const INVALID_SESSION = 'Session Invalidated Due To Inactivity/Expiry! Please Sign In Again to Continue!!'
+export const SOMETHING_WENT_WRONG = 'Something went wrong, please try again...'
+export const INVALID_SIGNIN = 'Invalid input, please try again...'
+export const INVALID_PASSWORD = 'Passwords do not match, please try again...'
+export const SIGNIN_FIRST = 'Please sign in first...'
+export const INVALID_SESSION = 'Session invalidated due to inactivity/expiry, please sign in again to continue...'
 export const SIGNUP_SUCCESS =
-  'Signup Successful! Please check your inbox to validate your account!! ' +
-  'Account can be used only after validation!!!'
+  'Signup successful, please check your inbox to validate your account. Account can only be used after validation...'
+export const VALIDATE_SUCCESS = 'Email validation successful, please sign in to continue...'
+export const VALIDATE_FAILURE = 'Email validation failure, link may have expired, please try again...'
+export const RESET_INIT_SUCCESS = 'Reset email sent, please check your inbox to reset your account...'
+export const RESET_INIT_FAILURE = 'Account reset failure, link may have expired, please try again...'
+export const RESET_EXIT_SUCCESS = 'Account reset successful, please sign in to continue...'
 
 export const CREATE_SUCCESS = (what: string) => `Add ${what} Success!`
 export const UPDATE_SUCCESS = (what: string) => `Edit ${what} Success!`

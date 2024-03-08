@@ -18,7 +18,7 @@ export const validateSignInUpInput = (
 ): boolean => {
   if (showFormType === SHOW_FORM_TYPE.VALIDATE || showFormType === SHOW_FORM_TYPE.RESET_INIT) {
     return !!(username && username.length > 6 && username.length < 49 && REGEX_LOGIN_INPUT_PATTERN.test(username))
-  } else if (showFormType === SHOW_FORM_TYPE.SIGNIN) {
+  } else if (showFormType === SHOW_FORM_TYPE.SIGNIN || showFormType === SHOW_FORM_TYPE.RESET_EXIT) {
     return !!(
       username &&
       password &&
