@@ -51,7 +51,7 @@ export const getRefTypes = () => {
         requestComponents.push('collection_method')
       }
       if (getStore().filingTypes.data.length === 0) {
-        requestComponents.push('form_type')
+        requestComponents.push('filing_type')
       }
       if (getStore().hearingTypes.data.length === 0) {
         requestComponents.push('hearing_type')
@@ -70,35 +70,33 @@ export const getRefTypes = () => {
         }
         const allRefTypes = (await Async.fetch(urlPath, options)) as RefTypesResponse
 
-        if (allRefTypes.data?.componentStatuses?.length) {
+        if (allRefTypes.data?.componentStatuses?.data?.length) {
           dispatch(
             allRefTypesSuccess(
               COMPONENT_STATUSES_RETRIEVE_SUCCESS,
-              'componentStatuses',
-              allRefTypes.data.componentStatuses,
+              allRefTypes.data.componentStatuses.data,
             ),
           )
         }
-        if (allRefTypes.data?.caseTypes?.length) {
-          dispatch(allRefTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, 'caseTypes', allRefTypes.data.caseTypes))
+        if (allRefTypes.data?.caseTypes?.data?.length) {
+          dispatch(allRefTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, allRefTypes.data.caseTypes.data))
         }
-        if (allRefTypes.data?.collectionMethods?.length) {
+        if (allRefTypes.data?.collectionMethods?.data?.length) {
           dispatch(
             allRefTypesSuccess(
               COLLECTION_METHODS_RETRIEVE_SUCCESS,
-              'collectionMethods',
-              allRefTypes.data.collectionMethods,
+              allRefTypes.data.collectionMethods.data,
             ),
           )
         }
-        if (allRefTypes.data?.filingTypes?.length) {
-          dispatch(allRefTypesSuccess(FILING_TYPES_RETRIEVE_SUCCESS, 'formTypes', allRefTypes.data.filingTypes))
+        if (allRefTypes.data?.filingTypes?.data?.length) {
+          dispatch(allRefTypesSuccess(FILING_TYPES_RETRIEVE_SUCCESS, allRefTypes.data.filingTypes.data))
         }
-        if (allRefTypes.data?.hearingTypes?.length) {
-          dispatch(allRefTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, 'hearingTypes', allRefTypes.data.hearingTypes))
+        if (allRefTypes.data?.hearingTypes?.data?.length) {
+          dispatch(allRefTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, allRefTypes.data.hearingTypes.data))
         }
-        if (allRefTypes.data?.taskTypes?.length) {
-          dispatch(allRefTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, 'taskTypes', allRefTypes.data.taskTypes))
+        if (allRefTypes.data?.taskTypes?.data?.length) {
+          dispatch(allRefTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, allRefTypes.data.taskTypes.data))
         }
       }
     } catch (error) {
@@ -121,7 +119,6 @@ const allRefTypesRequest = (type: string) => ({
 
 const allRefTypesSuccess = (
   type: string,
-  ref_type: string,
   ref_types:
     | ComponentStatusSchema[]
     | CaseTypeSchema[]
@@ -131,7 +128,7 @@ const allRefTypesSuccess = (
     | TaskTypeSchema[],
 ) => ({
   type: type,
-  [ref_type]: ref_types,
+  data: ref_types,
 })
 
 const allRefTypesComplete = (type: string) => ({

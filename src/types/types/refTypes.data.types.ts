@@ -118,12 +118,12 @@ export interface CaseTypeAction extends CaseTypeState {
 }
 
 export interface RefTypesResponseData {
-  componentStatuses: ComponentStatusSchema[]
-  collectionMethods: CollectionMethodSchema[]
-  caseTypes: CaseTypeSchema[]
-  filingTypes: FilingTypeSchema[]
-  hearingTypes: HearingTypeSchema[]
-  taskTypes: TaskTypeSchema[]
+  componentStatuses: ComponentStatusResponse
+  collectionMethods: CollectionMethodResponse
+  caseTypes: CaseTypeResponse
+  filingTypes: FilingTypeResponse
+  hearingTypes: HearingTypeResponse
+  taskTypes: TaskTypeResponse
 }
 
 export interface RefTypesResponse {

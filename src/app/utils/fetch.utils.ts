@@ -101,7 +101,7 @@ const getUrl = (urlPath: string, options: Partial<FetchUrlOptions>) => {
 }
 
 const getRequestInit = (options: Partial<FetchRequestOptions>) => {
-  const { noAuth = true, requestHeaders = {}, method = 'GET', requestBody = {} } = options
+  const { noAuth , requestHeaders = {}, method = 'GET', requestBody = {} } = options
   const token = LocalStorage.getItem('token') as string
   // this is a bug, and it should not come to this
   // it comes to this after logging out from SessionTimeout

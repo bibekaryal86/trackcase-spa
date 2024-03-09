@@ -17,8 +17,8 @@ import {
   CaseTypeState,
   collectionMethods,
   CollectionMethodState,
+  filingTypes,
   FilingTypeState,
-  formTypes,
   hearingTypes,
   HearingTypeState,
   refTypes,
@@ -70,7 +70,7 @@ const appReducers = combineReducers({
   componentStatuses,
   caseTypes,
   collectionMethods,
-  formTypes,
+  filingTypes,
   hearingTypes,
   taskTypes,
   courts,
@@ -85,9 +85,9 @@ const appReducers = combineReducers({
 const rootReducer = (state: any, action: any) => {
   if (action.type === USER_LOGOUT) {
     // do not clear ref types when logging out
-    const { componentStatuses, caseTypes, collectionMethods, formTypes, hearingTypes, taskTypes, courts, judges } =
+    const { componentStatuses, caseTypes, collectionMethods, filingTypes, hearingTypes, taskTypes, courts, judges } =
       state
-    state = { componentStatuses, caseTypes, collectionMethods, formTypes, hearingTypes, taskTypes, courts, judges }
+    state = { componentStatuses, caseTypes, collectionMethods, filingTypes, hearingTypes, taskTypes, courts, judges }
   }
   return appReducers(state, action)
 }
