@@ -130,7 +130,7 @@ export interface BaseModelSchema {
   created?: Dayjs
   modified?: Dayjs
   isDeleted?: boolean
-  deletedDate?: boolean
+  deletedDate?: Dayjs
 }
 
 export interface NameDescBaseSchema {
