@@ -9,7 +9,7 @@ import { FilingTypeSchema } from '../types/refTypes.data.types'
 
 const mapStateToProps = ({ filingTypes }: GlobalState) => {
   return {
-    formTypesList: filingTypes.formTypes,
+    formTypesList: filingTypes.data,
   }
 }
 

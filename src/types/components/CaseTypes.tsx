@@ -9,7 +9,7 @@ import { CaseTypeSchema } from '../types/refTypes.data.types'
 
 const mapStateToProps = ({ caseTypes }: GlobalState) => {
   return {
-    caseTypesList: caseTypes.caseTypes,
+    caseTypesList: caseTypes.data,
   }
 }
 

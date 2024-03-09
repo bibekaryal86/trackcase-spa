@@ -9,7 +9,7 @@ import { TaskTypeSchema } from '../types/refTypes.data.types'
 
 const mapStateToProps = ({ taskTypes }: GlobalState) => {
   return {
-    taskTypesList: taskTypes.taskTypes,
+    taskTypesList: taskTypes.data,
   }
 }
 

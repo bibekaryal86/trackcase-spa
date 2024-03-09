@@ -9,7 +9,7 @@ import { HearingTypeSchema } from '../types/refTypes.data.types'
 
 const mapStateToProps = ({ hearingTypes }: GlobalState) => {
   return {
-    hearingTypesList: hearingTypes.hearingTypes,
+    hearingTypesList: hearingTypes.data,
   }
 }
 

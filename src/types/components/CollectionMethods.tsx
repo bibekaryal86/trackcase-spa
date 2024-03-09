@@ -14,7 +14,7 @@ import { CollectionMethodSchema } from '../types/refTypes.data.types'
 
 const mapStateToProps = ({ collectionMethods }: GlobalState) => {
   return {
-    collectionMethodsList: collectionMethods.collectionMethods,
+    collectionMethodsList: collectionMethods.data,
   }
 }
 
