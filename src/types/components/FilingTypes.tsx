@@ -30,7 +30,7 @@ interface FormTypesProps {
   unmountPage: () => void
 }
 
-const FormTypes = (props: FormTypesProps): React.ReactElement => {
+const FilingTypes = (props: FormTypesProps): React.ReactElement => {
   const { unmountPage } = props
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const FormTypes = (props: FormTypesProps): React.ReactElement => {
 
   const refTypes = () => (
     <RefTypes
-      refTypeId="form_type"
+      refTypeId="filing_type"
       refTypeName="Filing Type"
       refTypesList={props.formTypesList}
       getRefTypes={props.getFormTypes}
@@ -54,4 +54,4 @@ const FormTypes = (props: FormTypesProps): React.ReactElement => {
   return <>{refTypes()}</>
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormTypes)
+export default connect(mapStateToProps, mapDispatchToProps)(FilingTypes)

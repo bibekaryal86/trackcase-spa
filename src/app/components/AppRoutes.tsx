@@ -22,7 +22,7 @@ import { Court, Courts } from '../../courts'
 import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
-import { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes } from '../../types'
+import { CaseTypes, CollectionMethods, FilingTypes, HearingTypes, TaskTypes } from '../../types'
 import { UserSignInUp } from '../../users'
 import { RoutesType } from '../types/app.data.types'
 import { isLoggedIn } from '../utils/app.utils'
@@ -172,9 +172,9 @@ export const refTypesRoutes: RoutesType[] = [
     icon: <CurrencyBitcoinRounded />,
   },
   {
-    path: '/form_types',
+    path: '/filing_types',
     display: 'Filing Types',
-    element: <FormTypes />,
+    element: <FilingTypes />,
     icon: <FilePresentRoundedIcon />,
   },
   {

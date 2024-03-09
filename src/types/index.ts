@@ -8,7 +8,7 @@ import { getTaskTypes } from './actions/taskTypes.action'
 // components
 import CaseTypes from './components/CaseTypes'
 import CollectionMethods from './components/CollectionMethods'
-import FormTypes from './components/FormTypes'
+import FilingTypes from './components/FilingTypes'
 import HearingTypes from './components/HearingTypes'
 import TaskTypes from './components/TaskTypes'
 // reducers
@@ -69,7 +69,7 @@ import {
 } from './types/refTypes.data.types'
 
 export { getCaseTypes, getCollectionMethods, getFilingType, getHearingTypes, getRefTypes, getTaskTypes }
-export { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes }
+export { CaseTypes, CollectionMethods, FilingTypes, HearingTypes, TaskTypes }
 export { caseTypes, collectionMethods, filingTypes, hearingTypes, refTypes, taskTypes }
 export {
   CASE_TYPES_RETRIEVE_REQUEST,

@@ -34,8 +34,8 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 }
 
 interface RefTypesProps {
-  refTypeId: 'case_type' | 'collection_method' | 'form_type' | 'hearing_type' | 'task_type'
-  refTypeName: 'Case Type' | 'Collection Method' | 'Form Status' | 'Filing Type' | 'Hearing Type' | 'Task Type'
+  refTypeId: 'case_type' | 'collection_method' | 'component_status' | 'filing_type' | 'hearing_type' | 'task_type'
+  refTypeName: 'Case Type' | 'Collection Method' | 'Component Status' | 'Filing Type' | 'Hearing Type' | 'Task Type'
   refTypesList:
     | CaseTypeSchema[]
     | CollectionMethodSchema[]

@@ -19,7 +19,7 @@ import {
 } from '../types/refTypes.action.types'
 import { ComponentStatusResponse, ComponentStatusSchema } from '../types/refTypes.data.types'
 
-export const addComponentStatus = (name: string, description: string) => {
+export const addComponentStatus = (componentName: string, statusName: string) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     dispatch(componentStatusesRequest(COMPONENT_STATUS_CREATE_REQUEST))
 
@@ -28,8 +28,9 @@ export const addComponentStatus = (name: string, description: string) => {
       const options: Partial<FetchOptions> = {
         method: 'POST',
         requestBody: {
-          name,
-          description,
+          componentName,
+          statusName,
+          isActive: true
         },
       }
 
@@ -83,7 +84,7 @@ export const getComponentStatuses = (isForceFetch: boolean = false) => {
   }
 }
 
-export const editComponentStatus = (id: number, name: string, description: string) => {
+export const editComponentStatus = (id: number, componentName: string, statusName: string, isActive?: boolean) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     dispatch(componentStatusesRequest(COMPONENT_STATUS_UPDATE_REQUEST))
 
@@ -93,8 +94,9 @@ export const editComponentStatus = (id: number, name: string, description: strin
         method: 'PUT',
         pathParams: { component_status_id: id },
         requestBody: {
-          name,
-          description,
+          componentName,
+          statusName,
+          isActive
         },
       }
 
