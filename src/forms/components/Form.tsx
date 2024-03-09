@@ -10,17 +10,17 @@ import FormForm from './FormForm'
 import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
 import { Calendars } from '../../calendars'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
-import { FormTypeSchema, getFormTypes } from '../../types'
+import { FilingTypeSchema, getFilingType } from '../../types'
 import { editForm, getForm } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
 import { isAreTwoFormsSame } from '../utils/forms.utils'
 
-const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
+const mapStateToProps = ({ forms, statuses, filingTypes, courtCases }: GlobalState) => {
   return {
     selectedForm: forms.selectedForm,
     statusList: statuses.statuses,
-    formTypesList: formTypes.formTypes,
+    formTypesList: filingTypes.formTypes,
     courtCasesList: courtCases.courtCases,
   }
 }
@@ -30,7 +30,7 @@ const mapDispatchToProps = {
   editForm: (formId: number, form: FormSchema) => editForm(formId, form),
   unmountPage: () => unmountPage(FORMS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  getFormTypesList: () => getFormTypes(),
+  getFormTypesList: () => getFilingType(),
   getCourtCasesList: () => getCourtCases(),
 }
 
@@ -41,7 +41,7 @@ interface FormProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  formTypesList: FormTypeSchema[]
+  formTypesList: FilingTypeSchema[]
   getFormTypesList: () => void
   courtCasesList: CourtCaseSchema[]
   getCourtCasesList: () => void

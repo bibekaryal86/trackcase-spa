@@ -17,8 +17,8 @@ import {
   CaseTypeState,
   collectionMethods,
   CollectionMethodState,
+  FilingTypeState,
   formTypes,
-  FormTypeState,
   hearingTypes,
   HearingTypeState,
   refTypes,
@@ -26,6 +26,8 @@ import {
   taskTypes,
   TaskTypeState,
 } from '../../types'
+import componentStatuses from '../../types/reducers/componentStatuses.reducer'
+import { ComponentStatusState } from '../../types/types/refTypes.data.types'
 import alert from '../reducers/alert.reducer'
 import spinner from '../reducers/spinner.reducer'
 import statuses from '../reducers/statuses.reducer'
@@ -41,9 +43,10 @@ export interface GlobalState {
   spinner: SpinnerState
   statuses: StatusState
   refTypes: RefTypesState
+  componentStatuses: ComponentStatusState
   caseTypes: CaseTypeState
   collectionMethods: CollectionMethodState
-  formTypes: FormTypeState
+  filingTypes: FilingTypeState
   hearingTypes: HearingTypeState
   taskTypes: TaskTypeState
   courts: CourtsState
@@ -64,6 +67,7 @@ const appReducers = combineReducers({
   spinner,
   statuses,
   refTypes,
+  componentStatuses,
   caseTypes,
   collectionMethods,
   formTypes,
@@ -81,8 +85,9 @@ const appReducers = combineReducers({
 const rootReducer = (state: any, action: any) => {
   if (action.type === USER_LOGOUT) {
     // do not clear ref types when logging out
-    const { statuses, caseTypes, collectionMethods, formTypes, hearingTypes, taskTypes, courts, judges } = state
-    state = { statuses, caseTypes, collectionMethods, formTypes, hearingTypes, taskTypes, courts, judges }
+    const { componentStatuses, caseTypes, collectionMethods, formTypes, hearingTypes, taskTypes, courts, judges } =
+      state
+    state = { componentStatuses, caseTypes, collectionMethods, formTypes, hearingTypes, taskTypes, courts, judges }
   }
   return appReducers(state, action)
 }

@@ -7,7 +7,7 @@ import {
 import { CollectionMethodAction, CollectionMethodState } from '../types/refTypes.data.types'
 
 export const DefaultCollectionMethodState: CollectionMethodState = {
-  collectionMethods: [],
+  data: [],
 }
 
 export default function collectionMethods(
@@ -17,13 +17,13 @@ export default function collectionMethods(
   switch (action.type) {
     case COLLECTION_METHODS_RETRIEVE_SUCCESS:
       return {
-        collectionMethods: action.collectionMethods,
+        data: action.data,
       }
     case COLLECTION_METHOD_CREATE_SUCCESS:
     case COLLECTION_METHOD_UPDATE_SUCCESS:
     case COLLECTION_METHOD_DELETE_SUCCESS:
       return {
-        collectionMethods: [], // so that it will fetch
+        data: [], // so that it will fetch
       }
     default:
       return state

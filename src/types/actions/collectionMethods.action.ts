@@ -24,7 +24,7 @@ export const addCollectionMethod = (name: string, description: string) => {
     dispatch(collectionMethodsRequest(COLLECTION_METHOD_CREATE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.COLLECTION_METHOD_CREATE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.COLLECTION_METHOD_CREATE as string)
       const options: Partial<FetchOptions> = {
         method: 'POST',
         requestBody: {
@@ -55,10 +55,10 @@ export const getCollectionMethods = (isForceFetch: boolean = false) => {
 
     try {
       let collectionMethodResponse: CollectionMethodResponse
-      const collectionMethodsInStore: CollectionMethodSchema[] = getStore().collectionMethods.collectionMethods
+      const collectionMethodsInStore: CollectionMethodSchema[] = getStore().collectionMethods.data
 
       if (isForceFetch || collectionMethodsInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.COLLECTION_METHODS_RETRIEVE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.COLLECTION_METHOD_READ as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
@@ -69,13 +69,7 @@ export const getCollectionMethods = (isForceFetch: boolean = false) => {
             collectionMethodsFailure(COLLECTION_METHODS_RETRIEVE_FAILURE, getErrMsg(collectionMethodResponse.detail)),
           )
         } else {
-          dispatch(
-            collectionMethodsSuccess(
-              COLLECTION_METHODS_RETRIEVE_SUCCESS,
-              '',
-              collectionMethodResponse.collectionMethods,
-            ),
-          )
+          dispatch(collectionMethodsSuccess(COLLECTION_METHODS_RETRIEVE_SUCCESS, '', collectionMethodResponse.data))
         }
       } else {
         dispatch(collectionMethodsSuccess(COLLECTION_METHODS_RETRIEVE_SUCCESS, '', collectionMethodsInStore))
@@ -94,7 +88,7 @@ export const editCollectionMethod = (id: number, name: string, description: stri
     dispatch(collectionMethodsRequest(COLLECTION_METHOD_UPDATE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.COLLECTION_METHOD_UPDATE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.COLLECTION_METHOD_UPDATE as string)
       const options: Partial<FetchOptions> = {
         method: 'PUT',
         pathParams: { collection_method_id: id },
@@ -125,7 +119,7 @@ export const deleteCollectionMethod = (id: number) => {
     dispatch(collectionMethodsRequest(COLLECTION_METHOD_DELETE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.COLLECTION_METHOD_DELETE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.COLLECTION_METHOD_DELETE as string)
       const options: Partial<FetchOptions> = {
         method: 'DELETE',
         pathParams: { collection_method_id: id },

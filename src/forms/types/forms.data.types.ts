@@ -4,7 +4,7 @@ import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
-import { FormTypeSchema } from '../../types'
+import { FilingTypeSchema } from '../../types'
 
 export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
   formTypeId: number
@@ -17,7 +17,7 @@ export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
   rfeSubmitDate?: Dayjs
   decisionDate?: Dayjs
   // orm_mode
-  formType?: FormTypeSchema
+  formType?: FilingTypeSchema
   courtCase?: CourtCaseSchema
   taskCalendars?: TaskCalendarSchema[]
   // history
@@ -45,7 +45,7 @@ export interface HistoryFormSchema extends BaseModelSchema {
   comments?: string
   // orm_mode
   form?: FormSchema
-  formType?: FormTypeSchema
+  formType?: FilingTypeSchema
   courtCase?: CourtCaseSchema
 }
 

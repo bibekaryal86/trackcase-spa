@@ -19,18 +19,18 @@ import {
   BUTTON_UPDATE,
   ID_DEFAULT,
 } from '../../constants'
-import { FormTypeSchema, getFormTypes } from '../../types'
+import { FilingTypeSchema, getFilingType } from '../../types'
 import { addForm, deleteForm, editForm, getForms } from '../actions/forms.action'
 import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
 import { isAreTwoFormsSame } from '../utils/forms.utils'
 
-const mapStateToProps = ({ forms, statuses, formTypes, courtCases }: GlobalState) => {
+const mapStateToProps = ({ forms, statuses, filingTypes, courtCases }: GlobalState) => {
   return {
     isCloseModal: forms.isCloseModal,
     formsList: forms.forms,
     statusList: statuses.statuses,
-    formTypesList: formTypes.formTypes,
+    formTypesList: filingTypes.formTypes,
     courtCasesList: courtCases.courtCases,
     selectedCourtCase: courtCases.selectedCourtCase,
   }
@@ -43,7 +43,7 @@ const mapDispatchToProps = {
   deleteForm: (id: number) => deleteForm(id),
   unmountPage: () => unmountPage(FORMS_UNMOUNT),
   getStatusesList: () => getStatusesList(),
-  getFormTypesList: () => getFormTypes(),
+  getFormTypesList: () => getFilingType(),
   getCourtCasesList: () => getCourtCases(),
   getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId),
 }
@@ -58,7 +58,7 @@ interface FormsProps {
   unmountPage: () => void
   statusList: StatusSchema<string>
   getStatusesList: () => void
-  formTypesList: FormTypeSchema[]
+  formTypesList: FilingTypeSchema[]
   getFormTypesList: () => void
   courtCasesList: CourtCaseSchema[]
   getCourtCasesList: () => void

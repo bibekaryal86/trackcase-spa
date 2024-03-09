@@ -22,7 +22,7 @@ import {
 import {
   CaseTypeSchema,
   CollectionMethodSchema,
-  FormTypeSchema,
+  FilingTypeSchema,
   HearingTypeSchema,
   TaskTypeSchema,
 } from '../types/refTypes.data.types'
@@ -36,7 +36,12 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 interface RefTypesProps {
   refTypeId: 'case_type' | 'collection_method' | 'form_type' | 'hearing_type' | 'task_type'
   refTypeName: 'Case Type' | 'Collection Method' | 'Form Status' | 'Filing Type' | 'Hearing Type' | 'Task Type'
-  refTypesList: CaseTypeSchema[] | CollectionMethodSchema[] | FormTypeSchema[] | HearingTypeSchema[] | TaskTypeSchema[]
+  refTypesList:
+    | CaseTypeSchema[]
+    | CollectionMethodSchema[]
+    | FilingTypeSchema[]
+    | HearingTypeSchema[]
+    | TaskTypeSchema[]
   getRefTypes: () => void
   addRefType: (name: string, description: string) => void
   editRefType: (id: number, name: string, description: string) => void

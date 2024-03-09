@@ -11,7 +11,7 @@ import {
   BUTTON_UPDATE,
   ID_ACTION_BUTTON,
 } from '../../constants'
-import { FormTypeSchema } from '../../types'
+import { FilingTypeSchema } from '../../types'
 import { FormSchema } from '../types/forms.data.types'
 
 interface FormTableProps {
@@ -22,7 +22,7 @@ interface FormTableProps {
   setSelectedFormForReset?: (form: FormSchema) => void
   courtCasesList: CourtCaseSchema[]
   selectedCourtCase?: CourtCaseSchema
-  formTypesList: FormTypeSchema[]
+  formTypesList: FilingTypeSchema[]
 }
 
 const FormTable = (props: FormTableProps): React.ReactElement => {

@@ -7,20 +7,20 @@ import {
 import { TaskTypeAction, TaskTypeState } from '../types/refTypes.data.types'
 
 export const DefaultTaskTypeState: TaskTypeState = {
-  taskTypes: [],
+  data: [],
 }
 
-export default function collectionMethods(state = DefaultTaskTypeState, action: TaskTypeAction): TaskTypeState {
+export default function taskTypes(state = DefaultTaskTypeState, action: TaskTypeAction): TaskTypeState {
   switch (action.type) {
     case TASK_TYPES_RETRIEVE_SUCCESS:
       return {
-        taskTypes: action.taskTypes,
+        data: action.data,
       }
     case TASK_TYPE_CREATE_SUCCESS:
     case TASK_TYPE_UPDATE_SUCCESS:
     case TASK_TYPE_DELETE_SUCCESS:
       return {
-        taskTypes: [], // so that it will fetch
+        data: [], // so that it will fetch
       }
     default:
       return state

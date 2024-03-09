@@ -24,7 +24,7 @@ export const addCaseType = (name: string, description: string) => {
     dispatch(caseTypesRequest(CASE_TYPE_CREATE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.CASE_TYPE_CREATE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.CASE_TYPE_CREATE as string)
       const options: Partial<FetchOptions> = {
         method: 'POST',
         requestBody: {
@@ -55,10 +55,10 @@ export const getCaseTypes = (isForceFetch: boolean = false) => {
 
     try {
       let caseTypeResponse: CaseTypeResponse
-      const caseTypesInStore: CaseTypeSchema[] = getStore().caseTypes.caseTypes
+      const caseTypesInStore: CaseTypeSchema[] = getStore().caseTypes.data
 
       if (isForceFetch || caseTypesInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.CASE_TYPES_RETRIEVE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.CASE_TYPE_READ as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
@@ -67,7 +67,7 @@ export const getCaseTypes = (isForceFetch: boolean = false) => {
         if (caseTypeResponse.detail) {
           dispatch(caseTypesFailure(CASE_TYPES_RETRIEVE_FAILURE, getErrMsg(caseTypeResponse.detail)))
         } else {
-          dispatch(caseTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, '', caseTypeResponse.caseTypes))
+          dispatch(caseTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, '', caseTypeResponse.data))
         }
       } else {
         dispatch(caseTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, '', caseTypesInStore))
@@ -86,7 +86,7 @@ export const editCaseType = (id: number, name: string, description: string) => {
     dispatch(caseTypesRequest(CASE_TYPE_UPDATE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.CASE_TYPE_UPDATE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.CASE_TYPE_UPDATE as string)
       const options: Partial<FetchOptions> = {
         method: 'PUT',
         pathParams: { case_type_id: id },
@@ -117,7 +117,7 @@ export const deleteCaseType = (id: number) => {
     dispatch(caseTypesRequest(CASE_TYPE_DELETE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.CASE_TYPE_DELETE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.CASE_TYPE_DELETE as string)
       const options: Partial<FetchOptions> = {
         method: 'DELETE',
         pathParams: { case_type_id: id },

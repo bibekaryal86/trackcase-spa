@@ -3,26 +3,26 @@ import { connect } from 'react-redux'
 
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
-import { addFormType, deleteFormType, editFormType, getFormTypes } from '../actions/formTypes.action'
-import { FORM_TYPES_UNMOUNT } from '../types/refTypes.action.types'
-import { FormTypeSchema } from '../types/refTypes.data.types'
+import { addFilingType, deleteFilingType, editFilingType, getFilingType } from '../actions/filingTypes.action'
+import { FILING_TYPES_UNMOUNT } from '../types/refTypes.action.types'
+import { FilingTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ formTypes }: GlobalState) => {
+const mapStateToProps = ({ filingTypes }: GlobalState) => {
   return {
-    formTypesList: formTypes.formTypes,
+    formTypesList: filingTypes.formTypes,
   }
 }
 
 const mapDispatchToProps = {
-  getFormTypes: () => getFormTypes(),
-  addFormType: (name: string, description: string) => addFormType(name, description),
-  editFormType: (id: number, name: string, description: string) => editFormType(id, name, description),
-  deleteFormType: (id: number) => deleteFormType(id),
-  unmountPage: () => unmountPage(FORM_TYPES_UNMOUNT),
+  getFormTypes: () => getFilingType(),
+  addFormType: (name: string, description: string) => addFilingType(name, description),
+  editFormType: (id: number, name: string, description: string) => editFilingType(id, name, description),
+  deleteFormType: (id: number) => deleteFilingType(id),
+  unmountPage: () => unmountPage(FILING_TYPES_UNMOUNT),
 }
 
 interface FormTypesProps {
-  formTypesList: FormTypeSchema[]
+  formTypesList: FilingTypeSchema[]
   getFormTypes: () => void
   addFormType: (name: string, description: string) => void
   editFormType: (id: number, name: string, description: string) => void

@@ -1,8 +1,9 @@
 // actions
 import { getCaseTypes } from './actions/caseTypes.action'
 import { getCollectionMethods } from './actions/collectionMethods.action'
-import { getFormTypes } from './actions/formTypes.action'
+import { getFilingType } from './actions/filingTypes.action'
 import { getHearingTypes } from './actions/hearingTypes.action'
+import { getRefTypes } from './actions/refTypes.action'
 import { getTaskTypes } from './actions/taskTypes.action'
 // components
 import CaseTypes from './components/CaseTypes'
@@ -13,7 +14,7 @@ import TaskTypes from './components/TaskTypes'
 // reducers
 import caseTypes from './reducers/caseTypes.reducer'
 import collectionMethods from './reducers/collectionMethods.reducer'
-import formTypes from './reducers/formTypes.reducer'
+import formTypes from './reducers/filingTypes.reducer.ts'
 import hearingTypes from './reducers/hearingTypes.reducer'
 import refTypes from './reducers/refTypes.reducer'
 import taskTypes from './reducers/taskTypes.reducer'
@@ -27,10 +28,14 @@ import {
   COLLECTION_METHODS_RETRIEVE_FAILURE,
   COLLECTION_METHODS_RETRIEVE_REQUEST,
   COLLECTION_METHODS_RETRIEVE_SUCCESS,
-  FORM_TYPES_COMPLETE,
-  FORM_TYPES_RETRIEVE_FAILURE,
-  FORM_TYPES_RETRIEVE_REQUEST,
-  FORM_TYPES_RETRIEVE_SUCCESS,
+  COMPONENT_STATUSES_COMPLETE,
+  COMPONENT_STATUSES_RETRIEVE_FAILURE,
+  COMPONENT_STATUSES_RETRIEVE_REQUEST,
+  COMPONENT_STATUSES_RETRIEVE_SUCCESS,
+  FILING_TYPE_RETRIEVE_REQUEST,
+  FILING_TYPES_COMPLETE,
+  FILING_TYPES_RETRIEVE_FAILURE,
+  FILING_TYPES_RETRIEVE_SUCCESS,
   HEARING_TYPES_COMPLETE,
   HEARING_TYPES_RETRIEVE_FAILURE,
   HEARING_TYPES_RETRIEVE_REQUEST,
@@ -51,9 +56,9 @@ import {
   CollectionMethodState,
   ComponentStatusResponse,
   ComponentStatusSchema,
-  FormTypeResponse,
-  FormTypeSchema,
-  FormTypeState,
+  FilingTypeResponse,
+  FilingTypeSchema,
+  FilingTypeState,
   HearingTypeResponse,
   HearingTypeSchema,
   HearingTypeState,
@@ -63,28 +68,32 @@ import {
   TaskTypeState,
 } from './types/refTypes.data.types'
 
-export { getCaseTypes, getCollectionMethods, getFormTypes, getHearingTypes, getTaskTypes }
+export { getCaseTypes, getCollectionMethods, getFilingType, getHearingTypes, getRefTypes, getTaskTypes }
 export { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes }
 export { caseTypes, collectionMethods, formTypes, hearingTypes, refTypes, taskTypes }
 export {
   CASE_TYPES_RETRIEVE_REQUEST,
   COLLECTION_METHODS_RETRIEVE_REQUEST,
-  FORM_TYPES_RETRIEVE_REQUEST,
+  COMPONENT_STATUSES_RETRIEVE_REQUEST,
+  FILING_TYPE_RETRIEVE_REQUEST,
   HEARING_TYPES_RETRIEVE_REQUEST,
   TASK_TYPES_RETRIEVE_REQUEST,
   CASE_TYPES_RETRIEVE_SUCCESS,
   COLLECTION_METHODS_RETRIEVE_SUCCESS,
-  FORM_TYPES_RETRIEVE_SUCCESS,
+  COMPONENT_STATUSES_RETRIEVE_SUCCESS,
+  FILING_TYPES_RETRIEVE_SUCCESS,
   HEARING_TYPES_RETRIEVE_SUCCESS,
   TASK_TYPES_RETRIEVE_SUCCESS,
   CASE_TYPES_RETRIEVE_FAILURE,
   COLLECTION_METHODS_RETRIEVE_FAILURE,
-  FORM_TYPES_RETRIEVE_FAILURE,
+  COMPONENT_STATUSES_RETRIEVE_FAILURE,
+  FILING_TYPES_RETRIEVE_FAILURE,
   HEARING_TYPES_RETRIEVE_FAILURE,
   TASK_TYPES_RETRIEVE_FAILURE,
   CASE_TYPES_COMPLETE,
   COLLECTION_METHODS_COMPLETE,
-  FORM_TYPES_COMPLETE,
+  COMPONENT_STATUSES_COMPLETE,
+  FILING_TYPES_COMPLETE,
   HEARING_TYPES_COMPLETE,
   TASK_TYPES_COMPLETE,
 }
@@ -98,9 +107,9 @@ export type {
   CollectionMethodAction,
   ComponentStatusResponse,
   ComponentStatusSchema,
-  FormTypeSchema,
-  FormTypeResponse,
-  FormTypeState,
+  FilingTypeSchema,
+  FilingTypeResponse,
+  FilingTypeState,
   HearingTypeSchema,
   HearingTypeResponse,
   HearingTypeState,

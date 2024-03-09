@@ -1,7 +1,13 @@
 import { Dayjs } from 'dayjs'
 import React, { ReactElement } from 'react'
 
-import { CaseTypeSchema, CollectionMethodSchema, FormTypeSchema, HearingTypeSchema, TaskTypeSchema } from '../../types'
+import {
+  CaseTypeSchema,
+  CollectionMethodSchema,
+  FilingTypeSchema,
+  HearingTypeSchema,
+  TaskTypeSchema,
+} from '../../types'
 
 export type TableOrder = 'asc' | 'desc'
 
@@ -182,7 +188,7 @@ export interface AllRefTypesSchema {
   statuses: StatusSchema<string>
   case_types: { caseTypes: CaseTypeSchema[] }
   collection_methods: { collectionMethods: CollectionMethodSchema[] }
-  form_types: { formTypes: FormTypeSchema[] }
+  form_types: { formTypes: FilingTypeSchema[] }
   hearing_types: { hearingTypes: HearingTypeSchema[] }
   task_types: { taskTypes: TaskTypeSchema[] }
 }

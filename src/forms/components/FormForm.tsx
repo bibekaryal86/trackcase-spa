@@ -18,7 +18,7 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { FormTypeSchema } from '../../types'
+import { FilingTypeSchema } from '../../types'
 import { FormSchema } from '../types/forms.data.types'
 import { handleFormDateOnChange, handleFormFormOnChange, isFormFormFieldError } from '../utils/forms.utils'
 
@@ -27,7 +27,7 @@ interface FormFormProps {
   setSelectedForm: (selectedForm: FormSchema) => void
   formStatusList: string[]
   isShowOneForm: boolean
-  formTypesList: FormTypeSchema[]
+  formTypesList: FilingTypeSchema[]
   courtCasesList: CourtCaseSchema[]
   courtCaseId?: string
   statusList: StatusSchema<string>

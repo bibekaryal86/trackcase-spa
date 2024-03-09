@@ -7,20 +7,20 @@ import {
 import { CaseTypeAction, CaseTypeState } from '../types/refTypes.data.types'
 
 export const DefaultCaseTypeState: CaseTypeState = {
-  caseTypes: [],
+  data: [],
 }
 
 export default function caseTypes(state = DefaultCaseTypeState, action: CaseTypeAction): CaseTypeState {
   switch (action.type) {
     case CASE_TYPES_RETRIEVE_SUCCESS:
       return {
-        caseTypes: action.caseTypes,
+        data: action.data,
       }
     case CASE_TYPE_CREATE_SUCCESS:
     case CASE_TYPE_UPDATE_SUCCESS:
     case CASE_TYPE_DELETE_SUCCESS:
       return {
-        caseTypes: [], // so that it will fetch
+        data: [], // so that it will fetch
       }
     default:
       return state

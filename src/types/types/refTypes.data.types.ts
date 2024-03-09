@@ -12,16 +12,16 @@ export interface ComponentStatusSchema extends BaseModelSchema {
 }
 
 export interface ComponentStatusResponse extends ResponseBase {
-  componentStatuses: ComponentStatusSchema[]
+  data: ComponentStatusSchema[]
 }
 
-export interface CaseTypeSchema extends BaseModelSchema, NameDescBaseSchema {
+export interface FilingTypeSchema extends BaseModelSchema, NameDescBaseSchema {
   // orm_mode
-  courtCases?: CourtCaseSchema[]
+  filings?: FormSchema[]
 }
 
-export interface CaseTypeResponse extends ResponseBase {
-  caseTypes: CaseTypeSchema[]
+export interface FilingTypeResponse extends ResponseBase {
+  data: FilingTypeSchema[]
 }
 
 export interface CollectionMethodSchema extends BaseModelSchema, NameDescBaseSchema {
@@ -30,16 +30,7 @@ export interface CollectionMethodSchema extends BaseModelSchema, NameDescBaseSch
 }
 
 export interface CollectionMethodResponse extends ResponseBase {
-  collectionMethods: CollectionMethodSchema[]
-}
-
-export interface FormTypeSchema extends BaseModelSchema, NameDescBaseSchema {
-  // orm_mode
-  forms?: FormSchema[]
-}
-
-export interface FormTypeResponse extends ResponseBase {
-  formTypes: FormTypeSchema[]
+  data: CollectionMethodSchema[]
 }
 
 export interface HearingTypeSchema extends BaseModelSchema, NameDescBaseSchema {
@@ -48,7 +39,7 @@ export interface HearingTypeSchema extends BaseModelSchema, NameDescBaseSchema {
 }
 
 export interface HearingTypeResponse extends ResponseBase {
-  hearingTypes: HearingTypeSchema[]
+  data: HearingTypeSchema[]
 }
 
 export interface TaskTypeSchema extends BaseModelSchema, NameDescBaseSchema {
@@ -57,7 +48,16 @@ export interface TaskTypeSchema extends BaseModelSchema, NameDescBaseSchema {
 }
 
 export interface TaskTypeResponse extends ResponseBase {
-  taskTypes: TaskTypeSchema[]
+  data: TaskTypeSchema[]
+}
+
+export interface CaseTypeSchema extends BaseModelSchema, NameDescBaseSchema {
+  // orm_mode
+  courtCases?: CourtCaseSchema[]
+}
+
+export interface CaseTypeResponse extends ResponseBase {
+  data: CaseTypeSchema[]
 }
 
 // states and actions
@@ -69,32 +69,32 @@ export interface RefTypesAction extends RefTypesState {
   type: string
 }
 
-export interface CaseTypeState {
-  caseTypes: CaseTypeSchema[]
+export interface ComponentStatusState {
+  data: ComponentStatusSchema[]
 }
 
-export interface CaseTypeAction extends CaseTypeState {
+export interface ComponentStatusAction extends ComponentStatusState {
+  type: string
+}
+
+export interface FilingTypeState {
+  data: FilingTypeSchema[]
+}
+
+export interface FormTypeAction extends FilingTypeState {
   type: string
 }
 
 export interface CollectionMethodState {
-  collectionMethods: CollectionMethodSchema[]
+  data: CollectionMethodSchema[]
 }
 
 export interface CollectionMethodAction extends CollectionMethodState {
   type: string
 }
 
-export interface FormTypeState {
-  formTypes: FormTypeSchema[]
-}
-
-export interface FormTypeAction extends FormTypeState {
-  type: string
-}
-
 export interface HearingTypeState {
-  hearingTypes: HearingTypeSchema[]
+  data: HearingTypeSchema[]
 }
 
 export interface HearingTypeAction extends HearingTypeState {
@@ -102,9 +102,30 @@ export interface HearingTypeAction extends HearingTypeState {
 }
 
 export interface TaskTypeState {
-  taskTypes: TaskTypeSchema[]
+  data: TaskTypeSchema[]
 }
 
 export interface TaskTypeAction extends TaskTypeState {
   type: string
+}
+
+export interface CaseTypeState {
+  data: CaseTypeSchema[]
+}
+
+export interface CaseTypeAction extends CaseTypeState {
+  type: string
+}
+
+export interface RefTypesResponseData {
+  componentStatuses: ComponentStatusSchema[]
+  collectionMethods: CollectionMethodSchema[]
+  caseTypes: CaseTypeSchema[]
+  filingTypes: FilingTypeSchema[]
+  hearingTypes: HearingTypeSchema[]
+  taskTypes: TaskTypeSchema[]
+}
+
+export interface RefTypesResponse {
+  data: RefTypesResponseData
 }

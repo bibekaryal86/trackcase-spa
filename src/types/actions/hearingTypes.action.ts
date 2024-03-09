@@ -24,7 +24,7 @@ export const addHearingType = (name: string, description: string) => {
     dispatch(hearingTypesRequest(HEARING_TYPE_CREATE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.HEARING_TYPE_CREATE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.HEARING_TYPE_CREATE as string)
       const options: Partial<FetchOptions> = {
         method: 'POST',
         requestBody: {
@@ -55,10 +55,10 @@ export const getHearingTypes = (isForceFetch: boolean = false) => {
 
     try {
       let hearingTypeResponse: HearingTypeResponse
-      const hearingTypesInStore: HearingTypeSchema[] = getStore().hearingTypes.hearingTypes
+      const hearingTypesInStore: HearingTypeSchema[] = getStore().hearingTypes.data
 
       if (isForceFetch || hearingTypesInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.HEARING_TYPES_RETRIEVE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.HEARING_TYPE_READ as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
@@ -67,7 +67,7 @@ export const getHearingTypes = (isForceFetch: boolean = false) => {
         if (hearingTypeResponse.detail) {
           dispatch(hearingTypesFailure(HEARING_TYPES_RETRIEVE_FAILURE, getErrMsg(hearingTypeResponse.detail)))
         } else {
-          dispatch(hearingTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, '', hearingTypeResponse.hearingTypes))
+          dispatch(hearingTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, '', hearingTypeResponse.data))
         }
       } else {
         dispatch(hearingTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, '', hearingTypesInStore))
@@ -86,7 +86,7 @@ export const editHearingType = (id: number, name: string, description: string) =
     dispatch(hearingTypesRequest(HEARING_TYPE_UPDATE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.HEARING_TYPE_UPDATE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.HEARING_TYPE_UPDATE as string)
       const options: Partial<FetchOptions> = {
         method: 'PUT',
         pathParams: { hearing_type_id: id },
@@ -117,7 +117,7 @@ export const deleteHearingType = (id: number) => {
     dispatch(hearingTypesRequest(HEARING_TYPE_DELETE_REQUEST))
 
     try {
-      const urlPath = getEndpoint(process.env.HEARING_TYPE_DELETE_ENDPOINT as string)
+      const urlPath = getEndpoint(process.env.HEARING_TYPE_DELETE as string)
       const options: Partial<FetchOptions> = {
         method: 'DELETE',
         pathParams: { hearing_type_id: id },
