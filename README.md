@@ -12,8 +12,9 @@
       * Allow hard delete as an option for `superuser` role
       * Show option for `superuser` role to view soft deleted rows
       * MAJOR
-        * Add sync api call
-          * make selected object sync api call
+        * Disable sorting from table headers
+          * Add separate component for sort/filter for tables
+        * Besides ref types, courts and judges do not store items on redux
         * react testing library
           * add complete tests including snapshot testing for at least one module
         * address code duplication
