@@ -1,11 +1,7 @@
 // actions
 import { getRefTypes } from './actions/refTypes.action'
 // components
-import CaseTypes from './components/CaseTypes'
-import CollectionMethods from './components/CollectionMethods'
-import FilingTypes from './components/FilingTypes'
-import HearingTypes from './components/HearingTypes'
-import TaskTypes from './components/TaskTypes'
+import RefTypesNew from './components/RefTypesNew'
 // reducers
 import refTypes from './reducers/refTypes.reducer'
 // action types
@@ -53,7 +49,7 @@ import {
 } from './types/refTypes.data.types'
 
 export { getRefTypes }
-export { CaseTypes, CollectionMethods, FilingTypes, HearingTypes, TaskTypes }
+export { RefTypesNew }
 export { refTypes }
 export {
   CASE_TYPE_RETRIEVE_REQUEST,

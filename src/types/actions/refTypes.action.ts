@@ -190,7 +190,7 @@ export const editRefType = (
   id: number,
   name: string,
   description: string,
-  isActive?: string,
+  isActive?: boolean,
 ) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     dispatch(refTypesDispatch({ type: `${refType}_UPDATE_REQUEST` }))

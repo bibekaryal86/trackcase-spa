@@ -6,6 +6,7 @@ import ChecklistRtlRoundedIcon from '@mui/icons-material/ChecklistRtlRounded'
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import FilePresentRoundedIcon from '@mui/icons-material/FilePresentRounded'
+import FlareIcon from '@mui/icons-material/Flare'
 import GroupsIcon from '@mui/icons-material/Groups'
 import RecentActorsIcon from '@mui/icons-material/RecentActors'
 import TodayIcon from '@mui/icons-material/Today'
@@ -18,11 +19,12 @@ import { Calendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
 import { Collections } from '../../collections'
+import { REF_TYPES_REGISTRY } from '../../constants'
 import { Court, Courts } from '../../courts'
 import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
-import { CaseTypes, CollectionMethods, FilingTypes, HearingTypes, TaskTypes } from '../../types'
+import { RefTypesNew } from '../../types'
 import { UserSignInUp } from '../../users'
 import { RoutesType } from '../types/app.data.types'
 import { isLoggedIn } from '../utils/app.utils'
@@ -160,33 +162,39 @@ export const protectedRoutes: RoutesType[] = [
 
 export const refTypesRoutes: RoutesType[] = [
   {
+    path: '/component_status',
+    display: 'Component Status',
+    element: <RefTypesNew refType={REF_TYPES_REGISTRY.COMPONENT_STATUS} />,
+    icon: <FlareIcon />,
+  },
+  {
     path: '/case_type',
     display: 'Case Types',
-    element: <CaseTypes />,
+    element: <RefTypesNew refType={REF_TYPES_REGISTRY.CASE_TYPE} />,
     icon: <CasesRoundedIcon />,
   },
   {
     path: '/collection_method',
     display: 'Collection Methods',
-    element: <CollectionMethods />,
+    element: <RefTypesNew refType={REF_TYPES_REGISTRY.COLLECTION_METHOD} />,
     icon: <CurrencyBitcoinRounded />,
   },
   {
     path: '/filing_type',
     display: 'Filing Types',
-    element: <FilingTypes />,
+    element: <RefTypesNew refType={REF_TYPES_REGISTRY.FILING_TYPE} />,
     icon: <FilePresentRoundedIcon />,
   },
   {
     path: '/hearing_type',
     display: 'Hearing Types',
-    element: <HearingTypes />,
+    element: <RefTypesNew refType={REF_TYPES_REGISTRY.HEARING_TYPE} />,
     icon: <ChecklistRtlRoundedIcon />,
   },
   {
     path: '/task_type',
     display: 'Task Types',
-    element: <TaskTypes />,
+    element: <RefTypesNew refType={REF_TYPES_REGISTRY.TASK_TYPE} />,
     icon: <ChecklistRoundedIcon />,
   },
 ]
