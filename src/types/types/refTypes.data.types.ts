@@ -60,7 +60,6 @@ export interface CaseTypeResponse extends ResponseBase {
   data: CaseTypeSchema[]
 }
 
-// states and actions
 export interface RefTypesResponseData {
   componentStatuses: ComponentStatusResponse
   collectionMethods: CollectionMethodResponse
@@ -75,15 +74,18 @@ export interface RefTypesResponse {
 }
 
 export interface RefTypeResponse extends ResponseBase {
-  data:
-    | ComponentStatusSchema[]
-    | FilingTypeSchema[]
-    | CollectionMethodSchema[]
-    | CaseTypeSchema[]
-    | HearingTypeSchema[]
-    | TaskTypeSchema[]
+  data: RefTypeSchema[]
 }
 
+export type RefTypeSchema =
+  | CaseTypeSchema
+  | CollectionMethodSchema
+  | ComponentStatusSchema
+  | FilingTypeSchema
+  | HearingTypeSchema
+  | TaskTypeSchema
+
+// states and actions
 export interface RefTypesState {
   isCloseModal: boolean
   componentStatus: ComponentStatusSchema[]
@@ -96,11 +98,5 @@ export interface RefTypesState {
 
 export interface RefTypesAction {
   type: string
-  data:
-    | ComponentStatusSchema[]
-    | FilingTypeSchema[]
-    | CollectionMethodSchema[]
-    | CaseTypeSchema[]
-    | HearingTypeSchema[]
-    | TaskTypeSchema[]
+  data: RefTypeSchema[]
 }

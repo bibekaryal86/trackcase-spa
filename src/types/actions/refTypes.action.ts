@@ -28,16 +28,7 @@ import {
   TASK_TYPE_RETRIEVE_REQUEST,
   TASK_TYPE_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
-import {
-  CaseTypeSchema,
-  CollectionMethodSchema,
-  ComponentStatusSchema,
-  FilingTypeSchema,
-  HearingTypeSchema,
-  RefTypeResponse,
-  RefTypesResponse,
-  TaskTypeSchema,
-} from '../types/refTypes.data.types'
+import { RefTypeResponse, RefTypeSchema, RefTypesResponse } from '../types/refTypes.data.types'
 import { refTypesDispatch, RefTypesReduxStoreKeys } from '../utils/refTypes.utils'
 
 export const getRefTypes = () => {
@@ -130,7 +121,7 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
 
     try {
       const urlPath = getUrlPath(refType, 'CREATE')
-      let requestBody: {}
+      let requestBody
       if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
         requestBody = {
           componentName: name,
@@ -168,13 +159,7 @@ export const getRefType = (refType: RefTypesRegistry) => {
     dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_REQUEST` }))
 
     try {
-      let refTypeList:
-        | CaseTypeSchema[]
-        | CollectionMethodSchema[]
-        | ComponentStatusSchema[]
-        | FilingTypeSchema[]
-        | HearingTypeSchema[]
-        | TaskTypeSchema[] = []
+      let refTypeList: RefTypeSchema[] = []
       const refTypeInStoreName = convertToCamelCase(refType, '_') as keyof RefTypesReduxStoreKeys
 
       if (getStore().refTypes[refTypeInStoreName] && getStore().refTypes[refTypeInStoreName].length === 0) {
@@ -213,7 +198,7 @@ export const editRefType = (
     try {
       const refTypeId = `${refType}_ID`.toLowerCase()
       const urlPath = getUrlPath(refType, 'UPDATE')
-      let requestBody: {}
+      let requestBody
       if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
         requestBody = {
           componentName: name,

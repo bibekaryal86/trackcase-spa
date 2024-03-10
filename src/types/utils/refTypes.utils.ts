@@ -1,11 +1,4 @@
-import {
-  CaseTypeSchema,
-  CollectionMethodSchema,
-  ComponentStatusSchema,
-  FilingTypeSchema,
-  HearingTypeSchema,
-  TaskTypeSchema,
-} from '../types/refTypes.data.types'
+import { RefTypeSchema } from '../types/refTypes.data.types'
 
 export interface RefTypesReduxStoreKeys {
   componentStatus: string
@@ -16,18 +9,7 @@ export interface RefTypesReduxStoreKeys {
   taskType: string
 }
 
-export const refTypesDispatch = ({
-  type = '',
-  error = '',
-  success = '',
-  data = [] as
-    | CaseTypeSchema[]
-    | CollectionMethodSchema[]
-    | ComponentStatusSchema[]
-    | FilingTypeSchema[]
-    | HearingTypeSchema[]
-    | TaskTypeSchema[],
-} = {}) => {
+export const refTypesDispatch = ({ type = '', error = '', success = '', data = [] as RefTypeSchema[] } = {}) => {
   if (error) {
     return {
       type,
