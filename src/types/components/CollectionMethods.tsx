@@ -9,12 +9,12 @@ import {
   editCollectionMethod,
   getCollectionMethods,
 } from '../actions/collectionMethods.action'
-import { COLLECTION_METHODS_UNMOUNT } from '../types/refTypes.action.types'
+import { COLLECTION_METHOD_UNMOUNT } from '../types/refTypes.action.types'
 import { CollectionMethodSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ collectionMethods }: GlobalState) => {
+const mapStateToProps = ({ collectionMethod }: GlobalState) => {
   return {
-    collectionMethodsList: collectionMethods.data,
+    collectionMethodsList: collectionMethod.data,
   }
 }
 
@@ -23,7 +23,7 @@ const mapDispatchToProps = {
   addCollectionMethod: (name: string, description: string) => addCollectionMethod(name, description),
   editCollectionMethod: (id: number, name: string, description: string) => editCollectionMethod(id, name, description),
   deleteCollectionMethod: (id: number) => deleteCollectionMethod(id),
-  unmountPage: () => unmountPage(COLLECTION_METHODS_UNMOUNT),
+  unmountPage: () => unmountPage(COLLECTION_METHOD_UNMOUNT),
 }
 
 interface CollectionMethodsProps {

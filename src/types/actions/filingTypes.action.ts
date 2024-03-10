@@ -3,19 +3,19 @@ import React from 'react'
 import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
 import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
+  FILING_TYPE_COMPLETE,
   FILING_TYPE_CREATE_FAILURE,
   FILING_TYPE_CREATE_REQUEST,
   FILING_TYPE_CREATE_SUCCESS,
   FILING_TYPE_DELETE_FAILURE,
   FILING_TYPE_DELETE_REQUEST,
   FILING_TYPE_DELETE_SUCCESS,
+  FILING_TYPE_RETRIEVE_FAILURE,
   FILING_TYPE_RETRIEVE_REQUEST,
+  FILING_TYPE_RETRIEVE_SUCCESS,
   FILING_TYPE_UPDATE_FAILURE,
   FILING_TYPE_UPDATE_REQUEST,
   FILING_TYPE_UPDATE_SUCCESS,
-  FILING_TYPES_COMPLETE,
-  FILING_TYPES_RETRIEVE_FAILURE,
-  FILING_TYPES_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { FilingTypeResponse, FilingTypeSchema } from '../types/refTypes.data.types'
 
@@ -55,7 +55,7 @@ export const getFilingType = (isForceFetch: boolean = false) => {
 
     try {
       let filingTypeResponse: FilingTypeResponse
-      const filingTypesInStore: FilingTypeSchema[] = getStore().filingTypes.data
+      const filingTypesInStore: FilingTypeSchema[] = getStore().filingType.data
 
       if (isForceFetch || filingTypesInStore.length === 0) {
         const urlPath = getEndpoint(process.env.FILING_TYPE_READ as string)
@@ -65,16 +65,16 @@ export const getFilingType = (isForceFetch: boolean = false) => {
         filingTypeResponse = (await Async.fetch(urlPath, options)) as FilingTypeResponse
 
         if (filingTypeResponse.detail) {
-          dispatch(filingTypesFailure(FILING_TYPES_RETRIEVE_FAILURE, getErrMsg(filingTypeResponse.detail)))
+          dispatch(filingTypesFailure(FILING_TYPE_RETRIEVE_FAILURE, getErrMsg(filingTypeResponse.detail)))
         } else {
-          dispatch(filingTypesSuccess(FILING_TYPES_RETRIEVE_SUCCESS, '', filingTypeResponse.data))
+          dispatch(filingTypesSuccess(FILING_TYPE_RETRIEVE_SUCCESS, '', filingTypeResponse.data))
         }
       } else {
-        dispatch(filingTypesSuccess(FILING_TYPES_RETRIEVE_SUCCESS, '', filingTypesInStore))
+        dispatch(filingTypesSuccess(FILING_TYPE_RETRIEVE_SUCCESS, '', filingTypesInStore))
       }
     } catch (error) {
       console.log('Get FilingTypes Error: ', error)
-      dispatch(filingTypesFailure(FILING_TYPES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(filingTypesFailure(FILING_TYPE_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(filingTypesComplete())
     }
@@ -163,5 +163,5 @@ const filingTypesFailure = (type: string, errMsg: string) => ({
 })
 
 const filingTypesComplete = () => ({
-  type: FILING_TYPES_COMPLETE,
+  type: FILING_TYPE_COMPLETE,
 })

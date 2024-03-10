@@ -3,19 +3,19 @@ import React from 'react'
 import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
 import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
+  TASK_TYPE_COMPLETE,
   TASK_TYPE_CREATE_FAILURE,
   TASK_TYPE_CREATE_REQUEST,
   TASK_TYPE_CREATE_SUCCESS,
   TASK_TYPE_DELETE_FAILURE,
   TASK_TYPE_DELETE_REQUEST,
   TASK_TYPE_DELETE_SUCCESS,
+  TASK_TYPE_RETRIEVE_FAILURE,
+  TASK_TYPE_RETRIEVE_REQUEST,
+  TASK_TYPE_RETRIEVE_SUCCESS,
   TASK_TYPE_UPDATE_FAILURE,
   TASK_TYPE_UPDATE_REQUEST,
   TASK_TYPE_UPDATE_SUCCESS,
-  TASK_TYPES_COMPLETE,
-  TASK_TYPES_RETRIEVE_FAILURE,
-  TASK_TYPES_RETRIEVE_REQUEST,
-  TASK_TYPES_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { TaskTypeResponse, TaskTypeSchema } from '../types/refTypes.data.types'
 
@@ -51,11 +51,11 @@ export const addTaskType = (name: string, description: string) => {
 
 export const getTaskTypes = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(taskTypesRequest(TASK_TYPES_RETRIEVE_REQUEST))
+    dispatch(taskTypesRequest(TASK_TYPE_RETRIEVE_REQUEST))
 
     try {
       let taskTypeResponse: TaskTypeResponse
-      const taskTypesInStore: TaskTypeSchema[] = getStore().taskTypes.data
+      const taskTypesInStore: TaskTypeSchema[] = getStore().taskType.data
 
       if (isForceFetch || taskTypesInStore.length === 0) {
         const urlPath = getEndpoint(process.env.TASK_TYPES_READ as string)
@@ -65,16 +65,16 @@ export const getTaskTypes = (isForceFetch: boolean = false) => {
         taskTypeResponse = (await Async.fetch(urlPath, options)) as TaskTypeResponse
 
         if (taskTypeResponse.detail) {
-          dispatch(taskTypesFailure(TASK_TYPES_RETRIEVE_FAILURE, getErrMsg(taskTypeResponse.detail)))
+          dispatch(taskTypesFailure(TASK_TYPE_RETRIEVE_FAILURE, getErrMsg(taskTypeResponse.detail)))
         } else {
-          dispatch(taskTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, '', taskTypeResponse.data))
+          dispatch(taskTypesSuccess(TASK_TYPE_RETRIEVE_SUCCESS, '', taskTypeResponse.data))
         }
       } else {
-        dispatch(taskTypesSuccess(TASK_TYPES_RETRIEVE_SUCCESS, '', taskTypesInStore))
+        dispatch(taskTypesSuccess(TASK_TYPE_RETRIEVE_SUCCESS, '', taskTypesInStore))
       }
     } catch (error) {
       console.log('Get TaskTypes Error: ', error)
-      dispatch(taskTypesFailure(TASK_TYPES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(taskTypesFailure(TASK_TYPE_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(taskTypesComplete())
     }
@@ -163,5 +163,5 @@ const taskTypesFailure = (type: string, errMsg: string) => ({
 })
 
 const taskTypesComplete = () => ({
-  type: TASK_TYPES_COMPLETE,
+  type: TASK_TYPE_COMPLETE,
 })

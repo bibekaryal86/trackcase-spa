@@ -37,15 +37,15 @@ import {
 } from '../types/calendars.data.types'
 import { isAreTwoCalendarsSame, isHearingCalendar } from '../utils/calendars.utils'
 
-const mapStateToProps = ({ calendars, statuses, hearingTypes, taskTypes, courtCases, forms, clients }: GlobalState) => {
+const mapStateToProps = ({ calendars, statuses, hearingType, taskType, courtCases, forms, clients }: GlobalState) => {
   return {
     isCloseModal: calendars.isCloseModal,
     calendarEventsList: calendars.calendarEvents,
     hearingCalendarsList: calendars.hearingCalendars,
     taskCalendarsList: calendars.taskCalendars,
     statusList: statuses.statuses,
-    hearingTypesList: hearingTypes.hearingTypes,
-    taskTypesList: taskTypes.taskTypes,
+    hearingTypesList: hearingType.hearingTypes,
+    taskTypesList: taskType.taskTypes,
     courtCasesList: courtCases.courtCases,
     formsList: forms.forms,
     clientsList: clients.clients,

@@ -181,3 +181,6 @@ export const convertDateToLocaleString = (date?: Dayjs, isIncludeTime: boolean =
   }
   return ''
 }
+
+export const convertToCamelCase = (input: string, delimiter: string) =>
+  input.toLowerCase().replace(new RegExp(delimiter + '(.?)', 'g'), (_, char) => char.toUpperCase())

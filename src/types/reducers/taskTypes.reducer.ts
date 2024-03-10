@@ -1,8 +1,8 @@
 import {
   TASK_TYPE_CREATE_SUCCESS,
   TASK_TYPE_DELETE_SUCCESS,
+  TASK_TYPE_RETRIEVE_SUCCESS,
   TASK_TYPE_UPDATE_SUCCESS,
-  TASK_TYPES_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { TaskTypeAction, TaskTypeState } from '../types/refTypes.data.types'
 
@@ -12,7 +12,7 @@ export const DefaultTaskTypeState: TaskTypeState = {
 
 export default function taskTypes(state = DefaultTaskTypeState, action: TaskTypeAction): TaskTypeState {
   switch (action.type) {
-    case TASK_TYPES_RETRIEVE_SUCCESS:
+    case TASK_TYPE_RETRIEVE_SUCCESS:
       return {
         data: action.data,
       }

@@ -129,3 +129,13 @@ export interface RefTypesResponseData {
 export interface RefTypesResponse {
   data: RefTypesResponseData
 }
+
+export interface RefTypeResponse {
+  data:
+    | ComponentStatusSchema[]
+    | FilingTypeSchema[]
+    | CollectionMethodSchema[]
+    | CaseTypeSchema[]
+    | HearingTypeSchema[]
+    | TaskTypeSchema[]
+}

@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
 import { addTaskType, deleteTaskType, editTaskType, getTaskTypes } from '../actions/taskTypes.action'
-import { TASK_TYPES_UNMOUNT } from '../types/refTypes.action.types'
+import { TASK_TYPE_UNMOUNT } from '../types/refTypes.action.types'
 import { TaskTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ taskTypes }: GlobalState) => {
+const mapStateToProps = ({ taskType }: GlobalState) => {
   return {
-    taskTypesList: taskTypes.data,
+    taskTypesList: taskType.data,
   }
 }
 
@@ -18,7 +18,7 @@ const mapDispatchToProps = {
   addTaskType: (name: string, description: string) => addTaskType(name, description),
   editTaskType: (id: number, name: string, description: string) => editTaskType(id, name, description),
   deleteTaskType: (id: number) => deleteTaskType(id),
-  unmountPage: () => unmountPage(TASK_TYPES_UNMOUNT),
+  unmountPage: () => unmountPage(TASK_TYPE_UNMOUNT),
 }
 
 interface TaskTypesProps {

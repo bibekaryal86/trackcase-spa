@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
 import { addHearingType, deleteHearingType, editHearingType, getHearingTypes } from '../actions/hearingTypes.action'
-import { HEARING_TYPES_UNMOUNT } from '../types/refTypes.action.types'
+import { HEARING_TYPE_UNMOUNT } from '../types/refTypes.action.types'
 import { HearingTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ hearingTypes }: GlobalState) => {
+const mapStateToProps = ({ hearingType }: GlobalState) => {
   return {
-    hearingTypesList: hearingTypes.data,
+    hearingTypesList: hearingType.data,
   }
 }
 
@@ -18,7 +18,7 @@ const mapDispatchToProps = {
   addHearingType: (name: string, description: string) => addHearingType(name, description),
   editHearingType: (id: number, name: string, description: string) => editHearingType(id, name, description),
   deleteHearingType: (id: number) => deleteHearingType(id),
-  unmountPage: () => unmountPage(HEARING_TYPES_UNMOUNT),
+  unmountPage: () => unmountPage(HEARING_TYPE_UNMOUNT),
 }
 
 interface HearingTypesProps {

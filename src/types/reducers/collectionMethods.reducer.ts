@@ -1,8 +1,8 @@
 import {
   COLLECTION_METHOD_CREATE_SUCCESS,
   COLLECTION_METHOD_DELETE_SUCCESS,
+  COLLECTION_METHOD_RETRIEVE_SUCCESS,
   COLLECTION_METHOD_UPDATE_SUCCESS,
-  COLLECTION_METHODS_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { CollectionMethodAction, CollectionMethodState } from '../types/refTypes.data.types'
 
@@ -15,7 +15,7 @@ export default function collectionMethods(
   action: CollectionMethodAction,
 ): CollectionMethodState {
   switch (action.type) {
-    case COLLECTION_METHODS_RETRIEVE_SUCCESS:
+    case COLLECTION_METHOD_RETRIEVE_SUCCESS:
       return {
         data: action.data,
       }

@@ -3,19 +3,19 @@ import React from 'react'
 import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
 import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
+  CASE_TYPE_COMPLETE,
   CASE_TYPE_CREATE_FAILURE,
   CASE_TYPE_CREATE_REQUEST,
   CASE_TYPE_CREATE_SUCCESS,
   CASE_TYPE_DELETE_FAILURE,
   CASE_TYPE_DELETE_REQUEST,
   CASE_TYPE_DELETE_SUCCESS,
+  CASE_TYPE_RETRIEVE_FAILURE,
+  CASE_TYPE_RETRIEVE_REQUEST,
+  CASE_TYPE_RETRIEVE_SUCCESS,
   CASE_TYPE_UPDATE_FAILURE,
   CASE_TYPE_UPDATE_REQUEST,
   CASE_TYPE_UPDATE_SUCCESS,
-  CASE_TYPES_COMPLETE,
-  CASE_TYPES_RETRIEVE_FAILURE,
-  CASE_TYPES_RETRIEVE_REQUEST,
-  CASE_TYPES_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { CaseTypeResponse, CaseTypeSchema } from '../types/refTypes.data.types'
 
@@ -51,11 +51,11 @@ export const addCaseType = (name: string, description: string) => {
 
 export const getCaseTypes = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(caseTypesRequest(CASE_TYPES_RETRIEVE_REQUEST))
+    dispatch(caseTypesRequest(CASE_TYPE_RETRIEVE_REQUEST))
 
     try {
       let caseTypeResponse: CaseTypeResponse
-      const caseTypesInStore: CaseTypeSchema[] = getStore().caseTypes.data
+      const caseTypesInStore: CaseTypeSchema[] = getStore().caseType.data
 
       if (isForceFetch || caseTypesInStore.length === 0) {
         const urlPath = getEndpoint(process.env.CASE_TYPE_READ as string)
@@ -65,16 +65,16 @@ export const getCaseTypes = (isForceFetch: boolean = false) => {
         caseTypeResponse = (await Async.fetch(urlPath, options)) as CaseTypeResponse
 
         if (caseTypeResponse.detail) {
-          dispatch(caseTypesFailure(CASE_TYPES_RETRIEVE_FAILURE, getErrMsg(caseTypeResponse.detail)))
+          dispatch(caseTypesFailure(CASE_TYPE_RETRIEVE_FAILURE, getErrMsg(caseTypeResponse.detail)))
         } else {
-          dispatch(caseTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, '', caseTypeResponse.data))
+          dispatch(caseTypesSuccess(CASE_TYPE_RETRIEVE_SUCCESS, '', caseTypeResponse.data))
         }
       } else {
-        dispatch(caseTypesSuccess(CASE_TYPES_RETRIEVE_SUCCESS, '', caseTypesInStore))
+        dispatch(caseTypesSuccess(CASE_TYPE_RETRIEVE_SUCCESS, '', caseTypesInStore))
       }
     } catch (error) {
       console.log('Get CaseTypes Error: ', error)
-      dispatch(caseTypesFailure(CASE_TYPES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(caseTypesFailure(CASE_TYPE_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(caseTypesComplete())
     }
@@ -163,5 +163,5 @@ const caseTypesFailure = (type: string, errMsg: string) => ({
 })
 
 const caseTypesComplete = () => ({
-  type: CASE_TYPES_COMPLETE,
+  type: CASE_TYPE_COMPLETE,
 })

@@ -28,13 +28,13 @@ import { COLLECTIONS_UNMOUNT } from '../types/collections.action.types'
 import { CaseCollectionSchema, CashCollectionSchema, DefaultCollectionSchema } from '../types/collections.data.types'
 import { isAreTwoCollectionsSame, isCaseCollection } from '../utils/collections.utils'
 
-const mapStateToProps = ({ collections, statuses, collectionMethods, caseTypes, courtCases, clients }: GlobalState) => {
+const mapStateToProps = ({ collections, statuses, collectionMethod, caseType, courtCases, clients }: GlobalState) => {
   return {
     isCloseModal: collections.isCloseModal,
     caseCollectionsList: collections.caseCollections,
     statusList: statuses.statuses,
-    collectionMethodsList: collectionMethods.collectionMethods,
-    caseTypesList: caseTypes.caseTypes,
+    collectionMethodsList: collectionMethod.collectionMethods,
+    caseTypesList: caseType.caseTypes,
     courtCasesList: courtCases.courtCases,
     clientsList: clients.clients,
     selectedCourtCase: courtCases.selectedCourtCase,

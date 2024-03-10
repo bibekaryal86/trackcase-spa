@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
 import { addCaseType, deleteCaseType, editCaseType, getCaseTypes } from '../actions/caseTypes.action'
-import { CASE_TYPES_UNMOUNT } from '../types/refTypes.action.types'
+import { CASE_TYPE_UNMOUNT } from '../types/refTypes.action.types'
 import { CaseTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ caseTypes }: GlobalState) => {
+const mapStateToProps = ({ caseType }: GlobalState) => {
   return {
-    caseTypesList: caseTypes.data,
+    caseTypesList: caseType.data,
   }
 }
 
@@ -18,7 +18,7 @@ const mapDispatchToProps = {
   addCaseType: (name: string, description: string) => addCaseType(name, description),
   editCaseType: (id: number, name: string, description: string) => editCaseType(id, name, description),
   deleteCaseType: (id: number) => deleteCaseType(id),
-  unmountPage: () => unmountPage(CASE_TYPES_UNMOUNT),
+  unmountPage: () => unmountPage(CASE_TYPE_UNMOUNT),
 }
 
 interface CaseTypesProps {

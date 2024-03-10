@@ -43,12 +43,12 @@ export interface GlobalState {
   spinner: SpinnerState
   statuses: StatusState
   refTypes: RefTypesState
-  componentStatuses: ComponentStatusState
-  caseTypes: CaseTypeState
-  collectionMethods: CollectionMethodState
-  filingTypes: FilingTypeState
-  hearingTypes: HearingTypeState
-  taskTypes: TaskTypeState
+  componentStatus: ComponentStatusState
+  caseType: CaseTypeState
+  collectionMethod: CollectionMethodState
+  filingType: FilingTypeState
+  hearingType: HearingTypeState
+  taskType: TaskTypeState
   courts: CourtsState
   judges: JudgesState
   clients: ClientsState

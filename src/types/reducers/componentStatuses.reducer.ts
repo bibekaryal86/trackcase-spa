@@ -1,8 +1,8 @@
 import {
   COMPONENT_STATUS_CREATE_SUCCESS,
   COMPONENT_STATUS_DELETE_SUCCESS,
+  COMPONENT_STATUS_RETRIEVE_SUCCESS,
   COMPONENT_STATUS_UPDATE_SUCCESS,
-  COMPONENT_STATUSES_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { ComponentStatusAction, ComponentStatusState } from '../types/refTypes.data.types'
 
@@ -15,7 +15,7 @@ export default function componentStatuses(
   action: ComponentStatusAction,
 ): ComponentStatusState {
   switch (action.type) {
-    case COMPONENT_STATUSES_RETRIEVE_SUCCESS:
+    case COMPONENT_STATUS_RETRIEVE_SUCCESS:
       return {
         data: action.data,
       }

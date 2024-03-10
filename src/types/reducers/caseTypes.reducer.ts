@@ -1,8 +1,8 @@
 import {
   CASE_TYPE_CREATE_SUCCESS,
   CASE_TYPE_DELETE_SUCCESS,
+  CASE_TYPE_RETRIEVE_SUCCESS,
   CASE_TYPE_UPDATE_SUCCESS,
-  CASE_TYPES_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { CaseTypeAction, CaseTypeState } from '../types/refTypes.data.types'
 
@@ -12,7 +12,7 @@ export const DefaultCaseTypeState: CaseTypeState = {
 
 export default function caseTypes(state = DefaultCaseTypeState, action: CaseTypeAction): CaseTypeState {
   switch (action.type) {
-    case CASE_TYPES_RETRIEVE_SUCCESS:
+    case CASE_TYPE_RETRIEVE_SUCCESS:
       return {
         data: action.data,
       }

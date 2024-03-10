@@ -1,8 +1,8 @@
 import {
   HEARING_TYPE_CREATE_SUCCESS,
   HEARING_TYPE_DELETE_SUCCESS,
+  HEARING_TYPE_RETRIEVE_SUCCESS,
   HEARING_TYPE_UPDATE_SUCCESS,
-  HEARING_TYPES_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { HearingTypeAction, HearingTypeState } from '../types/refTypes.data.types'
 
@@ -12,7 +12,7 @@ export const DefaultHearingTypeState: HearingTypeState = {
 
 export default function hearingTypes(state = DefaultHearingTypeState, action: HearingTypeAction): HearingTypeState {
   switch (action.type) {
-    case HEARING_TYPES_RETRIEVE_SUCCESS:
+    case HEARING_TYPE_RETRIEVE_SUCCESS:
       return {
         data: action.data,
       }

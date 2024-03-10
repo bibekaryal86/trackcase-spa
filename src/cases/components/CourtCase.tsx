@@ -21,11 +21,11 @@ import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
 import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
 import { isAreTwoCourtCasesSame } from '../utils/courtCases.utils'
 
-const mapStateToProps = ({ courtCases, statuses, caseTypes, clients }: GlobalState) => {
+const mapStateToProps = ({ courtCases, statuses, caseType, clients }: GlobalState) => {
   return {
     selectedCourtCase: courtCases.selectedCourtCase,
     statusList: statuses.statuses,
-    caseTypesList: caseTypes.caseTypes,
+    caseTypesList: caseType.caseTypes,
     clientsList: clients.clients,
   }
 }

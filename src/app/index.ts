@@ -42,6 +42,7 @@ import { useStateData } from './utils/app.hooks'
 import {
   clearMessages,
   convertDateToLocaleString,
+  convertToCamelCase,
   getComments,
   getCurrency,
   getDayjs,
@@ -106,6 +107,7 @@ export { useStateData }
 export {
   clearMessages,
   convertDateToLocaleString,
+  convertToCamelCase,
   getComments,
   getCurrency,
   getDayjs,

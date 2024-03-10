@@ -25,12 +25,12 @@ import { FORMS_UNMOUNT } from '../types/forms.action.types'
 import { DefaultFormSchema, FormSchema } from '../types/forms.data.types'
 import { isAreTwoFormsSame } from '../utils/forms.utils'
 
-const mapStateToProps = ({ forms, statuses, filingTypes, courtCases }: GlobalState) => {
+const mapStateToProps = ({ forms, statuses, filingType, courtCases }: GlobalState) => {
   return {
     isCloseModal: forms.isCloseModal,
     formsList: forms.forms,
     statusList: statuses.statuses,
-    formTypesList: filingTypes.formTypes,
+    formTypesList: filingType.formTypes,
     courtCasesList: courtCases.courtCases,
     selectedCourtCase: courtCases.selectedCourtCase,
   }

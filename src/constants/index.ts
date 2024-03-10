@@ -77,6 +77,17 @@ export const CASE_TABS = Object.freeze({
   COLLECTIONS: 'COLLECTIONS',
 })
 
+// REF TYPES
+export const REF_TYPES_REGISTRY = Object.freeze({
+  COMPONENT_STATUS: 'COMPONENT_STATUS',
+  CASE_TYPE: 'CASE_TYPE',
+  COLLECTION_METHOD: 'COLLECTION_METHOD',
+  FILING_TYPE: 'FILING_TYPE',
+  HEARING_TYPE: 'HEARING_TYPE',
+  TASK_TYPE: 'TASK_TYPE',
+})
+export type RefTypeRegistry = keyof typeof REF_TYPES_REGISTRY
+
 // STATES
 export const STATES_LIST = [
   { name: 'Alabama', abbreviation: 'AL' },

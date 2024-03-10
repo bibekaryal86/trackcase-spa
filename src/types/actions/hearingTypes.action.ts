@@ -3,19 +3,19 @@ import React from 'react'
 import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
 import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
+  HEARING_TYPE_COMPLETE,
   HEARING_TYPE_CREATE_FAILURE,
   HEARING_TYPE_CREATE_REQUEST,
   HEARING_TYPE_CREATE_SUCCESS,
   HEARING_TYPE_DELETE_FAILURE,
   HEARING_TYPE_DELETE_REQUEST,
   HEARING_TYPE_DELETE_SUCCESS,
+  HEARING_TYPE_RETRIEVE_FAILURE,
+  HEARING_TYPE_RETRIEVE_REQUEST,
+  HEARING_TYPE_RETRIEVE_SUCCESS,
   HEARING_TYPE_UPDATE_FAILURE,
   HEARING_TYPE_UPDATE_REQUEST,
   HEARING_TYPE_UPDATE_SUCCESS,
-  HEARING_TYPES_COMPLETE,
-  HEARING_TYPES_RETRIEVE_FAILURE,
-  HEARING_TYPES_RETRIEVE_REQUEST,
-  HEARING_TYPES_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { HearingTypeResponse, HearingTypeSchema } from '../types/refTypes.data.types'
 
@@ -51,11 +51,11 @@ export const addHearingType = (name: string, description: string) => {
 
 export const getHearingTypes = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(hearingTypesRequest(HEARING_TYPES_RETRIEVE_REQUEST))
+    dispatch(hearingTypesRequest(HEARING_TYPE_RETRIEVE_REQUEST))
 
     try {
       let hearingTypeResponse: HearingTypeResponse
-      const hearingTypesInStore: HearingTypeSchema[] = getStore().hearingTypes.data
+      const hearingTypesInStore: HearingTypeSchema[] = getStore().hearingType.data
 
       if (isForceFetch || hearingTypesInStore.length === 0) {
         const urlPath = getEndpoint(process.env.HEARING_TYPE_READ as string)
@@ -65,16 +65,16 @@ export const getHearingTypes = (isForceFetch: boolean = false) => {
         hearingTypeResponse = (await Async.fetch(urlPath, options)) as HearingTypeResponse
 
         if (hearingTypeResponse.detail) {
-          dispatch(hearingTypesFailure(HEARING_TYPES_RETRIEVE_FAILURE, getErrMsg(hearingTypeResponse.detail)))
+          dispatch(hearingTypesFailure(HEARING_TYPE_RETRIEVE_FAILURE, getErrMsg(hearingTypeResponse.detail)))
         } else {
-          dispatch(hearingTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, '', hearingTypeResponse.data))
+          dispatch(hearingTypesSuccess(HEARING_TYPE_RETRIEVE_SUCCESS, '', hearingTypeResponse.data))
         }
       } else {
-        dispatch(hearingTypesSuccess(HEARING_TYPES_RETRIEVE_SUCCESS, '', hearingTypesInStore))
+        dispatch(hearingTypesSuccess(HEARING_TYPE_RETRIEVE_SUCCESS, '', hearingTypesInStore))
       }
     } catch (error) {
       console.log('Get HearingTypes Error: ', error)
-      dispatch(hearingTypesFailure(HEARING_TYPES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(hearingTypesFailure(HEARING_TYPE_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(hearingTypesComplete())
     }
@@ -163,5 +163,5 @@ const hearingTypesFailure = (type: string, errMsg: string) => ({
 })
 
 const hearingTypesComplete = () => ({
-  type: HEARING_TYPES_COMPLETE,
+  type: HEARING_TYPE_COMPLETE,
 })

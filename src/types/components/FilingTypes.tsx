@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
 import { addFilingType, deleteFilingType, editFilingType, getFilingType } from '../actions/filingTypes.action'
-import { FILING_TYPES_UNMOUNT } from '../types/refTypes.action.types'
+import { FILING_TYPE_UNMOUNT } from '../types/refTypes.action.types'
 import { FilingTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ filingTypes }: GlobalState) => {
+const mapStateToProps = ({ filingType }: GlobalState) => {
   return {
-    formTypesList: filingTypes.data,
+    formTypesList: filingType.data,
   }
 }
 
@@ -18,7 +18,7 @@ const mapDispatchToProps = {
   addFormType: (name: string, description: string) => addFilingType(name, description),
   editFormType: (id: number, name: string, description: string) => editFilingType(id, name, description),
   deleteFormType: (id: number) => deleteFilingType(id),
-  unmountPage: () => unmountPage(FILING_TYPES_UNMOUNT),
+  unmountPage: () => unmountPage(FILING_TYPE_UNMOUNT),
 }
 
 interface FormTypesProps {

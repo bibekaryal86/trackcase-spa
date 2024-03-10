@@ -25,14 +25,14 @@ import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
 import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
 import { isAreTwoCourtCasesSame } from '../utils/courtCases.utils'
 
-const mapStateToProps = ({ courtCases, statuses, clients, caseTypes }: GlobalState) => {
+const mapStateToProps = ({ courtCases, statuses, clients, caseType }: GlobalState) => {
   return {
     isCloseModal: courtCases.isCloseModal,
     courtCasesList: courtCases.courtCases,
     statusList: statuses.statuses,
     clientsList: clients.clients,
     selectedClient: clients.selectedClient,
-    caseTypesList: caseTypes.caseTypes,
+    caseTypesList: caseType.caseTypes,
   }
 }
 

@@ -3,19 +3,19 @@ import React from 'react'
 import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
 import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
+  COLLECTION_METHOD_COMPLETE,
   COLLECTION_METHOD_CREATE_FAILURE,
   COLLECTION_METHOD_CREATE_REQUEST,
   COLLECTION_METHOD_CREATE_SUCCESS,
   COLLECTION_METHOD_DELETE_FAILURE,
   COLLECTION_METHOD_DELETE_REQUEST,
   COLLECTION_METHOD_DELETE_SUCCESS,
+  COLLECTION_METHOD_RETRIEVE_FAILURE,
+  COLLECTION_METHOD_RETRIEVE_REQUEST,
+  COLLECTION_METHOD_RETRIEVE_SUCCESS,
   COLLECTION_METHOD_UPDATE_FAILURE,
   COLLECTION_METHOD_UPDATE_REQUEST,
   COLLECTION_METHOD_UPDATE_SUCCESS,
-  COLLECTION_METHODS_COMPLETE,
-  COLLECTION_METHODS_RETRIEVE_FAILURE,
-  COLLECTION_METHODS_RETRIEVE_REQUEST,
-  COLLECTION_METHODS_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
 import { CollectionMethodResponse, CollectionMethodSchema } from '../types/refTypes.data.types'
 
@@ -51,11 +51,11 @@ export const addCollectionMethod = (name: string, description: string) => {
 
 export const getCollectionMethods = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(collectionMethodsRequest(COLLECTION_METHODS_RETRIEVE_REQUEST))
+    dispatch(collectionMethodsRequest(COLLECTION_METHOD_RETRIEVE_REQUEST))
 
     try {
       let collectionMethodResponse: CollectionMethodResponse
-      const collectionMethodsInStore: CollectionMethodSchema[] = getStore().collectionMethods.data
+      const collectionMethodsInStore: CollectionMethodSchema[] = getStore().collectionMethod.data
 
       if (isForceFetch || collectionMethodsInStore.length === 0) {
         const urlPath = getEndpoint(process.env.COLLECTION_METHOD_READ as string)
@@ -66,17 +66,17 @@ export const getCollectionMethods = (isForceFetch: boolean = false) => {
 
         if (collectionMethodResponse.detail) {
           dispatch(
-            collectionMethodsFailure(COLLECTION_METHODS_RETRIEVE_FAILURE, getErrMsg(collectionMethodResponse.detail)),
+            collectionMethodsFailure(COLLECTION_METHOD_RETRIEVE_FAILURE, getErrMsg(collectionMethodResponse.detail)),
           )
         } else {
-          dispatch(collectionMethodsSuccess(COLLECTION_METHODS_RETRIEVE_SUCCESS, '', collectionMethodResponse.data))
+          dispatch(collectionMethodsSuccess(COLLECTION_METHOD_RETRIEVE_SUCCESS, '', collectionMethodResponse.data))
         }
       } else {
-        dispatch(collectionMethodsSuccess(COLLECTION_METHODS_RETRIEVE_SUCCESS, '', collectionMethodsInStore))
+        dispatch(collectionMethodsSuccess(COLLECTION_METHOD_RETRIEVE_SUCCESS, '', collectionMethodsInStore))
       }
     } catch (error) {
       console.log('Get CollectionMethods Error: ', error)
-      dispatch(collectionMethodsFailure(COLLECTION_METHODS_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(collectionMethodsFailure(COLLECTION_METHOD_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(collectionMethodsComplete())
     }
@@ -165,5 +165,5 @@ const collectionMethodsFailure = (type: string, errMsg: string) => ({
 })
 
 const collectionMethodsComplete = () => ({
-  type: COLLECTION_METHODS_COMPLETE,
+  type: COLLECTION_METHOD_COMPLETE,
 })
