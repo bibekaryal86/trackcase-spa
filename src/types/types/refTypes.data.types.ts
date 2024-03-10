@@ -61,54 +61,6 @@ export interface CaseTypeResponse extends ResponseBase {
 }
 
 // states and actions
-export interface ComponentStatusState {
-  data: ComponentStatusSchema[]
-}
-
-export interface ComponentStatusAction extends ComponentStatusState {
-  type: string
-}
-
-export interface FilingTypeState {
-  data: FilingTypeSchema[]
-}
-
-export interface FormTypeAction extends FilingTypeState {
-  type: string
-}
-
-export interface CollectionMethodState {
-  data: CollectionMethodSchema[]
-}
-
-export interface CollectionMethodAction extends CollectionMethodState {
-  type: string
-}
-
-export interface HearingTypeState {
-  data: HearingTypeSchema[]
-}
-
-export interface HearingTypeAction extends HearingTypeState {
-  type: string
-}
-
-export interface TaskTypeState {
-  data: TaskTypeSchema[]
-}
-
-export interface TaskTypeAction extends TaskTypeState {
-  type: string
-}
-
-export interface CaseTypeState {
-  data: CaseTypeSchema[]
-}
-
-export interface CaseTypeAction extends CaseTypeState {
-  type: string
-}
-
 export interface RefTypesResponseData {
   componentStatuses: ComponentStatusResponse
   collectionMethods: CollectionMethodResponse
