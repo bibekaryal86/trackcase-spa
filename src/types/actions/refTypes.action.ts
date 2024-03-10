@@ -257,6 +257,8 @@ export const deleteRefType = (refType: RefTypesRegistry, id: number) => {
   }
 }
 
+// could not make `process.env[variableNameForEndpoint] work when running locally
+// hence this workaround
 const getUrlPath = (refType: RefTypesRegistry, action: string) => {
   if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
     if (action === 'CREATE') {
