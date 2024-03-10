@@ -160,31 +160,31 @@ export const protectedRoutes: RoutesType[] = [
 
 export const refTypesRoutes: RoutesType[] = [
   {
-    path: '/case_types',
+    path: '/case_type',
     display: 'Case Types',
     element: <CaseTypes />,
     icon: <CasesRoundedIcon />,
   },
   {
-    path: '/collection_methods',
+    path: '/collection_method',
     display: 'Collection Methods',
     element: <CollectionMethods />,
     icon: <CurrencyBitcoinRounded />,
   },
   {
-    path: '/filing_types',
+    path: '/filing_type',
     display: 'Filing Types',
     element: <FilingTypes />,
     icon: <FilePresentRoundedIcon />,
   },
   {
-    path: '/hearing_types',
+    path: '/hearing_type',
     display: 'Hearing Types',
     element: <HearingTypes />,
     icon: <ChecklistRtlRoundedIcon />,
   },
   {
-    path: '/task_types',
+    path: '/task_type',
     display: 'Task Types',
     element: <TaskTypes />,
     icon: <ChecklistRoundedIcon />,
