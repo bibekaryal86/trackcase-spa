@@ -130,7 +130,7 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
 
     try {
       const urlPath = getUrlPath(refType, 'CREATE')
-      let requestBody = {}
+      let requestBody: {}
       if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
         requestBody = {
           componentName: name,
@@ -213,7 +213,7 @@ export const editRefType = (
     try {
       const refTypeId = `${refType}_ID`.toLowerCase()
       const urlPath = getUrlPath(refType, 'UPDATE')
-      let requestBody = {}
+      let requestBody: {}
       if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
         requestBody = {
           componentName: name,
