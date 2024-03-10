@@ -10,14 +10,15 @@ import { CaseTypeSchema } from '../types/refTypes.data.types'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    caseTypesList: refTypes.caseType
+    caseTypesList: refTypes.caseType,
   }
 }
 
 const mapDispatchToProps = {
   getCaseTypes: () => getRefType(REF_TYPES_REGISTRY.CASE_TYPE),
   addCaseType: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.CASE_TYPE, name, description),
-  editCaseType: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.CASE_TYPE, id, name, description),
+  editCaseType: (id: number, name: string, description: string) =>
+    editRefType(REF_TYPES_REGISTRY.CASE_TYPE, id, name, description),
   deleteCaseType: (id: number) => deleteRefType(REF_TYPES_REGISTRY.CASE_TYPE, id),
   unmountPage: () => unmountPage(CASE_TYPE_UNMOUNT),
 }

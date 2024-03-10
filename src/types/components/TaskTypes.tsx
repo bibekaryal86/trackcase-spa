@@ -17,7 +17,8 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 const mapDispatchToProps = {
   getTaskTypes: () => getRefType(REF_TYPES_REGISTRY.TASK_TYPE),
   addTaskType: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.TASK_TYPE, name, description),
-  editTaskType: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.TASK_TYPE, id, name, description),
+  editTaskType: (id: number, name: string, description: string) =>
+    editRefType(REF_TYPES_REGISTRY.TASK_TYPE, id, name, description),
   deleteTaskType: (id: number) => deleteRefType(REF_TYPES_REGISTRY.TASK_TYPE, id),
   unmountPage: () => unmountPage(TASK_TYPE_UNMOUNT),
 }

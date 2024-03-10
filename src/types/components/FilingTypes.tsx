@@ -17,7 +17,8 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 const mapDispatchToProps = {
   getFormTypes: () => getRefType(REF_TYPES_REGISTRY.FILING_TYPE),
   addFormType: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.FILING_TYPE, name, description),
-  editFormType: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.FILING_TYPE, id, name, description),
+  editFormType: (id: number, name: string, description: string) =>
+    editRefType(REF_TYPES_REGISTRY.FILING_TYPE, id, name, description),
   deleteFormType: (id: number) => deleteRefType(REF_TYPES_REGISTRY.FILING_TYPE, id),
   unmountPage: () => unmountPage(FILING_TYPE_UNMOUNT),
 }

@@ -17,7 +17,8 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 const mapDispatchToProps = {
   getHearingTypes: () => getRefType(REF_TYPES_REGISTRY.HEARING_TYPE),
   addHearingType: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.HEARING_TYPE, name, description),
-  editHearingType: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.HEARING_TYPE, id, name, description),
+  editHearingType: (id: number, name: string, description: string) =>
+    editRefType(REF_TYPES_REGISTRY.HEARING_TYPE, id, name, description),
   deleteHearingType: (id: number) => deleteRefType(REF_TYPES_REGISTRY.HEARING_TYPE, id),
   unmountPage: () => unmountPage(HEARING_TYPE_UNMOUNT),
 }

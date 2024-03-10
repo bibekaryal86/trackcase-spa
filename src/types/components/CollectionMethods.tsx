@@ -16,8 +16,10 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 
 const mapDispatchToProps = {
   getCollectionMethods: () => getRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD),
-  addCollectionMethod: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD, name, description),
-  editCollectionMethod: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD, id, name, description),
+  addCollectionMethod: (name: string, description: string) =>
+    addRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD, name, description),
+  editCollectionMethod: (id: number, name: string, description: string) =>
+    editRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD, id, name, description),
   deleteCollectionMethod: (id: number) => deleteRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD, id),
   unmountPage: () => unmountPage(COLLECTION_METHOD_UNMOUNT),
 }
