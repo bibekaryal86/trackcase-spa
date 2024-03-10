@@ -202,12 +202,13 @@ export const getRefType = (refType: RefTypesRegistry) => {
   }
 }
 
-export const editRefType = (refType: RefTypesRegistry, name: string, description: string, isActive?: string) => {
+export const editRefType = (refType: RefTypesRegistry, id: number, name: string, description: string, isActive?: string) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     dispatch(refTypesDispatch({ type: `${refType}_UPDATE_REQUEST` }))
 
     try {
       const refTypeEndpoint = `${refType}_UPDATE`
+      const refTypeId = `${refType}_ID`.toLowerCase()
       const urlPath = getEndpoint(process.env[refTypeEndpoint] as string)
       let requestBody = {}
       if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
@@ -224,6 +225,7 @@ export const editRefType = (refType: RefTypesRegistry, name: string, description
       }
       const options: Partial<FetchOptions> = {
         method: 'POST',
+         pathParams: { [refTypeId]: id },
         requestBody: requestBody,
       }
       const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse

@@ -3,21 +3,22 @@ import { connect } from 'react-redux'
 
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
-import { addTaskType, deleteTaskType, editTaskType, getTaskTypes } from '../actions/taskTypes.action'
+import { REF_TYPES_REGISTRY } from '../../constants'
+import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { TASK_TYPE_UNMOUNT } from '../types/refTypes.action.types'
 import { TaskTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ taskType }: GlobalState) => {
+const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    taskTypesList: taskType.data,
+    taskTypesList: refTypes.taskType,
   }
 }
 
 const mapDispatchToProps = {
-  getTaskTypes: () => getTaskTypes(),
-  addTaskType: (name: string, description: string) => addTaskType(name, description),
-  editTaskType: (id: number, name: string, description: string) => editTaskType(id, name, description),
-  deleteTaskType: (id: number) => deleteTaskType(id),
+  getTaskTypes: () => getRefType(REF_TYPES_REGISTRY.TASK_TYPE),
+  addTaskType: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.TASK_TYPE, name, description),
+  editTaskType: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.TASK_TYPE, id, name, description),
+  deleteTaskType: (id: number) => deleteRefType(REF_TYPES_REGISTRY.TASK_TYPE, id),
   unmountPage: () => unmountPage(TASK_TYPE_UNMOUNT),
 }
 

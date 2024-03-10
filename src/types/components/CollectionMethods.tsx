@@ -3,26 +3,22 @@ import { connect } from 'react-redux'
 
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
-import {
-  addCollectionMethod,
-  deleteCollectionMethod,
-  editCollectionMethod,
-  getCollectionMethods,
-} from '../actions/collectionMethods.action'
+import { REF_TYPES_REGISTRY } from '../../constants'
+import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { COLLECTION_METHOD_UNMOUNT } from '../types/refTypes.action.types'
 import { CollectionMethodSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ collectionMethod }: GlobalState) => {
+const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    collectionMethodsList: collectionMethod.data,
+    collectionMethodsList: refTypes.collectionMethod,
   }
 }
 
 const mapDispatchToProps = {
-  getCollectionMethods: () => getCollectionMethods(),
-  addCollectionMethod: (name: string, description: string) => addCollectionMethod(name, description),
-  editCollectionMethod: (id: number, name: string, description: string) => editCollectionMethod(id, name, description),
-  deleteCollectionMethod: (id: number) => deleteCollectionMethod(id),
+  getCollectionMethods: () => getRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD),
+  addCollectionMethod: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD, name, description),
+  editCollectionMethod: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD, id, name, description),
+  deleteCollectionMethod: (id: number) => deleteRefType(REF_TYPES_REGISTRY.COLLECTION_METHOD, id),
   unmountPage: () => unmountPage(COLLECTION_METHOD_UNMOUNT),
 }
 

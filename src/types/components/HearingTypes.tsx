@@ -3,21 +3,22 @@ import { connect } from 'react-redux'
 
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
-import { addHearingType, deleteHearingType, editHearingType, getHearingTypes } from '../actions/hearingTypes.action'
+import { REF_TYPES_REGISTRY } from '../../constants'
+import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { HEARING_TYPE_UNMOUNT } from '../types/refTypes.action.types'
 import { HearingTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ hearingType }: GlobalState) => {
+const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    hearingTypesList: hearingType.data,
+    hearingTypesList: refTypes.hearingType,
   }
 }
 
 const mapDispatchToProps = {
-  getHearingTypes: () => getHearingTypes(),
-  addHearingType: (name: string, description: string) => addHearingType(name, description),
-  editHearingType: (id: number, name: string, description: string) => editHearingType(id, name, description),
-  deleteHearingType: (id: number) => deleteHearingType(id),
+  getHearingTypes: () => getRefType(REF_TYPES_REGISTRY.HEARING_TYPE),
+  addHearingType: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.HEARING_TYPE, name, description),
+  editHearingType: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.HEARING_TYPE, id, name, description),
+  deleteHearingType: (id: number) => deleteRefType(REF_TYPES_REGISTRY.HEARING_TYPE, id),
   unmountPage: () => unmountPage(HEARING_TYPE_UNMOUNT),
 }
 

@@ -3,21 +3,22 @@ import { connect } from 'react-redux'
 
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
-import { addFilingType, deleteFilingType, editFilingType, getFilingType } from '../actions/filingTypes.action'
+import { REF_TYPES_REGISTRY } from '../../constants'
+import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { FILING_TYPE_UNMOUNT } from '../types/refTypes.action.types'
 import { FilingTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ filingType }: GlobalState) => {
+const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    formTypesList: filingType.data,
+    formTypesList: refTypes.filingType,
   }
 }
 
 const mapDispatchToProps = {
-  getFormTypes: () => getFilingType(),
-  addFormType: (name: string, description: string) => addFilingType(name, description),
-  editFormType: (id: number, name: string, description: string) => editFilingType(id, name, description),
-  deleteFormType: (id: number) => deleteFilingType(id),
+  getFormTypes: () => getRefType(REF_TYPES_REGISTRY.FILING_TYPE),
+  addFormType: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.FILING_TYPE, name, description),
+  editFormType: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.FILING_TYPE, id, name, description),
+  deleteFormType: (id: number) => deleteRefType(REF_TYPES_REGISTRY.FILING_TYPE, id),
   unmountPage: () => unmountPage(FILING_TYPE_UNMOUNT),
 }
 

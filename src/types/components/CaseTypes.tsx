@@ -3,21 +3,22 @@ import { connect } from 'react-redux'
 
 import RefTypes from './RefTypes'
 import { GlobalState, unmountPage } from '../../app'
-import { addCaseType, deleteCaseType, editCaseType, getCaseTypes } from '../actions/caseTypes.action'
+import { REF_TYPES_REGISTRY } from '../../constants'
+import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { CASE_TYPE_UNMOUNT } from '../types/refTypes.action.types'
 import { CaseTypeSchema } from '../types/refTypes.data.types'
 
-const mapStateToProps = ({ caseType }: GlobalState) => {
+const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    caseTypesList: caseType.data,
+    caseTypesList: refTypes.caseType
   }
 }
 
 const mapDispatchToProps = {
-  getCaseTypes: () => getCaseTypes(),
-  addCaseType: (name: string, description: string) => addCaseType(name, description),
-  editCaseType: (id: number, name: string, description: string) => editCaseType(id, name, description),
-  deleteCaseType: (id: number) => deleteCaseType(id),
+  getCaseTypes: () => getRefType(REF_TYPES_REGISTRY.CASE_TYPE),
+  addCaseType: (name: string, description: string) => addRefType(REF_TYPES_REGISTRY.CASE_TYPE, name, description),
+  editCaseType: (id: number, name: string, description: string) => editRefType(REF_TYPES_REGISTRY.CASE_TYPE, id, name, description),
+  deleteCaseType: (id: number) => deleteRefType(REF_TYPES_REGISTRY.CASE_TYPE, id),
   unmountPage: () => unmountPage(CASE_TYPE_UNMOUNT),
 }
 
