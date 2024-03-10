@@ -12,22 +12,7 @@ import { collections, CollectionsState } from '../../collections'
 import { courts, CourtsState } from '../../courts'
 import { forms, FormsState } from '../../forms'
 import { judges, JudgesState } from '../../judges'
-import {
-  caseTypes,
-  CaseTypeState,
-  collectionMethods,
-  CollectionMethodState,
-  filingTypes,
-  FilingTypeState,
-  hearingTypes,
-  HearingTypeState,
-  refTypes,
-  RefTypesState,
-  taskTypes,
-  TaskTypeState,
-} from '../../types'
-import componentStatuses from '../../types/reducers/componentStatuses.reducer'
-import { ComponentStatusState } from '../../types/types/refTypes.data.types'
+import { refTypes, RefTypesState } from '../../types'
 import alert from '../reducers/alert.reducer'
 import spinner from '../reducers/spinner.reducer'
 import statuses from '../reducers/statuses.reducer'
@@ -43,12 +28,6 @@ export interface GlobalState {
   spinner: SpinnerState
   statuses: StatusState
   refTypes: RefTypesState
-  componentStatus: ComponentStatusState
-  caseType: CaseTypeState
-  collectionMethod: CollectionMethodState
-  filingType: FilingTypeState
-  hearingType: HearingTypeState
-  taskType: TaskTypeState
   courts: CourtsState
   judges: JudgesState
   clients: ClientsState
@@ -67,12 +46,6 @@ const appReducers = combineReducers({
   spinner,
   statuses,
   refTypes,
-  componentStatuses,
-  caseTypes,
-  collectionMethods,
-  filingTypes,
-  hearingTypes,
-  taskTypes,
   courts,
   judges,
   clients,
@@ -85,9 +58,8 @@ const appReducers = combineReducers({
 const rootReducer = (state: any, action: any) => {
   if (action.type === USER_LOGOUT) {
     // do not clear ref types when logging out
-    const { componentStatuses, caseTypes, collectionMethods, filingTypes, hearingTypes, taskTypes, courts, judges } =
-      state
-    state = { componentStatuses, caseTypes, collectionMethods, filingTypes, hearingTypes, taskTypes, courts, judges }
+    const { refTypes, courts, judges } = state
+    state = { refTypes, courts, judges }
   }
   return appReducers(state, action)
 }

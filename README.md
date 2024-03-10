@@ -28,3 +28,7 @@
           * when adding a new case, allow options to add client, calendar, collections etc
         * unify color palette
           * create a util module for it
+
+
+disable sorting in table
+add separate fields for sort and filter

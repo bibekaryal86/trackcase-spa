@@ -1,10 +1,15 @@
 import React from 'react'
 
-import { Async, convertToCamelCase, FetchOptions, getEndpoint, GlobalDispatch, GlobalState } from '../../app'
-import { RefTypeRegistry, SOMETHING_WENT_WRONG } from '../../constants'
+import { Async, convertToCamelCase, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
+import {
+  CREATE_SUCCESS,
+  REF_TYPES_REGISTRY,
+  RefTypesRegistry,
+  SOMETHING_WENT_WRONG,
+  UPDATE_SUCCESS,
+} from '../../constants'
 import {
   CASE_TYPE_COMPLETE,
-  CASE_TYPE_RETRIEVE_FAILURE,
   CASE_TYPE_RETRIEVE_REQUEST,
   CASE_TYPE_RETRIEVE_SUCCESS,
   COLLECTION_METHOD_COMPLETE,
@@ -23,7 +28,16 @@ import {
   TASK_TYPE_RETRIEVE_REQUEST,
   TASK_TYPE_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
-import { RefTypeResponse, RefTypesResponse } from '../types/refTypes.data.types'
+import {
+  CaseTypeSchema,
+  CollectionMethodSchema,
+  ComponentStatusSchema,
+  FilingTypeSchema,
+  HearingTypeSchema,
+  RefTypeResponse,
+  RefTypesResponse,
+  TaskTypeSchema,
+} from '../types/refTypes.data.types'
 import { refTypesDispatch, RefTypesReduxStoreKeys } from '../utils/refTypes.utils'
 
 export const getRefTypes = () => {
@@ -38,22 +52,22 @@ export const getRefTypes = () => {
     try {
       const requestComponents: string[] = []
 
-      if (getStore().componentStatus.data.length === 0) {
+      if (getStore().refTypes.componentStatus.length === 0) {
         requestComponents.push('component_status')
       }
-      if (getStore().caseType.data.length === 0) {
+      if (getStore().refTypes.caseType.length === 0) {
         requestComponents.push('case_type')
       }
-      if (getStore().collectionMethod.data.length === 0) {
+      if (getStore().refTypes.collectionMethod.length === 0) {
         requestComponents.push('collection_method')
       }
-      if (getStore().filingType.data.length === 0) {
+      if (getStore().refTypes.filingType.length === 0) {
         requestComponents.push('filing_type')
       }
-      if (getStore().hearingType.data.length === 0) {
+      if (getStore().refTypes.hearingType.length === 0) {
         requestComponents.push('hearing_type')
       }
-      if (getStore().taskType.data.length === 0) {
+      if (getStore().refTypes.taskType.length === 0) {
         requestComponents.push('task_type')
       }
 
@@ -79,7 +93,12 @@ export const getRefTypes = () => {
           dispatch(refTypesDispatch({ type: CASE_TYPE_RETRIEVE_SUCCESS, data: allRefTypes.data.caseTypes.data }))
         }
         if (allRefTypes.data?.collectionMethods?.data?.length) {
-          dispatch(refTypesDispatch({ type: COLLECTION_METHOD_RETRIEVE_SUCCESS, data: allRefTypes.data.collectionMethods.data }))
+          dispatch(
+            refTypesDispatch({
+              type: COLLECTION_METHOD_RETRIEVE_SUCCESS,
+              data: allRefTypes.data.collectionMethods.data,
+            }),
+          )
         }
         if (allRefTypes.data?.filingTypes?.data?.length) {
           dispatch(refTypesDispatch({ type: FILING_TYPE_RETRIEVE_SUCCESS, data: allRefTypes.data.filingTypes.data }))
@@ -105,33 +124,146 @@ export const getRefTypes = () => {
   }
 }
 
-export const getRefType = (refType: RefTypeRegistry) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(refTypesDispatch({type: `${refType}_RETRIEVE_REQUEST`}))
+export const addRefType = (refType: RefTypesRegistry, name: string, description: string, isActive?: string) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    dispatch(refTypesDispatch({ type: `${refType}_CREATE_REQUEST` }))
 
     try {
-      let refTypeList = []
+      const refTypeEndpoint = `${refType}_CREATE`
+      const urlPath = getEndpoint(process.env[refTypeEndpoint] as string)
+      let requestBody = {}
+      if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
+        requestBody = {
+          componentName: name,
+          statusName: description,
+          isActive: isActive,
+        }
+      } else {
+        requestBody = {
+          name,
+          description,
+        }
+      }
+      const options: Partial<FetchOptions> = {
+        method: 'POST',
+        requestBody: requestBody,
+      }
+      const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
+
+      if (refTypeResponse.detail) {
+        dispatch(refTypesDispatch({ type: `${refType}_CREATE_FAILURE`, error: getErrMsg(refTypeResponse.detail) }))
+      } else {
+        dispatch(refTypesDispatch({ type: `${refType}_CREATE_SUCCESS`, success: CREATE_SUCCESS(refType) }))
+      }
+    } catch (error) {
+      console.log(`Add ${refType} Error: `, error)
+      dispatch(refTypesDispatch({ type: `${refType}_CREATE_FAILURE`, error: SOMETHING_WENT_WRONG }))
+    } finally {
+      dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
+    }
+  }
+}
+
+export const getRefType = (refType: RefTypesRegistry) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+    dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_REQUEST` }))
+
+    try {
+      let refTypeList:
+        | CaseTypeSchema[]
+        | CollectionMethodSchema[]
+        | ComponentStatusSchema[]
+        | FilingTypeSchema[]
+        | HearingTypeSchema[]
+        | TaskTypeSchema[] = []
       const refTypeInStoreName = convertToCamelCase(refType, '_') as keyof RefTypesReduxStoreKeys
 
-      if (getStore()[refTypeInStoreName] && getStore()[refTypeInStoreName].data.length === 0) {
-        refTypeList = getStore()[refTypeInStoreName].data
+      if (getStore().refTypes[refTypeInStoreName] && getStore().refTypes[refTypeInStoreName].length === 0) {
+        refTypeList = getStore().refTypes[refTypeInStoreName]
       }
 
       if (refTypeList.length < 0) {
-        const endpointName = `${refType}_READ`
-        const urlPath = getEndpoint(process.env[endpointName] as string)
+        const refTypeEndpoint = `${refType}_READ`
+        const urlPath = getEndpoint(process.env[refTypeEndpoint] as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
-
         const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
         refTypeList = refTypeResponse?.data || []
       }
+
+      dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_SUCCESS`, data: refTypeList }))
     } catch (error) {
-      console.log('Get Ref Types Error: ', error)
-      dispatch(refTypesDispatch({ type: CASE_TYPE_RETRIEVE_FAILURE, error: SOMETHING_WENT_WRONG }))
+      console.log(`Get ${refType} Error: `, error)
+      dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_FAILURE`, error: SOMETHING_WENT_WRONG }))
     } finally {
-      dispatch(refTypesDispatch({type: `${refType}_COMPLETE`}))
+      dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
+    }
+  }
+}
+
+export const editRefType = (refType: RefTypesRegistry, name: string, description: string, isActive?: string) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    dispatch(refTypesDispatch({ type: `${refType}_UPDATE_REQUEST` }))
+
+    try {
+      const refTypeEndpoint = `${refType}_UPDATE`
+      const urlPath = getEndpoint(process.env[refTypeEndpoint] as string)
+      let requestBody = {}
+      if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
+        requestBody = {
+          componentName: name,
+          statusName: description,
+          isActive: isActive,
+        }
+      } else {
+        requestBody = {
+          name,
+          description,
+        }
+      }
+      const options: Partial<FetchOptions> = {
+        method: 'POST',
+        requestBody: requestBody,
+      }
+      const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
+      if (refTypeResponse.detail) {
+        dispatch(refTypesDispatch({ type: `${refType}_UPDATE_FAILURE`, error: getErrMsg(refTypeResponse.detail) }))
+      } else {
+        dispatch(refTypesDispatch({ type: `${refType}_UPDATE_SUCCESS`, success: UPDATE_SUCCESS(refType) }))
+      }
+    } catch (error) {
+      console.log(`Edit ${refType} Error: `, error)
+      dispatch(refTypesDispatch({ type: `${refType}_UPDATE_FAILURE`, error: SOMETHING_WENT_WRONG }))
+    } finally {
+      dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
+    }
+  }
+}
+
+export const deleteRefType = (refType: RefTypesRegistry, id: number) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+    dispatch(refTypesDispatch({ type: `${refType}_DELETE_REQUEST` }))
+
+    try {
+      const refTypeEndpoint = `${refType}_DELETE`
+      const refTypeId = `${refType}_ID`.toLowerCase()
+      const urlPath = getEndpoint(process.env[refTypeEndpoint] as string)
+      const options: Partial<FetchOptions> = {
+        method: 'DELETE',
+        pathParams: { [refTypeId]: id },
+      }
+      const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
+      if (refTypeResponse.detail) {
+        dispatch(refTypesDispatch({ type: `${refType}_DELETE_FAILURE`, error: getErrMsg(refTypeResponse.detail) }))
+      } else {
+        dispatch(refTypesDispatch({ type: `${refType}_DELETE_SUCCESS`, success: UPDATE_SUCCESS(refType) }))
+      }
+    } catch (error) {
+      console.log(`Delete ${refType} Error: `, error)
+      dispatch(refTypesDispatch({ type: `${refType}_DELETE_FAILURE`, error: SOMETHING_WENT_WRONG }))
+    } finally {
+      dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
     }
   }
 }

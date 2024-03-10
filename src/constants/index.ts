@@ -86,7 +86,7 @@ export const REF_TYPES_REGISTRY = Object.freeze({
   HEARING_TYPE: 'HEARING_TYPE',
   TASK_TYPE: 'TASK_TYPE',
 })
-export type RefTypeRegistry = keyof typeof REF_TYPES_REGISTRY
+export type RefTypesRegistry = keyof typeof REF_TYPES_REGISTRY
 
 // STATES
 export const STATES_LIST = [

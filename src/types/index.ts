@@ -12,12 +12,7 @@ import FilingTypes from './components/FilingTypes'
 import HearingTypes from './components/HearingTypes'
 import TaskTypes from './components/TaskTypes'
 // reducers
-import caseTypes from './reducers/caseTypes.reducer'
-import collectionMethods from './reducers/collectionMethods.reducer'
-import filingTypes from './reducers/filingTypes.reducer.ts'
-import hearingTypes from './reducers/hearingTypes.reducer'
 import refTypes from './reducers/refTypes.reducer'
-import taskTypes from './reducers/taskTypes.reducer'
 // action types
 import {
   CASE_TYPE_COMPLETE,
@@ -70,7 +65,7 @@ import {
 
 export { getCaseTypes, getCollectionMethods, getFilingType, getHearingTypes, getRefTypes, getTaskTypes }
 export { CaseTypes, CollectionMethods, FilingTypes, HearingTypes, TaskTypes }
-export { caseTypes, collectionMethods, filingTypes, hearingTypes, refTypes, taskTypes }
+export { refTypes }
 export {
   CASE_TYPE_RETRIEVE_REQUEST,
   COLLECTION_METHOD_RETRIEVE_REQUEST,
