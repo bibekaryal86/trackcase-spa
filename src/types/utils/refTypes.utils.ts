@@ -53,7 +53,6 @@ export const refTypesDispatch = ({ type = '', error = '', success = '', data = [
 export const validateFormData = (formData: RefTypeFormData, setFormErrors: (formErrors: RefTypeFormData) => void) => {
   let hasValidationErrors = false
   const formErrorsLocal: RefTypeFormData = DefaultRefTypeFormData
-  console.log(formData)
   if (!getString(formData.nameOrComponentName)) {
     hasValidationErrors = true
     formErrorsLocal.nameOrComponentName = 'Required'

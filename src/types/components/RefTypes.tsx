@@ -133,9 +133,8 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       console.log('Invalid action, formData combination', action, formData)
     }
 
-    if (!refTypeResponse || refTypeResponse.detail) {
-      console.log('Something went wrong')
-    } else {
+    if (refTypeResponse && !refTypeResponse.detail) {
+      isFetchRunDone.current = false
       secondaryButtonCallback()
     }
   }

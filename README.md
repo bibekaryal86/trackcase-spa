@@ -11,6 +11,8 @@
       * All necessary changes after the service changes above
       * Allow hard delete as an option for `superuser` role
       * Show option for `superuser` role to view soft deleted rows
+      * Show option for `superuser` role to hard delete items
+        * currently this is hard coded in component actions (eg: `refTypes.action.ts`)
       * MAJOR
         * Disable sorting from table headers
           * Add separate component for sort/filter for tables

@@ -214,7 +214,7 @@ export const editRefType = (
         }
       }
       const options: Partial<FetchOptions> = {
-        method: 'POST',
+        method: 'PUT',
         pathParams: { [refTypeId]: id },
         requestBody: requestBody,
       }
@@ -244,7 +244,7 @@ export const deleteRefType = (refType: RefTypesRegistry, id: number) => {
       const urlPath = getUrlPath(refType, 'DELETE')
       const options: Partial<FetchOptions> = {
         method: 'DELETE',
-        pathParams: { [refTypeId]: id },
+        pathParams: { [refTypeId]: id, is_hard_delete: true },
       }
       const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
       if (refTypeResponse.detail) {
