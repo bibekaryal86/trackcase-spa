@@ -43,6 +43,7 @@ export const FORCE_LOGOUT = 'forceLogout'
 // ALERT MESSAGES
 export const SOMETHING_WENT_WRONG = 'Something went wrong, please try again...'
 export const INVALID_SIGNIN = 'Invalid input, please try again...'
+export const INVALID_INPUT = 'Required inputs are invalid/empty, please try again...'
 export const INVALID_PASSWORD = 'Passwords do not match, please try again...'
 export const SIGNIN_FIRST = 'Please sign in first...'
 export const INVALID_SESSION = 'Session invalidated due to inactivity/expiry, please sign in again to continue...'

@@ -3,7 +3,7 @@ import { Async, FetchOptions } from '../utils/fetch.utils'
 
 export const testDatabase = () => {
   try {
-    const testDatabaseEndpoint = getEndpoint(process.env.TEST_DB_ENDPOINT as string, false)
+    const testDatabaseEndpoint = getEndpoint(process.env.TEST_DB_ENDPOINT as string)
     const options: Partial<FetchOptions> = {
       method: 'GET',
     }

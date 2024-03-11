@@ -22,7 +22,7 @@ export const getStatusesList = () => {
 
       // checking against court, but could be checked against any other (eg: judge, client, etc)
       if (statusSchemaInStore.court.all.length === 0) {
-        const urlPath = getEndpoint(process.env.STATUSES_ENDPOINT as string, false)
+        const urlPath = getEndpoint(process.env.STATUSES_ENDPOINT as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }

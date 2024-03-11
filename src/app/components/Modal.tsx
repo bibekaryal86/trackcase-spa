@@ -26,7 +26,7 @@ interface ModalProps {
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }
 
-const Modal = (props: ModalProps) => {
+export const Modal = (props: ModalProps) => {
   const maxWidth = props.maxWidth || 'sm'
 
   const handleClose = () => {
@@ -69,4 +69,57 @@ const Modal = (props: ModalProps) => {
   )
 }
 
-export default Modal
+interface ModalProps2 {
+  open: boolean
+  onClose: () => void
+  title: string
+  contentText?: string
+  content?: React.JSX.Element
+  primaryButtonText: string
+  primaryButtonCallback: () => void
+  primaryButtonDisabled?: boolean
+  secondaryButtonText?: string
+  secondaryButtonCallback?: () => void
+  secondaryButtonDisabled?: boolean
+  resetButtonText?: string
+  resetButtonCallback?: () => void
+  resetButtonDisabled?: boolean
+  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+}
+
+export const Modal2 = (props: ModalProps2) => {
+  const maxWidth = props.maxWidth || 'sm'
+
+  return (
+    <div>
+      <Dialog open={props.open} onClose={props.onClose} maxWidth={maxWidth} fullWidth={true}>
+        <DialogTitle>{props.title}</DialogTitle>
+        <DialogContent dividers>
+          {props.contentText && <DialogContentText>{props.contentText}</DialogContentText>}
+          {props.content}
+        </DialogContent>
+        <DialogActions>
+          {props.resetButtonText && (
+            <Button
+              disabled={props.resetButtonDisabled}
+              onClick={() => props.resetButtonCallback && props.resetButtonCallback()}
+            >
+              {props.resetButtonText}
+            </Button>
+          )}
+          {props.secondaryButtonText && (
+            <Button
+              disabled={props.secondaryButtonDisabled}
+              onClick={() => props.secondaryButtonCallback && props.secondaryButtonCallback()}
+            >
+              {props.secondaryButtonText}
+            </Button>
+          )}
+          <Button disabled={props.primaryButtonDisabled} onClick={() => props.primaryButtonCallback()}>
+            {props.primaryButtonText}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  )
+}

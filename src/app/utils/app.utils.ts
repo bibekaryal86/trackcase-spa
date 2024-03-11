@@ -186,6 +186,9 @@ export const convertToCamelCase = (input: string, delimiter: string) =>
   input.toLowerCase().replace(new RegExp(delimiter + '(.?)', 'g'), (_, char) => char.toUpperCase())
 
 export const convertToTitleCase = (input: string, delimiter: string) => {
-  const camelCaseString = convertToCamelCase(input, delimiter)
-  return camelCaseString.replace(/(?:^|\s)\S/g, (char) => char.toUpperCase())
+  return input
+    .replaceAll(delimiter, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 }

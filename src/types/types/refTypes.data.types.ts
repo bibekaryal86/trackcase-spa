@@ -85,6 +85,13 @@ export type RefTypeSchema =
   | HearingTypeSchema
   | TaskTypeSchema
 
+export type RefTypeLessStatusSchema =
+  | CaseTypeSchema
+  | CollectionMethodSchema
+  | FilingTypeSchema
+  | HearingTypeSchema
+  | TaskTypeSchema
+
 // states and actions
 export interface RefTypesState {
   isCloseModal: boolean

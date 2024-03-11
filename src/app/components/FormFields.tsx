@@ -34,6 +34,7 @@ interface FormTextFieldProps {
   value: string | undefined
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   error?: boolean
+  helperText?: string
   sx?: object
   multiline?: boolean
   maxRows?: number
@@ -145,6 +146,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   value,
   onChange,
   error = false,
+  helperText = '',
   sx = {},
   multiline = false,
   maxRows = 4,
@@ -166,6 +168,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       value={value || ''}
       onChange={onChange}
       error={error}
+      helperText={helperText}
       sx={sx}
       type={type}
       InputLabelProps={InputLabelProps}

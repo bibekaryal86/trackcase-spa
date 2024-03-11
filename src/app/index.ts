@@ -12,7 +12,7 @@ import {
   GridFormWrapper,
 } from './components/FormFields'
 import Link from './components/Link'
-import Modal from './components/Modal'
+import { Modal, Modal2 } from './components/Modal'
 import Switch from './components/Switch'
 import Table from './components/Table'
 // action types
@@ -31,14 +31,14 @@ import {
   StatusBaseSchema,
   StatusSchema,
   TableData,
-  TableHeaderData,
+  TableHeader,
   TableOrder,
   TableRowsPerPage,
   UserDetails,
 } from './types/app.data.types'
 // utils
 import { resetAlert, setAlert } from './utils/alerts.utils'
-import { useStateData } from './utils/app.hooks'
+import { useModal } from './utils/app.hooks'
 import {
   clearMessages,
   convertDateToLocaleString,
@@ -81,7 +81,7 @@ export {
   GridFormWrapper,
 }
 export { Link }
-export { Modal }
+export { Modal, Modal2 }
 export { Switch }
 export { Table }
 export type { GlobalDispatch, GlobalState }
@@ -97,14 +97,14 @@ export type {
   StatusBaseSchema,
   StatusSchema,
   TableData,
-  TableHeaderData,
+  TableHeader,
   TableOrder,
   TableRowsPerPage,
   UserDetails,
 }
 export { DefaultErrorDetail }
 export { resetAlert, setAlert }
-export { useStateData }
+export { useModal }
 export {
   clearMessages,
   convertDateToLocaleString,
