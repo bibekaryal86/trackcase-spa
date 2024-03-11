@@ -207,7 +207,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         setFormData(DefaultRefTypeFormData)
       }}
       title={`Add New ${refTypeTitle()}`}
-      contentText="Some Context Text"
       primaryButtonText={BUTTON_TYPES.Add}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.ADD)}
       secondaryButtonText={BUTTON_TYPES.Cancel}
