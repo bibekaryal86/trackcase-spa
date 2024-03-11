@@ -42,7 +42,6 @@ export const FORCE_LOGOUT = 'forceLogout'
 
 // ALERT MESSAGES
 export const SOMETHING_WENT_WRONG = 'Something went wrong, please try again...'
-export const INVALID_SIGNIN = 'Invalid input, please try again...'
 export const INVALID_INPUT = 'Required inputs are invalid/empty, please try again...'
 export const INVALID_PASSWORD = 'Passwords do not match, please try again...'
 export const SIGNIN_FIRST = 'Please sign in first...'
@@ -58,6 +57,35 @@ export const RESET_EXIT_SUCCESS = 'Account reset successful, please sign in to c
 export const CREATE_SUCCESS = (what: string) => `Add ${what} Success!`
 export const UPDATE_SUCCESS = (what: string) => `Edit ${what} Success!`
 export const DELETE_SUCCESS = (what: string) => `Delete ${what} Success!`
+
+// actions
+export const ACTION_TYPES = Object.freeze({
+  ADD: 'ADD',
+  UPDATE: 'UPDATE',
+  DELETE: 'DELETE',
+})
+export type ActionTypes = keyof typeof ACTION_TYPES
+
+// buttons
+export const BUTTON_TYPES = Object.freeze({
+  Add: 'Add',
+  Update: 'Update',
+  Delete: 'Delete',
+  Reset: 'Reset',
+  Cancel: 'Cancel',
+})
+export type ButtonTypes = keyof typeof BUTTON_TYPES
+
+// REF TYPES
+export const REF_TYPES_REGISTRY = Object.freeze({
+  COMPONENT_STATUS: 'COMPONENT_STATUS',
+  CASE_TYPE: 'CASE_TYPE',
+  COLLECTION_METHOD: 'COLLECTION_METHOD',
+  FILING_TYPE: 'FILING_TYPE',
+  HEARING_TYPE: 'HEARING_TYPE',
+  TASK_TYPE: 'TASK_TYPE',
+})
+export type RefTypesRegistry = keyof typeof REF_TYPES_REGISTRY
 
 // CALENDAR TYPES
 export const CALENDAR_OBJECT_TYPES = Object.freeze({
@@ -77,17 +105,6 @@ export const CASE_TABS = Object.freeze({
   CALENDARS: 'CALENDARS',
   COLLECTIONS: 'COLLECTIONS',
 })
-
-// REF TYPES
-export const REF_TYPES_REGISTRY = Object.freeze({
-  COMPONENT_STATUS: 'COMPONENT_STATUS',
-  CASE_TYPE: 'CASE_TYPE',
-  COLLECTION_METHOD: 'COLLECTION_METHOD',
-  FILING_TYPE: 'FILING_TYPE',
-  HEARING_TYPE: 'HEARING_TYPE',
-  TASK_TYPE: 'TASK_TYPE',
-})
-export type RefTypesRegistry = keyof typeof REF_TYPES_REGISTRY
 
 // STATES
 export const STATES_LIST = [

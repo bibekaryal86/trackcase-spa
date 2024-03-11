@@ -11,23 +11,14 @@ import {
   convertToCamelCase,
   convertToTitleCase,
   FormTextField,
+  getNumber,
   GlobalState,
   Modal2,
   Table,
   unmountPage,
   useModal,
 } from '../../app'
-import {
-  ACTION_ADD,
-  ACTION_UPDATE,
-  BUTTON_ADD,
-  BUTTON_CANCEL,
-  BUTTON_DELETE,
-  BUTTON_RESET,
-  BUTTON_UPDATE,
-  REF_TYPES_REGISTRY,
-  RefTypesRegistry,
-} from '../../constants'
+import { ACTION_TYPES, ActionTypes, BUTTON_TYPES, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
 import {
@@ -68,7 +59,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   // prevent infinite fetch if api returns empty
   const isFetchRunDone = useRef(false)
   const { refType, refTypes } = props
-  const { getRefType } = props
+  const { getRefType, addRefType, editRefType, deleteRefType } = props
   const { unmountPage } = props
   const [refTypeList, setRefTypeList] = useState([] as RefTypeSchema[])
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
@@ -130,12 +121,19 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     </>
   )
 
-  const primaryButtonCallback = () => {
+  const primaryButtonCallback = (action: ActionTypes) => {
     const hasFormErrors = validateFormData(formData, setFormErrors)
     if (hasFormErrors) {
+      console.log('Has Form Errors', formErrors)
       return
+    }
+
+    if (getNumber(formData.id) > 0) {
+      action === ACTION_TYPES.DELETE && deleteRefType(refType, formData.id)
+      action === ACTION_TYPES.UPDATE &&
+        editRefType(refType, formData.id, formData.nameOrComponentName, formData.descOrStatusName, formData.isActive)
     } else {
-      console.log('submit things')
+      action === ACTION_TYPES.ADD && addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName)
     }
   }
 
@@ -146,20 +144,18 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     setFormData(DefaultRefTypeFormData)
   }
 
-  const resetButtonCallback = (action: string) => {
-    if (action === ACTION_ADD) {
+  const resetButtonCallback = (action: ActionTypes) => {
+    if (action === ACTION_TYPES.ADD) {
       setFormData(DefaultRefTypeFormData)
-    } else if (action === ACTION_UPDATE) {
+    } else if (action === ACTION_TYPES.UPDATE) {
       setFormData(formDataReset)
-    } else {
-      console.log('Error! Invalid Action: ', action)
     }
   }
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = event.target
 
-    if (["nameOrComponentName", "descOrStatusName"].includes(name)) {
+    if (['nameOrComponentName', 'descOrStatusName'].includes(name)) {
       setFormData({ ...formData, [name]: value })
       setFormErrors({ ...formErrors, [name]: '' })
     } else {
@@ -209,13 +205,13 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       }}
       title={`Add New ${refTypeTitle()}`}
       contentText="Some Context Text"
-      primaryButtonText={BUTTON_ADD}
-      primaryButtonCallback={primaryButtonCallback}
-      secondaryButtonText={BUTTON_CANCEL}
+      primaryButtonText={BUTTON_TYPES.Add}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.ADD)}
+      secondaryButtonText={BUTTON_TYPES.Cancel}
       secondaryButtonCallback={secondaryButtonCallback}
       content={refTypeForm()}
-      resetButtonText={BUTTON_RESET}
-      resetButtonCallback={() => resetButtonCallback(ACTION_ADD)}
+      resetButtonText={BUTTON_TYPES.Reset}
+      resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.ADD)}
     />
   )
 
@@ -228,13 +224,13 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           setFormData(DefaultRefTypeFormData)
         }}
         title={`Update ${refTypeTitle()}`}
-        primaryButtonText={BUTTON_UPDATE}
-        primaryButtonCallback={primaryButtonCallback}
-        secondaryButtonText={BUTTON_CANCEL}
+        primaryButtonText={BUTTON_TYPES.Update}
+        primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE)}
+        secondaryButtonText={BUTTON_TYPES.Cancel}
         secondaryButtonCallback={secondaryButtonCallback}
         content={refTypeForm()}
-        resetButtonText={BUTTON_RESET}
-        resetButtonCallback={() => resetButtonCallback(ACTION_UPDATE)}
+        resetButtonText={BUTTON_TYPES.Reset}
+        resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.UPDATE)}
       />
     )
   }
@@ -248,9 +244,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           setFormData(DefaultRefTypeFormData)
         }}
         title={`Delete ${refTypeTitle()}`}
-        primaryButtonText={BUTTON_DELETE}
-        primaryButtonCallback={primaryButtonCallback}
-        secondaryButtonText={BUTTON_CANCEL}
+        primaryButtonText={BUTTON_TYPES.Delete}
+        primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.DELETE)}
+        secondaryButtonText={BUTTON_TYPES.Cancel}
         secondaryButtonCallback={secondaryButtonCallback}
         contentText={`Are you sure you want to delete ${refTypeTitle()}: ${formData.nameOrComponentName}, ${
           formData.descOrStatusName

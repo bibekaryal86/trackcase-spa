@@ -5,10 +5,10 @@ import { ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constant
 import { ComponentStatusSchema, RefTypeLessStatusSchema, RefTypeSchema } from '../types/refTypes.data.types'
 
 export interface RefTypeFormData {
-  id?: number
-  nameOrComponentName?: string
-  descOrStatusName?: string
-  isActive?: boolean
+  id: number
+  nameOrComponentName: string
+  descOrStatusName: string
+  isActive: boolean
 }
 
 export const DefaultRefTypeFormData: RefTypeFormData = {
@@ -51,7 +51,7 @@ export const refTypesDispatch = ({ type = '', error = '', success = '', data = [
 }
 
 export const validateFormData = (formData: RefTypeFormData, setFormErrors: (formErrors: RefTypeFormData) => void) => {
-  const formErrorsLocal: RefTypeFormData = {}
+  const formErrorsLocal: RefTypeFormData = DefaultRefTypeFormData
   if (!getString(formData.nameOrComponentName)) {
     formErrorsLocal.nameOrComponentName = 'Required'
   }
@@ -103,7 +103,12 @@ export const refTypeTableData = (
         nameOrComponentName: x.componentName,
         descOrStatusName: x.statusName,
         isActive: String(x.isActive).toUpperCase(),
-        actions: actionButtons({ nameOrComponentName: x.componentName, descOrStatusName: x.statusName, isActive: x.isActive }),
+        actions: actionButtons({
+          id: x.id || ID_DEFAULT,
+          nameOrComponentName: x.componentName,
+          descOrStatusName: x.statusName,
+          isActive: x.isActive,
+        }),
       }
     })
   } else {
@@ -112,7 +117,12 @@ export const refTypeTableData = (
       return {
         name: x.name,
         description: x.description,
-        actions: actionButtons({ nameOrComponentName: x.name, descOrStatusName: x.description }),
+        actions: actionButtons({
+          id: x.id || ID_DEFAULT,
+          nameOrComponentName: x.name,
+          descOrStatusName: x.description,
+          isActive: true,
+        }),
       }
     })
   }

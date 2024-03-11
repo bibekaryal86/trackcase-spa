@@ -23,8 +23,8 @@ import {
   ALERT_TYPE_INFO,
   ALERT_TYPE_SUCCESS,
   ALERT_TYPE_WARNING,
+  INVALID_INPUT,
   INVALID_PASSWORD,
-  INVALID_SIGNIN,
   RESET_EXIT_SUCCESS,
   RESET_INIT_FAILURE,
   RESET_INIT_SUCCESS,
@@ -201,7 +201,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
         setAlert(ALERT_TYPE_FAILURE, `Oops! ${SOMETHING_WENT_WRONG}`)
       }
     } else {
-      setAlert(ALERT_TYPE_FAILURE, INVALID_SIGNIN)
+      setAlert(ALERT_TYPE_FAILURE, INVALID_INPUT)
     }
     resetSpinner()
   }

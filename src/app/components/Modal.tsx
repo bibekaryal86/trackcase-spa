@@ -6,6 +6,8 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import React from 'react'
 
+import { ButtonTypes } from '../../constants'
+
 interface ModalProps {
   isOpen: boolean
   setIsOpen?: (value: boolean) => void
@@ -75,13 +77,13 @@ interface ModalProps2 {
   title: string
   contentText?: string
   content?: React.JSX.Element
-  primaryButtonText: string
+  primaryButtonText: ButtonTypes
   primaryButtonCallback: () => void
   primaryButtonDisabled?: boolean
-  secondaryButtonText?: string
+  secondaryButtonText?: ButtonTypes
   secondaryButtonCallback?: () => void
   secondaryButtonDisabled?: boolean
-  resetButtonText?: string
+  resetButtonText?: ButtonTypes
   resetButtonCallback?: () => void
   resetButtonDisabled?: boolean
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
