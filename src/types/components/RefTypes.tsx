@@ -126,7 +126,13 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     if (action === ACTION_TYPES.DELETE && getNumber(formData.id) > 0) {
       refTypeResponse = await deleteRefType(refType, formData.id)(dispatch)
     } else if (action === ACTION_TYPES.UPDATE && getNumber(formData.id) > 0) {
-      refTypeResponse = await editRefType(refType, formData.id, formData.nameOrComponentName, formData.descOrStatusName, formData.isActive)(dispatch)
+      refTypeResponse = await editRefType(
+        refType,
+        formData.id,
+        formData.nameOrComponentName,
+        formData.descOrStatusName,
+        formData.isActive,
+      )(dispatch)
     } else if (action === ACTION_TYPES.ADD) {
       refTypeResponse = await addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName)(dispatch)
     } else {

@@ -149,7 +149,7 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
     } catch (error) {
       console.log(`Add ${refType} Error: `, error)
       dispatch(refTypesDispatch({ type: `${refType}_CREATE_FAILURE`, error: SOMETHING_WENT_WRONG }))
-      return { data: [], detail: {error: SOMETHING_WENT_WRONG}}
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
     } finally {
       dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
     }
@@ -228,7 +228,7 @@ export const editRefType = (
     } catch (error) {
       console.log(`Edit ${refType} Error: `, error)
       dispatch(refTypesDispatch({ type: `${refType}_UPDATE_FAILURE`, error: SOMETHING_WENT_WRONG }))
-      return { data: [], detail: {error: SOMETHING_WENT_WRONG}}
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
     } finally {
       dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
     }
@@ -256,7 +256,7 @@ export const deleteRefType = (refType: RefTypesRegistry, id: number) => {
     } catch (error) {
       console.log(`Delete ${refType} Error: `, error)
       dispatch(refTypesDispatch({ type: `${refType}_DELETE_FAILURE`, error: SOMETHING_WENT_WRONG }))
-      return { data: [], detail: {error: SOMETHING_WENT_WRONG}}
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
     } finally {
       dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
     }
