@@ -16,18 +16,25 @@ import {
   useModal,
 } from '../../app'
 import {
+  ACTION_ADD,
+  ACTION_UPDATE,
   BUTTON_ADD,
   BUTTON_CANCEL,
   BUTTON_DELETE,
   BUTTON_RESET,
   BUTTON_UPDATE,
-  ID_DEFAULT,
   REF_TYPES_REGISTRY,
   RefTypesRegistry,
 } from '../../constants'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
-import { RefTypesReduxStoreKeys, refTypeTableData, refTypeTableHeader } from '../utils/refTypes.utils'
+import {
+  DefaultRefTypeFormData,
+  RefTypesReduxStoreKeys,
+  refTypeTableData,
+  refTypeTableHeader,
+  validateFormData,
+} from '../utils/refTypes.utils'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
@@ -63,21 +70,11 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
   const [refTypeList, setRefTypeList] = useState([] as RefTypeSchema[])
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
-  const [formData, setFormData] = useState({
-    // all fields (status uses componentName and statusName, all others use name and description)
-    id: ID_DEFAULT,
-    nameOrComponentName: '',
-    descOrStatusName: '',
-    isActive: false
-  })
-  const [formErrors, setFormErrors] = useState({
-    // only the required fields
-    nameOrComponentName: '',
-    descOrStatusName: '',
-  })
+  const [formData, setFormData] = useState(DefaultRefTypeFormData)
+  const [formErrors, setFormErrors] = useState(DefaultRefTypeFormData)
 
   const refTypeTitle = useCallback(() => {
-    return convertToTitleCase(refType, "_")
+    return convertToTitleCase(refType, '_')
   }, [refType])
 
   useEffect(() => {
@@ -103,46 +100,34 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     </Typography>
   )
 
-  const isDisabled = (name: string) => ['Due at Hearing', 'MASTER', 'MERIT'].includes(name)
+  // const isDisabled = (name: string) => ['Due at Hearing', 'MASTER', 'MERIT'].includes(name)
   const addButton = () => <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
-  const actionButtons = (name: string) => (
-    <>
-      <Button
-        onClick={() => {
-          updateModalState.toggleModalView()
-        }}
-        disabled={isDisabled(name)}
-      >
-        Update
-      </Button>
-      <Button
-        onClick={() => {
-          deleteModalState.toggleModalView()
-        }}
-        disabled={isDisabled(name)}
-      >
-        Delete
-      </Button>
-    </>
-  )
-  console.log(actionButtons(''))
-
-  const validateForm = () => {
-    let hasFormErrors = false
-    if (!formData.nameOrComponentName) {
-      hasFormErrors = true
-      setFormErrors({ ...formErrors, nameOrComponentName: 'Required' })
-    }
-    if (!formData.descOrStatusName) {
-      hasFormErrors = true
-      setFormErrors({ ...formErrors, descOrStatusName: 'Required' })
-    }
-    return hasFormErrors
-  }
+  // const actionButtons = (name: string) => (
+  //   <>
+  //     <Button
+  //       onClick={() => {
+  //         updateModalState.toggleModalView()
+  //       }}
+  //       disabled={isDisabled(name)}
+  //     >
+  //       Update
+  //     </Button>
+  //     <Button
+  //       onClick={() => {
+  //         deleteModalState.toggleModalView()
+  //       }}
+  //       disabled={isDisabled(name)}
+  //     >
+  //       Delete
+  //     </Button>
+  //   </>
+  // )
 
   const primaryButtonCallback = () => {
-    const hasFormErrors = validateForm()
+    console.log('in primary button callback')
+    const hasFormErrors = validateFormData(formData, setFormErrors)
     if (hasFormErrors) {
+      console.log(hasFormErrors)
       return
     } else {
       console.log('submit things')
@@ -153,12 +138,18 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     console.log('in secondary button callback')
   }
 
-  const resetButtonCallback = () => {
-    console.log('in reset button callback')
+  const resetButtonCallback = (action: string) => {
+    if (action === ACTION_ADD) {
+      setFormData(DefaultRefTypeFormData)
+    } else if (action === ACTION_UPDATE) {
+      console.log('action update')
+    } else {
+      console.log('Error! Invalid Action: ', action)
+    }
   }
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
     setFormData({ ...formData, [name]: value })
     setFormErrors({ ...formErrors, [name]: '' })
   }
@@ -167,23 +158,23 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     const nameOrComponentName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Component Name' : 'Name'
     const descOrStatusName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Status Name' : 'Description'
     return (
-      <Box
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      >
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <FormTextField
-          componentLabel={`${refTypeTitle()}_${nameOrComponentName}`}
+          componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
+          name="nameOrComponentName"
           required
           value={formData.nameOrComponentName}
           onChange={handleFormChange}
-          error={Boolean(formErrors.nameOrComponentName)}
+          error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
           helperText={formErrors.nameOrComponentName}
         />
         <FormTextField
-          componentLabel={`${refTypeTitle()}_${descOrStatusName}`}
+          componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
+          name="descOrStatusName"
           required
           value={formData.descOrStatusName}
           onChange={handleFormChange}
-          error={Boolean(formErrors.descOrStatusName)}
+          error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
           helperText={formErrors.descOrStatusName}
         />
       </Box>
@@ -201,7 +192,7 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
       secondaryButtonCallback={secondaryButtonCallback}
       content={refTypeForm()}
       resetButtonText={BUTTON_RESET}
-      resetButtonCallback={resetButtonCallback}
+      resetButtonCallback={() => resetButtonCallback(ACTION_ADD)}
     />
   )
 
@@ -217,7 +208,7 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
         secondaryButtonCallback={secondaryButtonCallback}
         content={refTypeForm()}
         resetButtonText={BUTTON_RESET}
-        resetButtonCallback={resetButtonCallback}
+        resetButtonCallback={() => resetButtonCallback(ACTION_UPDATE)}
       />
     )
   }

@@ -25,6 +25,7 @@ interface FormWrapperProps {
 
 interface FormTextFieldProps {
   componentLabel: string
+  name?: string
   required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
@@ -137,6 +138,7 @@ const getComponentLabelAndId = (componentLabel: string) => {
 
 export const FormTextField: React.FC<FormTextFieldProps> = ({
   componentLabel,
+  name = '',
   required = true,
   fullWidth = true,
   autoFocus = false,
@@ -180,8 +182,9 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
             }
           : undefined
       }
-      // Conditionally include maxRows only if multiline is true
+      // Conditionally include
       {...(multiline && { maxRows })}
+      {...(name && { name })}
     />
   )
 }
