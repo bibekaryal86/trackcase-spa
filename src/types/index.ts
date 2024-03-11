@@ -1,7 +1,7 @@
 // actions
 import { getRefTypes } from './actions/refTypes.action'
 // components
-import RefTypes from './components/RefTypesNew'
+import RefTypes from './components/RefTypes'
 // reducers
 import refTypes from './reducers/refTypes.reducer'
 // action types
