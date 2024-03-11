@@ -103,7 +103,7 @@ export const refTypeTableData = (
         nameOrComponentName: x.componentName,
         descOrStatusName: x.statusName,
         isActive: String(x.isActive).toUpperCase(),
-        actions: actionButtons({ nameOrComponentName: x.componentName, descOrStatusName: x.statusName }),
+        actions: actionButtons({ nameOrComponentName: x.componentName, descOrStatusName: x.statusName, isActive: x.isActive }),
       }
     })
   } else {

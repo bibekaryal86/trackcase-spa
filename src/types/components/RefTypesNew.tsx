@@ -1,5 +1,7 @@
+import { Checkbox } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -131,7 +133,6 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
   const primaryButtonCallback = () => {
     const hasFormErrors = validateFormData(formData, setFormErrors)
     if (hasFormErrors) {
-      console.log(hasFormErrors)
       return
     } else {
       console.log('submit things')
@@ -156,16 +157,21 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
   }
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setFormData({ ...formData, [name]: value })
-    setFormErrors({ ...formErrors, [name]: '' })
+    const { name, value, checked } = event.target
+
+    if (["nameOrComponentName", "descOrStatusName"].includes(name)) {
+      setFormData({ ...formData, [name]: value })
+      setFormErrors({ ...formErrors, [name]: '' })
+    } else {
+      setFormData({ ...formData, [name]: checked })
+    }
   }
 
   const refTypeForm = () => {
     const nameOrComponentName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Component Name' : 'Name'
     const descOrStatusName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Status Name' : 'Description'
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: -2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
         <FormTextField
           componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
           name="nameOrComponentName"
@@ -184,6 +190,12 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
           error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
           helperText={formErrors.descOrStatusName}
         />
+        {refType === REF_TYPES_REGISTRY.COMPONENT_STATUS && (
+          <FormControlLabel
+            label="Is Active Status"
+            control={<Checkbox name="isActive" checked={formData.isActive} onChange={handleFormChange} />}
+          />
+        )}
       </Box>
     )
   }
@@ -192,9 +204,9 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     <Modal2
       open={addModalState.showModal}
       onClose={() => {
-          addModalState.toggleModalView()
-          setFormData(DefaultRefTypeFormData)
-        }}
+        addModalState.toggleModalView()
+        setFormData(DefaultRefTypeFormData)
+      }}
       title={`Add New ${refTypeTitle()}`}
       contentText="Some Context Text"
       primaryButtonText={BUTTON_ADD}
