@@ -32,6 +32,6 @@
         * unify color palette
           * create a util module for it
 
-
-disable sorting in table
-add separate fields for sort and filter
+USER LOGIN/VALIDATE/RESET working
+REF TYPES MOSTLY WORKING
+NEXT: ADD ACCOUNT PAGE, ROLES, PERMISSIONS, USER-ROLE, ROLE-PERMISSION
