@@ -30,6 +30,7 @@ import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/r
 import { RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
 import {
   DefaultRefTypeFormData,
+  RefTypeFormData,
   RefTypesReduxStoreKeys,
   refTypeTableData,
   refTypeTableHeader,
@@ -71,6 +72,7 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const [formData, setFormData] = useState(DefaultRefTypeFormData)
+  const [formDataReset, setFormDataReset] = useState(DefaultRefTypeFormData)
   const [formErrors, setFormErrors] = useState(DefaultRefTypeFormData)
 
   const refTypeTitle = useCallback(() => {
@@ -100,31 +102,33 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     </Typography>
   )
 
-  // const isDisabled = (name: string) => ['Due at Hearing', 'MASTER', 'MERIT'].includes(name)
+  const isDisabled = (name: string) => ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name)
   const addButton = () => <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
-  // const actionButtons = (name: string) => (
-  //   <>
-  //     <Button
-  //       onClick={() => {
-  //         updateModalState.toggleModalView()
-  //       }}
-  //       disabled={isDisabled(name)}
-  //     >
-  //       Update
-  //     </Button>
-  //     <Button
-  //       onClick={() => {
-  //         deleteModalState.toggleModalView()
-  //       }}
-  //       disabled={isDisabled(name)}
-  //     >
-  //       Delete
-  //     </Button>
-  //   </>
-  // )
+  const actionButtons = (formDataModal: RefTypeFormData) => (
+    <>
+      <Button
+        onClick={() => {
+          updateModalState.toggleModalView()
+          setFormData(formDataModal)
+          setFormDataReset(formDataModal)
+        }}
+        disabled={isDisabled(formDataModal.nameOrComponentName || '')}
+      >
+        Update
+      </Button>
+      <Button
+        onClick={() => {
+          deleteModalState.toggleModalView()
+          setFormData(formDataModal)
+        }}
+        disabled={isDisabled(formDataModal.nameOrComponentName || '')}
+      >
+        Delete
+      </Button>
+    </>
+  )
 
   const primaryButtonCallback = () => {
-    console.log('in primary button callback')
     const hasFormErrors = validateFormData(formData, setFormErrors)
     if (hasFormErrors) {
       console.log(hasFormErrors)
@@ -135,14 +139,17 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
   }
 
   const secondaryButtonCallback = () => {
-    console.log('in secondary button callback')
+    addModalState.showModal && addModalState.toggleModalView()
+    updateModalState.showModal && updateModalState.toggleModalView()
+    deleteModalState.showModal && deleteModalState.toggleModalView()
+    setFormData(DefaultRefTypeFormData)
   }
 
   const resetButtonCallback = (action: string) => {
     if (action === ACTION_ADD) {
       setFormData(DefaultRefTypeFormData)
     } else if (action === ACTION_UPDATE) {
-      console.log('action update')
+      setFormData(formDataReset)
     } else {
       console.log('Error! Invalid Action: ', action)
     }
@@ -158,7 +165,7 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     const nameOrComponentName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Component Name' : 'Name'
     const descOrStatusName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Status Name' : 'Description'
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: -2 }}>
         <FormTextField
           componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
           name="nameOrComponentName"
@@ -184,8 +191,12 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
   const addModal = () => (
     <Modal2
       open={addModalState.showModal}
-      onClose={addModalState.toggleModalView}
+      onClose={() => {
+          addModalState.toggleModalView()
+          setFormData(DefaultRefTypeFormData)
+        }}
       title={`Add New ${refTypeTitle()}`}
+      contentText="Some Context Text"
       primaryButtonText={BUTTON_ADD}
       primaryButtonCallback={primaryButtonCallback}
       secondaryButtonText={BUTTON_CANCEL}
@@ -200,7 +211,10 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     return (
       <Modal2
         open={updateModalState.showModal}
-        onClose={updateModalState.toggleModalView}
+        onClose={() => {
+          updateModalState.toggleModalView()
+          setFormData(DefaultRefTypeFormData)
+        }}
         title={`Update ${refTypeTitle()}`}
         primaryButtonText={BUTTON_UPDATE}
         primaryButtonCallback={primaryButtonCallback}
@@ -217,13 +231,18 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     return (
       <Modal2
         open={deleteModalState.showModal}
-        onClose={deleteModalState.toggleModalView}
+        onClose={() => {
+          deleteModalState.toggleModalView()
+          setFormData(DefaultRefTypeFormData)
+        }}
         title={`Delete ${refTypeTitle()}`}
         primaryButtonText={BUTTON_DELETE}
         primaryButtonCallback={primaryButtonCallback}
         secondaryButtonText={BUTTON_CANCEL}
         secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to delete ${refTypeTitle()}?!?`}
+        contentText={`Are you sure you want to delete ${refTypeTitle()}: ${formData.nameOrComponentName}, ${
+          formData.descOrStatusName
+        }?!?`}
       />
     )
   }
@@ -232,7 +251,7 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
     <Table
       componentName={refTypeTitle()}
       headerData={refTypeTableHeader(refType)}
-      tableData={refTypeTableData(refType, refTypeList)}
+      tableData={refTypeTableData(refType, refTypeList, actionButtons)}
       addModelComponent={addButton()}
     />
   )

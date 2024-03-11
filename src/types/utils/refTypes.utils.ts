@@ -1,3 +1,5 @@
+import React from 'react'
+
 import { getString, TableData, TableHeaderData } from '../../app'
 import { ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
 import { ComponentStatusSchema, RefTypeLessStatusSchema, RefTypeSchema } from '../types/refTypes.data.types'
@@ -89,15 +91,19 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
   return tableHeaderData
 }
 
-export const refTypeTableData = (refType: RefTypesRegistry, refTypeList: RefTypeSchema[]): TableData[] => {
+export const refTypeTableData = (
+  refType: RefTypesRegistry,
+  refTypeList: RefTypeSchema[],
+  actionButtons: (formDataForModal: RefTypeFormData) => React.JSX.Element,
+): TableData[] => {
   if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
     const componentStatusList = refTypeList as ComponentStatusSchema[]
     return Array.from(componentStatusList, (x) => {
       return {
         nameOrComponentName: x.componentName,
         descOrStatusName: x.statusName,
-        isActive: x.isActive,
-        actions: 'Actions',
+        isActive: String(x.isActive).toUpperCase(),
+        actions: actionButtons({ nameOrComponentName: x.componentName, descOrStatusName: x.statusName }),
       }
     })
   } else {
@@ -106,7 +112,7 @@ export const refTypeTableData = (refType: RefTypesRegistry, refTypeList: RefType
       return {
         name: x.name,
         description: x.description,
-        actions: 'Actions',
+        actions: actionButtons({ nameOrComponentName: x.name, descOrStatusName: x.description }),
       }
     })
   }
