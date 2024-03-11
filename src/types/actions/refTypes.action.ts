@@ -116,7 +116,7 @@ export const getRefTypes = () => {
 }
 
 export const addRefType = (refType: RefTypesRegistry, name: string, description: string, isActive?: string) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<RefTypeResponse> => {
     dispatch(refTypesDispatch({ type: `${refType}_CREATE_REQUEST` }))
 
     try {
@@ -145,9 +145,11 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
       } else {
         dispatch(refTypesDispatch({ type: `${refType}_CREATE_SUCCESS`, success: CREATE_SUCCESS(refType) }))
       }
+      return refTypeResponse
     } catch (error) {
       console.log(`Add ${refType} Error: `, error)
       dispatch(refTypesDispatch({ type: `${refType}_CREATE_FAILURE`, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: {error: SOMETHING_WENT_WRONG}}
     } finally {
       dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
     }
@@ -192,7 +194,7 @@ export const editRefType = (
   description: string,
   isActive?: boolean,
 ) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<RefTypeResponse> => {
     dispatch(refTypesDispatch({ type: `${refType}_UPDATE_REQUEST` }))
 
     try {
@@ -222,9 +224,11 @@ export const editRefType = (
       } else {
         dispatch(refTypesDispatch({ type: `${refType}_UPDATE_SUCCESS`, success: UPDATE_SUCCESS(refType) }))
       }
+      return refTypeResponse
     } catch (error) {
       console.log(`Edit ${refType} Error: `, error)
       dispatch(refTypesDispatch({ type: `${refType}_UPDATE_FAILURE`, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: {error: SOMETHING_WENT_WRONG}}
     } finally {
       dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
     }
@@ -232,7 +236,7 @@ export const editRefType = (
 }
 
 export const deleteRefType = (refType: RefTypesRegistry, id: number) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<RefTypeResponse> => {
     dispatch(refTypesDispatch({ type: `${refType}_DELETE_REQUEST` }))
 
     try {
@@ -248,9 +252,11 @@ export const deleteRefType = (refType: RefTypesRegistry, id: number) => {
       } else {
         dispatch(refTypesDispatch({ type: `${refType}_DELETE_SUCCESS`, success: UPDATE_SUCCESS(refType) }))
       }
+      return refTypeResponse
     } catch (error) {
       console.log(`Delete ${refType} Error: `, error)
       dispatch(refTypesDispatch({ type: `${refType}_DELETE_FAILURE`, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: {error: SOMETHING_WENT_WRONG}}
     } finally {
       dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
     }

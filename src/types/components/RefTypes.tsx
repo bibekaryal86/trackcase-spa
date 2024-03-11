@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 
 import {
   convertToCamelCase,
@@ -20,7 +20,7 @@ import {
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, BUTTON_TYPES, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
-import { RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
+import { RefTypeResponse, RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
 import {
   DefaultRefTypeFormData,
   RefTypeFormData,
@@ -38,10 +38,6 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 
 const mapDispatchToProps = {
   getRefType: (refType: RefTypesRegistry) => getRefType(refType),
-  addRefType: (refType: RefTypesRegistry, name: string, description: string) => addRefType(refType, name, description),
-  editRefType: (refType: RefTypesRegistry, id: number, name: string, description: string, isActive?: boolean) =>
-    editRefType(refType, id, name, description, isActive),
-  deleteRefType: (refType: RefTypesRegistry, id: number) => deleteRefType(refType, id),
   unmountPage: (refType: RefTypesRegistry) => unmountPage(`${refType}_UNMOUNT`),
 }
 
@@ -49,9 +45,6 @@ interface RefTypeProps {
   refType: RefTypesRegistry
   refTypes: RefTypesState
   getRefType: (refType: RefTypesRegistry) => void
-  addRefType: (refType: RefTypesRegistry, name: string, description: string) => void
-  editRefType: (refType: RefTypesRegistry, id: number, name: string, description: string, isActive?: boolean) => void
-  deleteRefType: (refType: RefTypesRegistry, id: number) => void
   unmountPage: (refType: RefTypesRegistry) => void
 }
 
@@ -59,7 +52,8 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   // prevent infinite fetch if api returns empty
   const isFetchRunDone = useRef(false)
   const { refType, refTypes } = props
-  const { getRefType, addRefType, editRefType, deleteRefType } = props
+  const dispatch = useDispatch()
+  const { getRefType } = props
   const { unmountPage } = props
   const [refTypeList, setRefTypeList] = useState([] as RefTypeSchema[])
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
@@ -121,19 +115,28 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     </>
   )
 
-  const primaryButtonCallback = (action: ActionTypes) => {
+  const primaryButtonCallback = async (action: ActionTypes) => {
     const hasFormErrors = validateFormData(formData, setFormErrors)
     if (hasFormErrors) {
       console.log('Has Form Errors', formErrors)
       return
     }
 
-    if (getNumber(formData.id) > 0) {
-      action === ACTION_TYPES.DELETE && deleteRefType(refType, formData.id)
-      action === ACTION_TYPES.UPDATE &&
-        editRefType(refType, formData.id, formData.nameOrComponentName, formData.descOrStatusName, formData.isActive)
+    let refTypeResponse: RefTypeResponse = { data: [] }
+    if (action === ACTION_TYPES.DELETE && getNumber(formData.id) > 0) {
+      refTypeResponse = await deleteRefType(refType, formData.id)(dispatch)
+    } else if (action === ACTION_TYPES.UPDATE && getNumber(formData.id) > 0) {
+      refTypeResponse = await editRefType(refType, formData.id, formData.nameOrComponentName, formData.descOrStatusName, formData.isActive)(dispatch)
+    } else if (action === ACTION_TYPES.ADD) {
+      refTypeResponse = await addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName)(dispatch)
     } else {
-      action === ACTION_TYPES.ADD && addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName)
+      console.log('Invalid action, formData combination', action, formData)
+    }
+
+    if (!refTypeResponse || refTypeResponse.detail) {
+      console.log('Something went wrong')
+    } else {
+      secondaryButtonCallback()
     }
   }
 
