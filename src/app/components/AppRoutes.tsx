@@ -24,7 +24,7 @@ import { Court, Courts } from '../../courts'
 import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
-import { RefTypesNew } from '../../types'
+import { RefTypes } from '../../types'
 import { UserSignInUp } from '../../users'
 import { RoutesType } from '../types/app.data.types'
 import { isLoggedIn } from '../utils/app.utils'
@@ -164,37 +164,37 @@ export const refTypesRoutes: RoutesType[] = [
   {
     path: '/component_status',
     display: 'Component Status',
-    element: <RefTypesNew refType={REF_TYPES_REGISTRY.COMPONENT_STATUS} />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.COMPONENT_STATUS} />,
     icon: <FlareIcon />,
   },
   {
     path: '/case_type',
     display: 'Case Types',
-    element: <RefTypesNew refType={REF_TYPES_REGISTRY.CASE_TYPE} />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.CASE_TYPE} />,
     icon: <CasesRoundedIcon />,
   },
   {
     path: '/collection_method',
     display: 'Collection Methods',
-    element: <RefTypesNew refType={REF_TYPES_REGISTRY.COLLECTION_METHOD} />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.COLLECTION_METHOD} />,
     icon: <CurrencyBitcoinRounded />,
   },
   {
     path: '/filing_type',
     display: 'Filing Types',
-    element: <RefTypesNew refType={REF_TYPES_REGISTRY.FILING_TYPE} />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.FILING_TYPE} />,
     icon: <FilePresentRoundedIcon />,
   },
   {
     path: '/hearing_type',
     display: 'Hearing Types',
-    element: <RefTypesNew refType={REF_TYPES_REGISTRY.HEARING_TYPE} />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.HEARING_TYPE} />,
     icon: <ChecklistRtlRoundedIcon />,
   },
   {
     path: '/task_type',
     display: 'Task Types',
-    element: <RefTypesNew refType={REF_TYPES_REGISTRY.TASK_TYPE} />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.TASK_TYPE} />,
     icon: <ChecklistRoundedIcon />,
   },
 ]

@@ -64,7 +64,7 @@ interface RefTypeProps {
   unmountPage: (refType: RefTypesRegistry) => void
 }
 
-const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
+const RefTypes = (props: RefTypeProps): React.ReactElement => {
   // prevent infinite fetch if api returns empty
   const isFetchRunDone = useRef(false)
   const { refType, refTypes } = props
@@ -285,4 +285,4 @@ const RefTypesNew = (props: RefTypeProps): React.ReactElement => {
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RefTypesNew)
+export default connect(mapStateToProps, mapDispatchToProps)(RefTypes)

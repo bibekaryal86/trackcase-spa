@@ -1,7 +1,7 @@
 // actions
 import { getRefTypes } from './actions/refTypes.action'
 // components
-import RefTypesNew from './components/RefTypesNew'
+import RefTypes from './components/RefTypesNew'
 // reducers
 import refTypes from './reducers/refTypes.reducer'
 // action types
@@ -49,7 +49,7 @@ import {
 } from './types/refTypes.data.types'
 
 export { getRefTypes }
-export { RefTypesNew }
+export { RefTypes }
 export { refTypes }
 export {
   CASE_TYPE_RETRIEVE_REQUEST,
