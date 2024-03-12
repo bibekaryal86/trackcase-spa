@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs'
 
 import { getDayjs, getNumber, getNumericOnly } from '../../app'
-import { AMOUNT_DEFAULT, COLLECTION_OBJECT_TYPES } from '../../constants'
+import { AMOUNT_DEFAULT, COLLECTION_TYPES } from '../../constants'
 import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
 
 export const getAmountForDisplay = (value: number) => {
@@ -15,10 +15,10 @@ export const getAmountForDisplay = (value: number) => {
   return undefined
 }
 
-export const isCaseCollection = (type: string) => COLLECTION_OBJECT_TYPES.CASE === type
+export const isCaseCollection = (type: string) => COLLECTION_TYPES.CASE === type
 
 export const validateCollectionType = (collectionType: string): boolean =>
-  collectionType === COLLECTION_OBJECT_TYPES.CASE || collectionType === COLLECTION_OBJECT_TYPES.CASH
+  collectionType === COLLECTION_TYPES.CASE || collectionType === COLLECTION_TYPES.CASH
 
 export const getCashCollections = (caseCollections: CaseCollectionSchema[]) => {
   const cashCollections: CashCollectionSchema[] = []
@@ -38,7 +38,7 @@ export const validateCollection = (collectionType: string, collection: CaseColle
     return 'Invalid Collection Type!!!'
   }
   // case collection
-  if (collectionType === COLLECTION_OBJECT_TYPES.CASE) {
+  if (collectionType === COLLECTION_TYPES.CASE) {
     const caseCollection = collection as CaseCollectionSchema
 
     if (!caseCollection.quoteAmount || getNumber(caseCollection.quoteAmount) <= 0) {

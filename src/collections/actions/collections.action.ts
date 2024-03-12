@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Async, FetchOptions, getCurrency, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
 import {
-  COLLECTION_OBJECT_TYPES,
+  COLLECTION_TYPES,
   CREATE_SUCCESS,
   DELETE_SUCCESS,
   SOMETHING_WENT_WRONG,
@@ -18,7 +18,7 @@ import {
 import { isCaseCollection, validateCollection } from '../utils/collections.utils'
 
 export const addCollection = (collection: CaseCollectionSchema | CashCollectionSchema, collectionType: string) => {
-  const isCaseCollectionRequest = collectionType === COLLECTION_OBJECT_TYPES.CASE
+  const isCaseCollectionRequest = collectionType === COLLECTION_TYPES.CASE
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     const validationErrors = validateCollection(collectionType, collection)
     if (validationErrors) {
@@ -270,12 +270,12 @@ const collectionsSuccess = (
       type: type,
       success: success,
     }
-  } else if (collectionType === COLLECTION_OBJECT_TYPES.CASE) {
+  } else if (collectionType === COLLECTION_TYPES.CASE) {
     return {
       type: type,
       caseCollections: collections,
     }
-  } else if (collectionType === COLLECTION_OBJECT_TYPES.CASH) {
+  } else if (collectionType === COLLECTION_TYPES.CASH) {
     return {
       type: type,
       cashCollections: collections,

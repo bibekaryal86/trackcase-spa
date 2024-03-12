@@ -29,7 +29,7 @@ import {
   ACTION_ADD,
   ACTION_UPDATE,
   BUTTON_CANCEL,
-  CALENDAR_OBJECT_TYPES,
+  CALENDAR_TYPES,
   DATE_FORMAT,
   USE_MEDIA_QUERY_INPUT,
 } from '../../constants'
@@ -202,7 +202,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
 
   const addCalendarModalCallback = (type: string) => {
     setShowAddModal(false)
-    if (type === CALENDAR_OBJECT_TYPES.HEARING) {
+    if (type === CALENDAR_TYPES.HEARING) {
       setSelectedCalendar({ ...DefaultCalendarSchema, hearingDate: selectedDate || dayjs() })
       setSelectedCalendarForReset({ ...DefaultCalendarSchema, hearingDate: selectedDate || dayjs() })
     } else {
@@ -233,10 +233,10 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         isOpen={true}
         setIsOpen={setShowAddModal}
         title={'Add Calendar Event'}
-        primaryButtonText={CALENDAR_OBJECT_TYPES.HEARING.split('_')[0]}
-        primaryButtonCallback={() => addCalendarModalCallback(CALENDAR_OBJECT_TYPES.HEARING)}
-        secondaryButtonText={CALENDAR_OBJECT_TYPES.TASK.split('_')[0]}
-        secondaryButtonCallback={() => addCalendarModalCallback(CALENDAR_OBJECT_TYPES.TASK)}
+        primaryButtonText={CALENDAR_TYPES.HEARING.split('_')[0]}
+        primaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.HEARING)}
+        secondaryButtonText={CALENDAR_TYPES.TASK.split('_')[0]}
+        secondaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.TASK)}
         resetButtonText={BUTTON_CANCEL}
         resetButtonCallback={() => setShowAddModal(false)}
         contentText="Select Calendar Type to Add..."
@@ -301,9 +301,9 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   }
   const getSelectedCalendar = (id: number, type: string) => {
     let calendar: HearingCalendarSchema | TaskCalendarSchema | undefined
-    if (type === CALENDAR_OBJECT_TYPES.HEARING) {
+    if (type === CALENDAR_TYPES.HEARING) {
       calendar = hearingCalendarsList.find((h) => h.id === id)
-    } else if (type === CALENDAR_OBJECT_TYPES.TASK) {
+    } else if (type === CALENDAR_TYPES.TASK) {
       calendar = taskCalendarsList.find((t) => t.id === id)
     }
     return calendar || DefaultCalendarSchema

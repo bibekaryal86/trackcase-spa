@@ -2,7 +2,7 @@ import * as colors from '@mui/material/colors'
 import dayjs, { Dayjs } from 'dayjs'
 
 import { getDayjs, getNumber } from '../../app'
-import { CALENDAR_OBJECT_TYPES, DUE_AT_HEARING_ID } from '../../constants'
+import { CALENDAR_TYPES, DUE_AT_HEARING_ID } from '../../constants'
 import { CalendarTypeId, HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 
 export const getCalendarEventBgColor = (type?: string): string => (type ? CALENDAR_EVENT_BG_COLOR.get(type) || '' : '')
@@ -16,22 +16,22 @@ export const CALENDAR_EVENT_BG_COLOR = new Map([
 
 export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSchema): string | undefined => {
   if ('hearingDate' in calendar || 'hearingTypeId' in calendar) {
-    return CALENDAR_OBJECT_TYPES.HEARING
+    return CALENDAR_TYPES.HEARING
   } else if ('taskDate' in calendar || 'taskTypeId' in calendar) {
-    return CALENDAR_OBJECT_TYPES.TASK
+    return CALENDAR_TYPES.TASK
   }
   return undefined
 }
 
 export const isHearingCalendar = (calendarType?: string, calendarTypeId?: CalendarTypeId) =>
   calendarType
-    ? calendarType === CALENDAR_OBJECT_TYPES.HEARING
+    ? calendarType === CALENDAR_TYPES.HEARING
     : calendarTypeId
-    ? calendarTypeId.type === CALENDAR_OBJECT_TYPES.HEARING
+    ? calendarTypeId.type === CALENDAR_TYPES.HEARING
     : false
 
 export const validateCalendarType = (calendarType: string): boolean =>
-  calendarType === CALENDAR_OBJECT_TYPES.HEARING || calendarType === CALENDAR_OBJECT_TYPES.TASK
+  calendarType === CALENDAR_TYPES.HEARING || calendarType === CALENDAR_TYPES.TASK
 
 export const validateCalendar = (
   calendarType: string,
@@ -131,7 +131,7 @@ export const isAreTwoCalendarsSame = (
   two: HearingCalendarSchema | TaskCalendarSchema,
   calendarType: string,
 ) =>
-  calendarType === CALENDAR_OBJECT_TYPES.HEARING
+  calendarType === CALENDAR_TYPES.HEARING
     ? isAreTwoHearingCalendarsSame(one as HearingCalendarSchema, two as HearingCalendarSchema)
     : isAreTwoTaskCalendarsSame(one as TaskCalendarSchema, two as TaskCalendarSchema)
 

@@ -1,13 +1,7 @@
 import React from 'react'
 
 import { Async, FetchOptions, getEndpoint, getErrMsg, getNumber, GlobalDispatch, GlobalState } from '../../app'
-import {
-  CALENDAR_OBJECT_TYPES,
-  CREATE_SUCCESS,
-  DELETE_SUCCESS,
-  SOMETHING_WENT_WRONG,
-  UPDATE_SUCCESS,
-} from '../../constants'
+import { CALENDAR_TYPES, CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
   CALENDARS_COMPLETE,
   CALENDARS_RETRIEVE_FAILURE,
@@ -30,10 +24,10 @@ export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema
   const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     let hearingCalendar = undefined
-    if (calendarType === CALENDAR_OBJECT_TYPES.TASK) {
+    if (calendarType === CALENDAR_TYPES.TASK) {
       hearingCalendar = getSelectedCalendarFromStore(
         getStore(),
-        CALENDAR_OBJECT_TYPES.HEARING,
+        CALENDAR_TYPES.HEARING,
         (calendar as TaskCalendarSchema).hearingCalendarId,
       )
     }
@@ -244,10 +238,10 @@ export const editCalendar = (
   const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     let hearingCalendar = undefined
-    if (calendarType === CALENDAR_OBJECT_TYPES.TASK) {
+    if (calendarType === CALENDAR_TYPES.TASK) {
       hearingCalendar = getSelectedCalendarFromStore(
         getStore(),
-        CALENDAR_OBJECT_TYPES.HEARING,
+        CALENDAR_TYPES.HEARING,
         (calendar as TaskCalendarSchema).hearingCalendarId,
       )
     }
@@ -350,7 +344,7 @@ const calendarsSuccess = (
       type: type,
       hearingCalendars: calendars,
     }
-  } else if (calendarType === CALENDAR_OBJECT_TYPES.TASK) {
+  } else if (calendarType === CALENDAR_TYPES.TASK) {
     return {
       type: type,
       taskCalendars: calendars,
