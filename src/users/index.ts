@@ -21,7 +21,7 @@ import {
   AppUserSchema,
 } from './types/users.data.types'
 // utils
-import { isLoggedIn } from './utils/users.utils'
+import { isLoggedIn, isSuperuser } from './utils/users.utils'
 
 export { login, logout, signup }
 export { UserSignInUp }
@@ -40,4 +40,4 @@ export type {
   AppUserRequest,
   AppUserResponse,
 }
-export { isLoggedIn }
+export { isLoggedIn, isSuperuser }

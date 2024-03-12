@@ -1,4 +1,3 @@
-import { CurrencyBitcoinRounded } from '@mui/icons-material'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import CasesRoundedIcon from '@mui/icons-material/CasesRounded'
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded'
@@ -8,6 +7,8 @@ import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import FilePresentRoundedIcon from '@mui/icons-material/FilePresentRounded'
 import FlareIcon from '@mui/icons-material/Flare'
+import Groups from '@mui/icons-material/Groups'
+import LocalAtm from '@mui/icons-material/LocalAtm'
 import RecentActorsIcon from '@mui/icons-material/RecentActors'
 import TodayIcon from '@mui/icons-material/Today'
 import WorkIcon from '@mui/icons-material/Work'
@@ -176,7 +177,7 @@ export const refTypesRoutes: RoutesType[] = [
     path: '/collection_method',
     display: 'Collection Methods',
     element: <RefTypes refType={REF_TYPES_REGISTRY.COLLECTION_METHOD} />,
-    icon: <CurrencyBitcoinRounded />,
+    icon: <LocalAtm />,
   },
   {
     path: '/filing_type',
@@ -195,6 +196,14 @@ export const refTypesRoutes: RoutesType[] = [
     display: 'Task Types',
     element: <RefTypes refType={REF_TYPES_REGISTRY.TASK_TYPE} />,
     icon: <ChecklistRoundedIcon />,
+  },
+]
+export const userManagementRoutes: RoutesType[] = [
+  {
+    path: '/user_management',
+    display: 'User Management',
+    element: <RefTypes refType={REF_TYPES_REGISTRY.COMPONENT_STATUS} />,
+    icon: <Groups />,
   },
 ]
 
@@ -234,6 +243,9 @@ const AppRoutes = (): React.ReactElement => {
       )}
       {refTypesRoutes.map((refTypesRoute) => (
         <Route key={refTypesRoute.path} path={refTypesRoute.path} element={getElement(refTypesRoute.element)} />
+      ))}
+      {userManagementRoutes.map((userManagementRoute) => (
+        <Route key={userManagementRoute.path} path={userManagementRoute.path} element={getElement(userManagementRoute.element)} />
       ))}
     </Routes>
   )

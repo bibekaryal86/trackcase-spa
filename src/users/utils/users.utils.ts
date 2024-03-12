@@ -13,6 +13,15 @@ export const isLoggedIn = (): AppUserSchema | undefined => {
   return token ? appUserDetails : undefined
 }
 
+export const isSuperuser = (): boolean => {
+  const appUserDetails = isLoggedIn()
+  if (appUserDetails) {
+    const appRoles = appUserDetails.appRoles || []
+    return appRoles.some(appUserDetail => appUserDetail.name === 'SUPERUSER')
+  }
+  return false
+}
+
 export const validatePassword = (password: string, confirmPassword: string) => password === confirmPassword
 
 export const validateSignInUpInput = (

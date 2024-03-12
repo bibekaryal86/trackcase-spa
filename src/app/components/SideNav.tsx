@@ -11,7 +11,8 @@ import Tooltip from '@mui/material/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { protectedRoutes, refTypesRoutes } from './AppRoutes'
+import { protectedRoutes, refTypesRoutes, userManagementRoutes } from './AppRoutes'
+import { isSuperuser } from '../../users'
 
 const refTypesRoutesPaths = refTypesRoutes.map((route) => route.path)
 
@@ -113,6 +114,34 @@ const SideNav = (props: SideNavProps) => {
                         }}
                       >
                         {refTypesRoute.icon}
+                      </ListItemIcon>
+                    </Tooltip>
+                  </ListItemButton>
+                </ListItem>
+              ),
+          )}
+          {isSuperuser() && userManagementRoutes.map(
+            (userManagementRoute) =>
+              userManagementRoute.display && (
+                <ListItem
+                  key={userManagementRoute.path}
+                  disablePadding
+                  sx={{ display: 'block' }}
+                  onClick={() => navigateToPage(userManagementRoute.path)}
+                >
+                  <ListItemButton
+                    selected={isSelected(userManagementRoute.path)}
+                    sx={{
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Tooltip title={userManagementRoute.display} placement="right">
+                      <ListItemIcon
+                        sx={{
+                          justifyContent: 'center',
+                        }}
+                      >
+                        {userManagementRoute.icon}
                       </ListItemIcon>
                     </Tooltip>
                   </ListItemButton>
