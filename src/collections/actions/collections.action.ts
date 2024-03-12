@@ -18,7 +18,7 @@ import {
 import { isCaseCollection, validateCollection } from '../utils/collections.utils'
 
 export const addCollection = (collection: CaseCollectionSchema | CashCollectionSchema, collectionType: string) => {
-  const isCaseCollectionRequest = collectionType === COLLECTION_TYPES.CASE
+  const isCaseCollectionRequest = collectionType === COLLECTION_TYPES.CASE_COLLECTION
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
     const validationErrors = validateCollection(collectionType, collection)
     if (validationErrors) {
@@ -270,12 +270,12 @@ const collectionsSuccess = (
       type: type,
       success: success,
     }
-  } else if (collectionType === COLLECTION_TYPES.CASE) {
+  } else if (collectionType === COLLECTION_TYPES.CASE_COLLECTION) {
     return {
       type: type,
       caseCollections: collections,
     }
-  } else if (collectionType === COLLECTION_TYPES.CASH) {
+  } else if (collectionType === COLLECTION_TYPES.CASH_COLLECTION) {
     return {
       type: type,
       cashCollections: collections,

@@ -202,7 +202,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
 
   const addCalendarModalCallback = (type: string) => {
     setShowAddModal(false)
-    if (type === CALENDAR_TYPES.HEARING) {
+    if (type === CALENDAR_TYPES.HEARING_CALENDAR) {
       setSelectedCalendar({ ...DefaultCalendarSchema, hearingDate: selectedDate || dayjs() })
       setSelectedCalendarForReset({ ...DefaultCalendarSchema, hearingDate: selectedDate || dayjs() })
     } else {
@@ -233,10 +233,10 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         isOpen={true}
         setIsOpen={setShowAddModal}
         title={'Add Calendar Event'}
-        primaryButtonText={CALENDAR_TYPES.HEARING.split('_')[0]}
-        primaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.HEARING)}
-        secondaryButtonText={CALENDAR_TYPES.TASK.split('_')[0]}
-        secondaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.TASK)}
+        primaryButtonText={CALENDAR_TYPES.HEARING_CALENDAR.split('_')[0]}
+        primaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.HEARING_CALENDAR)}
+        secondaryButtonText={CALENDAR_TYPES.TASK_CALENDAR.split('_')[0]}
+        secondaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.TASK_CALENDAR)}
         resetButtonText={BUTTON_CANCEL}
         resetButtonCallback={() => setShowAddModal(false)}
         contentText="Select Calendar Type to Add..."
@@ -301,9 +301,9 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   }
   const getSelectedCalendar = (id: number, type: string) => {
     let calendar: HearingCalendarSchema | TaskCalendarSchema | undefined
-    if (type === CALENDAR_TYPES.HEARING) {
+    if (type === CALENDAR_TYPES.HEARING_CALENDAR) {
       calendar = hearingCalendarsList.find((h) => h.id === id)
-    } else if (type === CALENDAR_TYPES.TASK) {
+    } else if (type === CALENDAR_TYPES.TASK_CALENDAR) {
       calendar = taskCalendarsList.find((t) => t.id === id)
     }
     return calendar || DefaultCalendarSchema

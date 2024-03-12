@@ -24,10 +24,10 @@ export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema
   const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     let hearingCalendar = undefined
-    if (calendarType === CALENDAR_TYPES.TASK) {
+    if (calendarType === CALENDAR_TYPES.TASK_CALENDAR) {
       hearingCalendar = getSelectedCalendarFromStore(
         getStore(),
-        CALENDAR_TYPES.HEARING,
+        CALENDAR_TYPES.HEARING_CALENDAR,
         (calendar as TaskCalendarSchema).hearingCalendarId,
       )
     }
@@ -238,10 +238,10 @@ export const editCalendar = (
   const isHearingCalendarRequest = isHearingCalendar(calendarType)
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     let hearingCalendar = undefined
-    if (calendarType === CALENDAR_TYPES.TASK) {
+    if (calendarType === CALENDAR_TYPES.TASK_CALENDAR) {
       hearingCalendar = getSelectedCalendarFromStore(
         getStore(),
-        CALENDAR_TYPES.HEARING,
+        CALENDAR_TYPES.HEARING_CALENDAR,
         (calendar as TaskCalendarSchema).hearingCalendarId,
       )
     }
@@ -344,7 +344,7 @@ const calendarsSuccess = (
       type: type,
       hearingCalendars: calendars,
     }
-  } else if (calendarType === CALENDAR_TYPES.TASK) {
+  } else if (calendarType === CALENDAR_TYPES.TASK_CALENDAR) {
     return {
       type: type,
       taskCalendars: calendars,
