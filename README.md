@@ -14,6 +14,7 @@
       * Show option for `superuser` role to hard delete items
         * currently this is hard coded in component actions (eg: `refTypes.action.ts`)
       * MAJOR
+        * Implement relative imports from modules
         * Disable sorting from table headers
           * Add separate component for sort/filter for tables
         * Besides ref types, courts and judges do not store items on redux
