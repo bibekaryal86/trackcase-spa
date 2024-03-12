@@ -120,34 +120,35 @@ const SideNav = (props: SideNavProps) => {
                 </ListItem>
               ),
           )}
-          {isSuperuser() && userManagementRoutes.map(
-            (userManagementRoute) =>
-              userManagementRoute.display && (
-                <ListItem
-                  key={userManagementRoute.path}
-                  disablePadding
-                  sx={{ display: 'block' }}
-                  onClick={() => navigateToPage(userManagementRoute.path)}
-                >
-                  <ListItemButton
-                    selected={isSelected(userManagementRoute.path)}
-                    sx={{
-                      justifyContent: 'center',
-                    }}
+          {isSuperuser() &&
+            userManagementRoutes.map(
+              (userManagementRoute) =>
+                userManagementRoute.display && (
+                  <ListItem
+                    key={userManagementRoute.path}
+                    disablePadding
+                    sx={{ display: 'block' }}
+                    onClick={() => navigateToPage(userManagementRoute.path)}
                   >
-                    <Tooltip title={userManagementRoute.display} placement="right">
-                      <ListItemIcon
-                        sx={{
-                          justifyContent: 'center',
-                        }}
-                      >
-                        {userManagementRoute.icon}
-                      </ListItemIcon>
-                    </Tooltip>
-                  </ListItemButton>
-                </ListItem>
-              ),
-          )}
+                    <ListItemButton
+                      selected={isSelected(userManagementRoute.path)}
+                      sx={{
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Tooltip title={userManagementRoute.display} placement="right">
+                        <ListItemIcon
+                          sx={{
+                            justifyContent: 'center',
+                          }}
+                        >
+                          {userManagementRoute.icon}
+                        </ListItemIcon>
+                      </Tooltip>
+                    </ListItemButton>
+                  </ListItem>
+                ),
+            )}
         </Collapse>
       </List>
     </Menu>

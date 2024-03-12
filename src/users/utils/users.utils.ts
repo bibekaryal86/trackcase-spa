@@ -17,7 +17,7 @@ export const isSuperuser = (): boolean => {
   const appUserDetails = isLoggedIn()
   if (appUserDetails) {
     const appRoles = appUserDetails.appRoles || []
-    return appRoles.some(appUserDetail => appUserDetail.name === 'SUPERUSER')
+    return appRoles.some((appUserDetail) => appUserDetail.name === 'SUPERUSER')
   }
   return false
 }
