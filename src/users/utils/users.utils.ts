@@ -1,9 +1,17 @@
+import { LocalStorage } from '../../app'
 import {
   LOGIN_SHOW_FORM_TYPE,
   LoginShowFormType,
   REGEX_LOGIN_INPUT_PATTERN,
   REGEX_LOGIN_PASSWORD_PATTERN,
 } from '../../constants'
+import { AppUserSchema } from '../types/users.data.types'
+
+export const isLoggedIn = (): AppUserSchema | undefined => {
+  const token = LocalStorage.getItem('token') as string
+  const appUserDetails = LocalStorage.getItem('appUserDetails') as AppUserSchema
+  return token ? appUserDetails : undefined
+}
 
 export const validatePassword = (password: string, confirmPassword: string) => password === confirmPassword
 

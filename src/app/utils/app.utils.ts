@@ -1,10 +1,10 @@
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
-import { LocalStorage, SessionStorage } from './storage.utils'
+import { SessionStorage } from './storage.utils'
 import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
-import { AuthState, ErrorDetail, UserDetails } from '../types/app.data.types'
+import { ErrorDetail } from '../types/app.data.types'
 
 export const isGetDarkMode = () => (SessionStorage.getItem(IS_DARK_MODE) as string) === 'true'
 
@@ -22,20 +22,6 @@ export const clearMessages = (type: string) => {
       type: type,
     })
   }
-}
-
-export const isLoggedIn = (): AuthState | undefined => {
-  const token = LocalStorage.getItem('token') as string
-  const userDetails = LocalStorage.getItem('userDetails') as UserDetails
-  const isLoggedIn = !!token
-  if (isLoggedIn) {
-    return {
-      isLoggedIn,
-      token,
-      userDetails,
-    }
-  }
-  return undefined
 }
 
 export const getEndpoint = (endpoint: string): string => {

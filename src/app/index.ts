@@ -34,7 +34,6 @@ import {
   TableHeaderData,
   TableOrder,
   TableRowsPerPage,
-  UserDetails,
 } from './types/app.data.types'
 // utils
 import { resetAlert, setAlert } from './utils/alerts.utils'
@@ -57,7 +56,6 @@ import {
   getStartOfTheYear,
   getString,
   isGetDarkMode,
-  isLoggedIn,
   isNumericOnly,
   unmountPage,
   validateAddress,
@@ -100,7 +98,6 @@ export type {
   TableHeaderData,
   TableOrder,
   TableRowsPerPage,
-  UserDetails,
 }
 export { DefaultErrorDetail }
 export { resetAlert, setAlert }
@@ -123,7 +120,6 @@ export {
   getStartOfTheYear,
   getString,
   isGetDarkMode,
-  isLoggedIn,
   isNumericOnly,
   unmountPage,
   validateAddress,

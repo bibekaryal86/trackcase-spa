@@ -61,12 +61,6 @@ export interface RoutesType extends RouteCore {
   submenus?: RouteSubMenu[]
 }
 
-export interface AuthState {
-  isLoggedIn: boolean
-  token: string
-  userDetails: UserDetails
-}
-
 export interface ResponseMetadata {
   totalItems: number
   totalPages: number
@@ -78,48 +72,8 @@ export interface ErrorDetail {
   error: string
 }
 
-export interface LoginResponse {
-  token: string
-  user_details: UserDetails
-  errMsg?: string
-  detail?: ErrorDetail
-}
-
-export interface UserDetails {
-  username: string
-  firstName: string
-  lastName: string
-  streetAddress: string
-  city: string
-  state: string
-  zipcode: string
-  email: string
-  phone: string
-  status: string
-}
-
-export const DefaultUserDetails = {
-  username: '',
-  firstName: '',
-  lastName: '',
-  streetAddress: '',
-  city: '',
-  state: '',
-  zipcode: '',
-  email: '',
-  phone: '',
-  status: '',
-}
-
 export const DefaultErrorDetail: ErrorDetail = {
   error: '',
-}
-
-export const DefaultLoginResponse: LoginResponse = {
-  token: '',
-  user_details: DefaultUserDetails,
-  detail: DefaultErrorDetail,
-  errMsg: '',
 }
 
 // base models for all types

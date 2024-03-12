@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Link from './Link'
 import Switch from './Switch'
-import { isLoggedIn } from '../utils/app.utils'
+import { isLoggedIn } from '../../users'
 
 interface HeaderProps {
   isDarkMode: boolean

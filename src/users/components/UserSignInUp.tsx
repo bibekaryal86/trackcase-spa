@@ -8,16 +8,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import {
-  getErrMsg,
-  getString,
-  isLoggedIn,
-  LocalStorage,
-  resetAlert,
-  resetSpinner,
-  setAlert,
-  setSpinner,
-} from '../../app'
+import { getErrMsg, getString, LocalStorage, resetAlert, resetSpinner, setAlert, setSpinner } from '../../app'
 import {
   ALERT_TYPE_FAILURE,
   ALERT_TYPE_INFO,
@@ -38,7 +29,7 @@ import {
 } from '../../constants'
 import { login, resetExit, resetInit, signup, validateInit } from '../action/users.action'
 import { AppUserLoginResponse } from '../types/users.data.types'
-import { validatePassword, validateSignInUpInput } from '../utils/users.utils'
+import { isLoggedIn, validatePassword, validateSignInUpInput } from '../utils/users.utils'
 
 interface LoginProps {
   setAlert: (type: string, messageText: string) => void

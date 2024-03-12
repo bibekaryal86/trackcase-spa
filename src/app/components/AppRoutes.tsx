@@ -25,9 +25,8 @@ import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
 import { RefTypes } from '../../types'
-import { UserSignInUp } from '../../users'
+import { isLoggedIn, UserSignInUp } from '../../users'
 import { RoutesType } from '../types/app.data.types'
-import { isLoggedIn } from '../utils/app.utils'
 
 const publicRoutes: RoutesType[] = [
   {
@@ -201,8 +200,8 @@ export const refTypesRoutes: RoutesType[] = [
 
 function RequireAuth({ children }: { children: React.ReactElement }) {
   const location = useLocation()
-  const authState = isLoggedIn()
-  return authState ? children : <Navigate to="/" replace state={{ redirect: location.pathname }} />
+  const appUserDetails = isLoggedIn()
+  return appUserDetails ? children : <Navigate to="/" replace state={{ redirect: location.pathname }} />
 }
 
 const getElement = (children: React.ReactElement | undefined) => children && <RequireAuth>{children}</RequireAuth>

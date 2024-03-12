@@ -20,6 +20,8 @@ import {
   AppUserRoleSchema,
   AppUserSchema,
 } from './types/users.data.types'
+// utils
+import { isLoggedIn } from './utils/users.utils'
 
 export { login, logout, signup }
 export { UserSignInUp }
@@ -38,3 +40,4 @@ export type {
   AppUserRequest,
   AppUserResponse,
 }
+export { isLoggedIn }
