@@ -3,11 +3,11 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import CasesRoundedIcon from '@mui/icons-material/CasesRounded'
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded'
 import ChecklistRtlRoundedIcon from '@mui/icons-material/ChecklistRtlRounded'
+import Contacts from '@mui/icons-material/Contacts'
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import FilePresentRoundedIcon from '@mui/icons-material/FilePresentRounded'
 import FlareIcon from '@mui/icons-material/Flare'
-import GroupsIcon from '@mui/icons-material/Groups'
 import RecentActorsIcon from '@mui/icons-material/RecentActors'
 import TodayIcon from '@mui/icons-material/Today'
 import WorkIcon from '@mui/icons-material/Work'
@@ -113,7 +113,7 @@ export const protectedRoutes: RoutesType[] = [
     path: '/clients',
     display: 'Clients',
     element: <Clients />,
-    icon: <GroupsIcon />,
+    icon: <Contacts />,
   },
   {
     path: '/client',
