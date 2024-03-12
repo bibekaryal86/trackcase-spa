@@ -160,7 +160,7 @@ export const Async = {
         ) {
           console.log('Retrying in 1 seconds due to CONNECTIONS... Attempt: ', retryCount)
           await new Promise((resolve) => setTimeout(resolve, 1111))
-          return Async.fetch(url, requestInit, retryCount + 1)
+          return Async.fetch(urlPath, options, retryCount + 1)
         } else {
           console.log('Error Response non 401: ', response)
         }
