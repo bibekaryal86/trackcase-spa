@@ -58,6 +58,16 @@ export const CREATE_SUCCESS = (what: string) => `Add ${what} Success!`
 export const UPDATE_SUCCESS = (what: string) => `Edit ${what} Success!`
 export const DELETE_SUCCESS = (what: string) => `Delete ${what} Success!`
 
+// user signin/signup/reset/validate page
+export const LOGIN_SHOW_FORM_TYPE = Object.freeze({
+  SIGNIN: 'SIGNIN',
+  SIGNUP: 'SIGNUP',
+  RESET_INIT: 'RESET_INIT',
+  RESET_EXIT: 'RESET_EXIT',
+  VALIDATE: 'VALIDATE',
+})
+export type LoginShowFormType = keyof typeof LOGIN_SHOW_FORM_TYPE
+
 // actions
 export const ACTION_TYPES = Object.freeze({
   ADD: 'ADD',

@@ -25,6 +25,8 @@ import {
   ALERT_TYPE_WARNING,
   INVALID_INPUT,
   INVALID_PASSWORD,
+  LOGIN_SHOW_FORM_TYPE,
+  LoginShowFormType,
   RESET_EXIT_SUCCESS,
   RESET_INIT_FAILURE,
   RESET_INIT_SUCCESS,
@@ -36,7 +38,7 @@ import {
 } from '../../constants'
 import { login, resetExit, resetInit, signup, validateInit } from '../action/users.action'
 import { AppUserLoginResponse } from '../types/users.data.types'
-import { SHOW_FORM_TYPE, validatePassword, validateSignInUpInput } from '../utils/users.utils'
+import { validatePassword, validateSignInUpInput } from '../utils/users.utils'
 
 interface LoginProps {
   setAlert: (type: string, messageText: string) => void
@@ -55,7 +57,7 @@ const mapDispatchToProps = {
 const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const { setAlert, resetAlert, setSpinner, resetSpinner } = props
   const formRef = useRef(null)
-  const [showFormType, setShowFormType] = useState(SHOW_FORM_TYPE.SIGNIN.toString())
+  const [showFormType, setShowFormType] = useState(LOGIN_SHOW_FORM_TYPE.SIGNIN.toString())
   const [userToReset, setUserToReset] = useState('')
 
   const userLoginSuccessLocalStorageActions = (appUserLoginResponse: AppUserLoginResponse) => {
@@ -77,7 +79,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
       if (isValidatedQp === 'true') {
         setAlert(ALERT_TYPE_SUCCESS, VALIDATE_SUCCESS)
       } else {
-        setShowFormType(SHOW_FORM_TYPE.VALIDATE)
+        setShowFormType(LOGIN_SHOW_FORM_TYPE.VALIDATE)
         setAlert(ALERT_TYPE_WARNING, VALIDATE_FAILURE)
       }
     }
@@ -86,12 +88,12 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   useEffect(() => {
     if (isResetExitQp) {
       if (isResetExitQp === 'true') {
-        setShowFormType(SHOW_FORM_TYPE.RESET_EXIT)
+        setShowFormType(LOGIN_SHOW_FORM_TYPE.RESET_EXIT)
         if (userToResetQp) {
           setUserToReset(getString(userToResetQp).toLowerCase())
         }
       } else if (isResetExitQp === 'false') {
-        setShowFormType(SHOW_FORM_TYPE.RESET_EXIT)
+        setShowFormType(LOGIN_SHOW_FORM_TYPE.RESET_EXIT)
         setAlert(ALERT_TYPE_WARNING, RESET_INIT_FAILURE)
       }
     }
@@ -108,7 +110,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   }, [setAlert, state])
 
   const resetState = () => {
-    setShowFormType(SHOW_FORM_TYPE.SIGNIN)
+    setShowFormType(LOGIN_SHOW_FORM_TYPE.SIGNIN)
     setUserToReset('')
     formRef && formRef.current && (formRef.current as HTMLFormElement).reset()
   }
@@ -176,26 +178,26 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
     const password = data.get('password') as string
     const confirmPassword = data.get('confirmPassword') as string
     const fullName = data.get('fullName') as string
-    const isInputValid = validateSignInUpInput(username, password, fullName, showFormType)
+    const isInputValid = validateSignInUpInput(username, password, fullName, showFormType as LoginShowFormType)
 
     if (isInputValid) {
-      if (showFormType === SHOW_FORM_TYPE.VALIDATE) {
+      if (showFormType === LOGIN_SHOW_FORM_TYPE.VALIDATE) {
         await handleRevalidateSubmit(username)
-      } else if (showFormType === SHOW_FORM_TYPE.RESET_INIT) {
+      } else if (showFormType === LOGIN_SHOW_FORM_TYPE.RESET_INIT) {
         await handleResetInitSubmit(username)
-      } else if (showFormType === SHOW_FORM_TYPE.RESET_EXIT) {
+      } else if (showFormType === LOGIN_SHOW_FORM_TYPE.RESET_EXIT) {
         if (validatePassword(password, confirmPassword)) {
           await handleResetExitSubmit(password)
         } else {
           setAlert(ALERT_TYPE_FAILURE, INVALID_PASSWORD)
         }
-      } else if (showFormType === SHOW_FORM_TYPE.SIGNUP) {
+      } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNUP) {
         if (validatePassword(password, confirmPassword)) {
           await handleSignupSubmit(username, password, fullName)
         } else {
           setAlert(ALERT_TYPE_FAILURE, INVALID_PASSWORD)
         }
-      } else if (showFormType === SHOW_FORM_TYPE.SIGNIN) {
+      } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNIN) {
         await handleSigninSubmit(username, password)
       } else {
         setAlert(ALERT_TYPE_FAILURE, `Oops! ${SOMETHING_WENT_WRONG}`)
@@ -207,13 +209,13 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   }
 
   const formHeader = () => {
-    if (showFormType === SHOW_FORM_TYPE.VALIDATE) {
+    if (showFormType === LOGIN_SHOW_FORM_TYPE.VALIDATE) {
       return 'Resend validation'
-    } else if (showFormType === SHOW_FORM_TYPE.RESET_INIT || showFormType === SHOW_FORM_TYPE.RESET_EXIT) {
+    } else if (showFormType === LOGIN_SHOW_FORM_TYPE.RESET_INIT || showFormType === LOGIN_SHOW_FORM_TYPE.RESET_EXIT) {
       return 'Reset password'
-    } else if (showFormType === SHOW_FORM_TYPE.SIGNUP) {
+    } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNUP) {
       return 'Sign up'
-    } else if (showFormType === SHOW_FORM_TYPE.SIGNIN) {
+    } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNIN) {
       return 'Sign in'
     } else {
       return 'Form Header'
@@ -221,7 +223,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   }
 
   const formBody = () => {
-    if (showFormType === SHOW_FORM_TYPE.VALIDATE || showFormType === SHOW_FORM_TYPE.RESET_INIT) {
+    if (showFormType === LOGIN_SHOW_FORM_TYPE.VALIDATE || showFormType === LOGIN_SHOW_FORM_TYPE.RESET_INIT) {
       return (
         <TextField
           margin="normal"
@@ -234,7 +236,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
           autoFocus
         />
       )
-    } else if (showFormType === SHOW_FORM_TYPE.SIGNUP) {
+    } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNUP) {
       return (
         <>
           <TextField
@@ -268,7 +270,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
           <TextField margin="normal" required fullWidth id="fullName" label="Full Name" name="fullName" />
         </>
       )
-    } else if (showFormType === SHOW_FORM_TYPE.RESET_EXIT) {
+    } else if (showFormType === LOGIN_SHOW_FORM_TYPE.RESET_EXIT) {
       return (
         <>
           <Typography variant="body1">Email: {userToReset}</Typography>
@@ -321,23 +323,23 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
 
   const formFooter = () => {
     if (
-      showFormType === SHOW_FORM_TYPE.VALIDATE ||
-      showFormType === SHOW_FORM_TYPE.RESET_INIT ||
-      showFormType === SHOW_FORM_TYPE.RESET_EXIT ||
-      showFormType === SHOW_FORM_TYPE.SIGNUP
+      showFormType === LOGIN_SHOW_FORM_TYPE.VALIDATE ||
+      showFormType === LOGIN_SHOW_FORM_TYPE.RESET_INIT ||
+      showFormType === LOGIN_SHOW_FORM_TYPE.RESET_EXIT ||
+      showFormType === LOGIN_SHOW_FORM_TYPE.SIGNUP
     ) {
       return (
-        <Button fullWidth variant="text" sx={{ mt: 3 }} onClick={() => setShowFormType(SHOW_FORM_TYPE.SIGNIN)}>
+        <Button fullWidth variant="text" sx={{ mt: 3 }} onClick={() => setShowFormType(LOGIN_SHOW_FORM_TYPE.SIGNIN)}>
           Have account? Click here to sign in
         </Button>
       )
-    } else if (showFormType === SHOW_FORM_TYPE.SIGNIN) {
+    } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNIN) {
       return (
         <>
-          <Button fullWidth variant="text" sx={{ mt: 3 }} onClick={() => setShowFormType(SHOW_FORM_TYPE.SIGNUP)}>
+          <Button fullWidth variant="text" sx={{ mt: 3 }} onClick={() => setShowFormType(LOGIN_SHOW_FORM_TYPE.SIGNUP)}>
             No account? Click here to sign up
           </Button>
-          <Button fullWidth variant="text" onClick={() => setShowFormType(SHOW_FORM_TYPE.RESET_INIT)}>
+          <Button fullWidth variant="text" onClick={() => setShowFormType(LOGIN_SHOW_FORM_TYPE.RESET_INIT)}>
             Forgot password? Click here to reset
           </Button>
         </>
