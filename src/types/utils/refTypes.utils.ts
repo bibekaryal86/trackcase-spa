@@ -141,8 +141,8 @@ export const refTypeTableData = (
     const otherRefTypesList = refTypeList as RefTypeLessStatusSchema[]
     return Array.from(otherRefTypesList, (x) => {
       return {
-        name: x.name,
-        description: x.description,
+        nameOrComponentName: x.name,
+        descOrStatusName: x.description,
         actions: actionButtons(getFormDataForModal(x)),
       }
     })
