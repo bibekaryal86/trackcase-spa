@@ -36,7 +36,6 @@ import {
 } from '../types/refTypes.data.types'
 
 const DefaultRefTypesState: RefTypesState = {
-  isCloseModal: true,
   componentStatus: [],
   filingType: [],
   collectionMethod: [],
@@ -50,17 +49,13 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
   const matchesRequest = /(.*)_(REQUEST)/.exec(type)
 
   if (matchesRequest) {
-    return {
-      ...state,
-      isCloseModal: false,
-    }
+    return state
   }
 
   switch (action.type) {
     case CASE_TYPE_RETRIEVE_SUCCESS:
       return {
         ...state,
-        isCloseModal: true,
         caseType: action.data as CaseTypeSchema[],
       }
     case CASE_TYPE_CREATE_SUCCESS:
@@ -68,7 +63,6 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
     case CASE_TYPE_DELETE_SUCCESS:
       return {
         ...state,
-        isCloseModal: true,
         caseType: [], // so that it will fetch
       }
     case COLLECTION_METHOD_RETRIEVE_SUCCESS:
@@ -81,7 +75,6 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
     case COLLECTION_METHOD_DELETE_SUCCESS:
       return {
         ...state,
-        isCloseModal: true,
         collectionMethod: [], // so that it will fetch
       }
     case COMPONENT_STATUS_RETRIEVE_SUCCESS:
@@ -94,7 +87,6 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
     case COMPONENT_STATUS_DELETE_SUCCESS:
       return {
         ...state,
-        isCloseModal: true,
         componentStatus: [], // so that it will fetch
       }
     case FILING_TYPE_RETRIEVE_SUCCESS:
@@ -107,7 +99,6 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
     case FILING_TYPE_DELETE_SUCCESS:
       return {
         ...state,
-        isCloseModal: true,
         filingType: [], // so that it will fetch
       }
     case HEARING_TYPE_RETRIEVE_SUCCESS:
@@ -120,7 +111,6 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
     case HEARING_TYPE_DELETE_SUCCESS:
       return {
         ...state,
-        isCloseModal: true,
         hearingType: [], // so that it will fetch
       }
     case TASK_TYPE_RETRIEVE_SUCCESS:
@@ -133,7 +123,6 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
     case TASK_TYPE_DELETE_SUCCESS:
       return {
         ...state,
-        isCloseModal: true,
         taskType: [], // so that it will fetch
       }
     default:

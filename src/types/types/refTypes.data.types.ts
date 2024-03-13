@@ -94,7 +94,6 @@ export type RefTypeLessStatusSchema =
 
 // states and actions
 export interface RefTypesState {
-  isCloseModal: boolean
   componentStatus: ComponentStatusSchema[]
   filingType: FilingTypeSchema[]
   collectionMethod: CollectionMethodSchema[]
