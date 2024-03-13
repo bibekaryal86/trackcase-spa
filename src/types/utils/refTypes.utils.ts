@@ -9,6 +9,7 @@ export interface RefTypeFormData {
   nameOrComponentName: string
   descOrStatusName: string
   isActive: boolean
+  isHardDelete: boolean
 }
 
 export const DefaultRefTypeFormData: RefTypeFormData = {
@@ -16,6 +17,7 @@ export const DefaultRefTypeFormData: RefTypeFormData = {
   nameOrComponentName: '',
   descOrStatusName: '',
   isActive: false,
+  isHardDelete: false
 }
 
 export interface RefTypesReduxStoreKeys {
@@ -110,6 +112,7 @@ export const refTypeTableData = (
           nameOrComponentName: x.componentName,
           descOrStatusName: x.statusName,
           isActive: x.isActive,
+          isHardDelete: false,
         }),
       }
     })
@@ -124,6 +127,7 @@ export const refTypeTableData = (
           nameOrComponentName: x.name,
           descOrStatusName: x.description,
           isActive: true,
+          isHardDelete: false,
         }),
       }
     })

@@ -235,7 +235,7 @@ export const editRefType = (
   }
 }
 
-export const deleteRefType = (refType: RefTypesRegistry, id: number) => {
+export const deleteRefType = (refType: RefTypesRegistry, id: number, isHardDelete: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<RefTypeResponse> => {
     dispatch(refTypesDispatch({ type: `${refType}_DELETE_REQUEST` }))
 
@@ -244,7 +244,7 @@ export const deleteRefType = (refType: RefTypesRegistry, id: number) => {
       const urlPath = getUrlPath(refType, 'DELETE')
       const options: Partial<FetchOptions> = {
         method: 'DELETE',
-        pathParams: { [refTypeId]: id, is_hard_delete: true },
+        pathParams: { [refTypeId]: id, is_hard_delete: isHardDelete },
       }
       const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
       if (refTypeResponse.detail) {

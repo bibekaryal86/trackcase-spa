@@ -30,6 +30,7 @@ import {
   REF_TYPES_REGISTRY,
   RefTypesRegistry,
 } from '../../constants'
+import { isSuperuser } from '../../users'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { RefTypeResponse, RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
 import {
@@ -131,7 +132,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
     let refTypeResponse: RefTypeResponse = { data: [] }
     if (action === ACTION_TYPES.DELETE && getNumber(formData.id) > 0) {
-      refTypeResponse = await deleteRefType(refType, formData.id)(dispatch)
+      refTypeResponse = await deleteRefType(refType, formData.id, formData.isHardDelete)(dispatch)
     } else if (action === ACTION_TYPES.UPDATE && getNumber(formData.id) > 0) {
       refTypeResponse = await editRefType(
         refType,
@@ -226,6 +227,13 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     </>
   )
 
+  const hardDeleteCheckbox = () => isSuperuser() ? (
+    <FormControlLabel
+      label="Hard Delete"
+      control={<Checkbox name="isHardDelete" checked={formData.isHardDelete} onChange={handleFormChange} />}
+    />
+  ): undefined
+
   const refTypeFormOthers = (nameOrComponentName: string, descOrStatusName: string) => (
     <>
       <FormTextField
@@ -315,6 +323,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         contentText={`Are you sure you want to delete ${refTypeTitle()}: ${formData.nameOrComponentName}, ${
           formData.descOrStatusName
         }?!?`}
+        content={hardDeleteCheckbox()}
       />
     )
   }
