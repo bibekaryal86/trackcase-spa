@@ -26,7 +26,7 @@ import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
 import { RefTypes } from '../../types'
-import { isLoggedIn, UserSignInUp } from '../../users'
+import { isLoggedIn, UserAdmin, UserSignInUp } from '../../users'
 import { RoutesType } from '../types/app.data.types'
 
 const publicRoutes: RoutesType[] = [
@@ -202,7 +202,7 @@ export const userManagementRoutes: RoutesType[] = [
   {
     path: '/user_management',
     display: 'User Management',
-    element: <RefTypes refType={REF_TYPES_REGISTRY.COMPONENT_STATUS} />,
+    element: <UserAdmin />,
     icon: <Groups />,
   },
 ]

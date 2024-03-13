@@ -1,6 +1,7 @@
 // actions
 import { login, logout, signup } from './action/users.action'
 // components
+import UserAdmin from './components/UserAdmin'
 import UserSignInUp from './components/UserSignInUp'
 // reducers
 // action types
@@ -24,7 +25,7 @@ import {
 import { isLoggedIn, isSuperuser } from './utils/users.utils'
 
 export { login, logout, signup }
-export { UserSignInUp }
+export { UserSignInUp, UserAdmin }
 export type {
   AppPermissionSchema,
   AppPermissionResponse,
