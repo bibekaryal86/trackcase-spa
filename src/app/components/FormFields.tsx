@@ -247,7 +247,15 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   return (
     <FormControl sx={formControlSx} required={required} error={error}>
       <InputLabel sx={inputLabelSx}>{label}</InputLabel>
-      <Select labelId={id} id={id} variant={variant} name={name} value={value.toString()} onChange={onChange} disabled={disabled}>
+      <Select
+        labelId={id}
+        id={id}
+        variant={variant}
+        name={name}
+        value={value.toString()}
+        onChange={onChange}
+        disabled={disabled}
+      >
         {selectMenuItems}
       </Select>
       {helperText && <FormHelperText>{helperText}</FormHelperText>}

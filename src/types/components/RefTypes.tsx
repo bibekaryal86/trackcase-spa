@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 
 import {
   convertToCamelCase,
@@ -40,7 +41,6 @@ import {
   validateFormData,
 } from '../utils/refTypes.utils'
 
-
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
     refTypes: refTypes,
@@ -60,6 +60,7 @@ interface RefTypeProps {
 const RefTypes = (props: RefTypeProps): React.ReactElement => {
   // prevent infinite fetch if api returns empty
   const isFetchRunDone = useRef(false)
+  const location = useLocation()
   const { refType, refTypes } = props
   const dispatch = useDispatch()
   const { getRefType } = props
@@ -77,20 +78,19 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   useEffect(() => {
     const refTypeInStoreName = convertToCamelCase(refType, '_') as keyof RefTypesReduxStoreKeys
     const refTypeInStore = refTypes[refTypeInStoreName]
-    console.log(isFetchRunDone.current, refTypeInStoreName, refTypeInStore)
     setRefTypeList(refTypeInStore)
 
-    if (refTypeInStore.length === 0 && !isFetchRunDone.current){
+    if (refTypeInStore.length === 0 && !isFetchRunDone.current) {
       getRefType(refType as RefTypesRegistry)
       isFetchRunDone.current = true
     }
   }, [refTypeList, refType, refTypes, getRefType])
 
   useEffect(() => {
-    return () => {
-      isFetchRunDone.current = false
-    }
-  }, [])
+    // Reset fetch state when route changes
+    // this is needed because ref types share same component
+    isFetchRunDone.current = false
+  }, [location.pathname])
 
   const refTypePageTitle = () => (
     <Typography component="h1" variant="h6" color="primary" gutterBottom>
@@ -155,17 +155,17 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     addModalState.showModal && addModalState.toggleModalView()
     updateModalState.showModal && updateModalState.toggleModalView()
     deleteModalState.showModal && deleteModalState.toggleModalView()
-    setFormData({...DefaultRefTypeFormData})
-    setFormErrors({...DefaultRefTypeFormData})
+    setFormData({ ...DefaultRefTypeFormData })
+    setFormErrors({ ...DefaultRefTypeFormData })
   }
 
   const resetButtonCallback = (action: ActionTypes) => {
     if (action === ACTION_TYPES.ADD) {
       setFormData({ ...DefaultRefTypeFormData })
-      setFormErrors({...DefaultRefTypeFormData})
+      setFormErrors({ ...DefaultRefTypeFormData })
     } else if (action === ACTION_TYPES.UPDATE) {
       setFormData(formDataReset)
-      setFormErrors({...DefaultRefTypeFormData})
+      setFormErrors({ ...DefaultRefTypeFormData })
     }
   }
 
