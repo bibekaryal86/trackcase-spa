@@ -88,7 +88,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
   useEffect(() => {
     // Reset fetch state when route changes
-    // this is needed because ref types share same component
     isFetchRunDone.current = false
   }, [location.pathname])
 
