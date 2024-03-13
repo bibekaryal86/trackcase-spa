@@ -277,11 +277,11 @@ const TableRow = (props: TableRowProps) => {
             return null
           }
           const column = props.headerData.find((item) => item.id === key)
-          return (
+          return column && (
             <TableCell
               sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
               key={key.toString()}
-              align={(column && column.align) || 'left'}
+              align={column.align || 'left'}
             >
               {props.row[key]}
             </TableCell>
