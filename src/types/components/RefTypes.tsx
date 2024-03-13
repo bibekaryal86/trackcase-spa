@@ -227,12 +227,13 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     </>
   )
 
-  const hardDeleteCheckbox = () => isSuperuser() ? (
-    <FormControlLabel
-      label="Hard Delete"
-      control={<Checkbox name="isHardDelete" checked={formData.isHardDelete} onChange={handleFormChange} />}
-    />
-  ): undefined
+  const hardDeleteCheckbox = () =>
+    isSuperuser() ? (
+      <FormControlLabel
+        label="Hard Delete"
+        control={<Checkbox name="isHardDelete" checked={formData.isHardDelete} onChange={handleFormChange} />}
+      />
+    ) : undefined
 
   const refTypeFormOthers = (nameOrComponentName: string, descOrStatusName: string) => (
     <>

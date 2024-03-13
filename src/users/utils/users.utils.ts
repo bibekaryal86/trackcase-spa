@@ -22,6 +22,15 @@ export const isSuperuser = (): boolean => {
   return false
 }
 
+export const isPoweruser = (): boolean => {
+  const appUserDetails = isLoggedIn()
+  if (appUserDetails) {
+    const appRoles = appUserDetails.appRoles || []
+    return appRoles.some((appUserDetail) => appUserDetail.name === 'POWERUSER')
+  }
+  return false
+}
+
 export const validatePassword = (password: string, confirmPassword: string) => password === confirmPassword
 
 export const validateSignInUpInput = (

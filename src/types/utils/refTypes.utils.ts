@@ -2,6 +2,7 @@ import React from 'react'
 
 import { getString, TableData, TableHeaderData } from '../../app'
 import { ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
+import { isSuperuser } from '../../users'
 import { ComponentStatusSchema, RefTypeLessStatusSchema, RefTypeSchema } from '../types/refTypes.data.types'
 
 export interface RefTypeFormData {
@@ -10,6 +11,7 @@ export interface RefTypeFormData {
   descOrStatusName: string
   isActive: boolean
   isHardDelete: boolean
+  isShowSoftDeleted: boolean
 }
 
 export const DefaultRefTypeFormData: RefTypeFormData = {
@@ -17,7 +19,8 @@ export const DefaultRefTypeFormData: RefTypeFormData = {
   nameOrComponentName: '',
   descOrStatusName: '',
   isActive: false,
-  isHardDelete: false
+  isHardDelete: false,
+  isShowSoftDeleted: false,
 }
 
 export interface RefTypesReduxStoreKeys {
@@ -86,13 +89,37 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
       label: 'Active Status',
     })
   }
-  tableHeaderData.push({
-    id: 'actions',
-    label: 'Actions',
-    align: 'center' as const,
-    isDisableSorting: true,
-  })
+
+  isSuperuser() &&
+    tableHeaderData.push({
+      id: 'actions',
+      label: 'Actions',
+      align: 'center' as const,
+      isDisableSorting: true,
+    })
   return tableHeaderData
+}
+
+const getFormDataForModal = (x: RefTypeSchema) => {
+  if ('componentName' in x) {
+    return {
+      id: x.id || ID_DEFAULT,
+      nameOrComponentName: x.componentName,
+      descOrStatusName: x.statusName,
+      isActive: true,
+      isHardDelete: false,
+      isShowSoftDeleted: false,
+    }
+  } else {
+    return {
+      id: x.id || ID_DEFAULT,
+      nameOrComponentName: x.name,
+      descOrStatusName: x.description,
+      isActive: true,
+      isHardDelete: false,
+      isShowSoftDeleted: false,
+    }
+  }
 }
 
 export const refTypeTableData = (
@@ -107,13 +134,7 @@ export const refTypeTableData = (
         nameOrComponentName: x.componentName,
         descOrStatusName: x.statusName,
         isActive: String(x.isActive).toUpperCase(),
-        actions: actionButtons({
-          id: x.id || ID_DEFAULT,
-          nameOrComponentName: x.componentName,
-          descOrStatusName: x.statusName,
-          isActive: x.isActive,
-          isHardDelete: false,
-        }),
+        actions: actionButtons(getFormDataForModal(x)),
       }
     })
   } else {
@@ -122,13 +143,7 @@ export const refTypeTableData = (
       return {
         name: x.name,
         description: x.description,
-        actions: actionButtons({
-          id: x.id || ID_DEFAULT,
-          nameOrComponentName: x.name,
-          descOrStatusName: x.description,
-          isActive: true,
-          isHardDelete: false,
-        }),
+        actions: actionButtons(getFormDataForModal(x)),
       }
     })
   }

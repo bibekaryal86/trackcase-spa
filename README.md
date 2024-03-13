@@ -33,6 +33,6 @@
         * unify color palette
           * create a util module for it
 
-USER LOGIN/VALIDATE/RESET working
 REF TYPES MOSTLY WORKING
 NEXT: ADD ACCOUNT PAGE, ROLES, PERMISSIONS, USER-ROLE, ROLE-PERMISSION
+If filters change, api lookup, else store lookup
