@@ -90,13 +90,18 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
     })
   }
 
-  isSuperuser() &&
+  if (isSuperuser()) {
+    tableHeaderData.push({
+      id: 'isDeleted',
+      label: 'Is Deleted?',
+    })
     tableHeaderData.push({
       id: 'actions',
       label: 'Actions',
       align: 'center' as const,
-      isDisableSorting: true,
     })
+  }
+
   return tableHeaderData
 }
 
@@ -134,6 +139,7 @@ export const refTypeTableData = (
         nameOrComponentName: x.componentName,
         descOrStatusName: x.statusName,
         isActive: String(x.isActive).toUpperCase(),
+        isDeleted: String(x.isDeleted || false).toUpperCase(),
         actions: actionButtons(getFormDataForModal(x)),
       }
     })
@@ -143,6 +149,7 @@ export const refTypeTableData = (
       return {
         nameOrComponentName: x.name,
         descOrStatusName: x.description,
+        isDeleted: String(x.isDeleted || false).toUpperCase(),
         actions: actionButtons(getFormDataForModal(x)),
       }
     })
