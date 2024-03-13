@@ -1,5 +1,6 @@
 import { SelectChangeEvent } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
+import FormHelperText from '@mui/material/FormHelperText'
 import Grid, { GridDirection } from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -62,9 +63,11 @@ interface FormCommentFieldProps {
 
 interface FormSelectFieldProps {
   componentLabel: string
+  name?: string
   required?: boolean
   formControlSx?: object
   error?: boolean
+  helperText?: string
   inputLabelSx?: object
   variant?: TextFieldVariants
   value: number | string
@@ -224,9 +227,11 @@ export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
 
 export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   componentLabel,
+  name = '',
   required = false,
   formControlSx = { width: '100%', mt: '16px', mb: '8px' },
   error = false,
+  helperText = '',
   inputLabelSx = { left: '-0.9em' },
   variant = 'standard',
   value,
@@ -242,9 +247,10 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   return (
     <FormControl sx={formControlSx} required={required} error={error}>
       <InputLabel sx={inputLabelSx}>{label}</InputLabel>
-      <Select labelId={id} id={id} variant={variant} value={value.toString()} onChange={onChange} disabled={disabled}>
+      <Select labelId={id} id={id} variant={variant} name={name} value={value.toString()} onChange={onChange} disabled={disabled}>
         {selectMenuItems}
       </Select>
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   )
 }

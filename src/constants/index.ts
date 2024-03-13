@@ -97,6 +97,39 @@ export const REF_TYPES_REGISTRY = Object.freeze({
 })
 export type RefTypesRegistry = keyof typeof REF_TYPES_REGISTRY
 
+export const COMPONENT_STATUS_NAME = Object.freeze({
+  CALENDAR: 'CALENDAR',
+  COURT_CASE: 'COURT_CASE',
+  CLIENT: 'CLIENT',
+  COLLECTION: 'COLLECTION',
+  COURT: 'COURT',
+  FILING: 'FILING',
+  JUDGE: 'JUDGE',
+  APP_USER: 'APP_USER',
+  APP_ROLE: 'APP_ROLE',
+})
+export type ComponentStatusName = keyof typeof COMPONENT_STATUS_NAME
+
+export const COMPONENT_STATUS_STATUS = Object.freeze({
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  DISABLED: 'DISABLED',
+  CLOSED: 'CLOSED',
+  RETIRED: 'RETIRED',
+  FILING: 'COMPLETED',
+  JUDGE: 'TRANSFERRED',
+  APP_USER: 'CLOSED',
+  APP_ROLE: 'PROCESSING',
+  PAST_DUE: 'PAST_DUE',
+  PENDING: 'PENDING',
+  SUBMITTED: 'SUBMITTED',
+  EVIDENCE: 'EVIDENCE',
+  CREATED: 'CREATED',
+  RECEIVED: 'RECEIVED',
+  WAIVED: 'WAIVED',
+})
+export type ComponentStatusStatus = keyof typeof COMPONENT_STATUS_STATUS
+
 // CALENDAR TYPES
 export const CALENDAR_TYPES = Object.freeze({
   HEARING_CALENDAR: 'HEARING_CALENDAR',

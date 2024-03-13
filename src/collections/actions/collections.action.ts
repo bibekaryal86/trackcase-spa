@@ -1,13 +1,7 @@
 import React from 'react'
 
 import { Async, FetchOptions, getCurrency, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
-import {
-  COLLECTION_TYPES,
-  CREATE_SUCCESS,
-  DELETE_SUCCESS,
-  SOMETHING_WENT_WRONG,
-  UPDATE_SUCCESS,
-} from '../../constants'
+import { COLLECTION_TYPES, CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import { SET_SELECTED_CASE_COLLECTION, SET_SELECTED_CASH_COLLECTION } from '../types/collections.action.types'
 import {
   CaseCollectionResponse,

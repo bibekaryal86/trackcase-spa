@@ -1,8 +1,10 @@
-import { Checkbox } from '@mui/material'
+import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
+import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
@@ -10,15 +12,23 @@ import { connect, useDispatch } from 'react-redux'
 import {
   convertToCamelCase,
   convertToTitleCase,
+  FormSelectField,
   FormTextField,
   getNumber,
   GlobalState,
   Modal2,
   Table,
-  unmountPage,
   useModal,
 } from '../../app'
-import { ACTION_TYPES, ActionTypes, BUTTON_TYPES, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  BUTTON_TYPES,
+  COMPONENT_STATUS_NAME,
+  COMPONENT_STATUS_STATUS,
+  REF_TYPES_REGISTRY,
+  RefTypesRegistry,
+} from '../../constants'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { RefTypeResponse, RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
 import {
@@ -30,6 +40,7 @@ import {
   validateFormData,
 } from '../utils/refTypes.utils'
 
+
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
     refTypes: refTypes,
@@ -38,14 +49,12 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 
 const mapDispatchToProps = {
   getRefType: (refType: RefTypesRegistry) => getRefType(refType),
-  unmountPage: (refType: RefTypesRegistry) => unmountPage(`${refType}_UNMOUNT`),
 }
 
 interface RefTypeProps {
   refType: RefTypesRegistry
   refTypes: RefTypesState
   getRefType: (refType: RefTypesRegistry) => void
-  unmountPage: (refType: RefTypesRegistry) => void
 }
 
 const RefTypes = (props: RefTypeProps): React.ReactElement => {
@@ -54,7 +63,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const { refType, refTypes } = props
   const dispatch = useDispatch()
   const { getRefType } = props
-  const { unmountPage } = props
   const [refTypeList, setRefTypeList] = useState([] as RefTypeSchema[])
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
@@ -69,9 +77,10 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   useEffect(() => {
     const refTypeInStoreName = convertToCamelCase(refType, '_') as keyof RefTypesReduxStoreKeys
     const refTypeInStore = refTypes[refTypeInStoreName]
+    console.log(isFetchRunDone.current, refTypeInStoreName, refTypeInStore)
     setRefTypeList(refTypeInStore)
 
-    if (refTypeInStore.length === 0 && !isFetchRunDone.current) {
+    if (refTypeInStore.length === 0 && !isFetchRunDone.current){
       getRefType(refType as RefTypesRegistry)
       isFetchRunDone.current = true
     }
@@ -79,9 +88,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
   useEffect(() => {
     return () => {
-      unmountPage(props.refType as RefTypesRegistry)
+      isFetchRunDone.current = false
     }
-  }, [props.refType, unmountPage])
+  }, [])
 
   const refTypePageTitle = () => (
     <Typography component="h1" variant="h6" color="primary" gutterBottom>
@@ -118,7 +127,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const primaryButtonCallback = async (action: ActionTypes) => {
     const hasFormErrors = validateFormData(formData, setFormErrors)
     if (hasFormErrors) {
-      console.log('Has Form Errors', formErrors)
       return
     }
 
@@ -135,8 +143,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       )(dispatch)
     } else if (action === ACTION_TYPES.ADD) {
       refTypeResponse = await addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName)(dispatch)
-    } else {
-      console.log('Invalid action, formData combination', action, formData)
     }
 
     if (refTypeResponse && !refTypeResponse.detail) {
@@ -149,19 +155,26 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     addModalState.showModal && addModalState.toggleModalView()
     updateModalState.showModal && updateModalState.toggleModalView()
     deleteModalState.showModal && deleteModalState.toggleModalView()
-    setFormData(DefaultRefTypeFormData)
+    setFormData({...DefaultRefTypeFormData})
+    setFormErrors({...DefaultRefTypeFormData})
   }
 
   const resetButtonCallback = (action: ActionTypes) => {
     if (action === ACTION_TYPES.ADD) {
-      setFormData(DefaultRefTypeFormData)
+      setFormData({ ...DefaultRefTypeFormData })
+      setFormErrors({...DefaultRefTypeFormData})
     } else if (action === ACTION_TYPES.UPDATE) {
       setFormData(formDataReset)
+      setFormErrors({...DefaultRefTypeFormData})
     }
   }
 
-  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, checked } = event.target
+  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
+    let checked = false
+    const { name, value } = event.target
+    if ('checked' in event.target) {
+      checked = event.target.checked
+    }
 
     if (['nameOrComponentName', 'descOrStatusName'].includes(name)) {
       setFormData({ ...formData, [name]: value })
@@ -171,35 +184,80 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     }
   }
 
+  const componentNameMenuItems = () =>
+    Object.keys(COMPONENT_STATUS_NAME).map((x) => (
+      <MenuItem key={x} value={x}>
+        {x}
+      </MenuItem>
+    ))
+
+  const componentStatusMenuItems = () =>
+    Object.keys(COMPONENT_STATUS_STATUS).map((x) => (
+      <MenuItem key={x} value={x}>
+        {x}
+      </MenuItem>
+    ))
+
+  const refTypeFormComponentStatus = (nameOrComponentName: string, descOrStatusName: string) => (
+    <>
+      <FormSelectField
+        componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
+        name="nameOrComponentName"
+        required
+        value={formData.nameOrComponentName}
+        onChange={handleFormChange}
+        error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
+        helperText={formErrors.nameOrComponentName}
+        menuItems={componentNameMenuItems()}
+      />
+      <FormSelectField
+        componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
+        name="descOrStatusName"
+        required
+        value={formData.descOrStatusName}
+        onChange={handleFormChange}
+        error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
+        helperText={formErrors.descOrStatusName}
+        menuItems={componentStatusMenuItems()}
+      />
+      <FormControlLabel
+        label="Is Active Status"
+        control={<Checkbox name="isActive" checked={formData.isActive} onChange={handleFormChange} />}
+      />
+    </>
+  )
+
+  const refTypeFormOthers = (nameOrComponentName: string, descOrStatusName: string) => (
+    <>
+      <FormTextField
+        componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
+        name="nameOrComponentName"
+        required
+        value={formData.nameOrComponentName}
+        onChange={handleFormChange}
+        error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
+        helperText={formErrors.nameOrComponentName}
+      />
+      <FormTextField
+        componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
+        name="descOrStatusName"
+        required
+        value={formData.descOrStatusName}
+        onChange={handleFormChange}
+        error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
+        helperText={formErrors.descOrStatusName}
+      />
+    </>
+  )
+
   const refTypeForm = () => {
     const nameOrComponentName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Component Name' : 'Name'
     const descOrStatusName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Status Name' : 'Description'
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
-        <FormTextField
-          componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
-          name="nameOrComponentName"
-          required
-          value={formData.nameOrComponentName}
-          onChange={handleFormChange}
-          error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
-          helperText={formErrors.nameOrComponentName}
-        />
-        <FormTextField
-          componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
-          name="descOrStatusName"
-          required
-          value={formData.descOrStatusName}
-          onChange={handleFormChange}
-          error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
-          helperText={formErrors.descOrStatusName}
-        />
-        {refType === REF_TYPES_REGISTRY.COMPONENT_STATUS && (
-          <FormControlLabel
-            label="Is Active Status"
-            control={<Checkbox name="isActive" checked={formData.isActive} onChange={handleFormChange} />}
-          />
-        )}
+        {refType === REF_TYPES_REGISTRY.COMPONENT_STATUS
+          ? refTypeFormComponentStatus(nameOrComponentName, descOrStatusName)
+          : refTypeFormOthers(nameOrComponentName, descOrStatusName)}
       </Box>
     )
   }
@@ -209,7 +267,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       open={addModalState.showModal}
       onClose={() => {
         addModalState.toggleModalView()
-        setFormData(DefaultRefTypeFormData)
+        setFormData({ ...DefaultRefTypeFormData })
       }}
       title={`Add New ${refTypeTitle()}`}
       primaryButtonText={BUTTON_TYPES.Add}
@@ -228,7 +286,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         open={updateModalState.showModal}
         onClose={() => {
           updateModalState.toggleModalView()
-          setFormData(DefaultRefTypeFormData)
+          setFormData({ ...DefaultRefTypeFormData })
         }}
         title={`Update ${refTypeTitle()}`}
         primaryButtonText={BUTTON_TYPES.Update}
@@ -248,7 +306,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         open={deleteModalState.showModal}
         onClose={() => {
           deleteModalState.toggleModalView()
-          setFormData(DefaultRefTypeFormData)
+          setFormData({ ...DefaultRefTypeFormData })
         }}
         title={`Delete ${refTypeTitle()}`}
         primaryButtonText={BUTTON_TYPES.Delete}

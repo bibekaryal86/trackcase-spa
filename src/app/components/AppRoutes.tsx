@@ -245,7 +245,11 @@ const AppRoutes = (): React.ReactElement => {
         <Route key={refTypesRoute.path} path={refTypesRoute.path} element={getElement(refTypesRoute.element)} />
       ))}
       {userManagementRoutes.map((userManagementRoute) => (
-        <Route key={userManagementRoute.path} path={userManagementRoute.path} element={getElement(userManagementRoute.element)} />
+        <Route
+          key={userManagementRoute.path}
+          path={userManagementRoute.path}
+          element={getElement(userManagementRoute.element)}
+        />
       ))}
     </Routes>
   )
