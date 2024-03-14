@@ -12,7 +12,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { protectedRoutes, refTypesRoutes, userManagementRoutes } from './AppRoutes'
-import { isSuperuser } from '../../users'
+import { isPoweruser, isSuperuser } from '../../users'
 
 const refTypesRoutesPaths = refTypesRoutes.map((route) => route.path)
 
@@ -85,71 +85,75 @@ const SideNav = (props: SideNavProps) => {
               </ListItem>
             ),
         )}
-        <Divider />
-        <ListItemButton onClick={handleRefTypesOpen}>
-          <Tooltip title="Ref Types" placement="right">
-            <ListItemIcon>{isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
-          </Tooltip>
-        </ListItemButton>
-        <Collapse in={isRefTypesOpen} timeout="auto" unmountOnExit>
-          {refTypesRoutes.map(
-            (refTypesRoute) =>
-              refTypesRoute.display && (
-                <ListItem
-                  key={refTypesRoute.path}
-                  disablePadding
-                  sx={{ display: 'block' }}
-                  onClick={() => navigateToPage(refTypesRoute.path)}
-                >
-                  <ListItemButton
-                    selected={isSelected(refTypesRoute.path)}
-                    sx={{
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Tooltip title={refTypesRoute.display} placement="right">
-                      <ListItemIcon
+        {(isSuperuser() || isPoweruser()) && (
+          <>
+            <Divider />
+            <ListItemButton onClick={handleRefTypesOpen}>
+              <Tooltip title="Ref Types" placement="right">
+                <ListItemIcon>{isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
+              </Tooltip>
+            </ListItemButton>
+            <Collapse in={isRefTypesOpen} timeout="auto" unmountOnExit>
+              {refTypesRoutes.map(
+                (refTypesRoute) =>
+                  refTypesRoute.display && (
+                    <ListItem
+                      key={refTypesRoute.path}
+                      disablePadding
+                      sx={{ display: 'block' }}
+                      onClick={() => navigateToPage(refTypesRoute.path)}
+                    >
+                      <ListItemButton
+                        selected={isSelected(refTypesRoute.path)}
                         sx={{
                           justifyContent: 'center',
                         }}
                       >
-                        {refTypesRoute.icon}
-                      </ListItemIcon>
-                    </Tooltip>
-                  </ListItemButton>
-                </ListItem>
-              ),
-          )}
-          {isSuperuser() &&
-            userManagementRoutes.map(
-              (userManagementRoute) =>
-                userManagementRoute.display && (
-                  <ListItem
-                    key={userManagementRoute.path}
-                    disablePadding
-                    sx={{ display: 'block' }}
-                    onClick={() => navigateToPage(userManagementRoute.path)}
-                  >
-                    <ListItemButton
-                      selected={isSelected(userManagementRoute.path)}
-                      sx={{
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Tooltip title={userManagementRoute.display} placement="right">
-                        <ListItemIcon
+                        <Tooltip title={refTypesRoute.display} placement="right">
+                          <ListItemIcon
+                            sx={{
+                              justifyContent: 'center',
+                            }}
+                          >
+                            {refTypesRoute.icon}
+                          </ListItemIcon>
+                        </Tooltip>
+                      </ListItemButton>
+                    </ListItem>
+                  ),
+              )}
+              {isSuperuser() &&
+                userManagementRoutes.map(
+                  (userManagementRoute) =>
+                    userManagementRoute.display && (
+                      <ListItem
+                        key={userManagementRoute.path}
+                        disablePadding
+                        sx={{ display: 'block' }}
+                        onClick={() => navigateToPage(userManagementRoute.path)}
+                      >
+                        <ListItemButton
+                          selected={isSelected(userManagementRoute.path)}
                           sx={{
                             justifyContent: 'center',
                           }}
                         >
-                          {userManagementRoute.icon}
-                        </ListItemIcon>
-                      </Tooltip>
-                    </ListItemButton>
-                  </ListItem>
-                ),
-            )}
-        </Collapse>
+                          <Tooltip title={userManagementRoute.display} placement="right">
+                            <ListItemIcon
+                              sx={{
+                                justifyContent: 'center',
+                              }}
+                            >
+                              {userManagementRoute.icon}
+                            </ListItemIcon>
+                          </Tooltip>
+                        </ListItemButton>
+                      </ListItem>
+                    ),
+                )}
+            </Collapse>
+          </>
+        )}
       </List>
     </Menu>
   )
