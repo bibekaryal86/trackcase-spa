@@ -51,7 +51,7 @@ interface SwitchProps {
 
 const Switch = (props: SwitchProps) => {
   return (
-    <FormGroup>
+    <FormGroup sx={{ marginRight: 1 }}>
       <StyledSwitch checked={props.isChecked} onChange={props.onChangeCallback} />
     </FormGroup>
   )

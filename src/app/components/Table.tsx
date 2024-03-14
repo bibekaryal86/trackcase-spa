@@ -370,7 +370,7 @@ const Table = (props: TableProps) => {
       <FormControlLabel
         sx={{ marginRight: 3 }}
         control={<Switch isChecked={showSoftDeleted} onChangeCallback={handleChangeShowSoftDeleted} />}
-        label={showSoftDeleted ? 'Hide Soft Deleted' : 'Show Soft Deleted'}
+        label="Soft Deleted"
       />
     ) : null
 
