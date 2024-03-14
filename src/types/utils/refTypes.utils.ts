@@ -128,7 +128,7 @@ const getFormDataForModal = (x: RefTypeSchema) => {
       isActive: true,
       isHardDelete: false,
       isShowSoftDeleted: false,
-      isDeleted: x.isDeleted
+      isDeleted: x.isDeleted,
     }
   } else {
     return {

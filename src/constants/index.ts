@@ -73,6 +73,7 @@ export const ACTION_TYPES = Object.freeze({
   ADD: 'ADD',
   UPDATE: 'UPDATE',
   DELETE: 'DELETE',
+  RESTORE: 'RESTORE',
 })
 export type ActionTypes = keyof typeof ACTION_TYPES
 

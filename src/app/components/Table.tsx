@@ -172,8 +172,10 @@ function getCollapseRowKey(tableData: TableData): string | undefined {
   return undefined
 }
 
-const emptyTableMessage = (componentName: string, showSoftDeleteComponent: React.JSX.Element | null): React.JSX.Element => {
-  console.log(showSoftDeleteComponent)
+const emptyTableMessage = (
+  componentName: string,
+  showSoftDeleteComponent: React.JSX.Element | null,
+): React.JSX.Element => {
   const messageText =
     'Table is empty! If an error message was not displayed, then there are likely no ' +
     'COMPONENT in the system.....'.replace('COMPONENT', componentName)

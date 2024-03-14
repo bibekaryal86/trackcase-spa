@@ -95,7 +95,8 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     </Typography>
   )
 
-  const isDisabled = (name: string, isDeleted?: boolean) => ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name) || isDeleted
+  const isDisabled = (name: string, isDeleted?: boolean) =>
+    ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name) || isDeleted
   const addButton = () => <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
   const actionButtons = (formDataModal: RefTypeFormData) => (
     <>
@@ -130,14 +131,19 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     let refTypeResponse: RefTypeResponse = { data: [] }
     if (action === ACTION_TYPES.DELETE && getNumber(formData.id) > 0) {
       refTypeResponse = await deleteRefType(refType, formData.id, formData.isHardDelete)(dispatch)
-    } else if (action === ACTION_TYPES.UPDATE && getNumber(formData.id) > 0) {
-      refTypeResponse = await editRefType(
-        refType,
-        formData.id,
-        formData.nameOrComponentName,
-        formData.descOrStatusName,
-        formData.isActive,
-      )(dispatch)
+    } else if ((action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) && getNumber(formData.id) > 0) {
+      if (action === ACTION_TYPES.RESTORE && formData.isHardDelete) {
+        refTypeResponse = await deleteRefType(refType, formData.id, formData.isHardDelete)(dispatch)
+      } else {
+        refTypeResponse = await editRefType(
+          refType,
+          formData.id,
+          formData.nameOrComponentName,
+          formData.descOrStatusName,
+          formData.isActive,
+          action === ACTION_TYPES.RESTORE,
+        )(dispatch)
+      }
     } else if (action === ACTION_TYPES.ADD) {
       refTypeResponse = await addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName)(dispatch)
     }
@@ -226,7 +232,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const hardDeleteCheckbox = () =>
     isSuperuser() ? (
       <FormControlLabel
-        label="Hard Delete"
+        label="Hard Delete [Will delete permanently, even overrides RESTORE button click]!"
         control={<Checkbox name="isHardDelete" checked={formData.isHardDelete} onChange={handleFormChange} />}
       />
     ) : undefined
@@ -314,12 +320,14 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         }}
         title={`${formData.isDeleted ? 'Restore' : 'Delete'} ${refTypeTitle()}`}
         primaryButtonText={formData.isDeleted ? BUTTON_TYPES.Restore : BUTTON_TYPES.Delete}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.DELETE)}
+        primaryButtonCallback={() =>
+          primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE)
+        }
         secondaryButtonText={BUTTON_TYPES.Cancel}
         secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to ${formData.isDeleted ? 'restore' : 'delete'} ${refTypeTitle()}: ${formData.nameOrComponentName}, ${
-          formData.descOrStatusName
-        }?!?`}
+        contentText={`Are you sure you want to ${formData.isDeleted ? 'restore' : 'delete'} ${refTypeTitle()}: ${
+          formData.nameOrComponentName
+        }, ${formData.descOrStatusName}?!?`}
         content={hardDeleteCheckbox()}
       />
     )

@@ -252,6 +252,7 @@ export const editRefType = (
   name: string,
   description: string,
   isActive?: boolean,
+  isRestore?: boolean,
 ) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<RefTypeResponse> => {
     dispatch(refTypesDispatch({ type: `${refType}_UPDATE_REQUEST` }))
@@ -274,6 +275,7 @@ export const editRefType = (
       }
       const options: Partial<FetchOptions> = {
         method: 'PUT',
+        queryParams: { is_restore: isRestore || false },
         pathParams: { [refTypeId]: id },
         requestBody: requestBody,
       }
