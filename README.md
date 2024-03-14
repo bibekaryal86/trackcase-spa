@@ -3,6 +3,8 @@
 * Things to ADD/UPDATE
   * `trackcase-service`
     * MAJOR
+      * Separate Filing with RFE
+        * add RFE to it's own table
     * MINOR
       * calculate case collection amount remaining
         * case collection MINUS sum of cash collections
