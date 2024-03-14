@@ -83,6 +83,7 @@ export const BUTTON_TYPES = Object.freeze({
   Delete: 'Delete',
   Reset: 'Reset',
   Cancel: 'Cancel',
+  Restore: 'Restore',
 })
 export type ButtonTypes = keyof typeof BUTTON_TYPES
 

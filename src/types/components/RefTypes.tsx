@@ -95,7 +95,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     </Typography>
   )
 
-  const isDisabled = (name: string) => ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name)
+  const isDisabled = (name: string, isDeleted?: boolean) => ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name) || isDeleted
   const addButton = () => <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
   const actionButtons = (formDataModal: RefTypeFormData) => (
     <>
@@ -105,7 +105,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           setFormData(formDataModal)
           setFormDataReset(formDataModal)
         }}
-        disabled={isDisabled(formDataModal.nameOrComponentName || '')}
+        disabled={isDisabled(formDataModal.nameOrComponentName || '', formDataModal.isDeleted)}
       >
         Update
       </Button>
@@ -116,7 +116,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         }}
         disabled={isDisabled(formDataModal.nameOrComponentName || '')}
       >
-        Delete
+        {formDataModal.isDeleted ? 'Restore' : 'Delete'}
       </Button>
     </>
   )
@@ -312,12 +312,12 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           deleteModalState.toggleModalView()
           setFormData({ ...DefaultRefTypeFormData })
         }}
-        title={`Delete ${refTypeTitle()}`}
-        primaryButtonText={BUTTON_TYPES.Delete}
+        title={`${formData.isDeleted ? 'Restore' : 'Delete'} ${refTypeTitle()}`}
+        primaryButtonText={formData.isDeleted ? BUTTON_TYPES.Restore : BUTTON_TYPES.Delete}
         primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.DELETE)}
         secondaryButtonText={BUTTON_TYPES.Cancel}
         secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to delete ${refTypeTitle()}: ${formData.nameOrComponentName}, ${
+        contentText={`Are you sure you want to ${formData.isDeleted ? 'restore' : 'delete'} ${refTypeTitle()}: ${formData.nameOrComponentName}, ${
           formData.descOrStatusName
         }?!?`}
         content={hardDeleteCheckbox()}

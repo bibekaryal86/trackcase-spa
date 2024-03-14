@@ -17,6 +17,7 @@ export interface RefTypeFormData {
   isActive: boolean
   isHardDelete: boolean
   isShowSoftDeleted: boolean
+  isDeleted?: boolean
 }
 
 export const DefaultRefTypeFormData: RefTypeFormData = {
@@ -26,6 +27,7 @@ export const DefaultRefTypeFormData: RefTypeFormData = {
   isActive: false,
   isHardDelete: false,
   isShowSoftDeleted: false,
+  isDeleted: false,
 }
 
 export interface RefTypesReduxStoreKeys {
@@ -126,6 +128,7 @@ const getFormDataForModal = (x: RefTypeSchema) => {
       isActive: true,
       isHardDelete: false,
       isShowSoftDeleted: false,
+      isDeleted: x.isDeleted
     }
   } else {
     return {
@@ -135,6 +138,7 @@ const getFormDataForModal = (x: RefTypeSchema) => {
       isActive: true,
       isHardDelete: false,
       isShowSoftDeleted: false,
+      isDeleted: x.isDeleted,
     }
   }
 }
