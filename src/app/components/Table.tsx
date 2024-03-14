@@ -12,7 +12,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableSortLabel from '@mui/material/TableSortLabel'
-import Typography from '@mui/material/Typography'
 import { visuallyHidden } from '@mui/utils'
 import React, { isValidElement, useMemo, useState } from 'react'
 import { CSVLink } from 'react-csv'
@@ -173,20 +172,21 @@ function getCollapseRowKey(tableData: TableData): string | undefined {
   return undefined
 }
 
-const emptyTableMessage = (componentName: string): React.JSX.Element => {
+const emptyTableMessage = (componentName: string, showSoftDeleteComponent: React.JSX.Element | null): React.JSX.Element => {
+  console.log(showSoftDeleteComponent)
   const messageText =
     'Table is empty! If an error message was not displayed, then there are likely no ' +
-    'COMPONENT in the system!!'.replace('COMPONENT', componentName)
+    'COMPONENT in the system.....'.replace('COMPONENT', componentName)
   const messageStyle: React.CSSProperties = {
     paddingTop: '25px',
     paddingBottom: '25px',
     borderBottom: '1px solid rgba(224, 224, 224, 1)',
+    display: 'flex',
   }
   return (
     <div style={messageStyle}>
-      <Typography component="p" variant="subtitle2">
-        {messageText}
-      </Typography>
+      {messageText}
+      {showSoftDeleteComponent}
     </div>
   )
 }
@@ -426,7 +426,7 @@ const Table = (props: TableProps) => {
         </MuiTable>
       </TableContainer>
       {tableData.length === 0
-        ? emptyTableMessage(props.componentName)
+        ? emptyTableMessage(props.componentName, showSoftDeletedComponent())
         : props.isDisablePagination
         ? null
         : tablePagination(
