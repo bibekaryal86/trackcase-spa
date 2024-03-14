@@ -210,7 +210,14 @@ export const userManagementRoutes: RoutesType[] = [
 function RequireAuth({ children }: { children: React.ReactElement }) {
   const location = useLocation()
   const appUserDetails = isLoggedIn()
-  return appUserDetails ? children : <Navigate to="/" replace state={{ redirect: location.pathname }} />
+  if (appUserDetails) {
+    // TODO check auth here and redirect based on permissions
+    // update api to return roles as well
+    // roles are returned, permissions are not
+    return children
+  } else {
+    return <Navigate to="/" replace state={{ redirect: location.pathname }} />
+  }
 }
 
 const getElement = (children: React.ReactElement | undefined) => children && <RequireAuth>{children}</RequireAuth>
