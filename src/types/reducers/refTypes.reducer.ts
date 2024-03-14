@@ -42,6 +42,7 @@ const DefaultRefTypesState: RefTypesState = {
   caseType: [],
   hearingType: [],
   taskType: [],
+  requestMetadataState: [],
 }
 
 export default function refTypes(state = DefaultRefTypesState, action: RefTypesAction): RefTypesState {
@@ -57,6 +58,7 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
       return {
         ...state,
         caseType: action.data as CaseTypeSchema[],
+        requestMetadataState: action.metadata,
       }
     case CASE_TYPE_CREATE_SUCCESS:
     case CASE_TYPE_UPDATE_SUCCESS:
@@ -64,11 +66,13 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
       return {
         ...state,
         caseType: [], // so that it will fetch
+        requestMetadataState: [],
       }
     case COLLECTION_METHOD_RETRIEVE_SUCCESS:
       return {
         ...state,
         collectionMethod: action.data as CollectionMethodSchema[],
+        requestMetadataState: action.metadata,
       }
     case COLLECTION_METHOD_CREATE_SUCCESS:
     case COLLECTION_METHOD_UPDATE_SUCCESS:
@@ -76,11 +80,13 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
       return {
         ...state,
         collectionMethod: [], // so that it will fetch
+        requestMetadataState: [],
       }
     case COMPONENT_STATUS_RETRIEVE_SUCCESS:
       return {
         ...state,
         componentStatus: action.data as ComponentStatusSchema[],
+        requestMetadataState: action.metadata,
       }
     case COMPONENT_STATUS_CREATE_SUCCESS:
     case COMPONENT_STATUS_UPDATE_SUCCESS:
@@ -88,11 +94,13 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
       return {
         ...state,
         componentStatus: [], // so that it will fetch
+        requestMetadataState: [],
       }
     case FILING_TYPE_RETRIEVE_SUCCESS:
       return {
         ...state,
         filingType: action.data as FilingTypeSchema[],
+        requestMetadataState: action.metadata,
       }
     case FILING_TYPE_CREATE_SUCCESS:
     case FILING_TYPE_UPDATE_SUCCESS:
@@ -100,11 +108,13 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
       return {
         ...state,
         filingType: [], // so that it will fetch
+        requestMetadataState: [],
       }
     case HEARING_TYPE_RETRIEVE_SUCCESS:
       return {
         ...state,
         hearingType: action.data as HearingTypeSchema[],
+        requestMetadataState: action.metadata,
       }
     case HEARING_TYPE_CREATE_SUCCESS:
     case HEARING_TYPE_UPDATE_SUCCESS:
@@ -112,11 +122,13 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
       return {
         ...state,
         hearingType: [], // so that it will fetch
+        requestMetadataState: [],
       }
     case TASK_TYPE_RETRIEVE_SUCCESS:
       return {
         ...state,
         taskType: action.data as TaskTypeSchema[],
+        requestMetadataState: action.metadata,
       }
     case TASK_TYPE_CREATE_SUCCESS:
     case TASK_TYPE_UPDATE_SUCCESS:
@@ -124,6 +136,7 @@ export default function refTypes(state = DefaultRefTypesState, action: RefTypesA
       return {
         ...state,
         taskType: [], // so that it will fetch
+        requestMetadataState: [],
       }
     default:
       return state

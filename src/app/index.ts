@@ -62,7 +62,7 @@ import {
   validateEmailAddress,
   validatePhoneNumber,
 } from './utils/app.utils'
-import { Async, FetchOptions, FetchResponse } from './utils/fetch.utils'
+import { Async, FetchOptions, FetchRequestMetadata, FetchResponse } from './utils/fetch.utils'
 import { resetSpinner, setSpinner } from './utils/spinner.utils'
 import { LocalStorage, SessionStorage } from './utils/storage.utils'
 
@@ -127,6 +127,6 @@ export {
   validatePhoneNumber,
 }
 export { Async }
-export type { FetchOptions, FetchResponse }
+export type { FetchOptions, FetchRequestMetadata, FetchResponse }
 export { resetSpinner, setSpinner }
 export { LocalStorage, SessionStorage }

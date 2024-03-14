@@ -25,7 +25,7 @@ interface FilterConfig {
   operation: 'eq' | 'gt' | 'lt' | 'gte' | 'lte'
 }
 
-interface FetchRequestMetadata {
+export interface FetchRequestMetadata {
   modelId: number
   sortConfig: SortConfig
   filterConfig: FilterConfig[]

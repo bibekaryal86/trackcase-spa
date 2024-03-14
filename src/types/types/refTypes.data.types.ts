@@ -1,7 +1,8 @@
-import { BaseModelSchema, NameDescBaseSchema, ResponseBase } from '../../app'
+import { BaseModelSchema, FetchRequestMetadata, NameDescBaseSchema, ResponseBase } from '../../app'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CashCollectionSchema } from '../../collections'
+import { RefTypesRegistry } from '../../constants'
 import { FormSchema } from '../../forms'
 
 export interface ComponentStatusSchema extends BaseModelSchema {
@@ -93,6 +94,11 @@ export type RefTypeLessStatusSchema =
   | TaskTypeSchema
 
 // states and actions
+export interface RefTypesRequestMetadataState {
+  refType: RefTypesRegistry
+  requestMetadata: Partial<FetchRequestMetadata>
+}
+
 export interface RefTypesState {
   componentStatus: ComponentStatusSchema[]
   filingType: FilingTypeSchema[]
@@ -100,9 +106,11 @@ export interface RefTypesState {
   caseType: CaseTypeSchema[]
   hearingType: HearingTypeSchema[]
   taskType: TaskTypeSchema[]
+  requestMetadataState: RefTypesRequestMetadataState[]
 }
 
 export interface RefTypesAction {
   type: string
   data: RefTypeSchema[]
+  metadata: RefTypesRequestMetadataState[]
 }

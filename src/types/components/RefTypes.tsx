@@ -6,9 +6,8 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 
 import {
   convertToCamelCase,
@@ -49,7 +48,7 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 }
 
 const mapDispatchToProps = {
-  getRefType: (refType: RefTypesRegistry) => getRefType(refType),
+  getRefType: (refType: RefTypesRegistry) => getRefType(refType, {isIncludeDeleted: true}),
 }
 
 interface RefTypeProps {
@@ -60,8 +59,6 @@ interface RefTypeProps {
 
 const RefTypes = (props: RefTypeProps): React.ReactElement => {
   // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
-  const location = useLocation()
   const { refType, refTypes } = props
   const dispatch = useDispatch()
   const { getRefType } = props
@@ -81,16 +78,10 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     const refTypeInStore = refTypes[refTypeInStoreName]
     setRefTypeList(refTypeInStore)
 
-    if (refTypeInStore.length === 0 && !isFetchRunDone.current) {
+    if (refTypeInStore.length === 0) {
       getRefType(refType as RefTypesRegistry)
-      isFetchRunDone.current = true
     }
   }, [refTypeList, refType, refTypes, getRefType])
-
-  useEffect(() => {
-    // Reset fetch state when route changes
-    isFetchRunDone.current = false
-  }, [location.pathname])
 
   const refTypePageTitle = () => (
     <Typography component="h1" variant="h6" color="primary" gutterBottom>
@@ -146,7 +137,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     }
 
     if (refTypeResponse && !refTypeResponse.detail) {
-      isFetchRunDone.current = false
       secondaryButtonCallback()
     }
   }

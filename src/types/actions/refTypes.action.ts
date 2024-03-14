@@ -1,6 +1,15 @@
 import React from 'react'
 
-import { Async, convertToCamelCase, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
+import {
+  Async,
+  convertToCamelCase,
+  FetchOptions,
+  FetchRequestMetadata,
+  getEndpoint,
+  getErrMsg,
+  GlobalDispatch,
+  GlobalState,
+} from '../../app'
 import {
   CREATE_SUCCESS,
   REF_TYPES_REGISTRY,
@@ -28,7 +37,12 @@ import {
   TASK_TYPE_RETRIEVE_REQUEST,
   TASK_TYPE_RETRIEVE_SUCCESS,
 } from '../types/refTypes.action.types'
-import { RefTypeResponse, RefTypeSchema, RefTypesResponse } from '../types/refTypes.data.types'
+import {
+  RefTypeResponse,
+  RefTypeSchema,
+  RefTypesRequestMetadataState,
+  RefTypesResponse,
+} from '../types/refTypes.data.types'
 import { refTypesDispatch, RefTypesReduxStoreKeys } from '../utils/refTypes.utils'
 
 export const getRefTypes = () => {
@@ -156,15 +170,54 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
   }
 }
 
-export const getRefType = (refType: RefTypesRegistry) => {
+export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<FetchRequestMetadata>) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_REQUEST` }))
+
+    console.log(requestMetadata)
 
     try {
       let refTypeList: RefTypeSchema[] = []
       const refTypeInStoreName = convertToCamelCase(refType, '_') as keyof RefTypesReduxStoreKeys
 
-      if (getStore().refTypes[refTypeInStoreName] && getStore().refTypes[refTypeInStoreName].length === 0) {
+      let isRequestMetadataSame = true
+      let updatedRequestMetadataState = [] as RefTypesRequestMetadataState[]
+      const requestMetadataInStore: RefTypesRequestMetadataState[] = getStore().refTypes.requestMetadataState
+
+      if (requestMetadata) {
+        if (requestMetadataInStore && requestMetadataInStore.length) {
+          updatedRequestMetadataState = [...requestMetadataInStore]
+          const index = requestMetadataInStore.findIndex((x) => x.refType === refType)
+          if (index !== -1) {
+            const refTypeRequestMetadata = updatedRequestMetadataState[index]
+            isRequestMetadataSame = requestMetadata === refTypeRequestMetadata.requestMetadata
+            if (!isRequestMetadataSame) {
+              updatedRequestMetadataState[index] = {
+                ...updatedRequestMetadataState[index],
+                requestMetadata: requestMetadata,
+              }
+            }
+          } else {
+            updatedRequestMetadataState.push({
+              refType,
+              requestMetadata,
+            })
+          }
+        } else {
+          updatedRequestMetadataState.push({
+            refType,
+            requestMetadata,
+          })
+        }
+      } else {
+        updatedRequestMetadataState = [...requestMetadataInStore]
+      }
+
+      if (
+        isRequestMetadataSame &&
+        getStore().refTypes[refTypeInStoreName] &&
+        getStore().refTypes[refTypeInStoreName].length === 0
+      ) {
         refTypeList = getStore().refTypes[refTypeInStoreName]
       }
 
@@ -172,12 +225,15 @@ export const getRefType = (refType: RefTypesRegistry) => {
         const urlPath = getUrlPath(refType, 'READ')
         const options: Partial<FetchOptions> = {
           method: 'GET',
+          metadataParams: requestMetadata,
         }
         const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
         refTypeList = refTypeResponse?.data || []
       }
 
-      dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_SUCCESS`, data: refTypeList }))
+      dispatch(
+        refTypesDispatch({ type: `${refType}_RETRIEVE_SUCCESS`, data: refTypeList, metadata: updatedRequestMetadataState }),
+      )
     } catch (error) {
       console.log(`Get ${refType} Error: `, error)
       dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_FAILURE`, error: SOMETHING_WENT_WRONG }))

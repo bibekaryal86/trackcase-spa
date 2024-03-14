@@ -3,7 +3,12 @@ import React from 'react'
 import { getString, TableData, TableHeaderData } from '../../app'
 import { ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
 import { isSuperuser } from '../../users'
-import { ComponentStatusSchema, RefTypeLessStatusSchema, RefTypeSchema } from '../types/refTypes.data.types'
+import {
+  ComponentStatusSchema,
+  RefTypeLessStatusSchema,
+  RefTypeSchema,
+  RefTypesRequestMetadataState,
+} from '../types/refTypes.data.types'
 
 export interface RefTypeFormData {
   id: number
@@ -32,7 +37,13 @@ export interface RefTypesReduxStoreKeys {
   taskType: string
 }
 
-export const refTypesDispatch = ({ type = '', error = '', success = '', data = [] as RefTypeSchema[] } = {}) => {
+export const refTypesDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  data = [] as RefTypeSchema[],
+  metadata = [] as RefTypesRequestMetadataState[],
+} = {}) => {
   if (error) {
     return {
       type,
@@ -47,6 +58,7 @@ export const refTypesDispatch = ({ type = '', error = '', success = '', data = [
     return {
       type,
       data,
+      metadata,
     }
   } else {
     return {
