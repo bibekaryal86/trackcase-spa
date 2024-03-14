@@ -85,8 +85,8 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     }
   }, [refTypeList, refType, refTypes, getRefType])
 
-  const getRefTypeWithRequestMetadata = () => {
-    getRefType(refType as RefTypesRegistry, { isIncludeDeleted: true })
+  const getWithSoftDeleted = (isIncludeDeleted: boolean) => {
+    getRefType(refType as RefTypesRegistry, { isIncludeDeleted })
   }
 
   const refTypePageTitle = () => (
@@ -94,8 +94,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       {refTypeTitle()}
     </Typography>
   )
-
-  const testButton = () => <Button onClick={() => getRefTypeWithRequestMetadata()}>Get New</Button>
 
   const isDisabled = (name: string) => ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name)
   const addButton = () => <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
@@ -333,6 +331,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       headerData={refTypeTableHeader(refType)}
       tableData={refTypeTableData(refType, refTypeList, actionButtons)}
       addModelComponent={addButton()}
+      getSoftDeletedCallback={getWithSoftDeleted}
     />
   )
 
@@ -341,7 +340,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {refTypePageTitle()}
-          {testButton()}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {refTypeTable()}

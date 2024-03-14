@@ -19,6 +19,7 @@ import { CSVLink } from 'react-csv'
 
 import Switch from './Switch'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { isSuperuser } from '../../users'
 import { TableData, TableHeaderData, TableOrder } from '../types/app.data.types'
 
 const TABLE_EXPORT_KEYS_TO_AVOID = ['actions', 'Actions', 'collapsed']
@@ -47,6 +48,7 @@ interface TableProps {
   addModelComponent?: React.JSX.Element
   tableLayout?: string
   isDisablePagination?: boolean
+  getSoftDeletedCallback?: (isIncludeDeleted: boolean) => void
 }
 interface TableRowProps {
   row: TableData
@@ -199,6 +201,7 @@ const tablePagination = (
   denseComponent: React.JSX.Element | null,
   exportComponent: React.JSX.Element | null,
   isSmallScreen: boolean,
+  showSoftDeleteComponent: React.JSX.Element | null,
 ) => (
   <div
     style={{
@@ -208,6 +211,7 @@ const tablePagination = (
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     }}
   >
+    {showSoftDeleteComponent}
     {exportComponent}
     {denseComponent}
     <TablePagination
@@ -317,6 +321,7 @@ const Table = (props: TableProps) => {
   const [page, setPage] = useState(0)
   const [dense, setDense] = useState(props.defaultDense)
   const [rowsPerPage, setRowsPerPage] = useState(props.defaultRowsPerPage || 20)
+  const [showSoftDeleted, setShowSoftDeleted] = useState(false)
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0
@@ -353,6 +358,21 @@ const Table = (props: TableProps) => {
         label="Dense"
       />
     )
+
+  const handleChangeShowSoftDeleted = (event?: React.ChangeEvent<HTMLInputElement>) => {
+    const isShowSoftDeleted = event ? event.target.checked : false
+    setShowSoftDeleted(isShowSoftDeleted)
+    props.getSoftDeletedCallback && props.getSoftDeletedCallback(isShowSoftDeleted)
+  }
+
+  const showSoftDeletedComponent = () =>
+    isSuperuser() ? (
+      <FormControlLabel
+        sx={{ marginRight: 3 }}
+        control={<Switch isChecked={showSoftDeleted} onChangeCallback={handleChangeShowSoftDeleted} />}
+        label={showSoftDeleted ? 'Hide Soft Deleted' : 'Show Soft Deleted'}
+      />
+    ) : null
 
   const exportComponent = () =>
     props.isExportToCsv && props.tableData && props.tableData.length > 0 ? (
@@ -419,6 +439,7 @@ const Table = (props: TableProps) => {
             denseComponent(isSmallScreen),
             exportComponent(),
             isSmallScreen,
+            showSoftDeletedComponent(),
           )}
     </div>
   )
