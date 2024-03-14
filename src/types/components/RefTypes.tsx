@@ -12,6 +12,7 @@ import { connect, useDispatch } from 'react-redux'
 import {
   convertToCamelCase,
   convertToTitleCase,
+  FetchRequestMetadata,
   FormSelectField,
   FormTextField,
   getNumber,
@@ -48,13 +49,14 @@ const mapStateToProps = ({ refTypes }: GlobalState) => {
 }
 
 const mapDispatchToProps = {
-  getRefType: (refType: RefTypesRegistry) => getRefType(refType, {isIncludeDeleted: true}),
+  getRefType: (refType: RefTypesRegistry, requestMetadata?: Partial<FetchRequestMetadata>) =>
+    getRefType(refType, requestMetadata),
 }
 
 interface RefTypeProps {
   refType: RefTypesRegistry
   refTypes: RefTypesState
-  getRefType: (refType: RefTypesRegistry) => void
+  getRefType: (refType: RefTypesRegistry, requestMetadata?: Partial<FetchRequestMetadata>) => void
 }
 
 const RefTypes = (props: RefTypeProps): React.ReactElement => {
@@ -83,11 +85,17 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     }
   }, [refTypeList, refType, refTypes, getRefType])
 
+  const getRefTypeWithRequestMetadata = () => {
+    getRefType(refType as RefTypesRegistry, { isIncludeDeleted: true })
+  }
+
   const refTypePageTitle = () => (
     <Typography component="h1" variant="h6" color="primary" gutterBottom>
       {refTypeTitle()}
     </Typography>
   )
+
+  const testButton = () => <Button onClick={() => getRefTypeWithRequestMetadata()}>Get New</Button>
 
   const isDisabled = (name: string) => ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name)
   const addButton = () => <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
@@ -333,6 +341,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {refTypePageTitle()}
+          {testButton()}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {refTypeTable()}

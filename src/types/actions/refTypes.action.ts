@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React from 'react'
 
 import {
@@ -174,23 +175,21 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_REQUEST` }))
 
-    console.log(requestMetadata)
-
     try {
       let refTypeList: RefTypeSchema[] = []
       const refTypeInStoreName = convertToCamelCase(refType, '_') as keyof RefTypesReduxStoreKeys
 
-      let isRequestMetadataSame = true
+      let isRequestMetadataSame = false
       let updatedRequestMetadataState = [] as RefTypesRequestMetadataState[]
-      const requestMetadataInStore: RefTypesRequestMetadataState[] = getStore().refTypes.requestMetadataState
+      const requestMetadataState: RefTypesRequestMetadataState[] = getStore().refTypes.requestMetadataState
 
       if (requestMetadata) {
-        if (requestMetadataInStore && requestMetadataInStore.length) {
-          updatedRequestMetadataState = [...requestMetadataInStore]
-          const index = requestMetadataInStore.findIndex((x) => x.refType === refType)
+        if (requestMetadataState && requestMetadataState.length) {
+          updatedRequestMetadataState = [...requestMetadataState]
+          const index = requestMetadataState.findIndex((x) => x.refType === refType)
           if (index !== -1) {
-            const refTypeRequestMetadata = updatedRequestMetadataState[index]
-            isRequestMetadataSame = requestMetadata === refTypeRequestMetadata.requestMetadata
+            const requestMetadataInStore = updatedRequestMetadataState[index]
+            isRequestMetadataSame = _.isEqual(requestMetadata, requestMetadataInStore.requestMetadata)
             if (!isRequestMetadataSame) {
               updatedRequestMetadataState[index] = {
                 ...updatedRequestMetadataState[index],
@@ -210,13 +209,13 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
           })
         }
       } else {
-        updatedRequestMetadataState = [...requestMetadataInStore]
+        updatedRequestMetadataState = [...requestMetadataState]
       }
 
       if (
         isRequestMetadataSame &&
         getStore().refTypes[refTypeInStoreName] &&
-        getStore().refTypes[refTypeInStoreName].length === 0
+        getStore().refTypes[refTypeInStoreName].length > 0
       ) {
         refTypeList = getStore().refTypes[refTypeInStoreName]
       }
@@ -232,7 +231,11 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
       }
 
       dispatch(
-        refTypesDispatch({ type: `${refType}_RETRIEVE_SUCCESS`, data: refTypeList, metadata: updatedRequestMetadataState }),
+        refTypesDispatch({
+          type: `${refType}_RETRIEVE_SUCCESS`,
+          data: refTypeList,
+          metadata: updatedRequestMetadataState,
+        }),
       )
     } catch (error) {
       console.log(`Get ${refType} Error: `, error)
