@@ -57,9 +57,7 @@ const appReducers = combineReducers({
 
 const rootReducer = (state: any, action: any) => {
   if (action.type === USER_LOGOUT) {
-    // do not clear ref types when logging out
-    const { refTypes, courts, judges } = state
-    state = { refTypes, courts, judges }
+    state = undefined
   }
   return appReducers(state, action)
 }
