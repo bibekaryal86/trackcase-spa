@@ -11,7 +11,6 @@ import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-route
 import { getErrMsg, getString, LocalStorage, resetAlert, resetSpinner, setAlert, setSpinner } from '../../app'
 import {
   ALERT_TYPE_FAILURE,
-  ALERT_TYPE_INFO,
   ALERT_TYPE_SUCCESS,
   ALERT_TYPE_WARNING,
   INVALID_INPUT,
@@ -21,7 +20,6 @@ import {
   RESET_EXIT_SUCCESS,
   RESET_INIT_FAILURE,
   RESET_INIT_SUCCESS,
-  SIGNIN_FIRST,
   SIGNUP_SUCCESS,
   SOMETHING_WENT_WRONG,
   VALIDATE_FAILURE,
@@ -58,7 +56,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   }
 
   // redirect to home or selected page upon successful sign in
-  const { state } = useLocation() as { state: { redirect: string; message: string } }
+  const { state } = useLocation() as { state: { redirect: string } }
   const navigate = useNavigate()
   const [searchQueryParams] = useSearchParams()
   const isValidatedQp = searchQueryParams.get('is_validated')
@@ -89,16 +87,6 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
       }
     }
   }, [isResetExitQp, setAlert, userToResetQp])
-
-  useEffect(() => {
-    if (state?.message?.length) {
-      setAlert(ALERT_TYPE_INFO, state.message)
-    }
-    if (state?.redirect && !isLoggedIn()) {
-      setAlert(ALERT_TYPE_WARNING, SIGNIN_FIRST)
-    }
-    // state.message = ''
-  }, [setAlert, state])
 
   const resetState = () => {
     setShowFormType(LOGIN_SHOW_FORM_TYPE.SIGNIN)
