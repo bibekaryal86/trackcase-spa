@@ -20,13 +20,13 @@ import { Calendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
 import { Collections } from '../../collections'
-import { REF_TYPES_REGISTRY } from '../../constants'
+import { INCOMPLETE_PERMISSION, REF_TYPES_REGISTRY } from '../../constants'
 import { Court, Courts } from '../../courts'
 import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
 import { RefTypes } from '../../types'
-import { isLoggedIn, UserAdmin, UserSignInUp } from '../../users'
+import { checkUserHasPermission, isLoggedIn, UserAdmin, UserSignInUp } from '../../users'
 import { RoutesType } from '../types/app.data.types'
 
 const publicRoutes: RoutesType[] = [
@@ -207,20 +207,27 @@ export const userManagementRoutes: RoutesType[] = [
   },
 ]
 
-function RequireAuth({ children }: { children: React.ReactElement }) {
+function RequireAuth({ children, path }: { children: React.ReactElement; path: string }) {
   const location = useLocation()
   const appUserDetails = isLoggedIn()
   if (appUserDetails) {
-    // TODO check auth here and redirect based on permissions
-    // update api to return roles as well
-    // roles are returned, permissions are not
-    return children
+    if (checkUserHasPermission(path, 'view', appUserDetails)) {
+      return children
+    } else {
+      if (path === '/home') {
+        return children
+      } else {
+        console.log(path, INCOMPLETE_PERMISSION)
+        return children
+      }
+    }
   } else {
     return <Navigate to="/" replace state={{ redirect: location.pathname }} />
   }
 }
 
-const getElement = (children: React.ReactElement | undefined) => children && <RequireAuth>{children}</RequireAuth>
+const getElement = (children: React.ReactElement, path: string) =>
+  children && <RequireAuth path={path}>{children}</RequireAuth>
 
 const AppRoutes = (): React.ReactElement => {
   return (
@@ -229,10 +236,14 @@ const AppRoutes = (): React.ReactElement => {
         <Route key={publicRoute.path} path={publicRoute.path} element={publicRoute.element} />
       ))}
       {protectedRoutes.map((protectedRoute) => (
-        <Route key={protectedRoute.path} path={protectedRoute.path} element={getElement(protectedRoute.element)}>
+        <Route
+          key={protectedRoute.path}
+          path={protectedRoute.path}
+          element={getElement(protectedRoute.element, protectedRoute.path)}
+        >
           {protectedRoute.subroutes &&
             protectedRoute.subroutes.map((subroute) => (
-              <Route key={subroute.path} path={subroute.path} element={getElement(subroute.element)} />
+              <Route key={subroute.path} path={subroute.path} element={getElement(subroute.element, subroute.path)} />
             ))}
         </Route>
       ))}
@@ -240,22 +251,30 @@ const AppRoutes = (): React.ReactElement => {
         (protectedRoute) =>
           protectedRoute.submenus &&
           protectedRoute.submenus.map((submenu) => (
-            <Route key={submenu.path} path={submenu.path} element={getElement(submenu.element)}>
+            <Route key={submenu.path} path={submenu.path} element={getElement(submenu.element, submenu.path)}>
               {submenu.subroutes &&
                 submenu.subroutes.map((subroute) => (
-                  <Route key={subroute.path} path={subroute.path} element={getElement(subroute.element)} />
+                  <Route
+                    key={subroute.path}
+                    path={subroute.path}
+                    element={getElement(subroute.element, subroute.path)}
+                  />
                 ))}
             </Route>
           )),
       )}
       {refTypesRoutes.map((refTypesRoute) => (
-        <Route key={refTypesRoute.path} path={refTypesRoute.path} element={getElement(refTypesRoute.element)} />
+        <Route
+          key={refTypesRoute.path}
+          path={refTypesRoute.path}
+          element={getElement(refTypesRoute.element, refTypesRoute.path)}
+        />
       ))}
       {userManagementRoutes.map((userManagementRoute) => (
         <Route
           key={userManagementRoute.path}
           path={userManagementRoute.path}
-          element={getElement(userManagementRoute.element)}
+          element={getElement(userManagementRoute.element, userManagementRoute.path)}
         />
       ))}
     </Routes>

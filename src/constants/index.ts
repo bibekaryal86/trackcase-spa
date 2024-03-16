@@ -46,6 +46,7 @@ export const INVALID_INPUT = 'Required inputs are invalid/empty, please try agai
 export const INVALID_PASSWORD = 'Passwords do not match, please try again...'
 export const SIGNIN_FIRST = 'Please sign in first...'
 export const INVALID_SESSION = 'Session invalidated due to inactivity/expiry, please sign in again to continue...'
+export const INCOMPLETE_PERMISSION = 'Incomplete permission, redirected to home...'
 export const SIGNUP_SUCCESS =
   'Signup successful, please check your inbox to validate your account. Account can only be used after validation...'
 export const VALIDATE_SUCCESS = 'Email validation successful, please sign in to continue...'

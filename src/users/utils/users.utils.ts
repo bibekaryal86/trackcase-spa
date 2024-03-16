@@ -23,27 +23,26 @@ export const isSuperuser = (): boolean => {
 }
 
 export const checkUserHasPermission = (
-  component:
-    | 'collections'
-    | 'calendars'
-    | 'filings'
-    | 'court_cases'
-    | 'clients'
-    | 'judges'
-    | 'courts'
-    | 'ref_types'
-    | 'component_status'
-    | 'case_type'
-    | 'collection_method'
-    | 'filing_type'
-    | 'hearing_type'
-    | 'task_type',
+  component: string,
   action: 'add' | 'view' | 'update' | 'delete',
+  appUserDetails?: AppUserSchema
 ) => {
   if (isSuperuser()) {
     return true
   }
-  const appUserDetails = isLoggedIn()
+  if (!appUserDetails) {
+    appUserDetails = isLoggedIn()
+  }
+  if (component.startsWith("/")) {
+    component = component.replaceAll("/", '')
+  }
+  if (
+      ['component_status', 'case_type', 'collection_method', 'filing_type', 'hearing_type', 'task_type'].includes(
+        component,
+      )
+    ) {
+    component = 'ref_types'
+  }
   if (appUserDetails && appUserDetails.appRoles && appUserDetails.appRoles) {
     const permission = component + '_' + action
     const appPermissions = appUserDetails.appRoles.flatMap((appRole) => appRole.appPermissions)

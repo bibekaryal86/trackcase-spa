@@ -8,13 +8,11 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import Tooltip from '@mui/material/Tooltip'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { protectedRoutes, refTypesRoutes, userManagementRoutes } from './AppRoutes'
 import { checkUserHasPermission, isSuperuser } from '../../users'
-
-const refTypesRoutesPaths = refTypesRoutes.map((route) => route.path)
 
 interface SideNavProps {
   anchorEl: HTMLElement | null
@@ -46,25 +44,15 @@ const SideNav = (props: SideNavProps) => {
     [pathname],
   )
 
-  useEffect(() => {
-    if (refTypesRoutesPaths.includes(pathname)) {
-      setIsRefTypesOpen(true)
-    } else {
-      setIsRefTypesOpen(false)
-    }
-  }, [pathname])
+  // useEffect(() => {
+  //   if (refTypesRoutesPaths.includes(pathname)) {
+  //     setIsRefTypesOpen(true)
+  //   } else {
+  //     setIsRefTypesOpen(false)
+  //   }
+  // }, [pathname])
 
-  const hasPermissionForRoute = (routePath: string) => {
-    const permissionRoutePath = routePath.replace('/', '')
-    if (
-      ['component_status', 'case_type', 'collection_method', 'filing_type', 'hearing_type', 'task_type'].includes(
-        permissionRoutePath,
-      )
-    ) {
-      return checkUserHasPermission('ref_types', 'view')
-    }
-    return checkUserHasPermission(permissionRoutePath as never, 'view')
-  }
+  const hasPermissionForRoute = (routePath: string) => checkUserHasPermission(routePath, 'view')
 
   return (
     <Menu anchorEl={props.anchorEl} open={Boolean(props.anchorEl)} onClose={handleClose}>
