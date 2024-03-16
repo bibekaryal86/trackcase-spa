@@ -22,11 +22,32 @@ export const isSuperuser = (): boolean => {
   return false
 }
 
-export const isPoweruser = (): boolean => {
+export const checkUserHasPermission = (
+  component:
+    | 'collections'
+    | 'calendars'
+    | 'filings'
+    | 'court_cases'
+    | 'clients'
+    | 'judges'
+    | 'courts'
+    | 'ref_types'
+    | 'component_status'
+    | 'case_type'
+    | 'collection_method'
+    | 'filing_type'
+    | 'hearing_type'
+    | 'task_type',
+  action: 'add' | 'view' | ' update' | 'delete',
+) => {
+  if (isSuperuser()) {
+    return true
+  }
   const appUserDetails = isLoggedIn()
-  if (appUserDetails) {
-    const appRoles = appUserDetails.appRoles || []
-    return appRoles.some((appUserDetail) => appUserDetail.name === 'POWERUSER')
+  if (appUserDetails && appUserDetails.appRoles && appUserDetails.appRoles) {
+    const permission = component + '_' + action
+    const appPermissions = appUserDetails.appRoles.flatMap((appRole) => appRole.appPermissions)
+    return appPermissions && appPermissions.some((appPermission) => appPermission?.name === permission)
   }
   return false
 }

@@ -79,13 +79,13 @@ export const protectedRoutes: RoutesType[] = [
   //   ],
   // },
   {
-    path: '/forms',
+    path: '/filings',
     display: 'Filings',
     element: <Forms />,
     icon: <FileOpenIcon />,
   },
   {
-    path: '/form',
+    path: '/filing',
     element: <Form />,
     subroutes: [
       {

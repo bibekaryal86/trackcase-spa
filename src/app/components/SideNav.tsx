@@ -12,7 +12,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { protectedRoutes, refTypesRoutes, userManagementRoutes } from './AppRoutes'
-import { isPoweruser, isSuperuser } from '../../users'
+import { checkUserHasPermission, isSuperuser } from '../../users'
 
 const refTypesRoutesPaths = refTypesRoutes.map((route) => route.path)
 
@@ -54,12 +54,25 @@ const SideNav = (props: SideNavProps) => {
     }
   }, [pathname])
 
+  const hasPermissionForRoute = (routePath: string) => {
+    const permissionRoutePath = routePath.replace('/', '')
+    if (
+      ['component_status', 'case_type', 'collection_method', 'filing_type', 'hearing_type', 'task_type'].includes(
+        permissionRoutePath,
+      )
+    ) {
+      return checkUserHasPermission('ref_types', 'view')
+    }
+    return checkUserHasPermission(permissionRoutePath as never, 'view')
+  }
+
   return (
     <Menu anchorEl={props.anchorEl} open={Boolean(props.anchorEl)} onClose={handleClose}>
       <List sx={{ backgroundColor: 'inherit' }}>
         {protectedRoutes.map(
           (protectedRoute) =>
-            protectedRoute.display && (
+            protectedRoute.display &&
+            hasPermissionForRoute(protectedRoute.path) && (
               <ListItem
                 key={protectedRoute.path}
                 disablePadding
@@ -85,18 +98,23 @@ const SideNav = (props: SideNavProps) => {
               </ListItem>
             ),
         )}
-        {(isSuperuser() || isPoweruser()) && (
+        {
           <>
-            <Divider />
-            <ListItemButton onClick={handleRefTypesOpen}>
-              <Tooltip title="Ref Types" placement="right">
-                <ListItemIcon>{isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
-              </Tooltip>
-            </ListItemButton>
+            {hasPermissionForRoute('ref_types') && (
+              <>
+                <Divider />
+                <ListItemButton onClick={handleRefTypesOpen}>
+                  <Tooltip title="Ref Types" placement="right">
+                    <ListItemIcon>{isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
+                  </Tooltip>
+                </ListItemButton>
+              </>
+            )}
             <Collapse in={isRefTypesOpen} timeout="auto" unmountOnExit>
               {refTypesRoutes.map(
                 (refTypesRoute) =>
-                  refTypesRoute.display && (
+                  refTypesRoute.display &&
+                  hasPermissionForRoute(refTypesRoute.path) && (
                     <ListItem
                       key={refTypesRoute.path}
                       disablePadding
@@ -153,7 +171,7 @@ const SideNav = (props: SideNavProps) => {
                 )}
             </Collapse>
           </>
-        )}
+        }
       </List>
     </Menu>
   )

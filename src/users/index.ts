@@ -22,7 +22,7 @@ import {
   AppUserSchema,
 } from './types/users.data.types'
 // utils
-import { isLoggedIn, isPoweruser, isSuperuser } from './utils/users.utils'
+import { checkUserHasPermission, isLoggedIn, isSuperuser } from './utils/users.utils'
 
 export { login, logout, signup }
 export { UserSignInUp, UserAdmin }
@@ -41,4 +41,4 @@ export type {
   AppUserRequest,
   AppUserResponse,
 }
-export { isLoggedIn, isPoweruser, isSuperuser }
+export { isLoggedIn, isSuperuser, checkUserHasPermission }
