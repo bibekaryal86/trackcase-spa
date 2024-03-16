@@ -217,8 +217,7 @@ function RequireAuth({ children, path }: { children: React.ReactElement; path: s
       if (path === '/home') {
         return children
       } else {
-        console.log(path, INCOMPLETE_PERMISSION)
-        return children
+        return <Navigate to="/home" replace state={{ message: INCOMPLETE_PERMISSION}} />
       }
     }
   } else {
