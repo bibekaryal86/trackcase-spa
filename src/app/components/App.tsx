@@ -35,7 +35,7 @@ const mapDispatchToProps = {
 }
 
 function App(props: AppProps): React.ReactElement {
-  const {logout, setAlert} = props
+  const { logout, setAlert } = props
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [isDarkMode, setIsDarkMode] = useState(false)
 
@@ -59,7 +59,7 @@ function App(props: AppProps): React.ReactElement {
   }, [])
 
   // handle state messages on the top most component
-  const { state } = useLocation() as { state: { redirect: string; message: string, alertType: string} }
+  const { state } = useLocation() as { state: { redirect: string; message: string; alertType: string } }
   useEffect(() => {
     if (state?.message) {
       if (state.alertType) {
