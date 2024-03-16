@@ -38,7 +38,7 @@ export const checkUserHasPermission = (
     | 'filing_type'
     | 'hearing_type'
     | 'task_type',
-  action: 'add' | 'view' | ' update' | 'delete',
+  action: 'add' | 'view' | 'update' | 'delete',
 ) => {
   if (isSuperuser()) {
     return true
