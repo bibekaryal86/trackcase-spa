@@ -30,7 +30,7 @@ import {
   REF_TYPES_REGISTRY,
   RefTypesRegistry,
 } from '../../constants'
-import { isSuperuser } from '../../users'
+import { checkUserHasPermission, isSuperuser } from '../../users'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import { RefTypeResponse, RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
 import {
@@ -97,28 +97,35 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
   const isDisabled = (name: string, isDeleted?: boolean) =>
     ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name) || isDeleted
-  const addButton = () => <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
+  const addButton = () =>
+    checkUserHasPermission('ref_types', 'add') ? (
+      <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
+    ) : undefined
   const actionButtons = (formDataModal: RefTypeFormData) => (
     <>
-      <Button
-        onClick={() => {
-          updateModalState.toggleModalView()
-          setFormData(formDataModal)
-          setFormDataReset(formDataModal)
-        }}
-        disabled={isDisabled(formDataModal.nameOrComponentName || '', formDataModal.isDeleted)}
-      >
-        Update
-      </Button>
-      <Button
-        onClick={() => {
-          deleteModalState.toggleModalView()
-          setFormData(formDataModal)
-        }}
-        disabled={isDisabled(formDataModal.nameOrComponentName || '')}
-      >
-        {formDataModal.isDeleted ? 'Restore' : 'Delete'}
-      </Button>
+      {checkUserHasPermission('ref_types', 'update') && (
+        <Button
+          onClick={() => {
+            updateModalState.toggleModalView()
+            setFormData(formDataModal)
+            setFormDataReset(formDataModal)
+          }}
+          disabled={isDisabled(formDataModal.nameOrComponentName || '', formDataModal.isDeleted)}
+        >
+          Update
+        </Button>
+      )}
+      {checkUserHasPermission('ref_types', 'delete') && (
+        <Button
+          onClick={() => {
+            deleteModalState.toggleModalView()
+            setFormData(formDataModal)
+          }}
+          disabled={isDisabled(formDataModal.nameOrComponentName || '')}
+        >
+          {formDataModal.isDeleted ? 'Restore' : 'Delete'}
+        </Button>
+      )}
     </>
   )
 

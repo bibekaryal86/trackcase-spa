@@ -2,7 +2,7 @@ import React from 'react'
 
 import { getString, TableData, TableHeaderData } from '../../app'
 import { ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
-import { isSuperuser } from '../../users'
+import { checkUserHasPermission, isSuperuser } from '../../users'
 import {
   ComponentStatusSchema,
   RefTypeLessStatusSchema,
@@ -103,12 +103,13 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
       label: 'Active Status',
     })
   }
-
   if (isSuperuser()) {
     tableHeaderData.push({
       id: 'isDeleted',
       label: 'Is Deleted?',
     })
+  }
+  if (checkUserHasPermission('ref_types', 'update') || checkUserHasPermission('ref_types', 'delete')) {
     tableHeaderData.push({
       id: 'actions',
       label: 'Actions',
