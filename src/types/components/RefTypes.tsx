@@ -98,7 +98,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const isDisabled = (name: string, isDeleted?: boolean) =>
     ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name) || isDeleted
   const addButton = () =>
-    checkUserHasPermission('ref_types', 'add') ? (
+    checkUserHasPermission('ref_types', 'create') ? (
       <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
     ) : undefined
   const actionButtons = (formDataModal: RefTypeFormData) => (

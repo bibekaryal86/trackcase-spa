@@ -24,7 +24,7 @@ export const isSuperuser = (): boolean => {
 
 export const checkUserHasPermission = (
   component: string,
-  action: 'add' | 'view' | 'update' | 'delete',
+  action: 'create' | 'read' | 'update' | 'delete',
   appUserDetails?: AppUserSchema,
 ) => {
   if (isSuperuser()) {

@@ -52,7 +52,7 @@ const SideNav = (props: SideNavProps) => {
   //   }
   // }, [pathname])
 
-  const hasPermissionForRoute = (routePath: string) => checkUserHasPermission(routePath, 'view')
+  const hasPermissionForRoute = (routePath: string) => checkUserHasPermission(routePath, 'read')
 
   return (
     <Menu anchorEl={props.anchorEl} open={Boolean(props.anchorEl)} onClose={handleClose}>
