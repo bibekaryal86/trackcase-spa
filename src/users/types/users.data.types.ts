@@ -46,6 +46,7 @@ export interface AppUserSchema extends AddressBaseSchema {
 
 export interface AppUserRequest extends AppUserSchema {
   password?: string
+  isGuestUser?: boolean
 }
 
 export interface AppUserResponse extends ResponseBase {

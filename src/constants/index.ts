@@ -154,6 +154,16 @@ export const CASE_TABS = Object.freeze({
   COLLECTIONS: 'COLLECTIONS',
 })
 
+// USER ADMIN TABS
+export const USER_ADMIN_TABS = Object.freeze({
+  USERS: 'USERS',
+  ROLES: 'ROLES',
+  PERMISSIONS: 'PERMISSIONS',
+  USERS_ROLES: 'USERS_ROLES',
+  ROLES_PERMISSIONS: 'ROLES_PERMISSIONS',
+})
+export type UserAdminTabsRegistry = keyof typeof USER_ADMIN_TABS
+
 // STATES
 export const STATES_LIST = [
   { name: 'Alabama', abbreviation: 'AL' },
