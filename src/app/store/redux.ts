@@ -13,6 +13,7 @@ import { courts, CourtsState } from '../../courts'
 import { forms, FormsState } from '../../forms'
 import { judges, JudgesState } from '../../judges'
 import { refTypes, RefTypesState } from '../../types'
+import { UserAdminState, users } from '../../users'
 import alert from '../reducers/alert.reducer'
 import spinner from '../reducers/spinner.reducer'
 import statuses from '../reducers/statuses.reducer'
@@ -35,6 +36,7 @@ export interface GlobalState {
   forms: FormsState
   calendars: CalendarsState
   collections: CollectionsState
+  users: UserAdminState
 }
 
 export interface GlobalDispatch {
@@ -53,6 +55,7 @@ const appReducers = combineReducers({
   forms,
   calendars,
   collections,
+  users,
 })
 
 const rootReducer = (state: any, action: any) => {

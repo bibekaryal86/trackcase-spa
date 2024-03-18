@@ -5,7 +5,7 @@ import {
   REGEX_LOGIN_INPUT_PATTERN,
   REGEX_LOGIN_PASSWORD_PATTERN,
 } from '../../constants'
-import { AppUserSchema } from '../types/users.data.types'
+import { AppUserSchema, UserAdminRequestMetadataState } from '../types/users.data.types'
 
 export const isLoggedIn = (): AppUserSchema | undefined => {
   const token = SessionStorage.getItem('token') as string
@@ -91,5 +91,33 @@ export const validateSignInUpInput = (
       REGEX_LOGIN_INPUT_PATTERN.test(username) &&
       REGEX_LOGIN_PASSWORD_PATTERN.test(password)
     )
+  }
+}
+
+export const userAdminDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  metadata = [] as UserAdminRequestMetadataState[],
+} = {}) => {
+  if (error) {
+    return {
+      type,
+      error,
+    }
+  } else if (success) {
+    return {
+      type,
+      success,
+    }
+  } else if (metadata) {
+    return {
+      type,
+      metadata,
+    }
+  } else {
+    return {
+      type,
+    }
   }
 }

@@ -8,22 +8,23 @@ import UserAdminAppRoles from './UserAdminAppRoles'
 import UserAdminAppRolesPermissions from './UserAdminAppRolesPermissions'
 import UserAdminAppUsers from './UserAdminAppUsers'
 import UserAdminAppUsersRoles from './UserAdminAppUsersRoles'
-import { USER_ADMIN_TABS } from '../../constants'
+import { convertToTitleCase } from '../../app'
+import { USER_ADMIN_REGISTRY } from '../../constants'
 
 const UserAdmin = (): React.ReactElement => {
-  const [tabValue, setTabValue] = useState(USER_ADMIN_TABS.USERS.toString())
+  const [tabValue, setTabValue] = useState(USER_ADMIN_REGISTRY.APP_USERS.toString())
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => setTabValue(newValue)
 
   const showTabs = () => {
     return (
       <Tabs value={tabValue} onChange={handleTabChange} textColor="primary" indicatorColor="primary">
-        <Tab value={USER_ADMIN_TABS.USERS.toString()} label={USER_ADMIN_TABS.USERS.toString()} />
-        <Tab value={USER_ADMIN_TABS.ROLES.toString()} label={USER_ADMIN_TABS.ROLES.toString()} />
-        <Tab value={USER_ADMIN_TABS.PERMISSIONS.toString()} label={USER_ADMIN_TABS.PERMISSIONS.toString()} />
-        <Tab value={USER_ADMIN_TABS.USERS_ROLES.toString()} label={USER_ADMIN_TABS.USERS_ROLES.toString()} />
+        <Tab value={USER_ADMIN_REGISTRY.APP_USERS.toString()} label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_USERS, '_')} />
+        <Tab value={USER_ADMIN_REGISTRY.APP_ROLES.toString()} label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_ROLES, '_')} />
+        <Tab value={USER_ADMIN_REGISTRY.APP_PERMISSIONS.toString()} label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_PERMISSIONS, '_')} />
+        <Tab value={USER_ADMIN_REGISTRY.APP_USERS_ROLES.toString()} label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_USERS_ROLES, '_')} />
         <Tab
-          value={USER_ADMIN_TABS.ROLES_PERMISSIONS.toString()}
-          label={USER_ADMIN_TABS.ROLES_PERMISSIONS.toString()}
+          value={USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS.toString()}
+          label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS, '_')}
         />
       </Tabs>
     )
@@ -35,27 +36,27 @@ const UserAdmin = (): React.ReactElement => {
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {showTabs()}
         </Grid>
-        {tabValue === USER_ADMIN_TABS.USERS.toString() && (
+        {tabValue === USER_ADMIN_REGISTRY.APP_USERS.toString() && (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppUsers />
           </Grid>
         )}
-        {tabValue === USER_ADMIN_TABS.ROLES.toString() && (
+        {tabValue === USER_ADMIN_REGISTRY.APP_ROLES.toString() && (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppRoles />
           </Grid>
         )}
-        {tabValue === USER_ADMIN_TABS.PERMISSIONS.toString() && (
+        {tabValue === USER_ADMIN_REGISTRY.APP_PERMISSIONS.toString() && (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppPermissions />
           </Grid>
         )}
-        {tabValue === USER_ADMIN_TABS.USERS_ROLES.toString() && (
+        {tabValue === USER_ADMIN_REGISTRY.APP_USERS_ROLES.toString() && (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppUsersRoles />
           </Grid>
         )}
-        {tabValue === USER_ADMIN_TABS.ROLES_PERMISSIONS.toString() && (
+        {tabValue === USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS.toString() && (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppRolesPermissions />
           </Grid>

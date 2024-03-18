@@ -156,14 +156,14 @@ export const CASE_TABS = Object.freeze({
 })
 
 // USER ADMIN TABS
-export const USER_ADMIN_TABS = Object.freeze({
-  USERS: 'USERS',
-  ROLES: 'ROLES',
-  PERMISSIONS: 'PERMISSIONS',
-  USERS_ROLES: 'USERS_ROLES',
-  ROLES_PERMISSIONS: 'ROLES_PERMISSIONS',
+export const USER_ADMIN_REGISTRY = Object.freeze({
+  APP_USERS: 'APP_USERS',
+  APP_ROLES: 'APP_ROLES',
+  APP_PERMISSIONS: 'APP_PERMISSIONS',
+  APP_USERS_ROLES: 'APP_USERS_ROLES',
+  APP_ROLES_PERMISSIONS: 'APP_ROLES_PERMISSIONS',
 })
-export type UserAdminTabsRegistry = keyof typeof USER_ADMIN_TABS
+export type UserAdminRegistry = keyof typeof USER_ADMIN_REGISTRY
 
 // STATES
 export const STATES_LIST = [
