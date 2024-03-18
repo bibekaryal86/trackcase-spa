@@ -1,4 +1,4 @@
-import { LocalStorage } from '../../app'
+import { SessionStorage } from '../../app'
 import {
   LOGIN_SHOW_FORM_TYPE,
   LoginShowFormType,
@@ -8,8 +8,8 @@ import {
 import { AppUserSchema } from '../types/users.data.types'
 
 export const isLoggedIn = (): AppUserSchema | undefined => {
-  const token = LocalStorage.getItem('token') as string
-  const appUserDetails = LocalStorage.getItem('appUserDetails') as AppUserSchema
+  const token = SessionStorage.getItem('token') as string
+  const appUserDetails = SessionStorage.getItem('appUserDetails') as AppUserSchema
   return token ? appUserDetails : undefined
 }
 

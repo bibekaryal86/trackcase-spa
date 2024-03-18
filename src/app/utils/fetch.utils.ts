@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { LocalStorage } from './storage.utils'
+import { LocalStorage, SessionStorage } from './storage.utils'
 import { FORCE_LOGOUT } from '../../constants'
 import { ErrorDetail } from '../types/app.data.types'
 
@@ -102,7 +102,7 @@ const getUrl = (urlPath: string, options: Partial<FetchUrlOptions>) => {
 
 const getRequestInit = (options: Partial<FetchRequestOptions>) => {
   const { noAuth, requestHeaders = {}, method = 'GET', requestBody = {} } = options
-  const token = LocalStorage.getItem('token') as string
+  const token = SessionStorage.getItem('token') as string
   // this is a bug, and it should not come to this
   // it comes to this after logging out from SessionTimeout
   if (!noAuth && !token) {

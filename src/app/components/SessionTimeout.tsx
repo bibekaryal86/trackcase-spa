@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { INVALID_SESSION } from '../../constants'
 import { logout } from '../../users'
-import { LocalStorage } from '../utils/storage.utils'
+import { LocalStorage, SessionStorage } from '../utils/storage.utils'
 
 interface SessionTimeoutProps {
   logout: () => void
@@ -42,7 +42,7 @@ const SessionTimeout = (props: SessionTimeoutProps) => {
   const warningInactive = useCallback(() => {
     clearTimeout(startTimerInterval.current)
     warningInactiveInterval.current = window.setInterval(() => {
-      const tokenExpiration = LocalStorage.getItem('tokenExpiration') as number
+      const tokenExpiration = SessionStorage.getItem('tokenExpiration') as number
       const tokenExpDate = tokenExpiration ? new Date(tokenExpiration) : new Date()
       const currentDateTime = new Date()
 
@@ -64,13 +64,13 @@ const SessionTimeout = (props: SessionTimeoutProps) => {
     clearTimeout(startTimerInterval.current)
     clearInterval(warningInactiveInterval.current)
 
-    const isAuthenticated = LocalStorage.getItem('tokenExpiration') as number
+    const isAuthenticated = SessionStorage.getItem('tokenExpiration') as number
     const isForceCheckout = LocalStorage.getItem('forceLogout') as boolean
 
     if (isForceCheckout && isAuthenticated) {
       navigateToHome('Token Invalid Redirecting to Home')
     } else if (isAuthenticated) {
-      LocalStorage.setItem('tokenExpiration', new Date().setMinutes(new Date().getMinutes() + 15))
+      SessionStorage.setItem('tokenExpiration', new Date().setMinutes(new Date().getMinutes() + 15))
     } else {
       clearInterval(warningInactiveInterval.current)
     }

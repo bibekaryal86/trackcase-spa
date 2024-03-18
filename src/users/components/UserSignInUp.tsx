@@ -8,7 +8,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import { getErrMsg, getString, LocalStorage, resetAlert, resetSpinner, setAlert, setSpinner } from '../../app'
+import { getErrMsg, getString, resetAlert, resetSpinner, SessionStorage, setAlert, setSpinner } from '../../app'
 import {
   ALERT_TYPE_FAILURE,
   ALERT_TYPE_SUCCESS,
@@ -49,10 +49,10 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const [showFormType, setShowFormType] = useState(LOGIN_SHOW_FORM_TYPE.SIGNIN.toString())
   const [userToReset, setUserToReset] = useState('')
 
-  const userLoginSuccessLocalStorageActions = (appUserLoginResponse: AppUserLoginResponse) => {
-    LocalStorage.setItem('token', appUserLoginResponse.token)
-    LocalStorage.setItem('tokenExpiration', new Date().setMinutes(new Date().getMinutes() + 15))
-    LocalStorage.setItem('appUserDetails', appUserLoginResponse.appUserDetails)
+  const userLoginSuccessSessionStorageAction = (appUserLoginResponse: AppUserLoginResponse) => {
+    SessionStorage.setItem('token', appUserLoginResponse.token)
+    SessionStorage.setItem('tokenExpiration', new Date().setMinutes(new Date().getMinutes() + 15))
+    SessionStorage.setItem('appUserDetails', appUserLoginResponse.appUserDetails)
   }
 
   // redirect to home or selected page upon successful sign in
@@ -131,7 +131,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
     } else {
       resetState()
       resetAlert()
-      userLoginSuccessLocalStorageActions(loginResponse)
+      userLoginSuccessSessionStorageAction(loginResponse)
       navigate(state?.redirect || '/home', {
         replace: true,
         state: { redirect: '' },
