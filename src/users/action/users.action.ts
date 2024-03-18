@@ -20,7 +20,7 @@ import {
   DefaultAppUserResponse,
 } from '../types/users.data.types'
 
-export const signup = async (username: string, password: string, fullName: string): Promise<AppUserResponse> => {
+export const signup = async (username: string, password: string, fullName: string, isGuestUser?: boolean): Promise<AppUserResponse> => {
   try {
     const signupEndpoint = getEndpoint(process.env.APP_USER_CREATE as string)
     const options: Partial<FetchOptions> = {
@@ -32,9 +32,9 @@ export const signup = async (username: string, password: string, fullName: strin
         fullName: fullName,
         componentStatusId: 1,
         isValidated: false,
+        isGuestUser: isGuestUser ?? false,  // ?? is nullish coalescing operator
       },
     }
-
     return (await Async.fetch(signupEndpoint, options)) as AppUserResponse
   } catch (error) {
     console.log('SignUp Action Error: ', error)
