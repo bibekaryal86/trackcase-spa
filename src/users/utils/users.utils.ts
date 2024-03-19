@@ -5,7 +5,7 @@ import {
   REGEX_LOGIN_INPUT_PATTERN,
   REGEX_LOGIN_PASSWORD_PATTERN,
 } from '../../constants'
-import { AppUserSchema, UserAdminRequestMetadataState } from '../types/users.data.types'
+import { AppUserSchema } from '../types/users.data.types'
 
 export const isLoggedIn = (): AppUserSchema | undefined => {
   const token = SessionStorage.getItem('token') as string
@@ -94,12 +94,7 @@ export const validateSignInUpInput = (
   }
 }
 
-export const userAdminDispatch = ({
-  type = '',
-  error = '',
-  success = '',
-  metadata = [] as UserAdminRequestMetadataState[],
-} = {}) => {
+export const userAdminDispatch = ({ type = '', error = '', success = '' } = {}) => {
   if (error) {
     return {
       type,
@@ -109,11 +104,6 @@ export const userAdminDispatch = ({
     return {
       type,
       success,
-    }
-  } else if (metadata) {
-    return {
-      type,
-      metadata,
     }
   } else {
     return {

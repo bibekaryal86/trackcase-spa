@@ -18,10 +18,22 @@ const UserAdmin = (): React.ReactElement => {
   const showTabs = () => {
     return (
       <Tabs value={tabValue} onChange={handleTabChange} textColor="primary" indicatorColor="primary">
-        <Tab value={USER_ADMIN_REGISTRY.APP_USERS.toString()} label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_USERS, '_')} />
-        <Tab value={USER_ADMIN_REGISTRY.APP_ROLES.toString()} label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_ROLES, '_')} />
-        <Tab value={USER_ADMIN_REGISTRY.APP_PERMISSIONS.toString()} label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_PERMISSIONS, '_')} />
-        <Tab value={USER_ADMIN_REGISTRY.APP_USERS_ROLES.toString()} label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_USERS_ROLES, '_')} />
+        <Tab
+          value={USER_ADMIN_REGISTRY.APP_USERS.toString()}
+          label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_USERS, '_')}
+        />
+        <Tab
+          value={USER_ADMIN_REGISTRY.APP_ROLES.toString()}
+          label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_ROLES, '_')}
+        />
+        <Tab
+          value={USER_ADMIN_REGISTRY.APP_PERMISSIONS.toString()}
+          label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_PERMISSIONS, '_')}
+        />
+        <Tab
+          value={USER_ADMIN_REGISTRY.APP_USERS_ROLES.toString()}
+          label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_USERS_ROLES, '_')}
+        />
         <Tab
           value={USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS.toString()}
           label={convertToTitleCase(USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS, '_')}

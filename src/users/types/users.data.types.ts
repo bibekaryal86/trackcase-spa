@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs'
 
-import { AddressBaseSchema, FetchRequestMetadata, NameDescBaseSchema, ResponseBase } from '../../app'
-import { ID_DEFAULT, UserAdminRegistry } from '../../constants'
+import { AddressBaseSchema, NameDescBaseSchema, ResponseBase } from '../../app'
+import { ID_DEFAULT } from '../../constants'
 import { ComponentStatusSchema } from '../../types'
 
 export interface AppUserLoginRequest {
@@ -46,7 +46,6 @@ export interface AppUserSchema extends AddressBaseSchema {
 
 export interface AppUserRequest extends AppUserSchema {
   password?: string
-  isGuestUser?: boolean
 }
 
 export interface AppUserResponse extends ResponseBase {
@@ -70,22 +69,6 @@ export interface AppPermissionSchema extends NameDescBaseSchema {
 
 export interface AppPermissionResponse extends ResponseBase {
   data: AppPermissionSchema[]
-}
-
-// states and actions
-// users is not stored in redux, metadata only
-export interface UserAdminRequestMetadataState {
-  userAdminTab: UserAdminRegistry
-  requestMetadata: Partial<FetchRequestMetadata>
-}
-
-export interface UserAdminState {
-  requestMetadataState: UserAdminRequestMetadataState[]
-}
-
-export interface UserAdminAction {
-  type: string
-  metadata: UserAdminRequestMetadataState[]
 }
 
 export const DefaultAppUserLoginResponse: AppUserLoginResponse = {
