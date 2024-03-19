@@ -26,7 +26,7 @@ interface FilterConfig {
 }
 
 export interface FetchRequestMetadata {
-  modelId: number
+  schemaModelId: number
   sortConfig: SortConfig
   filterConfig: FilterConfig[]
   pageNumber: number
