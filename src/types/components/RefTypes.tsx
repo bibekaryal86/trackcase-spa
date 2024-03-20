@@ -71,7 +71,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const [formErrors, setFormErrors] = useState(DefaultRefTypeFormData)
 
   const refTypeTitle = useCallback(() => {
-    return convertToTitleCase(refType, '_')
+    return convertToTitleCase(refType, '_').toUpperCase()
   }, [refType])
 
   useEffect(() => {

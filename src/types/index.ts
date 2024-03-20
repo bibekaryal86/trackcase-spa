@@ -1,5 +1,5 @@
 // actions
-import { getRefTypes } from './actions/refTypes.action'
+import { getRefType, getRefTypes } from './actions/refTypes.action'
 // components
 import RefTypes from './components/RefTypes'
 // reducers
@@ -48,7 +48,7 @@ import {
   TaskTypeSchema,
 } from './types/refTypes.data.types'
 
-export { getRefTypes }
+export { getRefType, getRefTypes }
 export { RefTypes }
 export { refTypes }
 export {

@@ -24,9 +24,7 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
   if (
     matchesRequestHc ||
     matchesRequestTc ||
-    [CALENDARS_READ_REQUEST, HEARING_CALENDARS_READ_REQUEST, TASK_CALENDARS_READ_REQUEST].includes(
-      action.type,
-    )
+    [CALENDARS_READ_REQUEST, HEARING_CALENDARS_READ_REQUEST, TASK_CALENDARS_READ_REQUEST].includes(action.type)
   ) {
     return {
       ...state,

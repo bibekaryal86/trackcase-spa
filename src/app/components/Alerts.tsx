@@ -36,7 +36,7 @@ const Alerts = (props: AlertsProps): React.ReactElement => {
   return isOpen && messageType && messageText ? (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Snackbar open={isOpen} autoHideDuration={messageText === INVALID_SESSION ? 1000000 : 10000} onClose={close}>
-        <Alert onClose={close} severity={messageType as AlertColor} sx={{ width: '100%' }}>
+        <Alert onClose={close} severity={messageType.toLowerCase() as AlertColor} sx={{ width: '100%' }}>
           {messageText}
         </Alert>
       </Snackbar>
