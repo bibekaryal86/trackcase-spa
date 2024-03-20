@@ -32,15 +32,15 @@ import {
 } from '../../constants'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
-import { RefTypeResponse, RefTypeSchema, RefTypesState } from '../types/refTypes.data.types'
 import {
   DefaultRefTypeFormData,
   RefTypeFormData,
+  RefTypeResponse,
+  RefTypeSchema,
   RefTypesReduxStoreKeys,
-  refTypeTableData,
-  refTypeTableHeader,
-  validateFormData,
-} from '../utils/refTypes.utils'
+  RefTypesState,
+} from '../types/refTypes.data.types'
+import { refTypeTableData, refTypeTableHeader, validateFormData } from '../utils/refTypes.utils'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {

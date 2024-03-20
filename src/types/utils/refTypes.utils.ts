@@ -5,39 +5,12 @@ import { ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constant
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import {
   ComponentStatusSchema,
+  DefaultRefTypeFormData,
+  RefTypeFormData,
   RefTypeLessStatusSchema,
   RefTypeSchema,
   RefTypesRequestMetadataState,
 } from '../types/refTypes.data.types'
-
-export interface RefTypeFormData {
-  id: number
-  nameOrComponentName: string
-  descOrStatusName: string
-  isActive: boolean
-  isHardDelete: boolean
-  isShowSoftDeleted: boolean
-  isDeleted?: boolean
-}
-
-export const DefaultRefTypeFormData: RefTypeFormData = {
-  id: ID_DEFAULT,
-  nameOrComponentName: '',
-  descOrStatusName: '',
-  isActive: false,
-  isHardDelete: false,
-  isShowSoftDeleted: false,
-  isDeleted: false,
-}
-
-export interface RefTypesReduxStoreKeys {
-  componentStatus: string
-  caseType: string
-  collectionMethod: string
-  filingType: string
-  hearingType: string
-  taskType: string
-}
 
 export const refTypesDispatch = ({
   type = '',
@@ -90,7 +63,7 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
   const tableHeaderData: TableHeaderData[] = [
     {
       id: 'nameOrComponentName',
-      label: refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Component Name' : 'Name',
+      label: refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'COMPONENT NAME' : 'NAME',
     },
     {
       id: 'descOrStatusName',
@@ -100,19 +73,19 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
   if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
     tableHeaderData.push({
       id: 'isActive',
-      label: 'Active Status',
+      label: 'ACTIVE STATUS',
     })
   }
   if (isSuperuser()) {
     tableHeaderData.push({
       id: 'isDeleted',
-      label: 'Is Deleted?',
+      label: 'IS DELETED?',
     })
   }
   if (checkUserHasPermission('REF_TYPES', 'UPDATE') || checkUserHasPermission('REF_TYPES', 'DELETE')) {
     tableHeaderData.push({
       id: 'actions',
-      label: 'Actions',
+      label: 'ACTIONS',
       align: 'center' as const,
     })
   }

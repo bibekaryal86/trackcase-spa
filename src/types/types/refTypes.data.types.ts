@@ -2,7 +2,7 @@ import { BaseModelSchema, FetchRequestMetadata, NameDescBaseSchema, ResponseBase
 import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CashCollectionSchema } from '../../collections'
-import { RefTypesRegistry } from '../../constants'
+import { ID_DEFAULT, RefTypesRegistry } from '../../constants'
 import { FormSchema } from '../../forms'
 
 export interface ComponentStatusSchema extends BaseModelSchema {
@@ -113,4 +113,33 @@ export interface RefTypesAction {
   type: string
   data: RefTypeSchema[]
   metadata: RefTypesRequestMetadataState[]
+}
+
+export interface RefTypeFormData {
+  id: number
+  nameOrComponentName: string
+  descOrStatusName: string
+  isActive: boolean
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+  isDeleted?: boolean
+}
+
+export const DefaultRefTypeFormData: RefTypeFormData = {
+  id: ID_DEFAULT,
+  nameOrComponentName: '',
+  descOrStatusName: '',
+  isActive: false,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+  isDeleted: false,
+}
+
+export interface RefTypesReduxStoreKeys {
+  componentStatus: string
+  caseType: string
+  collectionMethod: string
+  filingType: string
+  hearingType: string
+  taskType: string
 }
