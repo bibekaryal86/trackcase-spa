@@ -130,14 +130,26 @@ export const resetExit = async (username: string, password: string): Promise<Fet
   }
 }
 
-export const appUsersAdmin = async (
-  action: ActionTypes,
-  appUserRequest?: AppUserRequest,
-  id?: number,
-  isRestore?: boolean,
-  isHardDelete?: boolean,
-  requestMetadata?: Partial<FetchRequestMetadata>,
-) => {
+export const fetchAppUsers = async (dispatch: React.Dispatch<GlobalDispatch>, requestMetadata?: Partial<FetchRequestMetadata>) => {
+  const dispatchFunction = await appUsersAdmin({ action: ACTION_TYPES.GET, requestMetadata: requestMetadata })
+  return await dispatchFunction(dispatch)
+}
+
+export const appUsersAdmin = async ({
+  action,
+  appUserRequest,
+  id,
+  isRestore,
+  isHardDelete,
+  requestMetadata,
+}: {
+  action: ActionTypes
+  appUserRequest?: AppUserRequest
+  id?: number
+  isRestore?: boolean
+  isHardDelete?: boolean
+  requestMetadata?: Partial<FetchRequestMetadata>
+}) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<AppUserResponse> => {
     const typeRequest = `APP_USERS_${action}_REQUEST`
     const typeSuccess = `APP_USERS_${action}_SUCCESS`
