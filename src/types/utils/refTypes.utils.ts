@@ -109,7 +109,7 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
       label: 'Is Deleted?',
     })
   }
-  if (checkUserHasPermission('ref_types', 'update') || checkUserHasPermission('ref_types', 'delete')) {
+  if (checkUserHasPermission('REF_TYPES', 'UPDATE') || checkUserHasPermission('REF_TYPES', 'DELETE')) {
     tableHeaderData.push({
       id: 'actions',
       label: 'Actions',

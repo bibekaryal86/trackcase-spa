@@ -211,7 +211,7 @@ function RequireAuth({ children, path }: { children: React.ReactElement; path: s
   const location = useLocation()
   const appUserDetails = isLoggedIn()
   if (appUserDetails) {
-    if (checkUserHasPermission(path, 'read', appUserDetails)) {
+    if (checkUserHasPermission(path.toUpperCase(), 'READ', appUserDetails)) {
       return children
     } else {
       if (path === '/home') {

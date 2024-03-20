@@ -177,7 +177,7 @@ export const appUsersAdmin = async (
       if (appUserResponse.detail) {
         dispatch(userAdminDispatch({ type: typeFailure, error: getErrMsg(appUserResponse.detail) }))
       } else {
-        dispatch(userAdminDispatch({ type: typeSuccess, success: `APP USER ${action} SUCCESS` }))
+        action !== ACTION_TYPES.GET && dispatch(userAdminDispatch({ type: typeSuccess, success: `APP USER ${action} SUCCESS` }))
       }
       return appUserResponse
     } catch (error) {
