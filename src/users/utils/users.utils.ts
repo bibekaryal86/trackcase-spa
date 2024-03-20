@@ -1,11 +1,14 @@
-import { SessionStorage } from '../../app'
+import React from 'react'
+
+import { convertDateToLocaleString, SessionStorage, TableData, TableHeaderData } from '../../app'
 import {
+  ID_DEFAULT,
   LOGIN_SHOW_FORM_TYPE,
   LoginShowFormType,
   REGEX_LOGIN_INPUT_PATTERN,
   REGEX_LOGIN_PASSWORD_PATTERN,
 } from '../../constants'
-import { AppUserSchema } from '../types/users.data.types'
+import { AppUserFormData, AppUserSchema } from '../types/users.data.types'
 
 export const isLoggedIn = (): AppUserSchema | undefined => {
   const token = SessionStorage.getItem('token') as string
@@ -111,3 +114,72 @@ export const userAdminDispatch = ({ type = '', error = '', success = '' } = {}) 
     }
   }
 }
+
+export const appUsersTableHeader = (): TableHeaderData[] => {
+  const tableHeaderData: TableHeaderData[] = [
+    {
+      id: 'email',
+      label: 'EMAIL',
+    },
+    {
+      id: 'fullName',
+      label: 'NAME',
+    },
+    {
+      id: 'status',
+      label: 'STATUS',
+    },
+    {
+      id: 'isValidated',
+      label: 'IS VALIDATED?',
+    },
+    {
+      id: 'lastLogin',
+      label: 'LAST LOGIN',
+    },
+  ]
+  if (isSuperuser()) {
+    tableHeaderData.push(
+      {
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      },
+      {
+        id: 'actions',
+        label: 'ACTIONS',
+        align: 'center' as const,
+      },
+    )
+  }
+  return tableHeaderData
+}
+
+const getFormDataForModal = (x: AppUserSchema): AppUserFormData => {
+  return {
+    id: x.id || ID_DEFAULT,
+    email: x.email,
+    fullName: x.fullName,
+    statusId: x.componentStatusId,
+    lastLogin: x.lastLogin,
+    isValidated: x.isValidated,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+    isDeleted: x.isDeleted,
+  }
+}
+
+export const appUsersTableData = (
+  appUsersList: AppUserSchema[],
+  actionButtons: (formDataForModal: AppUserFormData) => React.JSX.Element,
+): TableData[] =>
+  Array.from(appUsersList, (x) => {
+    return {
+      email: x.email,
+      fullName: x.fullName,
+      status: x.componentStatus?.statusName,
+      isValidated: x.isValidated,
+      lastLogin: convertDateToLocaleString(x.lastLogin),
+      isDeleted: x.isDeleted,
+      actions: actionButtons(getFormDataForModal(x)),
+    }
+  })

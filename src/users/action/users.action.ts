@@ -3,6 +3,7 @@ import React from 'react'
 import {
   Async,
   FetchOptions,
+  FetchRequestMetadata,
   FetchResponse,
   getEndpoint,
   getErrMsg,
@@ -135,6 +136,7 @@ export const appUsersAdmin = async (
   id?: number,
   isRestore?: boolean,
   isHardDelete?: boolean,
+  requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<AppUserResponse> => {
     const typeRequest = `APP_USERS_${action}_REQUEST`
@@ -153,6 +155,7 @@ export const appUsersAdmin = async (
       endpoint = getEndpoint(process.env.APP_USER_READ as string)
       options = {
         method: 'GET',
+        metadataParams: requestMetadata,
       }
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint = getEndpoint(process.env.APP_USER_UPDATE as string)
@@ -177,7 +180,8 @@ export const appUsersAdmin = async (
       if (appUserResponse.detail) {
         dispatch(userAdminDispatch({ type: typeFailure, error: getErrMsg(appUserResponse.detail) }))
       } else {
-        action !== ACTION_TYPES.GET && dispatch(userAdminDispatch({ type: typeSuccess, success: `APP USER ${action} SUCCESS` }))
+        action !== ACTION_TYPES.GET &&
+          dispatch(userAdminDispatch({ type: typeSuccess, success: `APP USER ${action} SUCCESS` }))
       }
       return appUserResponse
     } catch (error) {

@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { AddressBaseSchema, NameDescBaseSchema, ResponseBase } from '../../app'
+import { AddressBaseSchema, BaseModelSchema, NameDescBaseSchema, ResponseBase } from '../../app'
 import { ID_DEFAULT } from '../../constants'
 import { ComponentStatusSchema } from '../../types'
 
@@ -14,7 +14,7 @@ export interface AppUserLoginResponse extends ResponseBase {
   appUserDetails: AppUserSchema
 }
 
-export interface AppUserRoleSchema {
+export interface AppUserRoleSchema extends BaseModelSchema {
   appUserId: number
   appRoleId: number
 }
@@ -23,7 +23,7 @@ export interface AppUserRoleResponse {
   data: AppUserRoleSchema[]
 }
 
-export interface AppRolePermissionSchema {
+export interface AppRolePermissionSchema extends BaseModelSchema {
   appRoleId: number
   appPermissionId: number
 }
@@ -32,7 +32,7 @@ export interface AppRolePermissionResponse {
   data: AppRolePermissionSchema[]
 }
 
-export interface AppUserSchema extends AddressBaseSchema {
+export interface AppUserSchema extends BaseModelSchema, AddressBaseSchema {
   email: string
   fullName: string
   componentStatusId: number
@@ -52,7 +52,7 @@ export interface AppUserResponse extends ResponseBase {
   data: AppUserSchema[]
 }
 
-export interface AppRoleSchema extends NameDescBaseSchema {
+export interface AppRoleSchema extends BaseModelSchema, NameDescBaseSchema {
   // orm_mode
   appUsers?: AppUserSchema[]
   appPermissions?: AppPermissionSchema[]
@@ -62,7 +62,7 @@ export interface AppRoleResponse extends ResponseBase {
   data: AppRoleSchema[]
 }
 
-export interface AppPermissionSchema extends NameDescBaseSchema {
+export interface AppPermissionSchema extends BaseModelSchema, NameDescBaseSchema {
   // orm_mode
   appRoles?: AppRoleSchema[]
 }
@@ -83,4 +83,28 @@ export const DefaultAppUserLoginResponse: AppUserLoginResponse = {
 
 export const DefaultAppUserResponse: AppUserResponse = {
   data: [],
+}
+
+export interface AppUserFormData {
+  id: number
+  email: string
+  fullName: string
+  statusId: number
+  lastLogin: Dayjs | undefined
+  isValidated: boolean
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+  isDeleted?: boolean
+}
+
+export const DefaultAppUserFormData: AppUserFormData = {
+  id: ID_DEFAULT,
+  email: '',
+  fullName: '',
+  statusId: ID_DEFAULT,
+  lastLogin: undefined,
+  isValidated: false,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+  isDeleted: false,
 }
