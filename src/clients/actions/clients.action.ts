@@ -13,9 +13,9 @@ import {
   CLIENT_UPDATE_REQUEST,
   CLIENT_UPDATE_SUCCESS,
   CLIENTS_COMPLETE,
-  CLIENTS_RETRIEVE_FAILURE,
-  CLIENTS_RETRIEVE_REQUEST,
-  CLIENTS_RETRIEVE_SUCCESS,
+  CLIENTS_READ_FAILURE,
+  CLIENTS_READ_REQUEST,
+  CLIENTS_READ_SUCCESS,
   SET_SELECTED_CLIENT,
 } from '../types/clients.action.types'
 import { ClientResponse, ClientSchema } from '../types/clients.data.types'
@@ -56,30 +56,30 @@ export const addClient = (client: ClientSchema) => {
 
 export const getClients = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(clientsRequest(CLIENTS_RETRIEVE_REQUEST))
+    dispatch(clientsRequest(CLIENTS_READ_REQUEST))
 
     try {
       let clientResponse: ClientResponse
       const clientsInStore: ClientSchema[] = getStore().clients.clients
 
       if (isForceFetch || clientsInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.CLIENTS_RETRIEVE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.CLIENTS_READ_ENDPOINT as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
         clientResponse = (await Async.fetch(urlPath, options)) as ClientResponse
 
         if (clientResponse.detail) {
-          dispatch(clientsFailure(CLIENTS_RETRIEVE_FAILURE, getErrMsg(clientResponse.detail)))
+          dispatch(clientsFailure(CLIENTS_READ_FAILURE, getErrMsg(clientResponse.detail)))
         } else {
-          dispatch(clientsSuccess(CLIENTS_RETRIEVE_SUCCESS, '', clientResponse.clients))
+          dispatch(clientsSuccess(CLIENTS_READ_SUCCESS, '', clientResponse.clients))
         }
       } else {
-        dispatch(clientsSuccess(CLIENTS_RETRIEVE_SUCCESS, '', clientsInStore))
+        dispatch(clientsSuccess(CLIENTS_READ_SUCCESS, '', clientsInStore))
       }
     } catch (error) {
       console.log('Get Clients Error: ', error)
-      dispatch(clientsFailure(CLIENTS_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(clientsFailure(CLIENTS_READ_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(clientsComplete())
     }
@@ -88,7 +88,7 @@ export const getClients = (isForceFetch: boolean = false) => {
 
 export const getOneClient = async (clientId: number) => {
   try {
-    const urlPath = getEndpoint(process.env.CLIENT_RETRIEVE_ENDPOINT as string)
+    const urlPath = getEndpoint(process.env.CLIENT_READ_ENDPOINT as string)
     const options: Partial<FetchOptions> = {
       method: 'GET',
       pathParams: { client_id: clientId },
@@ -108,13 +108,13 @@ export const getOneClient = async (clientId: number) => {
 
 export const getClient = (clientId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(clientsRequest(CLIENTS_RETRIEVE_REQUEST))
+    dispatch(clientsRequest(CLIENTS_READ_REQUEST))
 
     // call api, if it fails fallback to store
     try {
       const clientResponse = (await getOneClient(clientId)) as ClientResponse
       if (clientResponse.detail) {
-        dispatch(clientsFailure(CLIENTS_RETRIEVE_FAILURE, getErrMsg(clientResponse.detail)))
+        dispatch(clientsFailure(CLIENTS_READ_FAILURE, getErrMsg(clientResponse.detail)))
         setSelectedClientFromStore(getStore(), dispatch, clientId)
       } else {
         dispatch(clientSelect(clientResponse.clients[0]))

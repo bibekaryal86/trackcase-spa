@@ -1,8 +1,8 @@
 import {
-  CASE_COLLECTIONS_RETRIEVE_REQUEST,
-  CASE_COLLECTIONS_RETRIEVE_SUCCESS,
+  CASE_COLLECTIONS_READ_REQUEST,
+  CASE_COLLECTIONS_READ_SUCCESS,
   CASE_COLLECTIONS_UNMOUNT,
-  CASH_COLLECTIONS_RETRIEVE_REQUEST,
+  CASH_COLLECTIONS_READ_REQUEST,
   CASH_COLLECTIONS_UNMOUNT,
   COLLECTIONS_UNMOUNT,
   SET_SELECTED_CASE_COLLECTION,
@@ -23,7 +23,7 @@ export default function collections(state = DefaultCollectionsState, action: Col
   if (
     matchesRequestCase ||
     matchesRequestCash ||
-    [CASE_COLLECTIONS_RETRIEVE_REQUEST, CASH_COLLECTIONS_RETRIEVE_REQUEST].includes(action.type)
+    [CASE_COLLECTIONS_READ_REQUEST, CASH_COLLECTIONS_READ_REQUEST].includes(action.type)
   ) {
     return {
       ...state,
@@ -45,7 +45,7 @@ export default function collections(state = DefaultCollectionsState, action: Col
   }
 
   switch (action.type) {
-    case CASE_COLLECTIONS_RETRIEVE_SUCCESS:
+    case CASE_COLLECTIONS_READ_SUCCESS:
       return {
         ...state,
         isCloseModal: true,

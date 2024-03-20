@@ -89,7 +89,7 @@ export interface AppUserFormData {
   id: number
   email: string
   fullName: string
-  statusId: number
+  componentStatusId: number
   lastLogin: Dayjs | undefined
   isValidated: boolean
   isHardDelete: boolean
@@ -97,14 +97,26 @@ export interface AppUserFormData {
   isDeleted?: boolean
 }
 
+export interface AppUserFormErrorData {
+  email: string
+  fullName: string
+  componentStatusId: string
+}
+
 export const DefaultAppUserFormData: AppUserFormData = {
   id: ID_DEFAULT,
   email: '',
   fullName: '',
-  statusId: ID_DEFAULT,
+  componentStatusId: ID_DEFAULT,
   lastLogin: undefined,
   isValidated: false,
   isHardDelete: false,
   isShowSoftDeleted: false,
   isDeleted: false,
+}
+
+export const DefaultAppUserFormErrorData: AppUserFormErrorData = {
+  email: '',
+  fullName: '',
+  componentStatusId: '',
 }

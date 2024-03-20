@@ -55,7 +55,7 @@ export const addCollection = (collection: CaseCollectionSchema | CashCollectionS
 export const getCollections = (collectionType: string, isForceFetch: boolean = false) => {
   const isCaseCollectionRequest = isCaseCollection(collectionType)
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(collectionsRequest(`${collectionType}S_RETRIEVE_REQUEST`))
+    dispatch(collectionsRequest(`${collectionType}S_READ_REQUEST`))
 
     try {
       let collectionResponse: CaseCollectionResponse | CashCollectionResponse
@@ -75,28 +75,28 @@ export const getCollections = (collectionType: string, isForceFetch: boolean = f
 
       if (isForceFetch || collectionsInStore.length === 0) {
         if (isCaseCollectionRequest) {
-          const urlPath = getEndpoint(process.env.CASE_COLLECTIONS_RETRIEVE_ENDPOINT as string)
+          const urlPath = getEndpoint(process.env.CASE_COLLECTIONS_READ_ENDPOINT as string)
           collectionResponse = (await Async.fetch(urlPath, options)) as CaseCollectionResponse
         } else {
-          const urlPath = getEndpoint(process.env.CASH_COLLECTIONS_RETRIEVE_ENDPOINT as string)
+          const urlPath = getEndpoint(process.env.CASH_COLLECTIONS_READ_ENDPOINT as string)
           collectionResponse = (await Async.fetch(urlPath, options)) as CashCollectionResponse
         }
 
         if (collectionResponse.detail) {
-          dispatch(collectionsFailure(`${collectionType}S_RETRIEVE_FAILURE`, getErrMsg(collectionResponse.detail)))
+          dispatch(collectionsFailure(`${collectionType}S_READ_FAILURE`, getErrMsg(collectionResponse.detail)))
         } else {
           const collections =
             'caseCollections' in collectionResponse
               ? collectionResponse.caseCollections
               : collectionResponse.cashCollections
-          dispatch(collectionsSuccess(`${collectionType}S_RETRIEVE_SUCCESS`, '', collectionType, collections))
+          dispatch(collectionsSuccess(`${collectionType}S_READ_SUCCESS`, '', collectionType, collections))
         }
       } else {
-        dispatch(collectionsSuccess(`${collectionType}S_RETRIEVE_SUCCESS`, '', collectionType, collectionsInStore))
+        dispatch(collectionsSuccess(`${collectionType}S_READ_SUCCESS`, '', collectionType, collectionsInStore))
       }
     } catch (error) {
       console.log(`Get ${collectionType}S Error: `, error)
-      dispatch(collectionsFailure(`${collectionType}S_RETRIEVE_FAILURE`, SOMETHING_WENT_WRONG))
+      dispatch(collectionsFailure(`${collectionType}S_READ_FAILURE`, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(collectionsComplete(`${collectionType}S_COMPLETE`))
     }
@@ -116,10 +116,10 @@ export const getOneCollection = async (collectionId: number, collectionType: str
     }
 
     if (isCaseCollectionRequest) {
-      urlPath = getEndpoint(process.env.CASE_COLLECTION_RETRIEVE_ENDPOINT as string)
+      urlPath = getEndpoint(process.env.CASE_COLLECTION_READ_ENDPOINT as string)
       options['pathParams'] = { case_collection_id: collectionId }
     } else {
-      urlPath = getEndpoint(process.env.CASH_COLLECTION_RETRIEVE_ENDPOINT as string)
+      urlPath = getEndpoint(process.env.CASH_COLLECTION_READ_ENDPOINT as string)
       options['pathParams'] = { cash_collection_id: collectionId }
     }
 
@@ -138,7 +138,7 @@ export const getOneCollection = async (collectionId: number, collectionType: str
 export const getCollection = (collectionId: number, collectionType: string) => {
   const isCaseCollectionRequest = isCaseCollection(collectionType)
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(collectionsRequest(`${collectionType}_RETRIEVE_REQUEST`))
+    dispatch(collectionsRequest(`${collectionType}_READ_REQUEST`))
 
     // call api, if it fails fallback to store
     try {
@@ -150,7 +150,7 @@ export const getCollection = (collectionId: number, collectionType: string) => {
       }
 
       if (collectionResponse.detail) {
-        dispatch(collectionsFailure(`${collectionType}_RETRIEVE_FAILURE`, getErrMsg(collectionResponse.detail)))
+        dispatch(collectionsFailure(`${collectionType}_READ_FAILURE`, getErrMsg(collectionResponse.detail)))
         setSelectedCollectionFromStore(getStore(), dispatch, collectionId, collectionType)
       } else {
         const collection: CaseCollectionSchema | CashCollectionSchema =

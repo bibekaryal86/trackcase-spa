@@ -1,13 +1,13 @@
 import {
-  CALENDARS_RETRIEVE_REQUEST,
-  CALENDARS_RETRIEVE_SUCCESS,
-  HEARING_CALENDARS_RETRIEVE_REQUEST,
-  HEARING_CALENDARS_RETRIEVE_SUCCESS,
+  CALENDARS_READ_REQUEST,
+  CALENDARS_READ_SUCCESS,
+  HEARING_CALENDARS_READ_REQUEST,
+  HEARING_CALENDARS_READ_SUCCESS,
   HEARING_CALENDARS_UNMOUNT,
   SET_SELECTED_HEARING_CALENDAR,
   SET_SELECTED_TASK_CALENDAR,
-  TASK_CALENDARS_RETRIEVE_REQUEST,
-  TASK_CALENDARS_RETRIEVE_SUCCESS,
+  TASK_CALENDARS_READ_REQUEST,
+  TASK_CALENDARS_READ_SUCCESS,
   TASK_CALENDARS_UNMOUNT,
 } from '../types/calendars.action.types'
 import {
@@ -24,7 +24,7 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
   if (
     matchesRequestHc ||
     matchesRequestTc ||
-    [CALENDARS_RETRIEVE_REQUEST, HEARING_CALENDARS_RETRIEVE_REQUEST, TASK_CALENDARS_RETRIEVE_REQUEST].includes(
+    [CALENDARS_READ_REQUEST, HEARING_CALENDARS_READ_REQUEST, TASK_CALENDARS_READ_REQUEST].includes(
       action.type,
     )
   ) {
@@ -50,7 +50,7 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
   }
 
   switch (action.type) {
-    case CALENDARS_RETRIEVE_SUCCESS:
+    case CALENDARS_READ_SUCCESS:
       return {
         ...state,
         isCloseModal: true,
@@ -58,13 +58,13 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
         hearingCalendars: action.hearingCalendars,
         taskCalendars: action.taskCalendars,
       }
-    case HEARING_CALENDARS_RETRIEVE_SUCCESS:
+    case HEARING_CALENDARS_READ_SUCCESS:
       return {
         ...state,
         isCloseModal: true,
         hearingCalendars: action.hearingCalendars,
       }
-    case TASK_CALENDARS_RETRIEVE_SUCCESS:
+    case TASK_CALENDARS_READ_SUCCESS:
       return {
         ...state,
         isCloseModal: true,

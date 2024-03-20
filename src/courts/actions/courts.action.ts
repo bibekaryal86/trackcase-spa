@@ -13,9 +13,9 @@ import {
   COURT_UPDATE_REQUEST,
   COURT_UPDATE_SUCCESS,
   COURTS_COMPLETE,
-  COURTS_RETRIEVE_FAILURE,
-  COURTS_RETRIEVE_REQUEST,
-  COURTS_RETRIEVE_SUCCESS,
+  COURTS_READ_FAILURE,
+  COURTS_READ_REQUEST,
+  COURTS_READ_SUCCESS,
   SET_SELECTED_COURT,
 } from '../types/courts.action.types'
 import { CourtResponse, CourtSchema } from '../types/courts.data.types'
@@ -55,30 +55,30 @@ export const addCourt = (court: CourtSchema) => {
 
 export const getCourts = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(courtsRequest(COURTS_RETRIEVE_REQUEST))
+    dispatch(courtsRequest(COURTS_READ_REQUEST))
 
     try {
       let courtResponse: CourtResponse
       const courtsInStore: CourtSchema[] = getStore().courts.courts
 
       if (isForceFetch || courtsInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.COURTS_RETRIEVE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.COURTS_READ_ENDPOINT as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
         courtResponse = (await Async.fetch(urlPath, options)) as CourtResponse
 
         if (courtResponse.detail) {
-          dispatch(courtsFailure(COURTS_RETRIEVE_FAILURE, getErrMsg(courtResponse.detail)))
+          dispatch(courtsFailure(COURTS_READ_FAILURE, getErrMsg(courtResponse.detail)))
         } else {
-          dispatch(courtsSuccess(COURTS_RETRIEVE_SUCCESS, '', courtResponse.courts))
+          dispatch(courtsSuccess(COURTS_READ_SUCCESS, '', courtResponse.courts))
         }
       } else {
-        dispatch(courtsSuccess(COURTS_RETRIEVE_SUCCESS, '', courtsInStore))
+        dispatch(courtsSuccess(COURTS_READ_SUCCESS, '', courtsInStore))
       }
     } catch (error) {
       console.log('Get Courts Error: ', error)
-      dispatch(courtsFailure(COURTS_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(courtsFailure(COURTS_READ_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(courtsComplete())
     }
@@ -87,7 +87,7 @@ export const getCourts = (isForceFetch: boolean = false) => {
 
 export const getOneCourt = async (courtId: number) => {
   try {
-    const urlPath = getEndpoint(process.env.COURT_RETRIEVE_ENDPOINT as string)
+    const urlPath = getEndpoint(process.env.COURT_READ_ENDPOINT as string)
     const options: Partial<FetchOptions> = {
       method: 'GET',
       pathParams: { court_id: courtId },
@@ -106,13 +106,13 @@ export const getOneCourt = async (courtId: number) => {
 
 export const getCourt = (courtId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(courtsRequest(COURTS_RETRIEVE_REQUEST))
+    dispatch(courtsRequest(COURTS_READ_REQUEST))
 
     // call api, if it fails fallback to store
     try {
       const courtResponse = (await getOneCourt(courtId)) as CourtResponse
       if (courtResponse.detail) {
-        dispatch(courtsFailure(COURTS_RETRIEVE_FAILURE, getErrMsg(courtResponse.detail)))
+        dispatch(courtsFailure(COURTS_READ_FAILURE, getErrMsg(courtResponse.detail)))
         setSelectedCourtFromStore(getStore(), dispatch, courtId)
       } else {
         dispatch(courtSelect(courtResponse.courts[0]))

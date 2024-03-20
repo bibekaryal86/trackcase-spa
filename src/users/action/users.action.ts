@@ -130,9 +130,22 @@ export const resetExit = async (username: string, password: string): Promise<Fet
   }
 }
 
-export const fetchAppUsers = async (dispatch: React.Dispatch<GlobalDispatch>, requestMetadata?: Partial<FetchRequestMetadata>) => {
-  const dispatchFunction = await appUsersAdmin({ action: ACTION_TYPES.GET, requestMetadata: requestMetadata })
+export const fetchAppUsers = async (
+  dispatch: React.Dispatch<GlobalDispatch>,
+  requestMetadata?: Partial<FetchRequestMetadata>,
+) => {
+  const dispatchFunction = await appUsersAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
   return await dispatchFunction(dispatch)
+}
+
+function createGuestPassword() {
+  const length = 9
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length))
+  }
+  return result
 }
 
 export const appUsersAdmin = async ({
@@ -157,13 +170,14 @@ export const appUsersAdmin = async ({
 
     let endpoint = ''
     let options: Partial<FetchOptions> = {}
-    if (action === ACTION_TYPES.ADD) {
+    if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.APP_USER_CREATE as string)
       options = {
         method: 'POST',
-        requestBody: { ...appUserRequest, isGuestUser: true },
+        // send as validatedTrue, but with random password so that guests must reset before logging in
+        requestBody: { ...appUserRequest, isGuestUser: true, isValidated: true, password: createGuestPassword() },
       }
-    } else if (action === ACTION_TYPES.GET) {
+    } else if (action === ACTION_TYPES.READ) {
       endpoint = getEndpoint(process.env.APP_USER_READ as string)
       options = {
         method: 'GET',
@@ -192,7 +206,7 @@ export const appUsersAdmin = async ({
       if (appUserResponse.detail) {
         dispatch(userAdminDispatch({ type: typeFailure, error: getErrMsg(appUserResponse.detail) }))
       } else {
-        action !== ACTION_TYPES.GET &&
+        action !== ACTION_TYPES.READ &&
           dispatch(userAdminDispatch({ type: typeSuccess, success: `APP USER ${action} SUCCESS` }))
       }
       return appUserResponse

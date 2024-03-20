@@ -3,8 +3,8 @@ import {
   COURT_CASE_CREATE_SUCCESS,
   COURT_CASE_DELETE_SUCCESS,
   COURT_CASE_UPDATE_SUCCESS,
-  COURT_CASES_RETRIEVE_REQUEST,
-  COURT_CASES_RETRIEVE_SUCCESS,
+  COURT_CASES_READ_REQUEST,
+  COURT_CASES_READ_SUCCESS,
   COURT_CASES_UNMOUNT,
   SET_SELECTED_COURT_CASE,
 } from '../types/courtCases.action.types'
@@ -17,7 +17,7 @@ import {
 
 export default function courtCases(state = DefaultCourtCaseState, action: CourtCasesAction): CourtCasesState {
   const matchesRequest = /^COURT_CASE_(CREATE|UPDATE|DELETE)_REQUEST$/.exec(action.type)
-  if (matchesRequest || action.type === COURT_CASES_RETRIEVE_REQUEST) {
+  if (matchesRequest || action.type === COURT_CASES_READ_REQUEST) {
     return {
       ...state,
       isCloseModal: false,
@@ -25,7 +25,7 @@ export default function courtCases(state = DefaultCourtCaseState, action: CourtC
   }
 
   switch (action.type) {
-    case COURT_CASES_RETRIEVE_SUCCESS:
+    case COURT_CASES_READ_SUCCESS:
       return {
         ...state,
         isCloseModal: true,

@@ -2,8 +2,8 @@ import {
   FORM_CREATE_SUCCESS,
   FORM_DELETE_SUCCESS,
   FORM_UPDATE_SUCCESS,
-  FORMS_RETRIEVE_REQUEST,
-  FORMS_RETRIEVE_SUCCESS,
+  FORMS_READ_REQUEST,
+  FORMS_READ_SUCCESS,
   FORMS_UNMOUNT,
   SET_SELECTED_FORM,
 } from '../types/forms.action.types'
@@ -11,7 +11,7 @@ import { DefaultFormSchema, DefaultFormState, FormsAction, FormsState } from '..
 
 export default function forms(state = DefaultFormState, action: FormsAction): FormsState {
   const matchesRequest = /^FORM_(CREATE|UPDATE|DELETE)_REQUEST$/.exec(action.type)
-  if (matchesRequest || action.type === FORMS_RETRIEVE_REQUEST) {
+  if (matchesRequest || action.type === FORMS_READ_REQUEST) {
     return {
       ...state,
       isCloseModal: false,
@@ -19,7 +19,7 @@ export default function forms(state = DefaultFormState, action: FormsAction): Fo
   }
 
   switch (action.type) {
-    case FORMS_RETRIEVE_SUCCESS:
+    case FORMS_READ_SUCCESS:
       return {
         ...state,
         isCloseModal: true,

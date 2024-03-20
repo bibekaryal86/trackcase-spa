@@ -13,9 +13,9 @@ import {
   COURT_CASE_UPDATE_REQUEST,
   COURT_CASE_UPDATE_SUCCESS,
   COURT_CASES_COMPLETE,
-  COURT_CASES_RETRIEVE_FAILURE,
-  COURT_CASES_RETRIEVE_REQUEST,
-  COURT_CASES_RETRIEVE_SUCCESS,
+  COURT_CASES_READ_FAILURE,
+  COURT_CASES_READ_REQUEST,
+  COURT_CASES_READ_SUCCESS,
   SET_SELECTED_COURT_CASE,
 } from '../types/courtCases.action.types'
 import { CourtCaseResponse, CourtCaseSchema } from '../types/courtCases.data.types'
@@ -56,30 +56,30 @@ export const addCourtCase = (courtCase: CourtCaseSchema) => {
 
 export const getCourtCases = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(courtCasesRequest(COURT_CASES_RETRIEVE_REQUEST))
+    dispatch(courtCasesRequest(COURT_CASES_READ_REQUEST))
 
     try {
       let courtCasesResponse: CourtCaseResponse
       const courtCasesInStore: CourtCaseSchema[] = getStore().courtCases.courtCases
 
       if (isForceFetch || courtCasesInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.COURT_CASES_RETRIEVE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.COURT_CASES_READ_ENDPOINT as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
         courtCasesResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
 
         if (courtCasesResponse.detail) {
-          dispatch(courtCasesFailure(COURT_CASES_RETRIEVE_FAILURE, getErrMsg(courtCasesResponse.detail)))
+          dispatch(courtCasesFailure(COURT_CASES_READ_FAILURE, getErrMsg(courtCasesResponse.detail)))
         } else {
-          dispatch(courtCasesSuccess(COURT_CASES_RETRIEVE_SUCCESS, '', courtCasesResponse.courtCases))
+          dispatch(courtCasesSuccess(COURT_CASES_READ_SUCCESS, '', courtCasesResponse.courtCases))
         }
       } else {
-        dispatch(courtCasesSuccess(COURT_CASES_RETRIEVE_SUCCESS, '', courtCasesInStore))
+        dispatch(courtCasesSuccess(COURT_CASES_READ_SUCCESS, '', courtCasesInStore))
       }
     } catch (error) {
       console.log('Get CourtCases Error: ', error)
-      dispatch(courtCasesFailure(COURT_CASES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(courtCasesFailure(COURT_CASES_READ_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(courtCasesComplete())
     }
@@ -88,7 +88,7 @@ export const getCourtCases = (isForceFetch: boolean = false) => {
 
 export const getOneCourtCase = async (courtCaseId: number) => {
   try {
-    const urlPath = getEndpoint(process.env.COURT_CASE_RETRIEVE_ENDPOINT as string)
+    const urlPath = getEndpoint(process.env.COURT_CASE_READ_ENDPOINT as string)
     const options: Partial<FetchOptions> = {
       method: 'GET',
       pathParams: { court_case_id: courtCaseId },
@@ -108,13 +108,13 @@ export const getOneCourtCase = async (courtCaseId: number) => {
 
 export const getCourtCase = (courtCaseId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(courtCasesRequest(COURT_CASES_RETRIEVE_REQUEST))
+    dispatch(courtCasesRequest(COURT_CASES_READ_REQUEST))
 
     // call api, if it fails fallback to store
     try {
       const courtCaseResponse = (await getOneCourtCase(courtCaseId)) as CourtCaseResponse
       if (courtCaseResponse.detail) {
-        dispatch(courtCasesFailure(COURT_CASES_RETRIEVE_FAILURE, getErrMsg(courtCaseResponse.detail)))
+        dispatch(courtCasesFailure(COURT_CASES_READ_FAILURE, getErrMsg(courtCaseResponse.detail)))
         setSelectedCourtCaseFromStore(getStore(), dispatch, courtCaseId)
       } else {
         dispatch(courtCaseSelect(courtCaseResponse.courtCases[0]))

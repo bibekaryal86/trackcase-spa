@@ -13,9 +13,9 @@ import {
   JUDGE_UPDATE_REQUEST,
   JUDGE_UPDATE_SUCCESS,
   JUDGES_COMPLETE,
-  JUDGES_RETRIEVE_FAILURE,
-  JUDGES_RETRIEVE_REQUEST,
-  JUDGES_RETRIEVE_SUCCESS,
+  JUDGES_READ_FAILURE,
+  JUDGES_READ_REQUEST,
+  JUDGES_READ_SUCCESS,
   SET_SELECTED_JUDGE,
 } from '../types/judges.action.types'
 import { JudgeResponse, JudgeSchema } from '../types/judges.data.types'
@@ -56,30 +56,30 @@ export const addJudge = (judge: JudgeSchema) => {
 
 export const getJudges = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(judgesRequest(JUDGES_RETRIEVE_REQUEST))
+    dispatch(judgesRequest(JUDGES_READ_REQUEST))
 
     try {
       let judgeResponse: JudgeResponse
       const judgesInStore: JudgeSchema[] = getStore().judges.judges
 
       if (isForceFetch || judgesInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.JUDGES_RETRIEVE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.JUDGES_READ_ENDPOINT as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
         judgeResponse = (await Async.fetch(urlPath, options)) as JudgeResponse
 
         if (judgeResponse.detail) {
-          dispatch(judgesFailure(JUDGES_RETRIEVE_FAILURE, getErrMsg(judgeResponse.detail)))
+          dispatch(judgesFailure(JUDGES_READ_FAILURE, getErrMsg(judgeResponse.detail)))
         } else {
-          dispatch(judgesSuccess(JUDGES_RETRIEVE_SUCCESS, '', judgeResponse.judges))
+          dispatch(judgesSuccess(JUDGES_READ_SUCCESS, '', judgeResponse.judges))
         }
       } else {
-        dispatch(judgesSuccess(JUDGES_RETRIEVE_SUCCESS, '', judgesInStore))
+        dispatch(judgesSuccess(JUDGES_READ_SUCCESS, '', judgesInStore))
       }
     } catch (error) {
       console.log('Get Judges Error: ', error)
-      dispatch(judgesFailure(JUDGES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(judgesFailure(JUDGES_READ_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(judgesComplete())
     }
@@ -88,7 +88,7 @@ export const getJudges = (isForceFetch: boolean = false) => {
 
 export const getOneJudge = (judgeId: number) => {
   try {
-    const urlPath = getEndpoint(process.env.JUDGE_RETRIEVE_ENDPOINT as string)
+    const urlPath = getEndpoint(process.env.JUDGE_READ_ENDPOINT as string)
     const options: Partial<FetchOptions> = {
       method: 'GET',
       pathParams: { judge_id: judgeId },
@@ -108,20 +108,20 @@ export const getOneJudge = (judgeId: number) => {
 
 export const getJudge = (judgeId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(judgesRequest(JUDGES_RETRIEVE_REQUEST))
+    dispatch(judgesRequest(JUDGES_READ_REQUEST))
 
     // call api, if it fails fallback to store
     try {
       const judgeResponse = (await getOneJudge(judgeId)) as JudgeResponse
       if (judgeResponse.detail) {
-        dispatch(judgesFailure(JUDGES_RETRIEVE_FAILURE, getErrMsg(judgeResponse.detail)))
+        dispatch(judgesFailure(JUDGES_READ_FAILURE, getErrMsg(judgeResponse.detail)))
         setSelectedJudgeFromStore(getStore(), dispatch, judgeId)
       } else {
         dispatch(judgeSelect(judgeResponse.judges[0]))
       }
     } catch (error) {
       console.log('Get Judge Error: ', error)
-      dispatch(judgesFailure(JUDGES_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(judgesFailure(JUDGES_READ_FAILURE, SOMETHING_WENT_WRONG))
       setSelectedJudgeFromStore(getStore(), dispatch, judgeId)
     } finally {
       dispatch(judgesComplete())

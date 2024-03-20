@@ -3,8 +3,8 @@ import {
   CLIENT_CREATE_SUCCESS,
   CLIENT_DELETE_SUCCESS,
   CLIENT_UPDATE_SUCCESS,
-  CLIENTS_RETRIEVE_REQUEST,
-  CLIENTS_RETRIEVE_SUCCESS,
+  CLIENTS_READ_REQUEST,
+  CLIENTS_READ_SUCCESS,
   CLIENTS_UNMOUNT,
   SET_SELECTED_CLIENT,
 } from '../types/clients.action.types'
@@ -12,7 +12,7 @@ import { ClientsAction, ClientsState, DefaultClientSchema, DefaultClientState } 
 
 export default function clients(state = DefaultClientState, action: ClientsAction): ClientsState {
   const matchesRequest = /^CLIENT_(CREATE|UPDATE|DELETE)_REQUEST$/.exec(action.type)
-  if (matchesRequest || action.type === CLIENTS_RETRIEVE_REQUEST) {
+  if (matchesRequest || action.type === CLIENTS_READ_REQUEST) {
     return {
       ...state,
       isCloseModal: false,
@@ -20,7 +20,7 @@ export default function clients(state = DefaultClientState, action: ClientsActio
   }
 
   switch (action.type) {
-    case CLIENTS_RETRIEVE_SUCCESS:
+    case CLIENTS_READ_SUCCESS:
       return {
         ...state,
         isCloseModal: true,

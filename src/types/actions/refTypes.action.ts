@@ -20,23 +20,23 @@ import {
 } from '../../constants'
 import {
   CASE_TYPE_COMPLETE,
-  CASE_TYPE_RETRIEVE_REQUEST,
-  CASE_TYPE_RETRIEVE_SUCCESS,
+  CASE_TYPE_READ_REQUEST,
+  CASE_TYPE_READ_SUCCESS,
   COLLECTION_METHOD_COMPLETE,
-  COLLECTION_METHOD_RETRIEVE_REQUEST,
-  COLLECTION_METHOD_RETRIEVE_SUCCESS,
+  COLLECTION_METHOD_READ_REQUEST,
+  COLLECTION_METHOD_READ_SUCCESS,
   COMPONENT_STATUS_COMPLETE,
-  COMPONENT_STATUS_RETRIEVE_REQUEST,
-  COMPONENT_STATUS_RETRIEVE_SUCCESS,
+  COMPONENT_STATUS_READ_REQUEST,
+  COMPONENT_STATUS_READ_SUCCESS,
   FILING_TYPE_COMPLETE,
-  FILING_TYPE_RETRIEVE_REQUEST,
-  FILING_TYPE_RETRIEVE_SUCCESS,
+  FILING_TYPE_READ_REQUEST,
+  FILING_TYPE_READ_SUCCESS,
   HEARING_TYPE_COMPLETE,
-  HEARING_TYPE_RETRIEVE_REQUEST,
-  HEARING_TYPE_RETRIEVE_SUCCESS,
+  HEARING_TYPE_READ_REQUEST,
+  HEARING_TYPE_READ_SUCCESS,
   TASK_TYPE_COMPLETE,
-  TASK_TYPE_RETRIEVE_REQUEST,
-  TASK_TYPE_RETRIEVE_SUCCESS,
+  TASK_TYPE_READ_REQUEST,
+  TASK_TYPE_READ_SUCCESS,
 } from '../types/refTypes.action.types'
 import {
   RefTypeResponse,
@@ -49,12 +49,12 @@ import { refTypesDispatch } from '../utils/refTypes.utils'
 
 export const getRefTypes = () => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(refTypesDispatch({ type: COMPONENT_STATUS_RETRIEVE_REQUEST }))
-    dispatch(refTypesDispatch({ type: CASE_TYPE_RETRIEVE_REQUEST }))
-    dispatch(refTypesDispatch({ type: COLLECTION_METHOD_RETRIEVE_REQUEST }))
-    dispatch(refTypesDispatch({ type: FILING_TYPE_RETRIEVE_REQUEST }))
-    dispatch(refTypesDispatch({ type: HEARING_TYPE_RETRIEVE_REQUEST }))
-    dispatch(refTypesDispatch({ type: TASK_TYPE_RETRIEVE_REQUEST }))
+    dispatch(refTypesDispatch({ type: COMPONENT_STATUS_READ_REQUEST }))
+    dispatch(refTypesDispatch({ type: CASE_TYPE_READ_REQUEST }))
+    dispatch(refTypesDispatch({ type: COLLECTION_METHOD_READ_REQUEST }))
+    dispatch(refTypesDispatch({ type: FILING_TYPE_READ_REQUEST }))
+    dispatch(refTypesDispatch({ type: HEARING_TYPE_READ_REQUEST }))
+    dispatch(refTypesDispatch({ type: TASK_TYPE_READ_REQUEST }))
 
     try {
       const requestComponents: string[] = []
@@ -91,30 +91,30 @@ export const getRefTypes = () => {
         if (allRefTypes.data?.componentStatuses?.data?.length) {
           dispatch(
             refTypesDispatch({
-              type: COMPONENT_STATUS_RETRIEVE_SUCCESS,
+              type: COMPONENT_STATUS_READ_SUCCESS,
               data: allRefTypes.data.componentStatuses.data,
             }),
           )
         }
         if (allRefTypes.data?.caseTypes?.data?.length) {
-          dispatch(refTypesDispatch({ type: CASE_TYPE_RETRIEVE_SUCCESS, data: allRefTypes.data.caseTypes.data }))
+          dispatch(refTypesDispatch({ type: CASE_TYPE_READ_SUCCESS, data: allRefTypes.data.caseTypes.data }))
         }
         if (allRefTypes.data?.collectionMethods?.data?.length) {
           dispatch(
             refTypesDispatch({
-              type: COLLECTION_METHOD_RETRIEVE_SUCCESS,
+              type: COLLECTION_METHOD_READ_SUCCESS,
               data: allRefTypes.data.collectionMethods.data,
             }),
           )
         }
         if (allRefTypes.data?.filingTypes?.data?.length) {
-          dispatch(refTypesDispatch({ type: FILING_TYPE_RETRIEVE_SUCCESS, data: allRefTypes.data.filingTypes.data }))
+          dispatch(refTypesDispatch({ type: FILING_TYPE_READ_SUCCESS, data: allRefTypes.data.filingTypes.data }))
         }
         if (allRefTypes.data?.hearingTypes?.data?.length) {
-          dispatch(refTypesDispatch({ type: HEARING_TYPE_RETRIEVE_SUCCESS, data: allRefTypes.data.hearingTypes.data }))
+          dispatch(refTypesDispatch({ type: HEARING_TYPE_READ_SUCCESS, data: allRefTypes.data.hearingTypes.data }))
         }
         if (allRefTypes.data?.taskTypes?.data?.length) {
-          dispatch(refTypesDispatch({ type: TASK_TYPE_RETRIEVE_SUCCESS, data: allRefTypes.data.taskTypes.data }))
+          dispatch(refTypesDispatch({ type: TASK_TYPE_READ_SUCCESS, data: allRefTypes.data.taskTypes.data }))
         }
       }
     } catch (error) {
@@ -174,7 +174,7 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
 
 export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<FetchRequestMetadata>) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_REQUEST` }))
+    dispatch(refTypesDispatch({ type: `${refType}_READ_REQUEST` }))
 
     try {
       let refTypeList: RefTypeSchema[] = []
@@ -233,14 +233,14 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
 
       dispatch(
         refTypesDispatch({
-          type: `${refType}_RETRIEVE_SUCCESS`,
+          type: `${refType}_READ_SUCCESS`,
           data: refTypeList,
           metadata: updatedRequestMetadataState,
         }),
       )
     } catch (error) {
       console.log(`Get ${refType} Error: `, error)
-      dispatch(refTypesDispatch({ type: `${refType}_RETRIEVE_FAILURE`, error: SOMETHING_WENT_WRONG }))
+      dispatch(refTypesDispatch({ type: `${refType}_READ_FAILURE`, error: SOMETHING_WENT_WRONG }))
     } finally {
       dispatch(refTypesDispatch({ type: `${refType}_COMPLETE` }))
     }

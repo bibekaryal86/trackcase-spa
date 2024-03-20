@@ -13,9 +13,9 @@ import {
   FORM_UPDATE_REQUEST,
   FORM_UPDATE_SUCCESS,
   FORMS_COMPLETE,
-  FORMS_RETRIEVE_FAILURE,
-  FORMS_RETRIEVE_REQUEST,
-  FORMS_RETRIEVE_SUCCESS,
+  FORMS_READ_FAILURE,
+  FORMS_READ_REQUEST,
+  FORMS_READ_SUCCESS,
   SET_SELECTED_FORM,
 } from '../types/forms.action.types'
 import { FormResponse, FormSchema } from '../types/forms.data.types'
@@ -56,30 +56,30 @@ export const addForm = (form: FormSchema) => {
 
 export const getForms = (isForceFetch: boolean = false) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(formsRequest(FORMS_RETRIEVE_REQUEST))
+    dispatch(formsRequest(FORMS_READ_REQUEST))
 
     try {
       let formsResponse: FormResponse
       const formsInStore: FormSchema[] = getStore().forms.forms
 
       if (isForceFetch || formsInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.FORMS_RETRIEVE_ENDPOINT as string)
+        const urlPath = getEndpoint(process.env.FORMS_READ_ENDPOINT as string)
         const options: Partial<FetchOptions> = {
           method: 'GET',
         }
         formsResponse = (await Async.fetch(urlPath, options)) as FormResponse
 
         if (formsResponse.detail) {
-          dispatch(formsFailure(FORMS_RETRIEVE_FAILURE, getErrMsg(formsResponse.detail)))
+          dispatch(formsFailure(FORMS_READ_FAILURE, getErrMsg(formsResponse.detail)))
         } else {
-          dispatch(formsSuccess(FORMS_RETRIEVE_SUCCESS, '', formsResponse.forms))
+          dispatch(formsSuccess(FORMS_READ_SUCCESS, '', formsResponse.forms))
         }
       } else {
-        dispatch(formsSuccess(FORMS_RETRIEVE_SUCCESS, '', formsInStore))
+        dispatch(formsSuccess(FORMS_READ_SUCCESS, '', formsInStore))
       }
     } catch (error) {
       console.log('Get Forms Error: ', error)
-      dispatch(formsFailure(FORMS_RETRIEVE_FAILURE, SOMETHING_WENT_WRONG))
+      dispatch(formsFailure(FORMS_READ_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(formsComplete())
     }
@@ -88,7 +88,7 @@ export const getForms = (isForceFetch: boolean = false) => {
 
 export const getOneForm = (formId: number) => {
   try {
-    const urlPath = getEndpoint(process.env.FORM_RETRIEVE_ENDPOINT as string)
+    const urlPath = getEndpoint(process.env.FORM_READ_ENDPOINT as string)
     const options: Partial<FetchOptions> = {
       method: 'GET',
       pathParams: { form_id: formId },
@@ -108,13 +108,13 @@ export const getOneForm = (formId: number) => {
 
 export const getForm = (formId: number) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(formsRequest(FORMS_RETRIEVE_REQUEST))
+    dispatch(formsRequest(FORMS_READ_REQUEST))
 
     // call api, if it fails fallback to store
     try {
       const formResponse = (await getOneForm(formId)) as FormResponse
       if (formResponse.detail) {
-        dispatch(formsFailure(FORMS_RETRIEVE_FAILURE, getErrMsg(formResponse.detail)))
+        dispatch(formsFailure(FORMS_READ_FAILURE, getErrMsg(formResponse.detail)))
         setSelectedFormFromStore(getStore(), dispatch, formId)
       } else {
         dispatch(formSelect(formResponse.forms[0]))

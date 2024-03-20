@@ -99,7 +99,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
   const addButton = () =>
     checkUserHasPermission('REF_TYPES', 'CREATE') ? (
-      <Button onClick={() => addModalState.toggleModalView()}>{ACTION_TYPES.CREATE} {' '} {refTypeTitle()}</Button>
+      <Button onClick={() => addModalState.toggleModalView()}>
+        {ACTION_TYPES.CREATE} {refTypeTitle()}
+      </Button>
     ) : undefined
 
   const actionButtons = (formDataModal: RefTypeFormData) => (
@@ -333,9 +335,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         }
         secondaryButtonText={ACTION_TYPES.CANCEL}
         secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`ARE YOU SURE YOU WANT TO ${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${refTypeTitle()}: ${
-          formData.nameOrComponentName
-        }, ${formData.descOrStatusName}?!?`}
+        contentText={`ARE YOU SURE YOU WANT TO ${
+          formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+        } ${refTypeTitle()}: ${formData.nameOrComponentName}, ${formData.descOrStatusName}?!?`}
         content={hardDeleteCheckbox()}
       />
     )

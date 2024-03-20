@@ -3,8 +3,8 @@ import {
   COURT_CREATE_SUCCESS,
   COURT_DELETE_SUCCESS,
   COURT_UPDATE_SUCCESS,
-  COURTS_RETRIEVE_REQUEST,
-  COURTS_RETRIEVE_SUCCESS,
+  COURTS_READ_REQUEST,
+  COURTS_READ_SUCCESS,
   COURTS_UNMOUNT,
   SET_SELECTED_COURT,
 } from '../types/courts.action.types'
@@ -12,7 +12,7 @@ import { CourtsAction, CourtsState, DefaultCourtSchema, DefaultCourtState } from
 
 export default function courts(state = DefaultCourtState, action: CourtsAction): CourtsState {
   const matchesRequest = /^COURT_(CREATE|UPDATE|DELETE)_REQUEST$/.exec(action.type)
-  if (matchesRequest || action.type === COURTS_RETRIEVE_REQUEST) {
+  if (matchesRequest || action.type === COURTS_READ_REQUEST) {
     return {
       ...state,
       isCloseModal: false,
@@ -20,7 +20,7 @@ export default function courts(state = DefaultCourtState, action: CourtsAction):
   }
 
   switch (action.type) {
-    case COURTS_RETRIEVE_SUCCESS:
+    case COURTS_READ_SUCCESS:
       return {
         ...state,
         isCloseModal: true,

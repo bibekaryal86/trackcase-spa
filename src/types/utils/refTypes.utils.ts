@@ -47,11 +47,11 @@ export const validateFormData = (formData: RefTypeFormData, setFormErrors: (form
   const formErrorsLocal: RefTypeFormData = { ...DefaultRefTypeFormData }
   if (!getString(formData.nameOrComponentName)) {
     hasValidationErrors = true
-    formErrorsLocal.nameOrComponentName = 'Required'
+    formErrorsLocal.nameOrComponentName = 'REQUIRED'
   }
   if (!getString(formData.descOrStatusName)) {
     hasValidationErrors = true
-    formErrorsLocal.descOrStatusName = 'Required'
+    formErrorsLocal.descOrStatusName = 'REQUIRED'
   }
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)
@@ -67,7 +67,7 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
     },
     {
       id: 'descOrStatusName',
-      label: refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Status Name' : 'Description',
+      label: refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'STATUS NAME' : 'DESCRIPTION',
     },
   ]
   if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {

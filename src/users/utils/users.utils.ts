@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { convertDateToLocaleString, SessionStorage, TableData, TableHeaderData } from '../../app'
+import { convertDateToLocaleString, getNumber, getString, SessionStorage, TableData, TableHeaderData } from '../../app'
 import {
   ID_DEFAULT,
   LOGIN_SHOW_FORM_TYPE,
@@ -8,7 +8,12 @@ import {
   REGEX_LOGIN_INPUT_PATTERN,
   REGEX_LOGIN_PASSWORD_PATTERN,
 } from '../../constants'
-import { AppUserFormData, AppUserSchema } from '../types/users.data.types'
+import {
+  AppUserFormData,
+  AppUserFormErrorData,
+  AppUserSchema,
+  DefaultAppUserFormErrorData,
+} from '../types/users.data.types'
 
 export const isLoggedIn = (): AppUserSchema | undefined => {
   const token = SessionStorage.getItem('token') as string
@@ -95,6 +100,30 @@ export const validateSignInUpInput = (
       REGEX_LOGIN_PASSWORD_PATTERN.test(password)
     )
   }
+}
+
+export const validateAppUser = (
+  formData: AppUserFormData,
+  setFormErrors: (formErrors: AppUserFormErrorData) => void,
+) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: AppUserFormErrorData = { ...DefaultAppUserFormErrorData }
+  if (!getString(formData.email)) {
+    hasValidationErrors = true
+    formErrorsLocal.email = 'REQUIRED'
+  }
+  if (!getString(formData.fullName)) {
+    hasValidationErrors = true
+    formErrorsLocal.fullName = 'REQUIRED'
+  }
+  if (getNumber(formData.statusId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.statusId = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
 }
 
 export const userAdminDispatch = ({ type = '', error = '', success = '' } = {}) => {

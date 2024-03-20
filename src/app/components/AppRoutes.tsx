@@ -217,7 +217,9 @@ function RequireAuth({ children, path }: { children: React.ReactElement; path: s
       if (path === '/home') {
         return children
       } else {
-        return <Navigate to="/home" replace state={{ message: INCOMPLETE_PERMISSION, alertType: ALERT_TYPES.WARNING }} />
+        return (
+          <Navigate to="/home" replace state={{ message: INCOMPLETE_PERMISSION, alertType: ALERT_TYPES.WARNING }} />
+        )
       }
     }
   } else {

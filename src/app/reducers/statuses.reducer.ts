@@ -1,4 +1,4 @@
-import { STATUSES_RETRIEVE_SUCCESS } from '../types/app.action.types'
+import { STATUSES_READ_SUCCESS } from '../types/app.action.types'
 import { StatusAction, StatusState } from '../types/app.data.types'
 
 export const DefaultStatusesState: StatusState = {
@@ -43,7 +43,7 @@ export const DefaultStatusesState: StatusState = {
 
 export default function statuses(state = DefaultStatusesState, action: StatusAction): StatusState {
   switch (action.type) {
-    case STATUSES_RETRIEVE_SUCCESS:
+    case STATUSES_READ_SUCCESS:
       return {
         statuses: action.statuses,
       }
