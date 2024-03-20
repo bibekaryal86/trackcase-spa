@@ -10,9 +10,7 @@ import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-route
 
 import { getErrMsg, getString, resetAlert, resetSpinner, SessionStorage, setAlert, setSpinner } from '../../app'
 import {
-  ALERT_TYPE_FAILURE,
-  ALERT_TYPE_SUCCESS,
-  ALERT_TYPE_WARNING,
+  ALERT_TYPES,
   INVALID_INPUT,
   INVALID_PASSWORD,
   LOGIN_SHOW_FORM_TYPE,
@@ -66,10 +64,10 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   useEffect(() => {
     if (isValidatedQp) {
       if (isValidatedQp === 'true') {
-        setAlert(ALERT_TYPE_SUCCESS, VALIDATE_SUCCESS)
+        setAlert(ALERT_TYPES.SUCCESS, VALIDATE_SUCCESS)
       } else {
         setShowFormType(LOGIN_SHOW_FORM_TYPE.VALIDATE)
-        setAlert(ALERT_TYPE_WARNING, VALIDATE_FAILURE)
+        setAlert(ALERT_TYPES.WARNING, VALIDATE_FAILURE)
       }
     }
   }, [isValidatedQp, setAlert])
@@ -83,7 +81,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
         }
       } else if (isResetExitQp === 'false') {
         setShowFormType(LOGIN_SHOW_FORM_TYPE.RESET_EXIT)
-        setAlert(ALERT_TYPE_WARNING, RESET_INIT_FAILURE)
+        setAlert(ALERT_TYPES.WARNING, RESET_INIT_FAILURE)
       }
     }
   }, [isResetExitQp, setAlert, userToResetQp])
@@ -97,37 +95,37 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const handleRevalidateSubmit = async (username: string) => {
     const revalidateResponse = await validateInit(username)
     if (revalidateResponse.detail) {
-      setAlert(ALERT_TYPE_FAILURE, getErrMsg(revalidateResponse.detail))
+      setAlert(ALERT_TYPES.FAILURE, getErrMsg(revalidateResponse.detail))
     } else {
       resetState()
-      setAlert(ALERT_TYPE_SUCCESS, SIGNUP_SUCCESS)
+      setAlert(ALERT_TYPES.SUCCESS, SIGNUP_SUCCESS)
     }
   }
 
   const handleResetInitSubmit = async (username: string) => {
     const resetInitResponse = await resetInit(username)
     if (resetInitResponse.detail) {
-      setAlert(ALERT_TYPE_FAILURE, getErrMsg(resetInitResponse.detail))
+      setAlert(ALERT_TYPES.FAILURE, getErrMsg(resetInitResponse.detail))
     } else {
       resetState()
-      setAlert(ALERT_TYPE_SUCCESS, RESET_INIT_SUCCESS)
+      setAlert(ALERT_TYPES.SUCCESS, RESET_INIT_SUCCESS)
     }
   }
 
   const handleResetExitSubmit = async (password: string) => {
     const resetExitResponse = await resetExit(userToReset, password)
     if (resetExitResponse.detail) {
-      setAlert(ALERT_TYPE_FAILURE, getErrMsg(resetExitResponse.detail))
+      setAlert(ALERT_TYPES.FAILURE, getErrMsg(resetExitResponse.detail))
     } else {
       resetState()
-      setAlert(ALERT_TYPE_SUCCESS, RESET_EXIT_SUCCESS)
+      setAlert(ALERT_TYPES.SUCCESS, RESET_EXIT_SUCCESS)
     }
   }
 
   const handleSigninSubmit = async (username: string, password: string) => {
     const loginResponse = await login(username, password)
     if (loginResponse.detail) {
-      setAlert(ALERT_TYPE_FAILURE, getErrMsg(loginResponse.detail))
+      setAlert(ALERT_TYPES.FAILURE, getErrMsg(loginResponse.detail))
     } else {
       resetState()
       resetAlert()
@@ -142,10 +140,10 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const handleSignupSubmit = async (username: string, password: string, fullName: string) => {
     const signupResponse = await signup(username, password, fullName)
     if (signupResponse.detail) {
-      setAlert(ALERT_TYPE_FAILURE, getErrMsg(signupResponse.detail))
+      setAlert(ALERT_TYPES.FAILURE, getErrMsg(signupResponse.detail))
     } else {
       resetState()
-      setAlert(ALERT_TYPE_SUCCESS, SIGNUP_SUCCESS)
+      setAlert(ALERT_TYPES.SUCCESS, SIGNUP_SUCCESS)
     }
   }
 
@@ -168,21 +166,21 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
         if (validatePassword(password, confirmPassword)) {
           await handleResetExitSubmit(password)
         } else {
-          setAlert(ALERT_TYPE_FAILURE, INVALID_PASSWORD)
+          setAlert(ALERT_TYPES.FAILURE, INVALID_PASSWORD)
         }
       } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNUP) {
         if (validatePassword(password, confirmPassword)) {
           await handleSignupSubmit(username, password, fullName)
         } else {
-          setAlert(ALERT_TYPE_FAILURE, INVALID_PASSWORD)
+          setAlert(ALERT_TYPES.FAILURE, INVALID_PASSWORD)
         }
       } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNIN) {
         await handleSigninSubmit(username, password)
       } else {
-        setAlert(ALERT_TYPE_FAILURE, `Oops! ${SOMETHING_WENT_WRONG}`)
+        setAlert(ALERT_TYPES.FAILURE, `Oops! ${SOMETHING_WENT_WRONG}`)
       }
     } else {
-      setAlert(ALERT_TYPE_FAILURE, INVALID_INPUT)
+      setAlert(ALERT_TYPES.FAILURE, INVALID_INPUT)
     }
     resetSpinner()
   }

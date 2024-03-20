@@ -20,7 +20,7 @@ import { Calendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
 import { Collections } from '../../collections'
-import { ALERT_TYPE_WARNING, INCOMPLETE_PERMISSION, REF_TYPES_REGISTRY } from '../../constants'
+import { ALERT_TYPES, INCOMPLETE_PERMISSION, REF_TYPES_REGISTRY } from '../../constants'
 import { Court, Courts } from '../../courts'
 import { Form, Forms } from '../../forms'
 import { Home } from '../../home'
@@ -217,7 +217,7 @@ function RequireAuth({ children, path }: { children: React.ReactElement; path: s
       if (path === '/home') {
         return children
       } else {
-        return <Navigate to="/home" replace state={{ message: INCOMPLETE_PERMISSION, alertType: ALERT_TYPE_WARNING }} />
+        return <Navigate to="/home" replace state={{ message: INCOMPLETE_PERMISSION, alertType: ALERT_TYPES.WARNING }} />
       }
     }
   } else {

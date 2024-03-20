@@ -119,7 +119,7 @@ export const getRefTypes = () => {
       }
     } catch (error) {
       console.log('Get Ref Types Error: ', error)
-      // do not dispatch error, when needed dispatched from their respective action components
+      // do not dispatch error, when needed will be dispatched from their respective action components
     } finally {
       dispatch(refTypesDispatch({ type: COMPONENT_STATUS_COMPLETE }))
       dispatch(refTypesDispatch({ type: CASE_TYPE_COMPLETE }))

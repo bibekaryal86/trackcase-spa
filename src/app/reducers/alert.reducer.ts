@@ -1,4 +1,4 @@
-import { ALERT_TYPE_FAILURE, ALERT_TYPE_SUCCESS } from '../../constants'
+import { ALERT_TYPES } from '../../constants'
 import { RESET_ALERT, SET_ALERT } from '../types/app.action.types'
 import { AlertAction, AlertState } from '../types/app.data.types'
 
@@ -26,14 +26,14 @@ export default function alert(state = initialState, action: AlertAction): AlertS
 
   if (matchesFailure && action.error) {
     return {
-      messageType: ALERT_TYPE_FAILURE,
+      messageType: ALERT_TYPES.FAILURE,
       messageText: action.error,
     }
   }
 
   if (matchesSuccess && action.success) {
     return {
-      messageType: ALERT_TYPE_SUCCESS,
+      messageType: ALERT_TYPES.SUCCESS,
       messageText: action.success,
     }
   }

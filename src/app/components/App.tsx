@@ -7,7 +7,7 @@ import Alerts from './Alerts'
 import Body from './Body'
 import SessionTimeout from './SessionTimeout'
 import Spinner from './Spinner'
-import { ALERT_TYPE_INFO, ALERT_TYPE_WARNING, IS_DARK_MODE, SIGNIN_FIRST } from '../../constants'
+import { ALERT_TYPES, IS_DARK_MODE, SIGNIN_FIRST } from '../../constants'
 import { isLoggedIn, logout } from '../../users'
 import { setAlert } from '../utils/alerts.utils'
 import { SessionStorage } from '../utils/storage.utils'
@@ -65,11 +65,11 @@ function App(props: AppProps): React.ReactElement {
       if (state.alertType) {
         setAlert(state.alertType, state.message)
       } else {
-        setAlert(ALERT_TYPE_INFO, state.message)
+        setAlert(ALERT_TYPES.INFO, state.message)
       }
     }
     if (state?.redirect && !isLoggedIn()) {
-      setAlert(ALERT_TYPE_WARNING, SIGNIN_FIRST)
+      setAlert(ALERT_TYPES.WARNING, SIGNIN_FIRST)
     }
   }, [navigate, setAlert, state])
 

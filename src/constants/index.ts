@@ -12,21 +12,6 @@ export const REGEX_CURRENCY_FORMAT = new RegExp('^\\$|\\-\\$(\\d{1,3}(\\,\\d{3})
 
 export const DATE_FORMAT = 'YYYY-MM-DD'
 
-export const ACTION_ADD = 'add'
-export const ACTION_UPDATE = 'update'
-export const ACTION_DELETE = 'delete'
-
-export const BUTTON_ADD = 'Add'
-export const BUTTON_UPDATE = 'Update'
-export const BUTTON_DELETE = 'Delete'
-export const BUTTON_CANCEL = 'Cancel'
-export const BUTTON_RESET = 'Reset'
-
-export const ALERT_TYPE_SUCCESS = 'success'
-export const ALERT_TYPE_FAILURE = 'error'
-export const ALERT_TYPE_INFO = 'info'
-export const ALERT_TYPE_WARNING = 'warning'
-
 export const AMOUNT_DEFAULT = -1.0
 export const ID_DEFAULT = -1
 export const ID_ACTION_BUTTON = -2
@@ -41,23 +26,23 @@ export const IS_DARK_MODE = 'isDarkMode'
 export const FORCE_LOGOUT = 'forceLogout'
 
 // ALERT MESSAGES
-export const SOMETHING_WENT_WRONG = 'Something went wrong, please try again...'
-export const INVALID_INPUT = 'Required inputs are invalid/empty, please try again...'
-export const INVALID_PASSWORD = 'Passwords do not match, please try again...'
-export const SIGNIN_FIRST = 'Please sign in first...'
-export const INVALID_SESSION = 'Session invalidated due to inactivity/expiry, please sign in again to continue...'
-export const INCOMPLETE_PERMISSION = 'Incomplete permission, redirected to home...'
+export const SOMETHING_WENT_WRONG = 'SOMETHING WENT WRONG, PLEASE TRY AGAIN...'
+export const INVALID_INPUT = 'REQUIRED INPUTS ARE EMPTY/INVALID, PLEASE TRY AGAIN...'
+export const INVALID_PASSWORD = 'PASSWORDS DO NOT MATCH, PLEASE TRY AGAIN...'
+export const SIGNIN_FIRST = 'PLEASE SIGN IN FIRST...'
+export const INVALID_SESSION = 'SESSION INVALIDATED DUE TO INACTIVITY/EXPIRY, PLEASE SIGN IN AGAIN TO CONTINUE...'
+export const INCOMPLETE_PERMISSION = 'INCOMPLETE PERMISSION, REDIRECTED TO HOME...'
 export const SIGNUP_SUCCESS =
-  'Signup successful, please check your inbox to validate your account. Account can only be used after validation...'
-export const VALIDATE_SUCCESS = 'Email validation successful, please sign in to continue...'
-export const VALIDATE_FAILURE = 'Email validation failure, link may have expired, please try again...'
-export const RESET_INIT_SUCCESS = 'Reset email sent, please check your inbox to reset your account...'
-export const RESET_INIT_FAILURE = 'Account reset failure, link may have expired, please try again...'
-export const RESET_EXIT_SUCCESS = 'Account reset successful, please sign in to continue...'
+  'SIGNUP SUCCESSFUL, PLEASE CHECK YOUR INBOX TO VALIDATE YOUR ACCOUNT...'
+export const VALIDATE_SUCCESS = 'EMAIL VALIDATION SUCCESSFUL, PLEASE SIGN IN TO CONTINUE...'
+export const VALIDATE_FAILURE = 'EMAIL VALIDATION FAILURE, LINK MAY HAVE EXPIRED, PLEASE TRY AGAIN...'
+export const RESET_INIT_SUCCESS = 'RESET EMAIL SENT, PLEASE CHECK YOUR INBOX TO RESET YOUR ACCOUNT...'
+export const RESET_INIT_FAILURE = 'ACCOUNT RESET FAILURE, LINK MAY HAVE EXPIRED, PLEASE TRY AGAIN...'
+export const RESET_EXIT_SUCCESS = 'ACCOUNT RESET SUCCESSFUL, PLEASE SIGN IN TO CONTINUE...'
 
-export const CREATE_SUCCESS = (what: string) => `Add ${what} Success!`
-export const UPDATE_SUCCESS = (what: string) => `Edit ${what} Success!`
-export const DELETE_SUCCESS = (what: string) => `Delete ${what} Success!`
+export const CREATE_SUCCESS = (what: string) => `CREATE ${what} SUCCESS!`
+export const UPDATE_SUCCESS = (what: string) => `UPDATE ${what} SUCCESS!`
+export const DELETE_SUCCESS = (what: string) => `DELETE ${what} SUCCESS!`
 
 // user signin/signup/reset/validate page
 export const LOGIN_SHOW_FORM_TYPE = Object.freeze({
@@ -69,26 +54,25 @@ export const LOGIN_SHOW_FORM_TYPE = Object.freeze({
 })
 export type LoginShowFormType = keyof typeof LOGIN_SHOW_FORM_TYPE
 
+export const ALERT_TYPES = Object.freeze({
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+  INFO: 'INFO',
+  WARNING: 'WARNING',
+})
+export type AlertTypes = keyof typeof ALERT_TYPES
+
 // actions
 export const ACTION_TYPES = Object.freeze({
-  ADD: 'ADD',
+  CREATE: 'CREATE',
+  READ: 'READ',
   UPDATE: 'UPDATE',
   DELETE: 'DELETE',
   RESTORE: 'RESTORE',
-  GET: 'GET',
+  RESET: 'RESET',
+  CANCEL: 'CANCEL',
 })
 export type ActionTypes = keyof typeof ACTION_TYPES
-
-// buttons
-export const BUTTON_TYPES = Object.freeze({
-  Add: 'Add',
-  Update: 'Update',
-  Delete: 'Delete',
-  Reset: 'Reset',
-  Cancel: 'Cancel',
-  Restore: 'Restore',
-})
-export type ButtonTypes = keyof typeof BUTTON_TYPES
 
 // REF TYPES
 export const REF_TYPES_REGISTRY = Object.freeze({
@@ -167,54 +151,54 @@ export type UserAdminRegistry = keyof typeof USER_ADMIN_REGISTRY
 
 // STATES
 export const STATES_LIST = [
-  { name: 'Alabama', abbreviation: 'AL' },
-  { name: 'Alaska', abbreviation: 'AK' },
-  { name: 'Arizona', abbreviation: 'AZ' },
-  { name: 'Arkansas', abbreviation: 'AR' },
-  { name: 'California', abbreviation: 'CA' },
-  { name: 'Colorado', abbreviation: 'CO' },
-  { name: 'Connecticut', abbreviation: 'CT' },
-  { name: 'Delaware', abbreviation: 'DE' },
-  { name: 'Florida', abbreviation: 'FL' },
-  { name: 'Georgia', abbreviation: 'GA' },
-  { name: 'Hawaii', abbreviation: 'HI' },
-  { name: 'Idaho', abbreviation: 'ID' },
-  { name: 'Illinois', abbreviation: 'IL' },
-  { name: 'Indiana', abbreviation: 'IN' },
-  { name: 'Iowa', abbreviation: 'IA' },
-  { name: 'Kansas', abbreviation: 'KS' },
-  { name: 'Kentucky', abbreviation: 'KY' },
-  { name: 'Louisiana', abbreviation: 'LA' },
-  { name: 'Maine', abbreviation: 'ME' },
-  { name: 'Maryland', abbreviation: 'MD' },
-  { name: 'Massachusetts', abbreviation: 'MA' },
-  { name: 'Michigan', abbreviation: 'MI' },
-  { name: 'Minnesota', abbreviation: 'MN' },
-  { name: 'Mississippi', abbreviation: 'MS' },
-  { name: 'Missouri', abbreviation: 'MO' },
-  { name: 'Montana', abbreviation: 'MT' },
-  { name: 'Nebraska', abbreviation: 'NE' },
-  { name: 'Nevada', abbreviation: 'NV' },
-  { name: 'New Hampshire', abbreviation: 'NH' },
-  { name: 'New Jersey', abbreviation: 'NJ' },
-  { name: 'New Mexico', abbreviation: 'NM' },
-  { name: 'New York', abbreviation: 'NY' },
-  { name: 'North Carolina', abbreviation: 'NC' },
-  { name: 'North Dakota', abbreviation: 'ND' },
-  { name: 'Ohio', abbreviation: 'OH' },
-  { name: 'Oklahoma', abbreviation: 'OK' },
-  { name: 'Oregon', abbreviation: 'OR' },
-  { name: 'Pennsylvania', abbreviation: 'PA' },
-  { name: 'Rhode Island', abbreviation: 'RI' },
-  { name: 'South Carolina', abbreviation: 'SC' },
-  { name: 'South Dakota', abbreviation: 'SD' },
-  { name: 'Tennessee', abbreviation: 'TN' },
-  { name: 'Texas', abbreviation: 'TX' },
-  { name: 'Utah', abbreviation: 'UT' },
-  { name: 'Vermont', abbreviation: 'VT' },
-  { name: 'Virginia', abbreviation: 'VA' },
-  { name: 'Washington', abbreviation: 'WA' },
-  { name: 'West Virginia', abbreviation: 'WV' },
-  { name: 'Wisconsin', abbreviation: 'WI' },
-  { name: 'Wyoming', abbreviation: 'WY' },
+  { name: 'ALABAMA', abbreviation: 'AL' },
+  { name: 'ALASKA', abbreviation: 'AK' },
+  { name: 'ARIZONA', abbreviation: 'AZ' },
+  { name: 'ARKANSAS', abbreviation: 'AR' },
+  { name: 'CALIFORNIA', abbreviation: 'CA' },
+  { name: 'COLORADO', abbreviation: 'CO' },
+  { name: 'CONNECTICUT', abbreviation: 'CT' },
+  { name: 'DELAWARE', abbreviation: 'DE' },
+  { name: 'FLORIDA', abbreviation: 'FL' },
+  { name: 'GEORGIA', abbreviation: 'GA' },
+  { name: 'HAWAII', abbreviation: 'HI' },
+  { name: 'IDAHO', abbreviation: 'ID' },
+  { name: 'ILLINOIS', abbreviation: 'IL' },
+  { name: 'INDIANA', abbreviation: 'IN' },
+  { name: 'IOWA', abbreviation: 'IA' },
+  { name: 'KANSAS', abbreviation: 'KS' },
+  { name: 'KENTUCKY', abbreviation: 'KY' },
+  { name: 'LOUISIANA', abbreviation: 'LA' },
+  { name: 'MAINE', abbreviation: 'ME' },
+  { name: 'MARYLAND', abbreviation: 'MD' },
+  { name: 'MASSACHUSETTS', abbreviation: 'MA' },
+  { name: 'MICHIGAN', abbreviation: 'MI' },
+  { name: 'MINNESOTA', abbreviation: 'MN' },
+  { name: 'MISSISSIPPI', abbreviation: 'MS' },
+  { name: 'MISSOURI', abbreviation: 'MO' },
+  { name: 'MONTANA', abbreviation: 'MT' },
+  { name: 'NEBRASKA', abbreviation: 'NE' },
+  { name: 'NEVADA', abbreviation: 'NV' },
+  { name: 'NEW HAMPSHIRE', abbreviation: 'NH' },
+  { name: 'NEW JERSEY', abbreviation: 'NJ' },
+  { name: 'NEW MEXICO', abbreviation: 'NM' },
+  { name: 'NEW YORK', abbreviation: 'NY' },
+  { name: 'NORTH CAROLINA', abbreviation: 'NC' },
+  { name: 'NORTH DAKOTA', abbreviation: 'ND' },
+  { name: 'OHIO', abbreviation: 'OH' },
+  { name: 'OKLAHOMA', abbreviation: 'OK' },
+  { name: 'OREGON', abbreviation: 'OR' },
+  { name: 'PENNSYLVANIA', abbreviation: 'PA' },
+  { name: 'RHODE ISLAND', abbreviation: 'RI' },
+  { name: 'SOUTH CAROLINA', abbreviation: 'SC' },
+  { name: 'SOUTH DAKOTA', abbreviation: 'SD' },
+  { name: 'TENNESSEE', abbreviation: 'TN' },
+  { name: 'TEXAS', abbreviation: 'TX' },
+  { name: 'UTAH', abbreviation: 'UT' },
+  { name: 'VERMONT', abbreviation: 'VT' },
+  { name: 'VIRGINIA', abbreviation: 'VA' },
+  { name: 'WASHINGTON', abbreviation: 'WA' },
+  { name: 'WEST VIRGINIA', abbreviation: 'WV' },
+  { name: 'WISCONSIN', abbreviation: 'WI' },
+  { name: 'WYOMING', abbreviation: 'WY' },
 ]

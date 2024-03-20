@@ -24,7 +24,6 @@ import {
 import {
   ACTION_TYPES,
   ActionTypes,
-  BUTTON_TYPES,
   COMPONENT_STATUS_NAME,
   COMPONENT_STATUS_STATUS,
   REF_TYPES_REGISTRY,
@@ -100,7 +99,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
   const addButton = () =>
     checkUserHasPermission('REF_TYPES', 'CREATE') ? (
-      <Button onClick={() => addModalState.toggleModalView()}>Add New {refTypeTitle()}</Button>
+      <Button onClick={() => addModalState.toggleModalView()}>{ACTION_TYPES.CREATE} {' '} {refTypeTitle()}</Button>
     ) : undefined
 
   const actionButtons = (formDataModal: RefTypeFormData) => (
@@ -114,7 +113,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           }}
           disabled={isDisabled(formDataModal.nameOrComponentName || '', formDataModal.isDeleted)}
         >
-          Update
+          {ACTION_TYPES.UPDATE}
         </Button>
       )}
       {checkUserHasPermission('REF_TYPES', 'DELETE') && (
@@ -125,7 +124,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           }}
           disabled={isDisabled(formDataModal.nameOrComponentName || '')}
         >
-          {formDataModal.isDeleted ? 'Restore' : 'Delete'}
+          {formDataModal.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
         </Button>
       )}
     </>
@@ -153,7 +152,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           action === ACTION_TYPES.RESTORE,
         )(dispatch)
       }
-    } else if (action === ACTION_TYPES.ADD) {
+    } else if (action === ACTION_TYPES.CREATE) {
       refTypeResponse = await addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName)(dispatch)
     }
 
@@ -171,7 +170,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   }
 
   const resetButtonCallback = (action: ActionTypes) => {
-    if (action === ACTION_TYPES.ADD) {
+    if (action === ACTION_TYPES.CREATE) {
       setFormData({ ...DefaultRefTypeFormData })
       setFormErrors({ ...DefaultRefTypeFormData })
     } else if (action === ACTION_TYPES.UPDATE) {
@@ -232,7 +231,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         menuItems={componentStatusMenuItems()}
       />
       <FormControlLabel
-        label="Is Active Status"
+        label="IS ACTIVE STATUS"
         control={<Checkbox name="isActive" checked={formData.isActive} onChange={handleFormChange} />}
       />
     </>
@@ -241,7 +240,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const hardDeleteCheckbox = () =>
     isSuperuser() ? (
       <FormControlLabel
-        label="Hard Delete [Will delete permanently, even overrides RESTORE button click]!"
+        label="HARD DELETE [WILL DELETE PERMANENTLY, EVEN OVERRIDES RESTORE BUTTON CLICK]!"
         control={<Checkbox name="isHardDelete" checked={formData.isHardDelete} onChange={handleFormChange} />}
       />
     ) : undefined
@@ -270,8 +269,8 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   )
 
   const refTypeForm = () => {
-    const nameOrComponentName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Component Name' : 'Name'
-    const descOrStatusName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'Status Name' : 'Description'
+    const nameOrComponentName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'COMPONENT NAME' : 'NAME'
+    const descOrStatusName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'STATUS NAME' : 'DESCRIPTION'
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
         {refType === REF_TYPES_REGISTRY.COMPONENT_STATUS
@@ -288,14 +287,14 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         addModalState.toggleModalView()
         setFormData({ ...DefaultRefTypeFormData })
       }}
-      title={`Add New ${refTypeTitle()}`}
-      primaryButtonText={BUTTON_TYPES.Add}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.ADD)}
-      secondaryButtonText={BUTTON_TYPES.Cancel}
+      title={`${ACTION_TYPES.CREATE} ${refTypeTitle()}`}
+      primaryButtonText={ACTION_TYPES.CREATE}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE)}
+      secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={secondaryButtonCallback}
       content={refTypeForm()}
-      resetButtonText={BUTTON_TYPES.Reset}
-      resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.ADD)}
+      resetButtonText={ACTION_TYPES.RESET}
+      resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.CREATE)}
     />
   )
 
@@ -307,13 +306,13 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           updateModalState.toggleModalView()
           setFormData({ ...DefaultRefTypeFormData })
         }}
-        title={`Update ${refTypeTitle()}`}
-        primaryButtonText={BUTTON_TYPES.Update}
+        title={`${ACTION_TYPES.UPDATE} ${refTypeTitle()}`}
+        primaryButtonText={ACTION_TYPES.UPDATE}
         primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE)}
-        secondaryButtonText={BUTTON_TYPES.Cancel}
+        secondaryButtonText={ACTION_TYPES.CANCEL}
         secondaryButtonCallback={secondaryButtonCallback}
         content={refTypeForm()}
-        resetButtonText={BUTTON_TYPES.Reset}
+        resetButtonText={ACTION_TYPES.CANCEL}
         resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.UPDATE)}
       />
     )
@@ -327,14 +326,14 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           deleteModalState.toggleModalView()
           setFormData({ ...DefaultRefTypeFormData })
         }}
-        title={`${formData.isDeleted ? 'Restore' : 'Delete'} ${refTypeTitle()}`}
-        primaryButtonText={formData.isDeleted ? BUTTON_TYPES.Restore : BUTTON_TYPES.Delete}
+        title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${refTypeTitle()}`}
+        primaryButtonText={formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
         primaryButtonCallback={() =>
           primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE)
         }
-        secondaryButtonText={BUTTON_TYPES.Cancel}
+        secondaryButtonText={ACTION_TYPES.CANCEL}
         secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to ${formData.isDeleted ? 'restore' : 'delete'} ${refTypeTitle()}: ${
+        contentText={`ARE YOU SURE YOU WANT TO ${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${refTypeTitle()}: ${
           formData.nameOrComponentName
         }, ${formData.descOrStatusName}?!?`}
         content={hardDeleteCheckbox()}
