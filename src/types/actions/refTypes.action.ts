@@ -41,10 +41,11 @@ import {
 import {
   RefTypeResponse,
   RefTypeSchema,
+  RefTypesReduxStoreKeys,
   RefTypesRequestMetadataState,
   RefTypesResponse,
 } from '../types/refTypes.data.types'
-import { refTypesDispatch, RefTypesReduxStoreKeys } from '../utils/refTypes.utils'
+import { refTypesDispatch } from '../utils/refTypes.utils'
 
 export const getRefTypes = () => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {

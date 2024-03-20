@@ -35,6 +35,5 @@
         * unify color palette
           * create a util module for it
 
-REF TYPES MOSTLY WORKING
-NEXT: ADD ACCOUNT PAGE, ROLES, PERMISSIONS, USER-ROLE, ROLE-PERMISSION
-If filters change, api lookup, else store lookup
+change `getWithSoftDeleted` to `getWithMetadata` with options for page numbers and limit
+how to make page numbers appear if not all data pulled in?
