@@ -3,6 +3,15 @@ import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
+  actionButtons,
+  addButton,
+  handleFormChange,
+  hardDeleteCheckbox,
+  pageTitle,
+  resetButtonCallback,
+  secondaryButtonCallback,
+} from './components/CommonComponents'
+import {
   FormCommentsField,
   FormDatePickerField,
   FormSelectField,
@@ -77,6 +86,15 @@ export {
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
+}
+export {
+  pageTitle,
+  addButton,
+  actionButtons,
+  secondaryButtonCallback,
+  resetButtonCallback,
+  hardDeleteCheckbox,
+  handleFormChange,
 }
 export { Link }
 export { Modal, Modal2 }
