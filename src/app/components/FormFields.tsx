@@ -240,10 +240,9 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   disabled = false,
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
-  const isTypeString = typeof value === 'string'
-
-  const defaultMenuItem = <MenuItem key={ID_DEFAULT} value={ID_DEFAULT} />
-  const selectMenuItems = isTypeString ? menuItems : [defaultMenuItem, ...menuItems]
+  if (value === ID_DEFAULT) {
+    value = ''
+  }
   return (
     <FormControl sx={formControlSx} required={required} error={error}>
       <InputLabel sx={inputLabelSx}>{label}</InputLabel>
@@ -256,7 +255,7 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
         onChange={onChange}
         disabled={disabled}
       >
-        {selectMenuItems}
+        {menuItems}
       </Select>
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>

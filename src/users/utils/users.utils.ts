@@ -116,9 +116,9 @@ export const validateAppUser = (
     hasValidationErrors = true
     formErrorsLocal.fullName = 'REQUIRED'
   }
-  if (getNumber(formData.statusId) <= 0) {
+  if (getNumber(formData.componentStatusId) <= 0) {
     hasValidationErrors = true
-    formErrorsLocal.statusId = 'REQUIRED'
+    formErrorsLocal.componentStatusId = 'REQUIRED'
   }
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)
@@ -188,7 +188,7 @@ const getFormDataForModal = (x: AppUserSchema): AppUserFormData => {
     id: x.id || ID_DEFAULT,
     email: x.email,
     fullName: x.fullName,
-    statusId: x.componentStatusId,
+    componentStatusId: x.componentStatusId,
     lastLogin: x.lastLogin,
     isValidated: x.isValidated,
     isHardDelete: false,

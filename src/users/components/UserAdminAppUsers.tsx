@@ -202,7 +202,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   const appUserForm = () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
       <FormTextField
-        componentLabel="APP USER---EMAIL"
+        componentLabel="APP USER--EMAIL"
         name="email"
         required
         value={formData.email}
@@ -211,7 +211,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         helperText={formErrors.email}
       />
       <FormTextField
-        componentLabel="APP USER---FULL NAME"
+        componentLabel="APP USER--FULL NAME"
         name="fullName"
         required
         value={formData.fullName}
@@ -220,7 +220,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         helperText={formErrors.fullName}
       />
       <FormSelectField
-        componentLabel="APP USER---STATUS"
+        componentLabel="APP USER--STATUS"
         name="componentStatusId"
         required
         value={formData.componentStatusId}
