@@ -185,14 +185,7 @@ export const addUpdateModalComponent = <T extends FormData, U extends FormErrorD
       content={content}
       resetButtonText={ACTION_TYPES.CANCEL}
       resetButtonCallback={() =>
-        resetButtonCallback(
-          action,
-          setFormData,
-          setFormErrors,
-          formDataReset,
-          defaultFormData,
-          defaultFormErrorData,
-        )
+        resetButtonCallback(action, setFormData, setFormErrors, formDataReset, defaultFormData, defaultFormErrorData)
       }
     />
   )

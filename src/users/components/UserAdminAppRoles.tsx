@@ -4,14 +4,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
+  addUpdateModalComponent,
+  deleteModalComponent,
   FetchRequestMetadata,
   FormTextField,
   getNumber,
   handleFormChange,
-  hardDeleteCheckboxComponent,
-  Modal2,
   pageTitleComponent,
-  resetButtonCallback,
   secondaryButtonCallback,
   Table,
   tableActionButtonsComponent,
@@ -80,7 +79,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
     }
   }
 
-  const appRoleForm = () => (
+  const addUpdateModalContent = () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
       <FormTextField
         componentLabel="APP ROLE--NAME"
@@ -103,114 +102,57 @@ const UserAdminAppRoles = (): React.ReactElement => {
     </Box>
   )
 
-  const addModal = () => (
-    <Modal2
-      open={addModalState.showModal}
-      onClose={() => {
-        addModalState.toggleModalView()
-        setFormData({ ...DefaultAppRoleFormData })
-      }}
-      title={`${ACTION_TYPES.CREATE} APP ROLE`}
-      primaryButtonText={ACTION_TYPES.CREATE}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE)}
-      secondaryButtonText={ACTION_TYPES.CANCEL}
-      secondaryButtonCallback={() =>
-        secondaryButtonCallback(
-          addModalState,
-          updateModalState,
-          deleteModalState,
-          setFormData,
-          setFormErrors,
-          DefaultAppRoleFormData,
-          DefaultAppRoleFormData,
-        )
-      }
-      content={appRoleForm()}
-      resetButtonText={ACTION_TYPES.RESET}
-      resetButtonCallback={() =>
-        resetButtonCallback(
-          ACTION_TYPES.CREATE,
-          setFormData,
-          setFormErrors,
-          formDataReset,
-          DefaultAppRoleFormData,
-          DefaultAppRoleFormData,
-        )
-      }
-    />
-  )
-
-  const updateModal = () => {
-    return (
-      <Modal2
-        open={updateModalState.showModal}
-        onClose={() => {
-          updateModalState.toggleModalView()
-          setFormData({ ...DefaultAppRoleFormData })
-        }}
-        title={`${ACTION_TYPES.UPDATE} APP ROLE`}
-        primaryButtonText={ACTION_TYPES.UPDATE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE)}
-        secondaryButtonText={ACTION_TYPES.CANCEL}
-        secondaryButtonCallback={() =>
-          secondaryButtonCallback(
-            addModalState,
-            updateModalState,
-            deleteModalState,
-            setFormData,
-            setFormErrors,
-            DefaultAppRoleFormData,
-            DefaultAppRoleFormData,
-          )
-        }
-        content={appRoleForm()}
-        resetButtonText={ACTION_TYPES.CANCEL}
-        resetButtonCallback={() =>
-          resetButtonCallback(
-            ACTION_TYPES.UPDATE,
-            setFormData,
-            setFormErrors,
-            formDataReset,
-            DefaultAppRoleFormData,
-            DefaultAppRoleFormData,
-          )
-        }
-      />
+  const addModal = () =>
+    addUpdateModalComponent(
+      ACTION_TYPES.CREATE,
+      USER_ADMIN_REGISTRY.APP_USERS.replace('_', ' '),
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultAppRoleFormData,
+      DefaultAppRoleFormData,
+      formDataReset,
     )
-  }
 
-  const deleteModal = () => {
-    return (
-      <Modal2
-        open={deleteModalState.showModal}
-        onClose={() => {
-          deleteModalState.toggleModalView()
-          setFormData({ ...DefaultAppRoleFormData })
-        }}
-        title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} APP ROLE`}
-        primaryButtonText={formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
-        primaryButtonCallback={() =>
-          primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE)
-        }
-        secondaryButtonText={ACTION_TYPES.CANCEL}
-        secondaryButtonCallback={() =>
-          secondaryButtonCallback(
-            addModalState,
-            updateModalState,
-            deleteModalState,
-            setFormData,
-            setFormErrors,
-            DefaultAppRoleFormData,
-            DefaultAppRoleFormData,
-          )
-        }
-        contentText={`ARE YOU SURE YOU WANT TO ${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${
-          formData.name
-        }?!?`}
-        content={hardDeleteCheckboxComponent(formData, formErrors, setFormData, setFormErrors)}
-      />
+  const updateModal = () =>
+    addUpdateModalComponent(
+      ACTION_TYPES.UPDATE,
+      USER_ADMIN_REGISTRY.APP_USERS.replace('_', ' '),
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultAppRoleFormData,
+      DefaultAppRoleFormData,
+      formDataReset,
     )
-  }
+
+  const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
+    formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+  } ${formData.name}?!?`
+
+  const deleteModal = () =>
+    deleteModalComponent(
+      USER_ADMIN_REGISTRY.APP_USERS.replace('_', ' '),
+      deleteModalContextText,
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultAppRoleFormData,
+      DefaultAppRoleFormData,
+      formData,
+      formErrors,
+    )
 
   const actionButtons = (formDataModal: AppRoleFormData) =>
     tableActionButtonsComponent(
