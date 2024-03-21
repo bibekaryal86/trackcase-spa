@@ -3,6 +3,8 @@ import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
+  addUpdateModalComponent,
+  deleteModalComponent,
   handleFormChange,
   hardDeleteCheckboxComponent,
   pageTitleComponent,
@@ -88,13 +90,15 @@ export {
   GridFormWrapper,
 }
 export {
-  pageTitleComponent,
-  tableAddButtonComponent,
-  tableActionButtonsComponent,
-  secondaryButtonCallback,
-  resetButtonCallback,
-  hardDeleteCheckboxComponent,
+  addUpdateModalComponent,
+  deleteModalComponent,
   handleFormChange,
+  hardDeleteCheckboxComponent,
+  pageTitleComponent,
+  resetButtonCallback,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  tableAddButtonComponent,
 }
 export { Link }
 export { Modal, Modal2 }

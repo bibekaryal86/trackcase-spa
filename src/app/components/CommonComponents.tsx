@@ -6,6 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 
+import { Modal2 } from './Modal'
 import { ACTION_TYPES, ActionTypes } from '../../constants'
 import { AppRoleFormData, AppUserFormData, checkUserHasPermission, isSuperuser } from '../../users'
 import { AppUserFormErrorData } from '../../users/types/users.data.types'
@@ -67,19 +68,19 @@ export const tableActionButtonsComponent = <T extends FormData>(
 )
 
 export const secondaryButtonCallback = <T extends FormData, U extends FormErrorData>(
-  addModalState: ModalState,
-  updateModalState: ModalState,
-  deleteModalState: ModalState,
-  setFormData: (formData: T) => void,
-  setFormErrors: (formErrorData: U) => void,
-  defaultFormData: T,
-  defaultFormErrorData: U,
+  addModalState?: ModalState,
+  updateModalState?: ModalState,
+  deleteModalState?: ModalState,
+  setFormData?: (formData: T) => void,
+  setFormErrors?: (formErrorData: U) => void,
+  defaultFormData?: T,
+  defaultFormErrorData?: U,
 ) => {
-  addModalState.showModal && addModalState.toggleModalView()
-  updateModalState.showModal && updateModalState.toggleModalView()
-  deleteModalState.showModal && deleteModalState.toggleModalView()
-  setFormData({ ...defaultFormData })
-  setFormErrors({ ...defaultFormErrorData })
+  addModalState && addModalState.showModal && addModalState.toggleModalView()
+  updateModalState && updateModalState.showModal && updateModalState.toggleModalView()
+  deleteModalState && deleteModalState.showModal && deleteModalState.toggleModalView()
+  setFormData && defaultFormData && setFormData({ ...defaultFormData })
+  setFormErrors && defaultFormErrorData && setFormErrors({ ...defaultFormErrorData })
 }
 
 export const resetButtonCallback = <T extends FormData, U extends FormErrorData>(
@@ -143,4 +144,100 @@ export const handleFormChange = <T extends FormData, U extends FormErrorData>(
   if (name in formErrors) {
     setFormErrors({ ...formErrors, [name]: '' })
   }
+}
+
+export const addUpdateModalComponent = <T extends FormData, U extends FormErrorData>(
+  action: ActionTypes,
+  component: string,
+  content: React.JSX.Element,
+  primaryButtonCallback: (action: ActionTypes) => void,
+  addModalState: ModalState,
+  updateModalState: ModalState,
+  deleteModalState: ModalState,
+  setFormData: (formData: T) => void,
+  setFormErrors: (formErrorData: U) => void,
+  defaultFormData: T,
+  defaultFormErrorData: U,
+  formDataReset: T,
+) => {
+  return (
+    <Modal2
+      open={updateModalState.showModal}
+      onClose={() => {
+        updateModalState.toggleModalView()
+        setFormData({ ...defaultFormData })
+      }}
+      title={`${action} ${component}`}
+      primaryButtonText={action}
+      primaryButtonCallback={() => primaryButtonCallback(action)}
+      secondaryButtonText={ACTION_TYPES.CANCEL}
+      secondaryButtonCallback={() =>
+        secondaryButtonCallback(
+          addModalState,
+          updateModalState,
+          deleteModalState,
+          setFormData,
+          setFormErrors,
+          defaultFormData,
+          defaultFormErrorData,
+        )
+      }
+      content={content}
+      resetButtonText={ACTION_TYPES.CANCEL}
+      resetButtonCallback={() =>
+        resetButtonCallback(
+          action,
+          setFormData,
+          setFormErrors,
+          formDataReset,
+          defaultFormData,
+          defaultFormErrorData,
+        )
+      }
+    />
+  )
+}
+
+export const deleteModalComponent = <T extends FormData, U extends FormErrorData>(
+  component: string,
+  contentText: string,
+  primaryButtonCallback: (action: ActionTypes) => void,
+  addModalState: ModalState,
+  updateModalState: ModalState,
+  deleteModalState: ModalState,
+  setFormData: (formData: T) => void,
+  setFormErrors: (formErrorData: U) => void,
+  defaultFormData: T,
+  defaultFormErrorData: U,
+  formData: T,
+  formErrors: U,
+) => {
+  return (
+    <Modal2
+      open={deleteModalState.showModal}
+      onClose={() => {
+        deleteModalState.toggleModalView()
+        setFormData({ ...defaultFormData })
+      }}
+      title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${component}`}
+      primaryButtonText={formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
+      primaryButtonCallback={() =>
+        primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE)
+      }
+      secondaryButtonText={ACTION_TYPES.CANCEL}
+      secondaryButtonCallback={() =>
+        secondaryButtonCallback(
+          addModalState,
+          updateModalState,
+          deleteModalState,
+          setFormData,
+          setFormErrors,
+          defaultFormData,
+          defaultFormErrorData,
+        )
+      }
+      contentText={contentText}
+      content={hardDeleteCheckboxComponent(formData, formErrors, setFormData, setFormErrors)}
+    />
+  )
 }
