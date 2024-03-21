@@ -95,7 +95,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const handleRevalidateSubmit = async (username: string) => {
     const revalidateResponse = await validateInit(username)
     if (revalidateResponse.detail) {
-      setAlert(ALERT_TYPES.FAILURE, getErrMsg(revalidateResponse.detail))
+      setAlert(ALERT_TYPES.ERROR, getErrMsg(revalidateResponse.detail))
     } else {
       resetState()
       setAlert(ALERT_TYPES.SUCCESS, SIGNUP_SUCCESS)
@@ -105,7 +105,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const handleResetInitSubmit = async (username: string) => {
     const resetInitResponse = await resetInit(username)
     if (resetInitResponse.detail) {
-      setAlert(ALERT_TYPES.FAILURE, getErrMsg(resetInitResponse.detail))
+      setAlert(ALERT_TYPES.ERROR, getErrMsg(resetInitResponse.detail))
     } else {
       resetState()
       setAlert(ALERT_TYPES.SUCCESS, RESET_INIT_SUCCESS)
@@ -115,7 +115,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const handleResetExitSubmit = async (password: string) => {
     const resetExitResponse = await resetExit(userToReset, password)
     if (resetExitResponse.detail) {
-      setAlert(ALERT_TYPES.FAILURE, getErrMsg(resetExitResponse.detail))
+      setAlert(ALERT_TYPES.ERROR, getErrMsg(resetExitResponse.detail))
     } else {
       resetState()
       setAlert(ALERT_TYPES.SUCCESS, RESET_EXIT_SUCCESS)
@@ -125,7 +125,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const handleSigninSubmit = async (username: string, password: string) => {
     const loginResponse = await login(username, password)
     if (loginResponse.detail) {
-      setAlert(ALERT_TYPES.FAILURE, getErrMsg(loginResponse.detail))
+      setAlert(ALERT_TYPES.ERROR, getErrMsg(loginResponse.detail))
     } else {
       resetState()
       resetAlert()
@@ -140,7 +140,7 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
   const handleSignupSubmit = async (username: string, password: string, fullName: string) => {
     const signupResponse = await signup(username, password, fullName)
     if (signupResponse.detail) {
-      setAlert(ALERT_TYPES.FAILURE, getErrMsg(signupResponse.detail))
+      setAlert(ALERT_TYPES.ERROR, getErrMsg(signupResponse.detail))
     } else {
       resetState()
       setAlert(ALERT_TYPES.SUCCESS, SIGNUP_SUCCESS)
@@ -166,21 +166,21 @@ const UserSignInUp = (props: LoginProps): React.ReactElement => {
         if (validatePassword(password, confirmPassword)) {
           await handleResetExitSubmit(password)
         } else {
-          setAlert(ALERT_TYPES.FAILURE, INVALID_PASSWORD)
+          setAlert(ALERT_TYPES.ERROR, INVALID_PASSWORD)
         }
       } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNUP) {
         if (validatePassword(password, confirmPassword)) {
           await handleSignupSubmit(username, password, fullName)
         } else {
-          setAlert(ALERT_TYPES.FAILURE, INVALID_PASSWORD)
+          setAlert(ALERT_TYPES.ERROR, INVALID_PASSWORD)
         }
       } else if (showFormType === LOGIN_SHOW_FORM_TYPE.SIGNIN) {
         await handleSigninSubmit(username, password)
       } else {
-        setAlert(ALERT_TYPES.FAILURE, `Oops! ${SOMETHING_WENT_WRONG}`)
+        setAlert(ALERT_TYPES.ERROR, `Oops! ${SOMETHING_WENT_WRONG}`)
       }
     } else {
-      setAlert(ALERT_TYPES.FAILURE, INVALID_INPUT)
+      setAlert(ALERT_TYPES.ERROR, INVALID_INPUT)
     }
     resetSpinner()
   }
