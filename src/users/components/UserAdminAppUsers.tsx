@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import {
-  addUpdateModalComponent,
+  addModalComponent,
   deleteModalComponent,
   FetchRequestMetadata,
   FormSelectField,
@@ -18,6 +18,7 @@ import {
   Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
+  updateModalComponent,
   useModal,
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, REF_TYPES_REGISTRY, USER_ADMIN_REGISTRY } from '../../constants'
@@ -154,8 +155,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   )
 
   const addModal = () =>
-    addUpdateModalComponent(
-      ACTION_TYPES.CREATE,
+    addModalComponent(
       USER_ADMIN_REGISTRY.APP_USERS.replace('_', ' '),
       addUpdateModalContent(),
       primaryButtonCallback,
@@ -170,8 +170,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
     )
 
   const updateModal = () =>
-    addUpdateModalComponent(
-      ACTION_TYPES.UPDATE,
+    updateModalComponent(
       USER_ADMIN_REGISTRY.APP_USERS.replace('_', ' '),
       addUpdateModalContent(),
       primaryButtonCallback,
