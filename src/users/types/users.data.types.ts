@@ -120,3 +120,21 @@ export const DefaultAppUserFormErrorData: AppUserFormErrorData = {
   fullName: '',
   componentStatusId: '',
 }
+
+export interface AppRoleFormData {
+  id: number
+  name: string
+  description: string
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+  isDeleted?: boolean
+}
+
+export const DefaultAppRoleFormData: AppRoleFormData = {
+  id: ID_DEFAULT,
+  name: '',
+  description: '',
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+  isDeleted: false,
+}

@@ -9,9 +9,12 @@ import {
   REGEX_LOGIN_PASSWORD_PATTERN,
 } from '../../constants'
 import {
+  AppRoleFormData,
+  AppRoleSchema,
   AppUserFormData,
   AppUserFormErrorData,
   AppUserSchema,
+  DefaultAppRoleFormData,
   DefaultAppUserFormErrorData,
 } from '../types/users.data.types'
 
@@ -183,7 +186,7 @@ export const appUsersTableHeader = (): TableHeaderData[] => {
   return tableHeaderData
 }
 
-const getFormDataForModal = (x: AppUserSchema): AppUserFormData => {
+const getAppUsersFormDataForModal = (x: AppUserSchema): AppUserFormData => {
   return {
     id: x.id || ID_DEFAULT,
     email: x.email,
@@ -209,6 +212,74 @@ export const appUsersTableData = (
       isValidated: x.isValidated,
       lastLogin: convertDateToLocaleString(x.lastLogin),
       isDeleted: x.isDeleted,
-      actions: actionButtons(getFormDataForModal(x)),
+      actions: actionButtons(getAppUsersFormDataForModal(x)),
+    }
+  })
+
+export const validateAppRole = (formData: AppRoleFormData, setFormErrors: (formErrors: AppRoleFormData) => void) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: AppRoleFormData = { ...DefaultAppRoleFormData }
+  if (!getString(formData.name)) {
+    hasValidationErrors = true
+    formErrorsLocal.name = 'REQUIRED'
+  }
+  if (!getString(formData.description)) {
+    hasValidationErrors = true
+    formErrorsLocal.description = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
+}
+
+export const appRolesTableHeader = (): TableHeaderData[] => {
+  const tableHeaderData: TableHeaderData[] = [
+    {
+      id: 'name',
+      label: 'NAME',
+    },
+    {
+      id: 'description',
+      label: 'DESCRIPTION',
+    },
+  ]
+  if (isSuperuser()) {
+    tableHeaderData.push(
+      {
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      },
+      {
+        id: 'actions',
+        label: 'ACTIONS',
+        align: 'center' as const,
+      },
+    )
+  }
+  return tableHeaderData
+}
+
+const getAppRolesFormDataForModal = (x: AppRoleSchema): AppRoleFormData => {
+  return {
+    id: x.id || ID_DEFAULT,
+    name: x.name,
+    description: x.description,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+    isDeleted: x.isDeleted,
+  }
+}
+
+export const appRolesTableData = (
+  appRolesList: AppRoleSchema[],
+  actionButtons: (formDataForModal: AppRoleFormData) => React.JSX.Element,
+): TableData[] =>
+  Array.from(appRolesList, (x) => {
+    return {
+      name: x.name,
+      description: x.description,
+      isDeleted: x.isDeleted,
+      actions: actionButtons(getAppRolesFormDataForModal(x)),
     }
   })

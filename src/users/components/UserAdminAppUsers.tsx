@@ -132,9 +132,11 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
       (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
       getNumber(formData.id) > 0
     ) {
+      const appUserRequest: AppUserRequest = { ...formData }
       appUserResponse = await (
         await appUsersAdmin({
           action: action,
+          appUserRequest: appUserRequest,
           id: formData.id,
           isRestore: action === ACTION_TYPES.RESTORE,
           isHardDelete: formData.isHardDelete,
@@ -144,6 +146,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
     if (appUserResponse && !appUserResponse.detail) {
       secondaryButtonCallback()
+      action !== ACTION_TYPES.READ && fetchAppUsersWithMetadata({})
     }
   }
 
