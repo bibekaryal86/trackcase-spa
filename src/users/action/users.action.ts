@@ -132,7 +132,7 @@ export const resetExit = async (username: string, password: string): Promise<Fet
   }
 }
 
-export const fetchAppUsers = async (
+export const getAppUsers = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
@@ -222,7 +222,7 @@ export const appUsersAdmin = async ({
   }
 }
 
-export const fetchAppRoles = async (
+export const getAppRoles = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {

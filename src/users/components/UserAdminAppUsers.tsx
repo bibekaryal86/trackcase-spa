@@ -23,7 +23,7 @@ import {
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, REF_TYPES_REGISTRY, USER_ADMIN_REGISTRY } from '../../constants'
 import { ComponentStatusSchema, getRefType } from '../../types'
-import { appUsersAdmin, fetchAppUsers } from '../action/users.action'
+import { appUsersAdmin, getAppUsers } from '../action/users.action'
 import {
   AppUserFormData,
   AppUserRequest,
@@ -64,15 +64,15 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   const componentNameNoUnderscore = componentName.replace('_', ' ')
 
   useEffect(() => {
-    fetchAppUsers(dispatch).then((r) => setAppUsersList(r.data))
+    getAppUsers(dispatch).then((r) => setAppUsersList(r.data))
   }, [dispatch])
 
   useEffect(() => {
     componentStatusList.length === 0 && getRefType()
   }, [componentStatusList.length, getRefType])
 
-  const fetchAppUsersWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
-    fetchAppUsers(dispatch, requestMetadata).then((r) => setAppUsersList(r.data))
+  const getAppUsersWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
+    getAppUsers(dispatch, requestMetadata).then((r) => setAppUsersList(r.data))
   }
 
   const primaryButtonCallback = async (action: ActionTypes) => {
@@ -111,7 +111,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         DefaultAppUserFormData,
         DefaultAppUserFormErrorData,
       )
-      action !== ACTION_TYPES.READ && fetchAppUsersWithMetadata({})
+      action !== ACTION_TYPES.READ && getAppUsersWithMetadata({})
     }
   }
 
@@ -223,7 +223,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
       headerData={appUsersTableHeader()}
       tableData={appUsersTableData(appUsersList, actionButtons)}
       addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_USERS, addModalState)}
-      getSoftDeletedCallback={() => fetchAppUsersWithMetadata({ isIncludeDeleted: true })}
+      getSoftDeletedCallback={() => getAppUsersWithMetadata({ isIncludeDeleted: true })}
     />
   )
 

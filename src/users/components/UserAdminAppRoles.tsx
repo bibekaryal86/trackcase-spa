@@ -19,7 +19,7 @@ import {
   useModal,
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '../../constants'
-import { appRolesAdmin, fetchAppRoles } from '../action/users.action'
+import { appRolesAdmin, getAppRoles } from '../action/users.action'
 import { AppRoleFormData, AppRoleResponse, AppRoleSchema, DefaultAppRoleFormData } from '../types/users.data.types'
 import { appRolesTableData, appRolesTableHeader, validateAppRole } from '../utils/users.utils'
 
@@ -36,11 +36,11 @@ const UserAdminAppRoles = (): React.ReactElement => {
   const componentNameNoUnderscore = componentName.replace('_', ' ')
 
   useEffect(() => {
-    fetchAppRoles(dispatch).then((r) => setAppRolesList(r.data))
+    getAppRoles(dispatch).then((r) => setAppRolesList(r.data))
   }, [dispatch])
 
-  const fetchAppRolesWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
-    fetchAppRoles(dispatch, requestMetadata).then((r) => setAppRolesList(r.data))
+  const getAppRolesWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
+    getAppRoles(dispatch, requestMetadata).then((r) => setAppRolesList(r.data))
   }
 
   const primaryButtonCallback = async (action: ActionTypes) => {
@@ -79,7 +79,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
         DefaultAppRoleFormData,
         DefaultAppRoleFormData,
       )
-      action !== ACTION_TYPES.READ && fetchAppRolesWithMetadata({})
+      action !== ACTION_TYPES.READ && getAppRolesWithMetadata({})
     }
   }
 
@@ -172,7 +172,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
       headerData={appRolesTableHeader()}
       tableData={appRolesTableData(appRolesList, actionButtons)}
       addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_ROLES, addModalState)}
-      getSoftDeletedCallback={() => fetchAppRolesWithMetadata({ isIncludeDeleted: true })}
+      getSoftDeletedCallback={() => getAppRolesWithMetadata({ isIncludeDeleted: true })}
     />
   )
 
