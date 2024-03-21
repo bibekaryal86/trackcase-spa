@@ -34,7 +34,7 @@ export const tableAddButtonComponent = (component: string, addModalState: ModalS
   ) : undefined
 
 export const tableActionButtonsComponent = <T extends FormData>(
-  component: string,
+  componentName: string,
   formDataModal: T,
   updateModalState: ModalState,
   deleteModalState: ModalState,
@@ -42,7 +42,7 @@ export const tableActionButtonsComponent = <T extends FormData>(
   setFormDataReset: (formData: T) => void,
 ) => (
   <>
-    {checkUserHasPermission(component, ACTION_TYPES.UPDATE) && (
+    {checkUserHasPermission(componentName, ACTION_TYPES.UPDATE) && (
       <Button
         onClick={() => {
           updateModalState.toggleModalView()
@@ -54,7 +54,7 @@ export const tableActionButtonsComponent = <T extends FormData>(
         {ACTION_TYPES.UPDATE}
       </Button>
     )}
-    {checkUserHasPermission(component, ACTION_TYPES.DELETE) && (
+    {checkUserHasPermission(componentName, ACTION_TYPES.DELETE) && (
       <Button
         onClick={() => {
           deleteModalState.toggleModalView()
@@ -147,7 +147,7 @@ export const handleFormChange = <T extends FormData, U extends FormErrorData>(
 }
 
 export const addModalComponent = <T extends FormData, U extends FormErrorData>(
-  component: string,
+  componentName: string,
   content: React.JSX.Element,
   primaryButtonCallback: (action: ActionTypes) => void,
   addModalState: ModalState,
@@ -166,7 +166,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
         addModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${ACTION_TYPES.CREATE} ${component}`}
+      title={`${ACTION_TYPES.CREATE} ${componentName}`}
       primaryButtonText={ACTION_TYPES.CREATE}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
@@ -191,7 +191,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
 }
 
 export const updateModalComponent = <T extends FormData, U extends FormErrorData>(
-  component: string,
+  componentName: string,
   content: React.JSX.Element,
   primaryButtonCallback: (action: ActionTypes) => void,
   addModalState: ModalState,
@@ -210,7 +210,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
         updateModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${ACTION_TYPES.UPDATE} ${component}`}
+      title={`${ACTION_TYPES.UPDATE} ${componentName}`}
       primaryButtonText={ACTION_TYPES.UPDATE}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
@@ -235,7 +235,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
 }
 
 export const deleteModalComponent = <T extends FormData, U extends FormErrorData>(
-  component: string,
+  componentName: string,
   contentText: string,
   primaryButtonCallback: (action: ActionTypes) => void,
   addModalState: ModalState,
@@ -255,7 +255,7 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
         deleteModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${component}`}
+      title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${componentName}`}
       primaryButtonText={formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
       primaryButtonCallback={() =>
         primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE)

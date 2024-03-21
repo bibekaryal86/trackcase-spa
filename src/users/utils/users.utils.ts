@@ -34,7 +34,7 @@ export const isSuperuser = (): boolean => {
 }
 
 export const checkUserHasPermission = (
-  component: string,
+  componentName: string,
   action: 'CREATE' | 'READ' | 'UPDATE' | 'DELETE',
   appUserDetails?: AppUserSchema,
 ) => {
@@ -44,23 +44,23 @@ export const checkUserHasPermission = (
   if (!appUserDetails) {
     appUserDetails = isLoggedIn()
   }
-  if (component.startsWith('/')) {
-    component = component.replaceAll('/', '')
+  if (componentName.startsWith('/')) {
+    componentName = componentName.replaceAll('/', '')
   }
   if (
     ['component_status', 'case_type', 'collection_method', 'filing_type', 'hearing_type', 'task_type'].includes(
-      component,
+      componentName,
     )
   ) {
-    component = 'ref_types'
+    componentName = 'ref_types'
   }
   // user_management is only accessible to super-users only, not permission checked
-  if (!component.endsWith('s')) {
+  if (!componentName.endsWith('s')) {
     // this is added for single page load (court, judge, client, court_case, filing, calendar, collection)
-    component = component.concat('s')
+    componentName = componentName.concat('s')
   }
   if (appUserDetails && appUserDetails.appRoles && appUserDetails.appRoles) {
-    const permission = component.concat('_', action)
+    const permission = componentName.concat('_', action)
     const appPermissions = appUserDetails.appRoles.flatMap((appRole) => appRole.appPermissions)
     return appPermissions && appPermissions.some((appPermission) => appPermission?.name === permission)
   }

@@ -60,6 +60,9 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   const [formDataReset, setFormDataReset] = useState(DefaultAppUserFormData)
   const [formErrors, setFormErrors] = useState(DefaultAppUserFormErrorData)
 
+  const componentName = USER_ADMIN_REGISTRY.APP_USERS
+  const componentNameNoUnderscore = componentName.replace('_', ' ')
+
   useEffect(() => {
     fetchAppUsers(dispatch).then((r) => setAppUsersList(r.data))
   }, [dispatch])
@@ -156,7 +159,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const addModal = () =>
     addModalComponent(
-      USER_ADMIN_REGISTRY.APP_USERS.replace('_', ' '),
+      componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -171,7 +174,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const updateModal = () =>
     updateModalComponent(
-      USER_ADMIN_REGISTRY.APP_USERS.replace('_', ' '),
+      componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -190,7 +193,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const deleteModal = () =>
     deleteModalComponent(
-      USER_ADMIN_REGISTRY.APP_USERS.replace('_', ' '),
+      componentNameNoUnderscore,
       deleteModalContextText,
       primaryButtonCallback,
       addModalState,
@@ -216,7 +219,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const appUserTable = () => (
     <Table
-      componentName="APP USER"
+      componentName={componentNameNoUnderscore}
       headerData={appUsersTableHeader()}
       tableData={appUsersTableData(appUsersList, actionButtons)}
       addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_USERS, addModalState)}
