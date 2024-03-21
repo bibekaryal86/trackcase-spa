@@ -242,7 +242,11 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const hardDeleteCheckbox = () =>
     isSuperuser() ? (
       <FormControlLabel
-        label="HARD DELETE [WILL DELETE PERMANENTLY, EVEN OVERRIDES RESTORE BUTTON CLICK]!"
+        label={
+          <Typography variant="body1" fontSize="0.75rem">
+            HARD DELETE [WILL DELETE PERMANENTLY, OVERRIDES RESTORE BUTTON]!
+          </Typography>
+        }
         control={<Checkbox name="isHardDelete" checked={formData.isHardDelete} onChange={handleFormChange} />}
       />
     ) : undefined
