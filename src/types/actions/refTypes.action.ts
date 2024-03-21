@@ -13,6 +13,7 @@ import {
 } from '../../app'
 import {
   CREATE_SUCCESS,
+  DELETE_SUCCESS,
   REF_TYPES_REGISTRY,
   RefTypesRegistry,
   SOMETHING_WENT_WRONG,
@@ -131,7 +132,7 @@ export const getRefTypes = () => {
   }
 }
 
-export const addRefType = (refType: RefTypesRegistry, name: string, description: string, isActive?: string) => {
+export const addRefType = (refType: RefTypesRegistry, name: string, description: string, isActive?: boolean) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<RefTypeResponse> => {
     dispatch(refTypesDispatch({ type: `${refType}_CREATE_REQUEST` }))
 
@@ -312,7 +313,7 @@ export const deleteRefType = (refType: RefTypesRegistry, id: number, isHardDelet
       if (refTypeResponse.detail) {
         dispatch(refTypesDispatch({ type: `${refType}_DELETE_FAILURE`, error: getErrMsg(refTypeResponse.detail) }))
       } else {
-        dispatch(refTypesDispatch({ type: `${refType}_DELETE_SUCCESS`, success: UPDATE_SUCCESS(refType) }))
+        dispatch(refTypesDispatch({ type: `${refType}_DELETE_SUCCESS`, success: DELETE_SUCCESS(refType) }))
       }
       return refTypeResponse
     } catch (error) {

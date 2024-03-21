@@ -155,7 +155,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         )(dispatch)
       }
     } else if (action === ACTION_TYPES.CREATE) {
-      refTypeResponse = await addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName)(dispatch)
+      refTypeResponse = await addRefType(refType, formData.nameOrComponentName, formData.descOrStatusName, formData.isActive)(dispatch)
     }
 
     if (refTypeResponse && !refTypeResponse.detail) {
