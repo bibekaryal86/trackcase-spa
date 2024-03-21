@@ -55,9 +55,9 @@ export type LoginShowFormType = keyof typeof LOGIN_SHOW_FORM_TYPE
 
 export const ALERT_TYPES = Object.freeze({
   SUCCESS: 'SUCCESS',
-  FAILURE: 'FAILURE',
   INFO: 'INFO',
   WARNING: 'WARNING',
+  ERROR: 'ERROR',
 })
 export type AlertTypes = keyof typeof ALERT_TYPES
 

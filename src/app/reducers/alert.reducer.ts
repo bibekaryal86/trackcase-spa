@@ -26,7 +26,7 @@ export default function alert(state = initialState, action: AlertAction): AlertS
 
   if (matchesFailure && action.error) {
     return {
-      messageType: ALERT_TYPES.FAILURE,
+      messageType: ALERT_TYPES.ERROR,
       messageText: action.error,
     }
   }
