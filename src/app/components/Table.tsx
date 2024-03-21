@@ -13,6 +13,7 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
+import { isBoolean } from 'lodash'
 import React, { isValidElement, useMemo, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
@@ -177,8 +178,8 @@ const emptyTableMessage = (
   showSoftDeleteComponent: React.JSX.Element | null,
 ): React.JSX.Element => {
   const messageText =
-    'Table is empty! If an error message was not displayed, then there are likely no ' +
-    'COMPONENT in the system.....'.replace('COMPONENT', componentName)
+    'TABLE IS EMPTY! IF AN ERROR MESSAGE WAS NOT DISPLAYED, THEN THERE ARE LIKELY NO ' +
+    'COMPONENT IN THE SYSTEM...'.replace('COMPONENT', componentName)
   const messageStyle: React.CSSProperties = {
     paddingTop: '25px',
     paddingBottom: '25px',
@@ -279,8 +280,11 @@ const TableRow = (props: TableRowProps) => {
           </TableCell>
         )}
         {(Object.keys(props.tableData[0]) as Array<keyof TableData>).map((key) => {
-          if (isTable(props.row[key])) {
+          let columnValue = props.row[key]
+          if (isTable(columnValue)) {
             return null
+          } else if (isBoolean(columnValue)) {
+            columnValue = String(columnValue).toUpperCase()
           }
           const column = props.headerData.find((item) => item.id === key)
           return (
@@ -290,7 +294,7 @@ const TableRow = (props: TableRowProps) => {
                 key={key.toString()}
                 align={column.align || 'left'}
               >
-                {props.row[key]}
+                {columnValue}
               </TableCell>
             )
           )
