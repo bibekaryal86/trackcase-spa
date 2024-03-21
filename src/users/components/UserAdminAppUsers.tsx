@@ -1,12 +1,6 @@
-import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import Divider from '@mui/material/Divider'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
-import Typography from '@mui/material/Typography'
 import React, { useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
@@ -16,8 +10,15 @@ import {
   FormTextField,
   getNumber,
   GlobalState,
+  handleFormChange,
+  hardDeleteCheckboxComponent,
   Modal2,
+  pageTitleComponent,
+  resetButtonCallback,
+  secondaryButtonCallback,
   Table,
+  tableActionButtonsComponent,
+  tableAddButtonComponent,
   useModal,
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, REF_TYPES_REGISTRY, USER_ADMIN_REGISTRY } from '../../constants'
@@ -31,13 +32,7 @@ import {
   DefaultAppUserFormData,
   DefaultAppUserFormErrorData,
 } from '../types/users.data.types'
-import {
-  appUsersTableData,
-  appUsersTableHeader,
-  checkUserHasPermission,
-  isSuperuser,
-  validateAppUser,
-} from '../utils/users.utils'
+import { appUsersTableData, appUsersTableHeader, validateAppUser } from '../utils/users.utils'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
@@ -77,47 +72,6 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
     fetchAppUsers(dispatch, requestMetadata).then((r) => setAppUsersList(r.data))
   }
 
-  const userAdminAppUsersTitle = () => (
-    <>
-      <Typography component="h1" variant="h6" color="primary">
-        APP USERS MANAGEMENT
-      </Typography>
-      <Divider />
-    </>
-  )
-
-  const addButton = () =>
-    checkUserHasPermission('APP_USERS', 'CREATE') ? (
-      <Button onClick={() => addModalState.toggleModalView()}>{ACTION_TYPES.CREATE} NEW USER</Button>
-    ) : undefined
-
-  const actionButtons = (formDataModal: AppUserFormData) => (
-    <>
-      {checkUserHasPermission('APP_USERS', 'UPDATE') && (
-        <Button
-          onClick={() => {
-            updateModalState.toggleModalView()
-            setFormData(formDataModal)
-            setFormDataReset(formDataModal)
-          }}
-          disabled={formDataModal.isDeleted}
-        >
-          {ACTION_TYPES.UPDATE}
-        </Button>
-      )}
-      {checkUserHasPermission('APP_USERS', 'DELETE') && (
-        <Button
-          onClick={() => {
-            deleteModalState.toggleModalView()
-            setFormData(formDataModal)
-          }}
-        >
-          {formDataModal.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
-        </Button>
-      )}
-    </>
-  )
-
   const primaryButtonCallback = async (action: ActionTypes) => {
     const hasFormErrors = validateAppUser(formData, setFormErrors)
     if (hasFormErrors) {
@@ -145,57 +99,18 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
     }
 
     if (appUserResponse && !appUserResponse.detail) {
-      secondaryButtonCallback()
+      secondaryButtonCallback(
+        addModalState,
+        updateModalState,
+        deleteModalState,
+        setFormData,
+        setFormErrors,
+        DefaultAppUserFormData,
+        DefaultAppUserFormErrorData,
+      )
       action !== ACTION_TYPES.READ && fetchAppUsersWithMetadata({})
     }
   }
-
-  const secondaryButtonCallback = () => {
-    addModalState.showModal && addModalState.toggleModalView()
-    updateModalState.showModal && updateModalState.toggleModalView()
-    deleteModalState.showModal && deleteModalState.toggleModalView()
-    setFormData({ ...DefaultAppUserFormData })
-    setFormErrors({ ...DefaultAppUserFormErrorData })
-  }
-
-  const resetButtonCallback = (action: ActionTypes) => {
-    if (action === ACTION_TYPES.CREATE) {
-      setFormData({ ...DefaultAppUserFormData })
-      setFormErrors({ ...DefaultAppUserFormErrorData })
-    } else if (action === ACTION_TYPES.UPDATE) {
-      setFormData(formDataReset)
-      setFormErrors({ ...DefaultAppUserFormErrorData })
-    }
-  }
-
-  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
-    const { name, value } = event.target
-    let checked = false
-    if ('checked' in event.target) {
-      checked = event.target.checked
-    }
-
-    if (name.startsWith('is') || name.startsWith('has')) {
-      setFormData({ ...formData, [name]: checked })
-    } else {
-      setFormData({ ...formData, [name]: value })
-    }
-    if (name in formErrors) {
-      setFormErrors({ ...formErrors, [name]: '' })
-    }
-  }
-
-  const hardDeleteCheckbox = () =>
-    isSuperuser() ? (
-      <FormControlLabel
-        label={
-          <Typography variant="body1" fontSize="0.75rem">
-            HARD DELETE [WILL DELETE PERMANENTLY, OVERRIDES RESTORE BUTTON]!
-          </Typography>
-        }
-        control={<Checkbox name="isHardDelete" checked={formData.isHardDelete} onChange={handleFormChange} />}
-      />
-    ) : undefined
 
   const componentStatusMenuItems = () =>
     componentStatusList
@@ -213,7 +128,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         name="email"
         required
         value={formData.email}
-        onChange={handleFormChange}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.email}
         helperText={formErrors.email}
       />
@@ -222,7 +137,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         name="fullName"
         required
         value={formData.fullName}
-        onChange={handleFormChange}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.fullName}
         helperText={formErrors.fullName}
       />
@@ -231,7 +146,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         name="componentStatusId"
         required
         value={formData.componentStatusId}
-        onChange={handleFormChange}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.componentStatusId}
         helperText={formErrors.componentStatusId}
         menuItems={componentStatusMenuItems()}
@@ -250,10 +165,29 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
       primaryButtonText={ACTION_TYPES.CREATE}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
-      secondaryButtonCallback={secondaryButtonCallback}
+      secondaryButtonCallback={() =>
+        secondaryButtonCallback(
+          addModalState,
+          updateModalState,
+          deleteModalState,
+          setFormData,
+          setFormErrors,
+          DefaultAppUserFormData,
+          DefaultAppUserFormErrorData,
+        )
+      }
       content={appUserForm()}
       resetButtonText={ACTION_TYPES.RESET}
-      resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.CREATE)}
+      resetButtonCallback={() =>
+        resetButtonCallback(
+          ACTION_TYPES.CREATE,
+          setFormData,
+          setFormErrors,
+          formDataReset,
+          DefaultAppUserFormData,
+          DefaultAppUserFormErrorData,
+        )
+      }
     />
   )
 
@@ -269,10 +203,29 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         primaryButtonText={ACTION_TYPES.UPDATE}
         primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE)}
         secondaryButtonText={ACTION_TYPES.CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
+        secondaryButtonCallback={() =>
+          secondaryButtonCallback(
+            addModalState,
+            updateModalState,
+            deleteModalState,
+            setFormData,
+            setFormErrors,
+            DefaultAppUserFormData,
+            DefaultAppUserFormErrorData,
+          )
+        }
         content={appUserForm()}
         resetButtonText={ACTION_TYPES.CANCEL}
-        resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.UPDATE)}
+        resetButtonCallback={() =>
+          resetButtonCallback(
+            ACTION_TYPES.UPDATE,
+            setFormData,
+            setFormErrors,
+            formDataReset,
+            DefaultAppUserFormData,
+            DefaultAppUserFormErrorData,
+          )
+        }
       />
     )
   }
@@ -291,21 +244,41 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
           primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE)
         }
         secondaryButtonText={ACTION_TYPES.CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
+        secondaryButtonCallback={() =>
+          secondaryButtonCallback(
+            addModalState,
+            updateModalState,
+            deleteModalState,
+            setFormData,
+            setFormErrors,
+            DefaultAppUserFormData,
+            DefaultAppUserFormErrorData,
+          )
+        }
         contentText={`ARE YOU SURE YOU WANT TO ${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${
           formData.fullName
         }?!?`}
-        content={hardDeleteCheckbox()}
+        content={hardDeleteCheckboxComponent(formData, formErrors, setFormData, setFormErrors)}
       />
     )
   }
+
+  const actionButtons = (formDataModal: AppUserFormData) =>
+    tableActionButtonsComponent(
+      USER_ADMIN_REGISTRY.APP_USERS,
+      formDataModal,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormDataReset,
+    )
 
   const appUserTable = () => (
     <Table
       componentName="APP USER"
       headerData={appUsersTableHeader()}
       tableData={appUsersTableData(appUsersList, actionButtons)}
-      addModelComponent={addButton()}
+      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_USERS, addModalState)}
       getSoftDeletedCallback={() => fetchAppUsersWithMetadata({ isIncludeDeleted: true })}
     />
   )
@@ -314,7 +287,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {userAdminAppUsersTitle()}
+          {pageTitleComponent('APP USERS MANAGEMENT')}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {appUserTable()}

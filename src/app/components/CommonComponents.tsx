@@ -8,14 +8,11 @@ import React from 'react'
 
 import { ACTION_TYPES, ActionTypes } from '../../constants'
 import { AppRoleFormData, AppUserFormData, checkUserHasPermission, isSuperuser } from '../../users'
-import {
-  AppUserFormErrorData,
-  DefaultAppUserFormData,
-  DefaultAppUserFormErrorData,
-} from '../../users/types/users.data.types'
+import { AppUserFormErrorData } from '../../users/types/users.data.types'
 
 type FormData = AppUserFormData | AppRoleFormData
 type FormErrorData = FormData | AppUserFormErrorData
+
 interface ModalState {
   showModal: boolean
   toggleModalView: () => void
@@ -35,13 +32,13 @@ export const tableAddButtonComponent = (component: string, addModalState: ModalS
     <Button onClick={() => addModalState.toggleModalView()}>{ACTION_TYPES.CREATE} NEW</Button>
   ) : undefined
 
-export const tableActionButtonsComponent = (
+export const tableActionButtonsComponent = <T extends FormData>(
   component: string,
-  formDataModal: FormData,
+  formDataModal: T,
   updateModalState: ModalState,
   deleteModalState: ModalState,
-  setFormData: (formData: FormData) => void,
-  setFormDataReset: (formData: FormData) => void,
+  setFormData: (formData: T) => void,
+  setFormDataReset: (formData: T) => void,
 ) => (
   <>
     {checkUserHasPermission(component, ACTION_TYPES.UPDATE) && (
@@ -69,14 +66,14 @@ export const tableActionButtonsComponent = (
   </>
 )
 
-export const secondaryButtonCallback = (
+export const secondaryButtonCallback = <T extends FormData, U extends FormErrorData>(
   addModalState: ModalState,
   updateModalState: ModalState,
   deleteModalState: ModalState,
-  setFormData: (formData: FormData) => void,
-  setFormErrors: (formData: FormData | AppUserFormErrorData) => void,
-  defaultFormData: FormData,
-  defaultFormErrorData: FormData | AppUserFormErrorData,
+  setFormData: (formData: T) => void,
+  setFormErrors: (formErrorData: U) => void,
+  defaultFormData: T,
+  defaultFormErrorData: U,
 ) => {
   addModalState.showModal && addModalState.toggleModalView()
   updateModalState.showModal && updateModalState.toggleModalView()
@@ -85,26 +82,28 @@ export const secondaryButtonCallback = (
   setFormErrors({ ...defaultFormErrorData })
 }
 
-export const resetButtonCallback = (
+export const resetButtonCallback = <T extends FormData, U extends FormErrorData>(
   action: ActionTypes,
-  setFormData: (formData: FormData) => void,
-  setFormErrors: (formData: FormData | AppUserFormErrorData) => void,
-  formDataReset: FormData,
+  setFormData: (formData: T) => void,
+  setFormErrors: (formErrorData: U) => void,
+  formDataReset: T,
+  defaultFormData: T,
+  defaultFormErrorData: U,
 ) => {
   if (action === ACTION_TYPES.CREATE) {
-    setFormData({ ...DefaultAppUserFormData })
-    setFormErrors({ ...DefaultAppUserFormErrorData })
+    setFormData({ ...defaultFormData })
+    setFormErrors({ ...defaultFormErrorData })
   } else if (action === ACTION_TYPES.UPDATE) {
     setFormData(formDataReset)
-    setFormErrors({ ...DefaultAppUserFormErrorData })
+    setFormErrors({ ...defaultFormErrorData })
   }
 }
 
-export const hardDeleteCheckbox = (
-  formData: FormData,
-  formErrors: FormErrorData,
-  setFormData: (formData: FormData) => void,
-  setFormErrors: (formData: FormErrorData) => void,
+export const hardDeleteCheckboxComponent = <T extends FormData, U extends FormErrorData>(
+  formData: T,
+  formErrors: U,
+  setFormData: (formData: T) => void,
+  setFormErrors: (formErrorData: U) => void,
 ) =>
   isSuperuser() ? (
     <FormControlLabel
@@ -123,12 +122,12 @@ export const hardDeleteCheckbox = (
     />
   ) : undefined
 
-export const handleFormChange = (
+export const handleFormChange = <T extends FormData, U extends FormErrorData>(
   event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>,
-  formData: FormData,
-  formErrors: FormErrorData,
-  setFormData: (formData: FormData) => void,
-  setFormErrors: (formData: FormErrorData) => void,
+  formData: T,
+  formErrors: U,
+  setFormData: (formData: T) => void,
+  setFormErrors: (formErrorData: U) => void,
 ) => {
   const { name, value } = event.target
   let checked = false

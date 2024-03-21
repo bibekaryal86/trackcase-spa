@@ -4,7 +4,7 @@ import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
   handleFormChange,
-  hardDeleteCheckbox,
+  hardDeleteCheckboxComponent,
   pageTitleComponent,
   resetButtonCallback,
   secondaryButtonCallback,
@@ -93,7 +93,7 @@ export {
   tableActionButtonsComponent,
   secondaryButtonCallback,
   resetButtonCallback,
-  hardDeleteCheckbox,
+  hardDeleteCheckboxComponent,
   handleFormChange,
 }
 export { Link }
