@@ -161,7 +161,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
 ) => {
   return (
     <Modal2
-      open={updateModalState.showModal}
+      open={addModalState.showModal}
       onClose={() => {
         addModalState.toggleModalView()
         setFormData({ ...defaultFormData })
