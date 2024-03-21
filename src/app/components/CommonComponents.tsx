@@ -21,7 +21,7 @@ interface ModalState {
   toggleModalView: () => void
 }
 
-export const pageTitle = (title: string) => (
+export const pageTitleComponent = (title: string) => (
   <>
     <Typography component="h1" variant="h6" color="primary">
       {title}
@@ -30,12 +30,12 @@ export const pageTitle = (title: string) => (
   </>
 )
 
-export const addButton = (component: string, addModalState: ModalState) =>
+export const tableAddButtonComponent = (component: string, addModalState: ModalState) =>
   checkUserHasPermission(component, ACTION_TYPES.CREATE) ? (
     <Button onClick={() => addModalState.toggleModalView()}>{ACTION_TYPES.CREATE} NEW</Button>
   ) : undefined
 
-export const actionButtons = (
+export const tableActionButtonsComponent = (
   component: string,
   formDataModal: FormData,
   updateModalState: ModalState,
@@ -125,10 +125,10 @@ export const hardDeleteCheckbox = (
 
 export const handleFormChange = (
   event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>,
-  formData: AppUserFormData | AppRoleFormData,
-  formErrors: AppUserFormData | AppUserFormErrorData | AppRoleFormData,
-  setFormData: (formData: AppUserFormData | AppRoleFormData) => void,
-  setFormErrors: (formData: AppUserFormData | AppUserFormErrorData | AppRoleFormData) => void,
+  formData: FormData,
+  formErrors: FormErrorData,
+  setFormData: (formData: FormData) => void,
+  setFormErrors: (formData: FormErrorData) => void,
 ) => {
   const { name, value } = event.target
   let checked = false

@@ -3,13 +3,13 @@ import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
-  actionButtons,
-  addButton,
   handleFormChange,
   hardDeleteCheckbox,
-  pageTitle,
+  pageTitleComponent,
   resetButtonCallback,
   secondaryButtonCallback,
+  tableActionButtonsComponent,
+  tableAddButtonComponent,
 } from './components/CommonComponents'
 import {
   FormCommentsField,
@@ -88,9 +88,9 @@ export {
   GridFormWrapper,
 }
 export {
-  pageTitle,
-  addButton,
-  actionButtons,
+  pageTitleComponent,
+  tableAddButtonComponent,
+  tableActionButtonsComponent,
   secondaryButtonCallback,
   resetButtonCallback,
   hardDeleteCheckbox,
