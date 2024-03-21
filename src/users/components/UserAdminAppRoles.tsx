@@ -1,25 +1,27 @@
-import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import Divider from '@mui/material/Divider'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { FetchRequestMetadata, FormTextField, getNumber, Modal2, Table, useModal } from '../../app'
-import { ACTION_TYPES, ActionTypes } from '../../constants'
+import {
+  FetchRequestMetadata,
+  FormTextField,
+  getNumber,
+  handleFormChange,
+  hardDeleteCheckboxComponent,
+  Modal2,
+  pageTitleComponent,
+  resetButtonCallback,
+  secondaryButtonCallback,
+  Table,
+  tableActionButtonsComponent,
+  tableAddButtonComponent,
+  useModal,
+} from '../../app'
+import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '../../constants'
 import { appRolesAdmin, fetchAppRoles } from '../action/users.action'
 import { AppRoleFormData, AppRoleResponse, AppRoleSchema, DefaultAppRoleFormData } from '../types/users.data.types'
-import {
-  appRolesTableData,
-  appRolesTableHeader,
-  checkUserHasPermission,
-  isSuperuser,
-  validateAppRole,
-} from '../utils/users.utils'
+import { appRolesTableData, appRolesTableHeader, validateAppRole } from '../utils/users.utils'
 
 const UserAdminAppRoles = (): React.ReactElement => {
   const dispatch = useDispatch()
@@ -37,47 +39,6 @@ const UserAdminAppRoles = (): React.ReactElement => {
   const fetchAppRolesWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
     fetchAppRoles(dispatch, requestMetadata).then((r) => setAppRolesList(r.data))
   }
-
-  const userAdminAppRolesTitle = () => (
-    <>
-      <Typography component="h1" variant="h6" color="primary">
-        APP ROLES MANAGEMENT
-      </Typography>
-      <Divider />
-    </>
-  )
-
-  const addButton = () =>
-    checkUserHasPermission('APP_ROLES', 'CREATE') ? (
-      <Button onClick={() => addModalState.toggleModalView()}>{ACTION_TYPES.CREATE} NEW ROLE</Button>
-    ) : undefined
-
-  const actionButtons = (formDataModal: AppRoleFormData) => (
-    <>
-      {checkUserHasPermission('APP_ROLES', 'UPDATE') && (
-        <Button
-          onClick={() => {
-            updateModalState.toggleModalView()
-            setFormData(formDataModal)
-            setFormDataReset(formDataModal)
-          }}
-          disabled={formDataModal.isDeleted}
-        >
-          {ACTION_TYPES.UPDATE}
-        </Button>
-      )}
-      {checkUserHasPermission('APP_ROLES', 'DELETE') && (
-        <Button
-          onClick={() => {
-            deleteModalState.toggleModalView()
-            setFormData(formDataModal)
-          }}
-        >
-          {formDataModal.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
-        </Button>
-      )}
-    </>
-  )
 
   const primaryButtonCallback = async (action: ActionTypes) => {
     const hasFormErrors = validateAppRole(formData, setFormErrors)
@@ -106,57 +67,18 @@ const UserAdminAppRoles = (): React.ReactElement => {
     }
 
     if (appRoleResponse && !appRoleResponse.detail) {
-      secondaryButtonCallback()
+      secondaryButtonCallback(
+        addModalState,
+        updateModalState,
+        deleteModalState,
+        setFormData,
+        setFormErrors,
+        DefaultAppRoleFormData,
+        DefaultAppRoleFormData,
+      )
       action !== ACTION_TYPES.READ && fetchAppRolesWithMetadata({})
     }
   }
-
-  const secondaryButtonCallback = () => {
-    addModalState.showModal && addModalState.toggleModalView()
-    updateModalState.showModal && updateModalState.toggleModalView()
-    deleteModalState.showModal && deleteModalState.toggleModalView()
-    setFormData({ ...DefaultAppRoleFormData })
-    setFormErrors({ ...DefaultAppRoleFormData })
-  }
-
-  const resetButtonCallback = (action: ActionTypes) => {
-    if (action === ACTION_TYPES.CREATE) {
-      setFormData({ ...DefaultAppRoleFormData })
-      setFormErrors({ ...DefaultAppRoleFormData })
-    } else if (action === ACTION_TYPES.UPDATE) {
-      setFormData(formDataReset)
-      setFormErrors({ ...DefaultAppRoleFormData })
-    }
-  }
-
-  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
-    const { name, value } = event.target
-    let checked = false
-    if ('checked' in event.target) {
-      checked = event.target.checked
-    }
-
-    if (name.startsWith('is') || name.startsWith('has')) {
-      setFormData({ ...formData, [name]: checked })
-    } else {
-      setFormData({ ...formData, [name]: value })
-    }
-    if (name in formErrors) {
-      setFormErrors({ ...formErrors, [name]: '' })
-    }
-  }
-
-  const hardDeleteCheckbox = () =>
-    isSuperuser() ? (
-      <FormControlLabel
-        label={
-          <Typography variant="body1" fontSize="0.75rem">
-            HARD DELETE [WILL DELETE PERMANENTLY, OVERRIDES RESTORE BUTTON]!
-          </Typography>
-        }
-        control={<Checkbox name="isHardDelete" checked={formData.isHardDelete} onChange={handleFormChange} />}
-      />
-    ) : undefined
 
   const appRoleForm = () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
@@ -165,7 +87,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
         name="name"
         required
         value={formData.name}
-        onChange={handleFormChange}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.name}
         helperText={formErrors.name}
       />
@@ -174,7 +96,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
         name="description"
         required
         value={formData.description}
-        onChange={handleFormChange}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.description}
         helperText={formErrors.description}
       />
@@ -192,10 +114,29 @@ const UserAdminAppRoles = (): React.ReactElement => {
       primaryButtonText={ACTION_TYPES.CREATE}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
-      secondaryButtonCallback={secondaryButtonCallback}
+      secondaryButtonCallback={() =>
+        secondaryButtonCallback(
+          addModalState,
+          updateModalState,
+          deleteModalState,
+          setFormData,
+          setFormErrors,
+          DefaultAppRoleFormData,
+          DefaultAppRoleFormData,
+        )
+      }
       content={appRoleForm()}
       resetButtonText={ACTION_TYPES.RESET}
-      resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.CREATE)}
+      resetButtonCallback={() =>
+        resetButtonCallback(
+          ACTION_TYPES.CREATE,
+          setFormData,
+          setFormErrors,
+          formDataReset,
+          DefaultAppRoleFormData,
+          DefaultAppRoleFormData,
+        )
+      }
     />
   )
 
@@ -211,10 +152,29 @@ const UserAdminAppRoles = (): React.ReactElement => {
         primaryButtonText={ACTION_TYPES.UPDATE}
         primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE)}
         secondaryButtonText={ACTION_TYPES.CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
+        secondaryButtonCallback={() =>
+          secondaryButtonCallback(
+            addModalState,
+            updateModalState,
+            deleteModalState,
+            setFormData,
+            setFormErrors,
+            DefaultAppRoleFormData,
+            DefaultAppRoleFormData,
+          )
+        }
         content={appRoleForm()}
         resetButtonText={ACTION_TYPES.CANCEL}
-        resetButtonCallback={() => resetButtonCallback(ACTION_TYPES.UPDATE)}
+        resetButtonCallback={() =>
+          resetButtonCallback(
+            ACTION_TYPES.UPDATE,
+            setFormData,
+            setFormErrors,
+            formDataReset,
+            DefaultAppRoleFormData,
+            DefaultAppRoleFormData,
+          )
+        }
       />
     )
   }
@@ -233,21 +193,41 @@ const UserAdminAppRoles = (): React.ReactElement => {
           primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE)
         }
         secondaryButtonText={ACTION_TYPES.CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
+        secondaryButtonCallback={() =>
+          secondaryButtonCallback(
+            addModalState,
+            updateModalState,
+            deleteModalState,
+            setFormData,
+            setFormErrors,
+            DefaultAppRoleFormData,
+            DefaultAppRoleFormData,
+          )
+        }
         contentText={`ARE YOU SURE YOU WANT TO ${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${
           formData.name
         }?!?`}
-        content={hardDeleteCheckbox()}
+        content={hardDeleteCheckboxComponent(formData, formErrors, setFormData, setFormErrors)}
       />
     )
   }
+
+  const actionButtons = (formDataModal: AppRoleFormData) =>
+    tableActionButtonsComponent(
+      USER_ADMIN_REGISTRY.APP_ROLES,
+      formDataModal,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormDataReset,
+    )
 
   const appRoleTable = () => (
     <Table
       componentName="APP ROLE"
       headerData={appRolesTableHeader()}
       tableData={appRolesTableData(appRolesList, actionButtons)}
-      addModelComponent={addButton()}
+      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_ROLES, addModalState)}
       getSoftDeletedCallback={() => fetchAppRolesWithMetadata({ isIncludeDeleted: true })}
     />
   )
@@ -256,7 +236,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {userAdminAppRolesTitle()}
+          {pageTitleComponent('APP ROLES MANAGEMENT')}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {appRoleTable()}
