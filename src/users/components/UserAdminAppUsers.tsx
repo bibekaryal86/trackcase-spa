@@ -167,9 +167,13 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
     const { name, value } = event.target
-
+    let checked = false
     if ('checked' in event.target) {
-      setFormData({ ...formData, [name]: event.target.checked })
+      checked = event.target.checked
+    }
+
+    if (name.startsWith('is') || name.startsWith('has')) {
+      setFormData({ ...formData, [name]: checked })
     } else {
       setFormData({ ...formData, [name]: value })
     }

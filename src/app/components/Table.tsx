@@ -185,7 +185,7 @@ const emptyTableMessage = (
     paddingBottom: '25px',
     borderBottom: '1px solid rgba(224, 224, 224, 1)',
     display: 'flex',
-    fontSize: '0.75rem'
+    fontSize: '0.75rem',
   }
   return (
     <div style={messageStyle}>
