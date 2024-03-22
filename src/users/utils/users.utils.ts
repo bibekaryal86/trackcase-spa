@@ -15,10 +15,14 @@ import {
   AppRoleSchema,
   AppUserFormData,
   AppUserFormErrorData,
+  AppUserRoleFormData,
+  AppUserRoleFormErrorData,
+  AppUserRoleSchema,
   AppUserSchema,
   DefaultAppPermissionFormData,
   DefaultAppRoleFormData,
   DefaultAppUserFormErrorData,
+  DefaultAppUserRoleFormErrorData,
 } from '../types/users.data.types'
 
 export const isLoggedIn = (): AppUserSchema | undefined => {
@@ -355,5 +359,76 @@ export const appPermissionsTableData = (
       description: x.description,
       isDeleted: x.isDeleted,
       actions: actionButtons(getAppPermissionsFormDataForModal(x)),
+    }
+  })
+
+export const validateAppUserRole = (
+  formData: AppUserRoleFormData,
+  setFormErrors: (formErrors: AppUserRoleFormErrorData) => void,
+) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: AppUserRoleFormErrorData = { ...DefaultAppUserRoleFormErrorData }
+  if (getNumber(formData.appUserId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.appUserId = 'REQUIRED'
+  }
+  if (getNumber(formData.appRoleId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.appRoleId = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
+}
+
+export const appUserRoleTableHeader = (): TableHeaderData[] => {
+  const tableHeaderData: TableHeaderData[] = [
+    {
+      id: 'user',
+      label: 'USER',
+    },
+    {
+      id: 'role',
+      label: 'ROLE',
+    },
+  ]
+  if (isSuperuser()) {
+    tableHeaderData.push(
+      {
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      },
+      {
+        id: 'actions',
+        label: 'ACTIONS',
+        align: 'center' as const,
+      },
+    )
+  }
+  return tableHeaderData
+}
+
+const getAppUserRoleFormDataForModal = (x: AppUserRoleSchema): AppUserRoleFormData => {
+  return {
+    id: x.id || ID_DEFAULT,
+    appUserId: x.appUserId,
+    appRoleId: x.appRoleId,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+    isDeleted: x.isDeleted,
+  }
+}
+
+export const appUserRoleTableData = (
+  appUserRoleList: AppUserRoleSchema[],
+  actionButtons: (formDataForModal: AppUserRoleFormData) => React.JSX.Element,
+): TableData[] =>
+  Array.from(appUserRoleList, (x) => {
+    return {
+      user: x.appUserId,
+      role: x.appRoleId,
+      isDeleted: x.isDeleted,
+      actions: actionButtons(getAppUserRoleFormDataForModal(x)),
     }
   })

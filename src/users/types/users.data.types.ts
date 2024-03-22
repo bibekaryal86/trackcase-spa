@@ -19,7 +19,7 @@ export interface AppUserRoleSchema extends BaseModelSchema {
   appRoleId: number
 }
 
-export interface AppUserRoleResponse {
+export interface AppUserRoleResponse extends ResponseBase {
   data: AppUserRoleSchema[]
 }
 
@@ -155,4 +155,32 @@ export const DefaultAppPermissionFormData: AppPermissionFormData = {
   isHardDelete: false,
   isShowSoftDeleted: false,
   isDeleted: false,
+}
+
+export interface AppUserRoleFormData {
+  id: number
+  appUserId: number
+  appRoleId: number
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+  isDeleted?: boolean
+}
+
+export interface AppUserRoleFormErrorData {
+  appUserId: string
+  appRoleId: string
+}
+
+export const DefaultAppUserRoleFormData: AppUserRoleFormData = {
+  id: ID_DEFAULT,
+  appUserId: ID_DEFAULT,
+  appRoleId: ID_DEFAULT,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+  isDeleted: false,
+}
+
+export const DefaultAppUserRoleFormErrorData: AppUserRoleFormErrorData = {
+  appUserId: '',
+  appRoleId: '',
 }

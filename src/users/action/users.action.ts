@@ -14,7 +14,12 @@ import {
 } from '../../app'
 import { USER_LOGOUT } from '../../app/types/app.action.types'
 import { ACTION_TYPES, ActionTypes, ID_DEFAULT, IS_DARK_MODE, SOMETHING_WENT_WRONG } from '../../constants'
-import { APP_PERMISSIONS_COMPLETE, APP_ROLES_COMPLETE, APP_USERS_COMPLETE } from '../types/users.action.types'
+import {
+  APP_PERMISSIONS_COMPLETE,
+  APP_ROLES_COMPLETE,
+  APP_USERS_COMPLETE,
+  APP_USERS_ROLES_COMPLETE,
+} from '../types/users.action.types'
 import {
   AppPermissionResponse,
   AppPermissionSchema,
@@ -24,6 +29,8 @@ import {
   AppUserLoginResponse,
   AppUserRequest,
   AppUserResponse,
+  AppUserRoleResponse,
+  AppUserRoleSchema,
   DefaultAppUserLoginResponse,
   DefaultAppUserResponse,
 } from '../types/users.data.types'
@@ -380,6 +387,86 @@ export const appPermissionsAdmin = async ({
       return { data: [] }
     } finally {
       dispatch(userAdminDispatch({ type: APP_PERMISSIONS_COMPLETE }))
+    }
+  }
+}
+
+export const getUsersRoles= async (
+  dispatch: React.Dispatch<GlobalDispatch>,
+  requestMetadata?: Partial<FetchRequestMetadata>,
+) => {
+  const dispatchFunction = await appUsersRolesAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
+  return await dispatchFunction(dispatch)
+}
+
+export const appUsersRolesAdmin = async ({
+  action,
+  appUserRoleRequest,
+  id,
+  isRestore,
+  isHardDelete,
+  requestMetadata,
+}: {
+  action: ActionTypes
+  appUserRoleRequest?: AppUserRoleSchema
+  id?: number
+  isRestore?: boolean
+  isHardDelete?: boolean
+  requestMetadata?: Partial<FetchRequestMetadata>
+}) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<AppUserRoleResponse> => {
+    const typeRequest = `APP_USERS_ROLES_${action}_REQUEST`
+    const typeSuccess = `APP_USERS_ROLES_${action}_SUCCESS`
+    const typeFailure = `APP_USERS_ROLES_${action}_FAILURE`
+
+    let endpoint = ''
+    let options: Partial<FetchOptions> = {}
+    if (action === ACTION_TYPES.CREATE) {
+      endpoint = getEndpoint(process.env.APP_USER_ROLE_CREATE as string)
+      options = {
+        method: 'POST',
+        // send as validatedTrue, but with random password so that guests must reset before logging in
+        requestBody: { appUserId: appUserRoleRequest?.appUserId, appRoleId: appUserRoleRequest?.appRoleId },
+      }
+    } else if (action === ACTION_TYPES.READ) {
+      endpoint = getEndpoint(process.env.APP_USER_ROLE_READ as string)
+      options = {
+        method: 'GET',
+        metadataParams: requestMetadata,
+      }
+    } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
+      endpoint = getEndpoint(process.env.APP_USER_ROLE_UPDATE as string)
+      options = {
+        method: 'PUT',
+        requestBody: { appUserId: appUserRoleRequest?.appUserId, appRoleId: appUserRoleRequest?.appRoleId },
+        queryParams: { is_restore: isRestore || false },
+        pathParams: { app_user_role_id: id || ID_DEFAULT },
+      }
+    } else if (action === ACTION_TYPES.DELETE) {
+      endpoint = getEndpoint(process.env.APP_USER_ROLE_DELETE as string)
+      options = {
+        method: 'DELETE',
+        pathParams: { app_user_role_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
+      }
+    }
+
+    dispatch(userAdminDispatch({ type: typeRequest }))
+
+    try {
+      const appUserRoleResponse = (await Async.fetch(endpoint, options)) as AppUserRoleResponse
+      if (appUserRoleResponse.detail) {
+        dispatch(userAdminDispatch({ type: typeFailure, error: getErrMsg(appUserRoleResponse.detail) }))
+      } else {
+        action !== ACTION_TYPES.READ &&
+          dispatch(userAdminDispatch({ type: typeSuccess, success: `APP USER ROLE ${action} SUCCESS` }))
+      }
+      return appUserRoleResponse
+    } catch (error) {
+      console.log(`App User Role ${action} Error: `, error)
+      dispatch(userAdminDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
+      return { data: [] }
+    } finally {
+      dispatch(userAdminDispatch({ type: APP_USERS_ROLES_COMPLETE }))
     }
   }
 }
