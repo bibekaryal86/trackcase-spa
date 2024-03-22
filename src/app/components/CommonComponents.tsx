@@ -8,10 +8,16 @@ import React from 'react'
 
 import { Modal2 } from './Modal'
 import { ACTION_TYPES, ActionTypes } from '../../constants'
-import { AppRoleFormData, AppUserFormData, checkUserHasPermission, isSuperuser } from '../../users'
-import { AppUserFormErrorData } from '../../users/types/users.data.types'
+import { RefTypeFormData } from '../../types'
+import {
+  AppRoleFormData,
+  AppUserFormData,
+  AppUserFormErrorData,
+  checkUserHasPermission,
+  isSuperuser,
+} from '../../users'
 
-type FormData = AppUserFormData | AppRoleFormData
+type FormData = AppUserFormData | AppRoleFormData | RefTypeFormData
 type FormErrorData = FormData | AppUserFormErrorData
 
 interface ModalState {
@@ -40,6 +46,8 @@ export const tableActionButtonsComponent = <T extends FormData>(
   deleteModalState: ModalState,
   setFormData: (formData: T) => void,
   setFormDataReset: (formData: T) => void,
+  isUpdateDisabled?: boolean,
+  isDeleteDisabled?: boolean,
 ) => (
   <>
     {checkUserHasPermission(componentName, ACTION_TYPES.UPDATE) && (
@@ -49,7 +57,7 @@ export const tableActionButtonsComponent = <T extends FormData>(
           setFormData(formDataModal)
           setFormDataReset(formDataModal)
         }}
-        disabled={formDataModal.isDeleted}
+        disabled={isUpdateDisabled || formDataModal.isDeleted}
       >
         {ACTION_TYPES.UPDATE}
       </Button>
@@ -60,6 +68,7 @@ export const tableActionButtonsComponent = <T extends FormData>(
           deleteModalState.toggleModalView()
           setFormData(formDataModal)
         }}
+        disabled={isDeleteDisabled}
       >
         {formDataModal.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
       </Button>
@@ -184,7 +193,14 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
       content={content}
       resetButtonText={ACTION_TYPES.RESET}
       resetButtonCallback={() =>
-        resetButtonCallback(ACTION_TYPES.CREATE, setFormData, setFormErrors, formDataReset, defaultFormData, defaultFormErrorData)
+        resetButtonCallback(
+          ACTION_TYPES.CREATE,
+          setFormData,
+          setFormErrors,
+          formDataReset,
+          defaultFormData,
+          defaultFormErrorData,
+        )
       }
     />
   )
@@ -228,7 +244,14 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
       content={content}
       resetButtonText={ACTION_TYPES.RESET}
       resetButtonCallback={() =>
-        resetButtonCallback(ACTION_TYPES.UPDATE, setFormData, setFormErrors, formDataReset, defaultFormData, defaultFormErrorData)
+        resetButtonCallback(
+          ACTION_TYPES.UPDATE,
+          setFormData,
+          setFormErrors,
+          formDataReset,
+          defaultFormData,
+          defaultFormErrorData,
+        )
       }
     />
   )
