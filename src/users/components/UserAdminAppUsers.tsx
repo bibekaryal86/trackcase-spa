@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import {
-  addModalComponent,
+  addUpdateModalComponent,
   deleteModalComponent,
   FetchRequestMetadata,
   FormSelectField,
@@ -18,7 +18,6 @@ import {
   Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
-  updateModalComponent,
   useModal,
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, REF_TYPES_REGISTRY, USER_ADMIN_REGISTRY } from '../../constants'
@@ -51,7 +50,7 @@ interface AppUserProps {
 
 const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   const dispatch = useDispatch()
-  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
+  const [addUpdateModalState, deleteModalState] = [useModal(), useModal()]
 
   const { componentStatusList, getRefType } = props
 
@@ -103,8 +102,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
     if (appUserResponse && !appUserResponse.detail) {
       secondaryButtonCallback(
-        addModalState,
-        updateModalState,
+        addUpdateModalState,
         deleteModalState,
         setFormData,
         setFormErrors,
@@ -157,28 +155,13 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
     </Box>
   )
 
-  const addModal = () =>
-    addModalComponent(
+  const addUpdateModal = (action: ActionTypes) =>
+    addUpdateModalComponent(
+      action,
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
-      deleteModalState,
-      setFormData,
-      setFormErrors,
-      DefaultAppUserFormData,
-      DefaultAppUserFormErrorData,
-      formDataReset,
-    )
-
-  const updateModal = () =>
-    updateModalComponent(
-      componentNameNoUnderscore,
-      addUpdateModalContent(),
-      primaryButtonCallback,
-      addModalState,
-      updateModalState,
+      addUpdateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -196,8 +179,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
       componentNameNoUnderscore,
       deleteModalContextText,
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
+      addUpdateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -211,7 +193,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
     tableActionButtonsComponent(
       USER_ADMIN_REGISTRY.APP_USERS,
       formDataModal,
-      updateModalState,
+      addUpdateModalState,
       deleteModalState,
       setFormData,
       setFormDataReset,
@@ -222,7 +204,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
       componentName={componentNameNoUnderscore}
       headerData={appUsersTableHeader()}
       tableData={appUsersTableData(appUsersList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_USERS, addModalState)}
+      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_USERS, addUpdateModalState)}
       getSoftDeletedCallback={() => getAppUsersWithMetadata({ isIncludeDeleted: true })}
     />
   )
@@ -237,8 +219,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
           {appUserTable()}
         </Grid>
       </Grid>
-      {addModal()}
-      {updateModal()}
+      {addUpdateModal(ACTION_TYPES.CREATE)}
       {deleteModal()}
     </Box>
   )

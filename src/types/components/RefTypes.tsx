@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import {
-  addModalComponent,
+  addUpdateModalComponent,
   convertToCamelCase,
   convertToTitleCase,
   deleteModalComponent,
@@ -22,7 +22,6 @@ import {
   Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
-  updateModalComponent,
   useModal,
 } from '../../app'
 import {
@@ -63,7 +62,7 @@ interface RefTypeProps {
 
 const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const dispatch = useDispatch()
-  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
+  const [addUpdateModalState, deleteModalState] = [useModal(), useModal()]
 
   const { refType, refTypes, getRefType } = props
 
@@ -125,8 +124,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
     if (refTypeResponse && !refTypeResponse.detail) {
       secondaryButtonCallback(
-        addModalState,
-        updateModalState,
+        addUpdateModalState,
         deleteModalState,
         setFormData,
         setFormErrors,
@@ -220,28 +218,13 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     )
   }
 
-  const addModal = () =>
-    addModalComponent(
+  const addUpdateModal = (action: ActionTypes) =>
+    addUpdateModalComponent(
+      action,
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
-      deleteModalState,
-      setFormData,
-      setFormErrors,
-      DefaultRefTypeFormData,
-      DefaultRefTypeFormData,
-      formDataReset,
-    )
-
-  const updateModal = () =>
-    updateModalComponent(
-      componentNameNoUnderscore,
-      addUpdateModalContent(),
-      primaryButtonCallback,
-      addModalState,
-      updateModalState,
+      addUpdateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -259,8 +242,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       componentNameNoUnderscore,
       deleteModalContextText,
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
+      addUpdateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -276,7 +258,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     tableActionButtonsComponent(
       refType,
       formDataModal,
-      updateModalState,
+      addUpdateModalState,
       deleteModalState,
       setFormData,
       setFormDataReset,
@@ -289,7 +271,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       componentName={refTypeTitle()}
       headerData={refTypeTableHeader(refType)}
       tableData={refTypeTableData(refType, refTypeList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(refType, addModalState)}
+      addModelComponent={tableAddButtonComponent(refType, addUpdateModalState)}
       getSoftDeletedCallback={() => getRefTypeWithMetadata({ isIncludeDeleted: true })}
     />
   )
@@ -304,8 +286,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           {refTypeTable()}
         </Grid>
       </Grid>
-      {addModal()}
-      {updateModal()}
+      {addUpdateModal(ACTION_TYPES.CREATE)}
       {deleteModal()}
     </Box>
   )
