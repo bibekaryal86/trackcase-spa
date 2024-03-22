@@ -3,7 +3,7 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import {
@@ -61,6 +61,8 @@ interface RefTypeProps {
 }
 
 const RefTypes = (props: RefTypeProps): React.ReactElement => {
+  // to avoid multiple api calls, avoid infinite loop if empty list returned
+  const isForceFetch = useRef(true)
   const dispatch = useDispatch()
   const [addUpdateModalState, deleteModalState] = [useModal(), useModal()]
 
@@ -82,10 +84,17 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     const refTypeInStore = refTypes[refTypeInStoreName]
     setRefTypeList(refTypeInStore)
 
-    if (refTypeInStore.length === 0) {
+    if (refTypeInStore.length === 0 && isForceFetch.current) {
       getRefType(refType as RefTypesRegistry)
+      isForceFetch.current = false
     }
   }, [refTypeList, refType, refTypes, getRefType])
+
+  useEffect(() => {
+    return () => {
+      isForceFetch.current = true
+    }
+  }, [])
 
   const getRefTypeWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
     getRefType(refType as RefTypesRegistry, requestMetadata)
@@ -131,6 +140,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         DefaultRefTypeFormData,
         DefaultRefTypeFormData,
       )
+      isForceFetch.current = true
     }
   }
 

@@ -61,22 +61,22 @@ export const getRefTypes = () => {
       const requestComponents: string[] = []
 
       if (getStore().refTypes.componentStatus.length === 0) {
-        requestComponents.push('component_status')
+        requestComponents.push(REF_TYPES_REGISTRY.COMPONENT_STATUS)
       }
       if (getStore().refTypes.caseType.length === 0) {
-        requestComponents.push('case_type')
+        requestComponents.push(REF_TYPES_REGISTRY.CASE_TYPE)
       }
       if (getStore().refTypes.collectionMethod.length === 0) {
-        requestComponents.push('collection_method')
+        requestComponents.push(REF_TYPES_REGISTRY.COLLECTION_METHOD)
       }
       if (getStore().refTypes.filingType.length === 0) {
-        requestComponents.push('filing_type')
+        requestComponents.push(REF_TYPES_REGISTRY.FILING_TYPE)
       }
       if (getStore().refTypes.hearingType.length === 0) {
-        requestComponents.push('hearing_type')
+        requestComponents.push(REF_TYPES_REGISTRY.HEARING_TYPE)
       }
       if (getStore().refTypes.taskType.length === 0) {
-        requestComponents.push('task_type')
+        requestComponents.push(REF_TYPES_REGISTRY.TASK_TYPE)
       }
 
       if (requestComponents.length > 0) {
