@@ -9,11 +9,14 @@ import {
   REGEX_LOGIN_PASSWORD_PATTERN,
 } from '../../constants'
 import {
+  AppPermissionFormData,
+  AppPermissionSchema,
   AppRoleFormData,
   AppRoleSchema,
   AppUserFormData,
   AppUserFormErrorData,
   AppUserSchema,
+  DefaultAppPermissionFormData,
   DefaultAppRoleFormData,
   DefaultAppUserFormErrorData,
 } from '../types/users.data.types'
@@ -281,5 +284,76 @@ export const appRolesTableData = (
       description: x.description,
       isDeleted: x.isDeleted,
       actions: actionButtons(getAppRolesFormDataForModal(x)),
+    }
+  })
+
+export const validateAppPermission = (
+  formData: AppPermissionFormData,
+  setFormErrors: (formErrors: AppPermissionFormData) => void,
+) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: AppPermissionFormData = { ...DefaultAppPermissionFormData }
+  if (!getString(formData.name)) {
+    hasValidationErrors = true
+    formErrorsLocal.name = 'REQUIRED'
+  }
+  if (!getString(formData.description)) {
+    hasValidationErrors = true
+    formErrorsLocal.description = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
+}
+
+export const appPermissionsTableHeader = (): TableHeaderData[] => {
+  const tableHeaderData: TableHeaderData[] = [
+    {
+      id: 'name',
+      label: 'NAME',
+    },
+    {
+      id: 'description',
+      label: 'DESCRIPTION',
+    },
+  ]
+  if (isSuperuser()) {
+    tableHeaderData.push(
+      {
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      },
+      {
+        id: 'actions',
+        label: 'ACTIONS',
+        align: 'center' as const,
+      },
+    )
+  }
+  return tableHeaderData
+}
+
+const getAppPermissionsFormDataForModal = (x: AppPermissionSchema): AppPermissionFormData => {
+  return {
+    id: x.id || ID_DEFAULT,
+    name: x.name,
+    description: x.description,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+    isDeleted: x.isDeleted,
+  }
+}
+
+export const appPermissionsTableData = (
+  appPermissionsList: AppPermissionSchema[],
+  actionButtons: (formDataForModal: AppPermissionFormData) => React.JSX.Element,
+): TableData[] =>
+  Array.from(appPermissionsList, (x) => {
+    return {
+      name: x.name,
+      description: x.description,
+      isDeleted: x.isDeleted,
+      actions: actionButtons(getAppPermissionsFormDataForModal(x)),
     }
   })

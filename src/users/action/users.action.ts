@@ -14,8 +14,10 @@ import {
 } from '../../app'
 import { USER_LOGOUT } from '../../app/types/app.action.types'
 import { ACTION_TYPES, ActionTypes, ID_DEFAULT, IS_DARK_MODE, SOMETHING_WENT_WRONG } from '../../constants'
-import { APP_ROLES_COMPLETE, APP_USERS_COMPLETE } from '../types/users.action.types'
+import { APP_PERMISSIONS_COMPLETE, APP_ROLES_COMPLETE, APP_USERS_COMPLETE } from '../types/users.action.types'
 import {
+  AppPermissionResponse,
+  AppPermissionSchema,
   AppRoleResponse,
   AppRoleSchema,
   AppUserLoginRequest,
@@ -298,6 +300,86 @@ export const appRolesAdmin = async ({
       return { data: [] }
     } finally {
       dispatch(userAdminDispatch({ type: APP_ROLES_COMPLETE }))
+    }
+  }
+}
+
+export const getAppPermissions = async (
+  dispatch: React.Dispatch<GlobalDispatch>,
+  requestMetadata?: Partial<FetchRequestMetadata>,
+) => {
+  const dispatchFunction = await appPermissionsAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
+  return await dispatchFunction(dispatch)
+}
+
+export const appPermissionsAdmin = async ({
+  action,
+  appPermissionRequest,
+  id,
+  isRestore,
+  isHardDelete,
+  requestMetadata,
+}: {
+  action: ActionTypes
+  appPermissionRequest?: AppPermissionSchema
+  id?: number
+  isRestore?: boolean
+  isHardDelete?: boolean
+  requestMetadata?: Partial<FetchRequestMetadata>
+}) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<AppPermissionResponse> => {
+    const typeRequest = `APP_PERMISSIONS_${action}_REQUEST`
+    const typeSuccess = `APP_PERMISSIONS_${action}_SUCCESS`
+    const typeFailure = `APP_PERMISSIONS_${action}_FAILURE`
+
+    let endpoint = ''
+    let options: Partial<FetchOptions> = {}
+    if (action === ACTION_TYPES.CREATE) {
+      endpoint = getEndpoint(process.env.APP_PERMISSION_CREATE as string)
+      options = {
+        method: 'POST',
+        // send as validatedTrue, but with random password so that guests must reset before logging in
+        requestBody: { name: appPermissionRequest?.name, description: appPermissionRequest?.description },
+      }
+    } else if (action === ACTION_TYPES.READ) {
+      endpoint = getEndpoint(process.env.APP_PERMISSION_READ as string)
+      options = {
+        method: 'GET',
+        metadataParams: requestMetadata,
+      }
+    } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
+      endpoint = getEndpoint(process.env.APP_PERMISSION_UPDATE as string)
+      options = {
+        method: 'PUT',
+        requestBody: { name: appPermissionRequest?.name, description: appPermissionRequest?.description },
+        queryParams: { is_restore: isRestore || false },
+        pathParams: { app_role_id: id || ID_DEFAULT },
+      }
+    } else if (action === ACTION_TYPES.DELETE) {
+      endpoint = getEndpoint(process.env.APP_PERMISSION_DELETE as string)
+      options = {
+        method: 'DELETE',
+        pathParams: { app_role_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
+      }
+    }
+
+    dispatch(userAdminDispatch({ type: typeRequest }))
+
+    try {
+      const appPermissionResponse = (await Async.fetch(endpoint, options)) as AppPermissionResponse
+      if (appPermissionResponse.detail) {
+        dispatch(userAdminDispatch({ type: typeFailure, error: getErrMsg(appPermissionResponse.detail) }))
+      } else {
+        action !== ACTION_TYPES.READ &&
+          dispatch(userAdminDispatch({ type: typeSuccess, success: `APP PERMISSION ${action} SUCCESS` }))
+      }
+      return appPermissionResponse
+    } catch (error) {
+      console.log(`App Permission ${action} Error: `, error)
+      dispatch(userAdminDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
+      return { data: [] }
+    } finally {
+      dispatch(userAdminDispatch({ type: APP_PERMISSIONS_COMPLETE }))
     }
   }
 }

@@ -138,3 +138,21 @@ export const DefaultAppRoleFormData: AppRoleFormData = {
   isShowSoftDeleted: false,
   isDeleted: false,
 }
+
+export interface AppPermissionFormData {
+  id: number
+  name: string
+  description: string
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+  isDeleted?: boolean
+}
+
+export const DefaultAppPermissionFormData: AppPermissionFormData = {
+  id: ID_DEFAULT,
+  name: '',
+  description: '',
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+  isDeleted: false,
+}
