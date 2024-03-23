@@ -17,6 +17,9 @@ export interface AppUserLoginResponse extends ResponseBase {
 export interface AppUserRoleSchema extends BaseModelSchema {
   appUserId: number
   appRoleId: number
+  email?: string
+  fullName?: string
+  roleName?: string
 }
 
 export interface AppUserRoleResponse extends ResponseBase {
@@ -26,6 +29,8 @@ export interface AppUserRoleResponse extends ResponseBase {
 export interface AppRolePermissionSchema extends BaseModelSchema {
   appRoleId: number
   appPermissionId: number
+  roleName?: string
+  permissionName?: string
 }
 
 export interface AppRolePermissionResponse {

@@ -15,11 +15,13 @@ interface FetchUrlOptions {
 }
 
 interface SortConfig {
+  table?: string
   column: string
   direction: 'asc' | 'desc'
 }
 
 interface FilterConfig {
+  table?: string
   column: string
   value: string | number | Dayjs
   operation: 'eq' | 'gt' | 'lt' | 'gte' | 'lte'
