@@ -117,7 +117,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const componentStatusMenuItems = () =>
     componentStatusList
-      .filter((x) => x.componentName === USER_ADMIN_REGISTRY.APP_USERS)
+      .filter((x) => x.componentName === 'APP_USER')
       .map((x) => (
         <MenuItem key={x.id} value={x.id}>
           {x.statusName}
