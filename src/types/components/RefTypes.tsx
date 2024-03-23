@@ -228,9 +228,24 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     )
   }
 
-  const addUpdateModal = (action: ActionTypes) =>
+  const addModal = () =>
     addUpdateModalComponent(
-      action,
+      ACTION_TYPES.CREATE,
+      componentNameNoUnderscore,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addUpdateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultRefTypeFormData,
+      DefaultRefTypeFormData,
+      formDataReset,
+    )
+
+  const updateModal = () =>
+    addUpdateModalComponent(
+      ACTION_TYPES.UPDATE,
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
@@ -296,7 +311,8 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           {refTypeTable()}
         </Grid>
       </Grid>
-      {addUpdateModal(ACTION_TYPES.CREATE)}
+      {addModal()}
+      {updateModal()}
       {deleteModal()}
     </Box>
   )

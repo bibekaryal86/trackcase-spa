@@ -104,9 +104,24 @@ const UserAdminAppRoles = (): React.ReactElement => {
     </Box>
   )
 
-  const addUpdateModal = (action: ActionTypes) =>
+  const addModal = () =>
     addUpdateModalComponent(
-      action,
+      ACTION_TYPES.CREATE,
+      componentNameNoUnderscore,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addUpdateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultAppRoleFormData,
+      DefaultAppRoleFormData,
+      formDataReset,
+    )
+
+  const updateModal = () =>
+    addUpdateModalComponent(
+      ACTION_TYPES.UPDATE,
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
@@ -168,7 +183,8 @@ const UserAdminAppRoles = (): React.ReactElement => {
           {appRoleTable()}
         </Grid>
       </Grid>
-      {addUpdateModal(ACTION_TYPES.CREATE)}
+      {addModal()}
+      {updateModal()}
       {deleteModal()}
     </Box>
   )

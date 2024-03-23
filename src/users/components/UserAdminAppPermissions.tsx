@@ -109,9 +109,24 @@ const UserAdminAppPermissions = (): React.ReactElement => {
     </Box>
   )
 
-  const addUpdateModal = (action: ActionTypes) =>
+  const addModal = () =>
     addUpdateModalComponent(
-      action,
+      ACTION_TYPES.CREATE,
+      componentNameNoUnderscore,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addUpdateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultAppPermissionFormData,
+      DefaultAppPermissionFormData,
+      formDataReset,
+    )
+
+  const updateModal = () =>
+    addUpdateModalComponent(
+      ACTION_TYPES.UPDATE,
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
@@ -173,7 +188,8 @@ const UserAdminAppPermissions = (): React.ReactElement => {
           {appPermissionTable()}
         </Grid>
       </Grid>
-      {addUpdateModal(ACTION_TYPES.CREATE)}
+      {addModal()}
+      {updateModal()}
       {deleteModal()}
     </Box>
   )
