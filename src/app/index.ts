@@ -3,7 +3,7 @@ import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
-  addUpdateModalComponent,
+  addModalComponent,
   deleteModalComponent,
   handleFormChange,
   hardDeleteCheckboxComponent,
@@ -12,6 +12,7 @@ import {
   secondaryButtonCallback,
   tableActionButtonsComponent,
   tableAddButtonComponent,
+  updateModalComponent,
 } from './components/CommonComponents'
 import {
   FormCommentsField,
@@ -90,7 +91,8 @@ export {
   GridFormWrapper,
 }
 export {
-  addUpdateModalComponent,
+  addModalComponent,
+  updateModalComponent,
   deleteModalComponent,
   handleFormChange,
   hardDeleteCheckboxComponent,

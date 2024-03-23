@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
-  addUpdateModalComponent,
+  addModalComponent,
   deleteModalComponent,
   FetchRequestMetadata,
   FormSelectField,
@@ -16,6 +16,7 @@ import {
   Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
+  updateModalComponent,
   useModal,
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '../../constants'
@@ -31,7 +32,7 @@ import { appUserRoleTableData, appUserRoleTableHeader, validateAppUserRole } fro
 
 const UserAdminAppUsersRoles = (): React.ReactElement => {
   const dispatch = useDispatch()
-  const [addUpdateModalState, deleteModalState] = [useModal(), useModal()]
+  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const [appUserRolesList, setAppUsersRolesList] = useState([] as AppUserRoleSchema[])
   const [formData, setFormData] = useState(DefaultAppUserRoleFormData)
@@ -77,7 +78,8 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
 
     if (appUserRoleResponse && !appUserRoleResponse.detail) {
       secondaryButtonCallback(
-        addUpdateModalState,
+        addModalState,
+        updateModalState,
         deleteModalState,
         setFormData,
         setFormErrors,
@@ -88,19 +90,19 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
     }
   }
 
-  const appUsersMenuItems = () => appUserRolesList
-      .map((x) => (
-        <MenuItem key={x.appUserId} value={x.appUserId}>
-          {x.fullName}
-        </MenuItem>
-      ))
+  const appUsersMenuItems = () =>
+    appUserRolesList.map((x) => (
+      <MenuItem key={x.appUserId} value={x.appUserId}>
+        {x.fullName}
+      </MenuItem>
+    ))
 
-  const appRolesMenuItems = () => appUserRolesList
-      .map((x) => (
-        <MenuItem key={x.appRoleId} value={x.appRoleId}>
-          {x.roleName}
-        </MenuItem>
-      ))
+  const appRolesMenuItems = () =>
+    appUserRolesList.map((x) => (
+      <MenuItem key={x.appRoleId} value={x.appRoleId}>
+        {x.roleName}
+      </MenuItem>
+    ))
 
   const addUpdateModalContent = () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
@@ -128,12 +130,12 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
   )
 
   const addModal = () =>
-    addUpdateModalComponent(
-      ACTION_TYPES.CREATE,
+    addModalComponent(
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -143,12 +145,12 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
     )
 
   const updateModal = () =>
-    addUpdateModalComponent(
-      ACTION_TYPES.UPDATE,
+    updateModalComponent(
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -166,7 +168,8 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
       componentNameNoUnderscore,
       deleteModalContextText,
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -180,7 +183,7 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
     tableActionButtonsComponent(
       USER_ADMIN_REGISTRY.APP_PERMISSIONS,
       formDataModal,
-      addUpdateModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormDataReset,
@@ -191,7 +194,7 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
       componentName={componentNameNoUnderscore}
       headerData={appUserRoleTableHeader()}
       tableData={appUserRoleTableData(appUserRolesList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_PERMISSIONS, addUpdateModalState)}
+      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_PERMISSIONS, addModalState)}
       getSoftDeletedCallback={() => getAppUsersRolesWithMetadata({ isIncludeDeleted: true })}
     />
   )

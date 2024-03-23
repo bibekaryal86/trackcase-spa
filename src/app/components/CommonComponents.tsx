@@ -18,12 +18,20 @@ import {
 } from '../../users'
 import {
   AppPermissionFormData,
+  AppRolePermissionFormData,
+  AppRolePermissionFormErrorData,
   AppUserRoleFormData,
   AppUserRoleFormErrorData,
 } from '../../users/types/users.data.types'
 
-type FormData = AppUserFormData | AppRoleFormData | AppPermissionFormData | AppUserRoleFormData | RefTypeFormData
-type FormErrorData = FormData | AppUserFormErrorData | AppUserRoleFormErrorData
+type FormData =
+  | AppUserFormData
+  | AppRoleFormData
+  | AppPermissionFormData
+  | AppUserRoleFormData
+  | AppRolePermissionFormData
+  | RefTypeFormData
+type FormErrorData = FormData | AppUserFormErrorData | AppUserRoleFormErrorData | AppRolePermissionFormErrorData
 
 interface ModalState {
   showModal: boolean
@@ -83,6 +91,7 @@ export const tableActionButtonsComponent = <T extends FormData>(
 
 export const secondaryButtonCallback = <T extends FormData, U extends FormErrorData>(
   addModalState: ModalState,
+  updateModalState: ModalState,
   deleteModalState: ModalState,
   setFormData: (formData: T) => void,
   setFormErrors: (formErrorData: U) => void,
@@ -90,6 +99,7 @@ export const secondaryButtonCallback = <T extends FormData, U extends FormErrorD
   defaultFormErrorData: U,
 ) => {
   addModalState.showModal && addModalState.toggleModalView()
+  updateModalState.showModal && updateModalState.toggleModalView()
   deleteModalState.showModal && deleteModalState.toggleModalView()
   defaultFormData && setFormData({ ...defaultFormData })
   defaultFormErrorData && setFormErrors({ ...defaultFormErrorData })
@@ -158,12 +168,12 @@ export const handleFormChange = <T extends FormData, U extends FormErrorData>(
   }
 }
 
-export const addUpdateModalComponent = <T extends FormData, U extends FormErrorData>(
-  action: ActionTypes,
+export const addModalComponent = <T extends FormData, U extends FormErrorData>(
   componentName: string,
   content: React.JSX.Element,
   primaryButtonCallback: (action: ActionTypes) => void,
-  addUpdateModalState: ModalState,
+  addModalState: ModalState,
+  updateModalState: ModalState,
   deleteModalState: ModalState,
   setFormData: (formData: T) => void,
   setFormErrors: (formErrorData: U) => void,
@@ -173,18 +183,19 @@ export const addUpdateModalComponent = <T extends FormData, U extends FormErrorD
 ) => {
   return (
     <Modal2
-      open={addUpdateModalState.showModal}
+      open={addModalState.showModal}
       onClose={() => {
-        addUpdateModalState.toggleModalView()
+        addModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${action} ${componentName}`}
-      primaryButtonText={action}
-      primaryButtonCallback={() => primaryButtonCallback(action)}
+      title={`${ACTION_TYPES.CREATE} ${componentName}`}
+      primaryButtonText={ACTION_TYPES.CREATE}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={() =>
         secondaryButtonCallback(
-          addUpdateModalState,
+          addModalState,
+          updateModalState,
           deleteModalState,
           setFormData,
           setFormErrors,
@@ -195,7 +206,65 @@ export const addUpdateModalComponent = <T extends FormData, U extends FormErrorD
       content={content}
       resetButtonText={ACTION_TYPES.RESET}
       resetButtonCallback={() =>
-        resetButtonCallback(action, setFormData, setFormErrors, formDataReset, defaultFormData, defaultFormErrorData)
+        resetButtonCallback(
+          ACTION_TYPES.CREATE,
+          setFormData,
+          setFormErrors,
+          formDataReset,
+          defaultFormData,
+          defaultFormErrorData,
+        )
+      }
+    />
+  )
+}
+
+export const updateModalComponent = <T extends FormData, U extends FormErrorData>(
+  componentName: string,
+  content: React.JSX.Element,
+  primaryButtonCallback: (action: ActionTypes) => void,
+  addModalState: ModalState,
+  updateModalState: ModalState,
+  deleteModalState: ModalState,
+  setFormData: (formData: T) => void,
+  setFormErrors: (formErrorData: U) => void,
+  defaultFormData: T,
+  defaultFormErrorData: U,
+  formDataReset: T,
+) => {
+  return (
+    <Modal2
+      open={updateModalState.showModal}
+      onClose={() => {
+        updateModalState.toggleModalView()
+        setFormData({ ...defaultFormData })
+      }}
+      title={`${ACTION_TYPES.UPDATE} ${componentName}`}
+      primaryButtonText={ACTION_TYPES.UPDATE}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE)}
+      secondaryButtonText={ACTION_TYPES.CANCEL}
+      secondaryButtonCallback={() =>
+        secondaryButtonCallback(
+          addModalState,
+          updateModalState,
+          deleteModalState,
+          setFormData,
+          setFormErrors,
+          defaultFormData,
+          defaultFormErrorData,
+        )
+      }
+      content={content}
+      resetButtonText={ACTION_TYPES.RESET}
+      resetButtonCallback={() =>
+        resetButtonCallback(
+          ACTION_TYPES.UPDATE,
+          setFormData,
+          setFormErrors,
+          formDataReset,
+          defaultFormData,
+          defaultFormErrorData,
+        )
       }
     />
   )
@@ -205,7 +274,8 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
   componentName: string,
   contentText: string,
   primaryButtonCallback: (action: ActionTypes) => void,
-  addUpdateModalState: ModalState,
+  addModalState: ModalState,
+  updateModalState: ModalState,
   deleteModalState: ModalState,
   setFormData: (formData: T) => void,
   setFormErrors: (formErrorData: U) => void,
@@ -229,7 +299,8 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
       secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={() =>
         secondaryButtonCallback(
-          addUpdateModalState,
+          addModalState,
+          updateModalState,
           deleteModalState,
           setFormData,
           setFormErrors,

@@ -444,7 +444,6 @@ export const appUserRoleTableData = (
     }
   })
 
-
 export const validateAppRolePermission = (
   formData: AppRolePermissionFormData,
   setFormErrors: (formErrors: AppRolePermissionFormErrorData) => void,

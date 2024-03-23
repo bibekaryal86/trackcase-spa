@@ -33,7 +33,7 @@ export interface AppRolePermissionSchema extends BaseModelSchema {
   permissionName?: string
 }
 
-export interface AppRolePermissionResponse {
+export interface AppRolePermissionResponse extends ResponseBase {
   data: AppRolePermissionSchema[]
 }
 

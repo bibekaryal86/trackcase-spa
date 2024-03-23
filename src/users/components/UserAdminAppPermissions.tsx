@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
-  addUpdateModalComponent,
+  addModalComponent,
   deleteModalComponent,
   FetchRequestMetadata,
   FormTextField,
@@ -15,6 +15,7 @@ import {
   Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
+  updateModalComponent,
   useModal,
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '../../constants'
@@ -29,7 +30,7 @@ import { appPermissionsTableData, appPermissionsTableHeader, validateAppPermissi
 
 const UserAdminAppPermissions = (): React.ReactElement => {
   const dispatch = useDispatch()
-  const [addUpdateModalState, deleteModalState] = [useModal(), useModal()]
+  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const [appPermissionsList, setAppPermissionsList] = useState([] as AppPermissionSchema[])
   const [formData, setFormData] = useState(DefaultAppPermissionFormData)
@@ -75,7 +76,8 @@ const UserAdminAppPermissions = (): React.ReactElement => {
 
     if (appPermissionResponse && !appPermissionResponse.detail) {
       secondaryButtonCallback(
-        addUpdateModalState,
+        addModalState,
+        updateModalState,
         deleteModalState,
         setFormData,
         setFormErrors,
@@ -110,12 +112,12 @@ const UserAdminAppPermissions = (): React.ReactElement => {
   )
 
   const addModal = () =>
-    addUpdateModalComponent(
-      ACTION_TYPES.CREATE,
+    addModalComponent(
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -125,12 +127,12 @@ const UserAdminAppPermissions = (): React.ReactElement => {
     )
 
   const updateModal = () =>
-    addUpdateModalComponent(
-      ACTION_TYPES.UPDATE,
+    updateModalComponent(
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -148,7 +150,8 @@ const UserAdminAppPermissions = (): React.ReactElement => {
       componentNameNoUnderscore,
       deleteModalContextText,
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -162,7 +165,7 @@ const UserAdminAppPermissions = (): React.ReactElement => {
     tableActionButtonsComponent(
       USER_ADMIN_REGISTRY.APP_PERMISSIONS,
       formDataModal,
-      addUpdateModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormDataReset,
@@ -173,7 +176,7 @@ const UserAdminAppPermissions = (): React.ReactElement => {
       componentName={componentNameNoUnderscore}
       headerData={appPermissionsTableHeader()}
       tableData={appPermissionsTableData(appPermissionsList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_PERMISSIONS, addUpdateModalState)}
+      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_PERMISSIONS, addModalState)}
       getSoftDeletedCallback={() => getAppPermissionsWithMetadata({ isIncludeDeleted: true })}
     />
   )

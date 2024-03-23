@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
-  addUpdateModalComponent,
+  addModalComponent,
   deleteModalComponent,
   FetchRequestMetadata,
   FormTextField,
@@ -15,6 +15,7 @@ import {
   Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
+  updateModalComponent,
   useModal,
 } from '../../app'
 import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '../../constants'
@@ -24,7 +25,7 @@ import { appRolesTableData, appRolesTableHeader, validateAppRole } from '../util
 
 const UserAdminAppRoles = (): React.ReactElement => {
   const dispatch = useDispatch()
-  const [addUpdateModalState, deleteModalState] = [useModal(), useModal()]
+  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const [appRolesList, setAppRolesList] = useState([] as AppRoleSchema[])
   const [formData, setFormData] = useState(DefaultAppRoleFormData)
@@ -70,7 +71,8 @@ const UserAdminAppRoles = (): React.ReactElement => {
 
     if (appRoleResponse && !appRoleResponse.detail) {
       secondaryButtonCallback(
-        addUpdateModalState,
+        addModalState,
+        updateModalState,
         deleteModalState,
         setFormData,
         setFormErrors,
@@ -105,12 +107,12 @@ const UserAdminAppRoles = (): React.ReactElement => {
   )
 
   const addModal = () =>
-    addUpdateModalComponent(
-      ACTION_TYPES.CREATE,
+    addModalComponent(
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -120,12 +122,12 @@ const UserAdminAppRoles = (): React.ReactElement => {
     )
 
   const updateModal = () =>
-    addUpdateModalComponent(
-      ACTION_TYPES.UPDATE,
+    updateModalComponent(
       componentNameNoUnderscore,
       addUpdateModalContent(),
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -143,7 +145,8 @@ const UserAdminAppRoles = (): React.ReactElement => {
       componentNameNoUnderscore,
       deleteModalContextText,
       primaryButtonCallback,
-      addUpdateModalState,
+      addModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormErrors,
@@ -157,7 +160,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
     tableActionButtonsComponent(
       USER_ADMIN_REGISTRY.APP_ROLES,
       formDataModal,
-      addUpdateModalState,
+      updateModalState,
       deleteModalState,
       setFormData,
       setFormDataReset,
@@ -168,7 +171,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
       componentName={componentNameNoUnderscore}
       headerData={appRolesTableHeader()}
       tableData={appRolesTableData(appRolesList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_ROLES, addUpdateModalState)}
+      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_ROLES, addModalState)}
       getSoftDeletedCallback={() => getAppRolesWithMetadata({ isIncludeDeleted: true })}
     />
   )
