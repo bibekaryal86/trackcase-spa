@@ -159,7 +159,7 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
 
   const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
     formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
-  } ${formData.appRoleId}?!?`
+  } ROLE ${formData.roleName} FOR USER ${formData.email}?!?`
 
   const deleteModal = () =>
     deleteModalComponent(

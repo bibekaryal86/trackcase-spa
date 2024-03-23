@@ -166,6 +166,8 @@ export interface AppUserRoleFormData {
   id: number
   appUserId: number
   appRoleId: number
+  email: string
+  roleName: string
   isHardDelete: boolean
   isShowSoftDeleted: boolean
   isDeleted?: boolean
@@ -180,6 +182,8 @@ export const DefaultAppUserRoleFormData: AppUserRoleFormData = {
   id: ID_DEFAULT,
   appUserId: ID_DEFAULT,
   appRoleId: ID_DEFAULT,
+  email: '',
+  roleName: '',
   isHardDelete: false,
   isShowSoftDeleted: false,
   isDeleted: false,
@@ -188,4 +192,36 @@ export const DefaultAppUserRoleFormData: AppUserRoleFormData = {
 export const DefaultAppUserRoleFormErrorData: AppUserRoleFormErrorData = {
   appUserId: '',
   appRoleId: '',
+}
+
+export interface AppRolePermissionFormData {
+  id: number
+  appRoleId: number
+  appPermissionId: number
+  roleName: string
+  permissionName: string
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+  isDeleted?: boolean
+}
+
+export interface AppRolePermissionFormErrorData {
+  appRoleId: string
+  appPermissionId: string
+}
+
+export const DefaultAppRolePermissionFormData: AppRolePermissionFormData = {
+  id: ID_DEFAULT,
+  appRoleId: ID_DEFAULT,
+  appPermissionId: ID_DEFAULT,
+  roleName: '',
+  permissionName: '',
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+  isDeleted: false,
+}
+
+export const DefaultAppRolePermissionFormErrorData: AppRolePermissionFormErrorData = {
+  appRoleId: '',
+  appPermissionId: '',
 }

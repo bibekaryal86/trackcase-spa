@@ -12,6 +12,9 @@ import {
   AppPermissionFormData,
   AppPermissionSchema,
   AppRoleFormData,
+  AppRolePermissionFormData,
+  AppRolePermissionFormErrorData,
+  AppRolePermissionSchema,
   AppRoleSchema,
   AppUserFormData,
   AppUserFormErrorData,
@@ -21,6 +24,7 @@ import {
   AppUserSchema,
   DefaultAppPermissionFormData,
   DefaultAppRoleFormData,
+  DefaultAppRolePermissionFormErrorData,
   DefaultAppUserFormErrorData,
   DefaultAppUserRoleFormErrorData,
 } from '../types/users.data.types'
@@ -418,6 +422,8 @@ const getAppUserRoleFormDataForModal = (x: AppUserRoleSchema): AppUserRoleFormDa
     id: x.id || ID_DEFAULT,
     appUserId: x.appUserId,
     appRoleId: x.appRoleId,
+    email: getString(x.email),
+    roleName: getString(x.roleName),
     isHardDelete: false,
     isShowSoftDeleted: false,
     isDeleted: x.isDeleted,
@@ -435,5 +441,79 @@ export const appUserRoleTableData = (
       role: x.roleName,
       isDeleted: x.isDeleted,
       actions: actionButtons(getAppUserRoleFormDataForModal(x)),
+    }
+  })
+
+
+export const validateAppRolePermission = (
+  formData: AppRolePermissionFormData,
+  setFormErrors: (formErrors: AppRolePermissionFormErrorData) => void,
+) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: AppRolePermissionFormErrorData = { ...DefaultAppRolePermissionFormErrorData }
+  if (getNumber(formData.appRoleId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.appRoleId = 'REQUIRED'
+  }
+  if (getNumber(formData.appPermissionId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.appPermissionId = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
+}
+
+export const appRolePermissionTableHeader = (): TableHeaderData[] => {
+  const tableHeaderData: TableHeaderData[] = [
+    {
+      id: 'role',
+      label: 'ROLE',
+    },
+    {
+      id: 'permission',
+      label: 'PERMISSION',
+    },
+  ]
+  if (isSuperuser()) {
+    tableHeaderData.push(
+      {
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      },
+      {
+        id: 'actions',
+        label: 'ACTIONS',
+        align: 'center' as const,
+      },
+    )
+  }
+  return tableHeaderData
+}
+
+const getAppRolePermissionFormDataForModal = (x: AppRolePermissionSchema): AppRolePermissionFormData => {
+  return {
+    id: x.id || ID_DEFAULT,
+    appRoleId: x.appRoleId,
+    appPermissionId: x.appPermissionId,
+    roleName: getString(x.roleName),
+    permissionName: getString(x.permissionName),
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+    isDeleted: x.isDeleted,
+  }
+}
+
+export const appRolePermissionTableData = (
+  appRolePermissionList: AppRolePermissionSchema[],
+  actionButtons: (formDataForModal: AppRolePermissionFormData) => React.JSX.Element,
+): TableData[] =>
+  Array.from(appRolePermissionList, (x) => {
+    return {
+      role: x.roleName,
+      permission: x.permissionName,
+      isDeleted: x.isDeleted,
+      actions: actionButtons(getAppRolePermissionFormDataForModal(x)),
     }
   })
