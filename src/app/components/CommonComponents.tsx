@@ -16,9 +16,14 @@ import {
   checkUserHasPermission,
   isSuperuser,
 } from '../../users'
+import {
+  AppPermissionFormData,
+  AppUserRoleFormData,
+  AppUserRoleFormErrorData,
+} from '../../users/types/users.data.types'
 
-type FormData = AppUserFormData | AppRoleFormData | RefTypeFormData
-type FormErrorData = FormData | AppUserFormErrorData
+type FormData = AppUserFormData | AppRoleFormData | AppPermissionFormData | AppUserRoleFormData | RefTypeFormData
+type FormErrorData = FormData | AppUserFormErrorData | AppUserRoleFormErrorData
 
 interface ModalState {
   showModal: boolean

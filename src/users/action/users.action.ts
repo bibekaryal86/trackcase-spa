@@ -391,7 +391,7 @@ export const appPermissionsAdmin = async ({
   }
 }
 
-export const getUsersRoles= async (
+export const getAppUsersRoles = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
