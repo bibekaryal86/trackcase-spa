@@ -85,15 +85,14 @@ export const REF_TYPES_REGISTRY = Object.freeze({
 export type RefTypesRegistry = keyof typeof REF_TYPES_REGISTRY
 
 export const COMPONENT_STATUS_NAME = Object.freeze({
-  CALENDAR: 'CALENDAR',
-  COURT_CASE: 'COURT_CASE',
-  CLIENT: 'CLIENT',
-  COLLECTION: 'COLLECTION',
-  COURT: 'COURT',
-  FILING: 'FILING',
-  JUDGE: 'JUDGE',
-  APP_USER: 'APP_USER',
-  APP_ROLE: 'APP_ROLE',
+  CALENDARS: 'CALENDARS',
+  COURT_CASES: 'COURT_CASES',
+  CLIENTS: 'CLIENTS',
+  COLLECTIONS: 'COLLECTIONS',
+  COURTS: 'COURTS',
+  FILINGS: 'FILINGS',
+  JUDGES: 'JUDGES',
+  APP_USERS: 'APP_USERS',
 })
 export type ComponentStatusName = keyof typeof COMPONENT_STATUS_NAME
 

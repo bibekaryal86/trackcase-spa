@@ -21,7 +21,13 @@ import {
   updateModalComponent,
   useModal,
 } from '../../app'
-import { ACTION_TYPES, ActionTypes, REF_TYPES_REGISTRY, USER_ADMIN_REGISTRY } from '../../constants'
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  COMPONENT_STATUS_NAME,
+  REF_TYPES_REGISTRY,
+  USER_ADMIN_REGISTRY,
+} from '../../constants'
 import { ComponentStatusSchema, getRefType } from '../../types'
 import { appUsersAdmin, getAppUsers } from '../action/users.action'
 import {
@@ -117,7 +123,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const componentStatusMenuItems = () =>
     componentStatusList
-      .filter((x) => x.componentName === 'APP_USER')
+      .filter((x) => x.componentName === COMPONENT_STATUS_NAME.APP_USERS)
       .map((x) => (
         <MenuItem key={x.id} value={x.id}>
           {x.statusName}
