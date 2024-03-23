@@ -35,5 +35,4 @@
         * unify color palette
           * create a util module for it
 
-change `getWithSoftDeleted` to `getWithMetadata` with options for page numbers and limit
 how to make page numbers appear if not all data pulled in?

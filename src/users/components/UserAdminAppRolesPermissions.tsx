@@ -98,14 +98,14 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
 
   const appRolesMenuItems = () =>
     appRolePermissionsList.map((x) => (
-      <MenuItem key={x.appRoleId} value={x.appRoleId}>
+      <MenuItem key={`${x.appRoleId}-${x.appPermissionId}`} value={x.appRoleId}>
         {x.roleName}
       </MenuItem>
     ))
 
   const appPermissionsMenuItems = () =>
     appRolePermissionsList.map((x) => (
-      <MenuItem key={x.appPermissionId} value={x.appPermissionId}>
+      <MenuItem key={`${x.appPermissionId}-${x.appRoleId}`} value={x.appPermissionId}>
         {x.permissionName}
       </MenuItem>
     ))
