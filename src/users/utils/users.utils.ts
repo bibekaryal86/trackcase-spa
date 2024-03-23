@@ -389,6 +389,10 @@ export const appUserRoleTableHeader = (): TableHeaderData[] => {
       label: 'USER',
     },
     {
+      id: 'email',
+      label: 'EMAIL',
+    },
+    {
       id: 'role',
       label: 'ROLE',
     },
@@ -426,8 +430,9 @@ export const appUserRoleTableData = (
 ): TableData[] =>
   Array.from(appUserRoleList, (x) => {
     return {
-      user: x.appUserId,
-      role: x.appRoleId,
+      user: x.fullName,
+      email: x.email,
+      role: x.roleName,
       isDeleted: x.isDeleted,
       actions: actionButtons(getAppUserRoleFormDataForModal(x)),
     }
