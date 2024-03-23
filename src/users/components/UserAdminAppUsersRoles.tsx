@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
+import MenuItem from '@mui/material/MenuItem'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -87,6 +88,20 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
     }
   }
 
+  const appUsersMenuItems = () => appUserRolesList
+      .map((x) => (
+        <MenuItem key={x.appUserId} value={x.appUserId}>
+          {x.fullName}
+        </MenuItem>
+      ))
+
+  const appRolesMenuItems = () => appUserRolesList
+      .map((x) => (
+        <MenuItem key={x.appRoleId} value={x.appRoleId}>
+          {x.roleName}
+        </MenuItem>
+      ))
+
   const addUpdateModalContent = () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
       <FormSelectField
@@ -95,7 +110,7 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
         required
         value={formData.appUserId}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
-        menuItems={[]}
+        menuItems={appUsersMenuItems()}
         error={!!formErrors.appUserId}
         helperText={formErrors.appUserId}
       />
@@ -105,7 +120,7 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
         required
         value={formData.appRoleId}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
-        menuItems={[]}
+        menuItems={appRolesMenuItems()}
         error={!!formErrors.appRoleId}
         helperText={formErrors.appRoleId}
       />
