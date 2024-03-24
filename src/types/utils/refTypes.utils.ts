@@ -89,7 +89,6 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
       align: 'center' as const,
     })
   }
-
   return tableHeaderData
 }
 

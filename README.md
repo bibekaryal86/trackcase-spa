@@ -34,5 +34,6 @@
           * when adding a new case, allow options to add client, calendar, collections etc
         * unify color palette
           * create a util module for it
+        * show deleted date column
 
 how to make page numbers appear if not all data pulled in?

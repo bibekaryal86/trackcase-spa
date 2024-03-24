@@ -1,60 +1,122 @@
-import { getNumericOnly, isNumericOnly, validateAddress, validatePhoneNumber } from '../../app'
-import { CourtSchema } from '../types/courts.data.types'
+import React from 'react'
 
-export const validateCourt = (court: CourtSchema) => {
-  const errors: string[] = []
+import { getFullAddress, getNumber, TableData, TableHeaderData, validateAddress, validatePhoneNumber } from '../../app'
+import { ACTION_TYPES, ID_DEFAULT } from '../../constants'
+import { checkUserHasPermission, isSuperuser } from '../../users'
+import { CourtFormData, CourtFormErrorData, CourtSchema, DefaultCourtFromErrorData } from '../types/courts.data.types'
 
-  if (!court.name.trim()) {
-    errors.push('Name is required!')
-  }
-  if (!validateAddress(court.streetAddress, court.city, court.state, court.zipCode, true)) {
-    errors.push('Full address is incomplete/invalid!')
-  }
-  if (!validatePhoneNumber(court.phoneNumber)) {
-    errors.push('Phone Number is incomplete/invalid!')
-  }
-  if (!court.status.trim()) {
-    errors.push('Status is required!')
-  }
+export const validateCourt = (formData: CourtFormData, setFormErrors: (formErrors: CourtFormErrorData) => void) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: CourtFormErrorData = { ...DefaultCourtFromErrorData }
 
-  return errors.length ? errors.join(', ') : ''
+  if (!formData.name.trim()) {
+    hasValidationErrors = true
+    formErrorsLocal.name = 'REQUIRED'
+  }
+  if (!validateAddress(formData.streetAddress, formData.city, formData.state, formData.zipCode, true)) {
+    hasValidationErrors = true
+    formErrorsLocal.streetAddress = 'INCOMPLETE ADDRESS'
+  }
+  if (!validatePhoneNumber(formData.phoneNumber)) {
+    hasValidationErrors = true
+    formErrorsLocal.phoneNumber = 'INCOMPLETE/INVALID'
+  }
+  if (getNumber(formData.componentStatusId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.phoneNumber = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
 }
 
-export const isAreTwoCourtsSame = (one: CourtSchema, two: CourtSchema) =>
-  one &&
-  two &&
-  one.name === two.name &&
-  one.dhsAddress === two.dhsAddress &&
-  one.status === two.status &&
-  one.comments === two.comments &&
-  one.streetAddress === two.streetAddress &&
-  one.city === two.city &&
-  one.state === two.state &&
-  one.zipCode === two.zipCode &&
-  one.phoneNumber === two.phoneNumber
-
-export const isCourtFormFieldError = (
-  value: string | null | undefined,
-  is_zip: boolean = false,
-  is_phone: boolean = false,
-): boolean =>
-  !value || (is_zip ? value.trim().length !== 5 : is_phone ? value.trim().length != 10 : value.trim() === '')
-
-export const handleCourtFormOnChange = (
-  name: string,
-  value: string | number,
-  selectedCourt: CourtSchema,
-  setSelectedCourt: (updatedCourt: CourtSchema) => void,
-  getValue: (value: string | number) => string | number,
-) => {
-  if (name === 'zipCode') {
-    value = isNumericOnly(value.toString()) ? value : selectedCourt.zipCode ? selectedCourt.zipCode : ''
-  } else if (name === 'phoneNumber') {
-    value = getNumericOnly(value.toString(), 10)
+export const courtDispatch = ({ type = '', error = '', success = '', courts = [] as CourtSchema[] } = {}) => {
+  if (error) {
+    return {
+      type,
+      error,
+    }
+  } else if (success) {
+    return {
+      type,
+      success,
+    }
+  } else if (courts) {
+    return {
+      type,
+      courts,
+    }
+  } else {
+    return {
+      type,
+    }
   }
-  const updatedCourt = {
-    ...selectedCourt,
-    [name]: getValue(value),
-  }
-  setSelectedCourt(updatedCourt)
 }
+
+export const courtsTableHeaderData = (): TableHeaderData[] => {
+  const tableHeaderData: TableHeaderData[] = [
+    {
+      id: 'name',
+      label: 'NAME',
+    },
+    {
+      id: 'address',
+      label: 'ADDRESS',
+      isDisableSorting: true,
+    },
+    {
+      id: 'phone',
+      label: 'PHONE',
+      isDisableSorting: true,
+    },
+    {
+      id: 'dhsAddress',
+      label: 'DHS ADDRESS',
+      isDisableSorting: true,
+    },
+    {
+      id: 'status',
+      label: 'STATUS',
+    },
+  ]
+  if (isSuperuser()) {
+    tableHeaderData.push({
+      id: 'isDeleted',
+      label: 'IS DELETED?',
+    })
+  }
+  if (checkUserHasPermission('COURTS', ACTION_TYPES.UPDATE) || checkUserHasPermission('COURTS', ACTION_TYPES.DELETE)) {
+    tableHeaderData.push({
+      id: 'actions',
+      label: 'ACTIONS',
+      align: 'center' as const,
+    })
+  }
+  return tableHeaderData
+}
+
+const getCourtsFormDataForModal = (x: CourtSchema): CourtFormData => {
+  return {
+    ...x,
+    id: x.id || ID_DEFAULT,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+  }
+}
+
+export const courtsTableData = (
+  courtsList: CourtSchema[],
+  actionButtons: (formDataForModal: CourtFormData) => React.JSX.Element,
+): TableData[] =>
+  Array.from(courtsList, (x) => {
+    return {
+      name: x.name,
+      address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
+      phone: x.phoneNumber,
+      dhsAddress: x.dhsAddress,
+      status: x.componentStatus?.statusName,
+      isDeleted: x.isDeleted,
+      actions: actionButtons(getCourtsFormDataForModal(x)),
+    }
+  })

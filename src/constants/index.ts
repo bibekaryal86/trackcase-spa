@@ -39,6 +39,16 @@ export const RESET_INIT_SUCCESS = 'RESET EMAIL SENT, PLEASE CHECK YOUR INBOX TO 
 export const RESET_INIT_FAILURE = 'ACCOUNT RESET FAILURE, LINK MAY HAVE EXPIRED, PLEASE TRY AGAIN...'
 export const RESET_EXIT_SUCCESS = 'ACCOUNT RESET SUCCESSFUL, PLEASE SIGN IN TO CONTINUE...'
 
+export const ACTION_SUCCESS = (action: ActionTypes, what: string) => {
+  if (action === ACTION_TYPES.CREATE) {
+    return CREATE_SUCCESS(what)
+  } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
+    return UPDATE_SUCCESS(what)
+  } else if (action === ACTION_TYPES.DELETE) {
+    return DELETE_SUCCESS(what)
+  }
+  return ''
+}
 export const CREATE_SUCCESS = (what: string) => `CREATE ${what} SUCCESS!`
 export const UPDATE_SUCCESS = (what: string) => `UPDATE ${what} SUCCESS!`
 export const DELETE_SUCCESS = (what: string) => `DELETE ${what} SUCCESS!`
