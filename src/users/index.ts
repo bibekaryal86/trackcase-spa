@@ -6,9 +6,12 @@ import UserSignInUp from './components/UserSignInUp'
 // action types
 // data types
 import {
+  AppPermissionFormData,
   AppPermissionResponse,
   AppPermissionSchema,
   AppRoleFormData,
+  AppRolePermissionFormData,
+  AppRolePermissionFormErrorData,
   AppRolePermissionResponse,
   AppRolePermissionSchema,
   AppRoleResponse,
@@ -19,6 +22,8 @@ import {
   AppUserLoginResponse,
   AppUserRequest,
   AppUserResponse,
+  AppUserRoleFormData,
+  AppUserRoleFormErrorData,
   AppUserRoleResponse,
   AppUserRoleSchema,
   AppUserSchema,
@@ -29,6 +34,11 @@ import { checkUserHasPermission, isLoggedIn, isSuperuser } from './utils/users.u
 export { login, logout, signup }
 export { UserSignInUp, UserAdmin }
 export type {
+  AppPermissionFormData,
+  AppRolePermissionFormData,
+  AppRolePermissionFormErrorData,
+  AppUserRoleFormData,
+  AppUserRoleFormErrorData,
   AppPermissionSchema,
   AppPermissionResponse,
   AppRoleFormData,

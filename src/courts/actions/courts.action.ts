@@ -9,8 +9,13 @@ import {
   GlobalDispatch,
   GlobalState,
 } from '../../app'
-import { ACTION_SUCCESS, ACTION_TYPES, ActionTypes, ID_DEFAULT } from '../../constants'
-import { COURTS_COMPLETE, COURTS_READ_FAILURE, COURTS_READ_REQUEST } from '../types/courts.action.types'
+import { ACTION_SUCCESS, ACTION_TYPES, ActionTypes, ID_DEFAULT, SOMETHING_WENT_WRONG } from '../../constants'
+import {
+  COURTS_COMPLETE,
+  COURTS_READ_FAILURE,
+  COURTS_READ_REQUEST,
+  COURTS_READ_SUCCESS,
+} from '../types/courts.action.types'
 import { CourtBase, CourtResponse, CourtSchema } from '../types/courts.data.types'
 import { courtDispatch } from '../utils/courts.utils'
 
@@ -20,39 +25,27 @@ export const courtsAction = async ({
   id,
   isRestore,
   isHardDelete,
-  requestMetadata,
 }: {
   action: ActionTypes
   courtsRequest?: CourtBase
   id?: number
   isRestore?: boolean
   isHardDelete?: boolean
-  requestMetadata?: Partial<FetchRequestMetadata>
 }) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<CourtResponse> => {
     const typeRequest = `COURTS_${action}_REQUEST`
     const typeSuccess = `COURTS_${action}_SUCCESS`
     const typeFailure = `COURTS_${action}_FAILURE`
+    dispatch(courtDispatch({ type: typeRequest }))
 
     let endpoint = ''
     let options: Partial<FetchOptions> = {}
-    let courtResponse: CourtResponse = { data: [] }
 
     if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.COURT_CREATE as string)
       options = {
         method: 'POST',
         requestBody: { ...courtsRequest },
-      }
-    } else if (action === ACTION_TYPES.READ) {
-      if (requestMetadata === getStore().courts.requestMetadata) {
-        // no need to fetch request, metadata is same
-        courtResponse.data = getStore().courts.courts
-      }
-      endpoint = getEndpoint(process.env.COURT_READ as string)
-      options = {
-        method: 'GET',
-        metadataParams: requestMetadata,
       }
     } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
       endpoint = getEndpoint(process.env.COURT_UPDATE as string)
@@ -70,12 +63,8 @@ export const courtsAction = async ({
       }
     }
 
-    dispatch(courtDispatch({ type: typeRequest }))
-
     try {
-      if (courtResponse.data.length <= 0) {
-        courtResponse = (await Async.fetch(endpoint, options)) as CourtResponse
-      }
+      const courtResponse = (await Async.fetch(endpoint, options)) as CourtResponse
       if (courtResponse.detail) {
         dispatch(courtDispatch({ type: typeFailure, error: getErrMsg(courtResponse.detail) }))
       } else {
@@ -85,8 +74,47 @@ export const courtsAction = async ({
           dispatch(courtDispatch({ type: typeSuccess, success: ACTION_SUCCESS(action, 'COURT') }))
         }
       }
+      return courtResponse
     } catch (error) {
       console.log(`Court ${action} Error: `, error)
+      dispatch(courtDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
+    } finally {
+      dispatch(courtDispatch({ type: COURTS_COMPLETE }))
+    }
+  }
+}
+
+export const getCourts = async ({ requestMetadata }: { requestMetadata?: Partial<FetchRequestMetadata> }) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+    dispatch(courtDispatch({ type: COURTS_READ_REQUEST }))
+
+    let courtResponse: CourtResponse = { data: [] }
+
+    if (requestMetadata === getStore().courts.requestMetadata) {
+      // no need to fetch request, metadata is same
+      courtResponse.data = getStore().courts.courts
+    }
+    const endpoint = getEndpoint(process.env.COURT_READ as string)
+    const options: Partial<FetchOptions> = {
+      method: 'GET',
+      metadataParams: requestMetadata,
+    }
+
+    try {
+      if (courtResponse.data.length <= 0) {
+        courtResponse = (await Async.fetch(endpoint, options)) as CourtResponse
+      }
+      if (courtResponse.detail) {
+        dispatch(courtDispatch({ type: COURTS_READ_FAILURE, error: getErrMsg(courtResponse.detail) }))
+      } else {
+        dispatch(
+          courtDispatch({ type: COURTS_READ_SUCCESS, courts: courtResponse.data, requestMetadata: requestMetadata }),
+        )
+      }
+    } catch (error) {
+      console.log(`Get Courts Error: `, error)
+      dispatch(courtDispatch({ type: COURTS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
     } finally {
       dispatch(courtDispatch({ type: COURTS_COMPLETE }))
     }
@@ -99,30 +127,39 @@ export const getCourt = async (courtId: number) => {
     getStore: () => GlobalState,
   ): Promise<CourtSchema | undefined> => {
     dispatch(courtDispatch({ type: COURTS_READ_REQUEST }))
+    let oneCourt = undefined
 
-    let courtInStore = undefined
-    const courtsInStore = getStore().courts.courts
-    if (courtsInStore) {
-      courtInStore = courtsInStore.find((x) => x.id === courtId)
-    }
-    if (courtInStore) {
-      return courtInStore
-    } else {
-      const endpoint = getEndpoint(process.env.COURT_READ as string)
-      const requestMetadata: Partial<FetchRequestMetadata> = {
-        schemaModelId: courtId,
+    try {
+      const courtsInStore = getStore().courts.courts
+      if (courtsInStore) {
+        oneCourt = courtsInStore.find((x) => x.id === courtId)
       }
-      const options: Partial<FetchOptions> = {
-        method: 'GET',
-        metadataParams: requestMetadata,
-      }
-      const courtResponse = (await Async.fetch(endpoint, options)) as CourtResponse
-      if (courtResponse.detail) {
-        dispatch(courtDispatch({ type: COURTS_READ_FAILURE, error: getErrMsg(courtResponse.detail) }))
+
+      if (oneCourt) {
+        return oneCourt
       } else {
-        courtInStore = courtResponse.data.find((x) => x.id === courtId)
+        const endpoint = getEndpoint(process.env.COURT_READ as string)
+        const requestMetadata: Partial<FetchRequestMetadata> = {
+          schemaModelId: courtId,
+        }
+        const options: Partial<FetchOptions> = {
+          method: 'GET',
+          metadataParams: requestMetadata,
+        }
+        const courtResponse = (await Async.fetch(endpoint, options)) as CourtResponse
+        if (courtResponse.detail) {
+          dispatch(courtDispatch({ type: COURTS_READ_FAILURE, error: getErrMsg(courtResponse.detail) }))
+        } else {
+          oneCourt = courtResponse.data.find((x) => x.id === courtId)
+        }
       }
+      return oneCourt
+    } catch (error) {
+      console.log(`Get Court Error: `, error)
+      dispatch(courtDispatch({ type: COURTS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
+      return oneCourt
+    } finally {
+      dispatch(courtDispatch({ type: COURTS_COMPLETE }))
     }
-    return courtInStore
   }
 }

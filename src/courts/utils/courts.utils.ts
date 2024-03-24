@@ -1,6 +1,14 @@
 import React from 'react'
 
-import { getFullAddress, getNumber, TableData, TableHeaderData, validateAddress, validatePhoneNumber } from '../../app'
+import {
+  FetchRequestMetadata,
+  getFullAddress,
+  getNumber,
+  TableData,
+  TableHeaderData,
+  validateAddress,
+  validatePhoneNumber,
+} from '../../app'
 import { ACTION_TYPES, ID_DEFAULT } from '../../constants'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import { CourtFormData, CourtFormErrorData, CourtSchema, DefaultCourtFromErrorData } from '../types/courts.data.types'
@@ -31,7 +39,13 @@ export const validateCourt = (formData: CourtFormData, setFormErrors: (formError
   return hasValidationErrors
 }
 
-export const courtDispatch = ({ type = '', error = '', success = '', courts = [] as CourtSchema[] } = {}) => {
+export const courtDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  courts = [] as CourtSchema[],
+  requestMetadata = {} as Partial<FetchRequestMetadata>,
+} = {}) => {
   if (error) {
     return {
       type,
@@ -46,6 +60,7 @@ export const courtDispatch = ({ type = '', error = '', success = '', courts = []
     return {
       type,
       courts,
+      requestMetadata,
     }
   } else {
     return {

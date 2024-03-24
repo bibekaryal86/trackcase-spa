@@ -8,21 +8,20 @@ import React from 'react'
 
 import { Modal2 } from './Modal'
 import { ACTION_TYPES, ActionTypes } from '../../constants'
+import { CourtFormData, CourtFormErrorData } from '../../courts'
 import { RefTypeFormData } from '../../types'
 import {
+  AppPermissionFormData,
   AppRoleFormData,
+  AppRolePermissionFormData,
+  AppRolePermissionFormErrorData,
   AppUserFormData,
   AppUserFormErrorData,
+  AppUserRoleFormData,
+  AppUserRoleFormErrorData,
   checkUserHasPermission,
   isSuperuser,
 } from '../../users'
-import {
-  AppPermissionFormData,
-  AppRolePermissionFormData,
-  AppRolePermissionFormErrorData,
-  AppUserRoleFormData,
-  AppUserRoleFormErrorData,
-} from '../../users/types/users.data.types'
 
 type FormData =
   | AppUserFormData
@@ -31,7 +30,13 @@ type FormData =
   | AppUserRoleFormData
   | AppRolePermissionFormData
   | RefTypeFormData
-type FormErrorData = FormData | AppUserFormErrorData | AppUserRoleFormErrorData | AppRolePermissionFormErrorData
+  | CourtFormData
+type FormErrorData =
+  | FormData
+  | AppUserFormErrorData
+  | AppUserRoleFormErrorData
+  | AppRolePermissionFormErrorData
+  | CourtFormErrorData
 
 interface ModalState {
   showModal: boolean
