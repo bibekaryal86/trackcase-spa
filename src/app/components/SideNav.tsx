@@ -12,6 +12,7 @@ import { useCallback, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { protectedRoutes, refTypesRoutes, userManagementRoutes } from './AppRoutes'
+import { ACTION_TYPES } from '../../constants'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 
 interface SideNavProps {
@@ -52,7 +53,8 @@ const SideNav = (props: SideNavProps) => {
   //   }
   // }, [pathname])
 
-  const hasPermissionForRoute = (routePath: string) => checkUserHasPermission(routePath, 'read')
+  const hasPermissionForRoute = (routePath: string) =>
+    checkUserHasPermission(routePath.toUpperCase(), ACTION_TYPES.READ)
 
   return (
     <Menu anchorEl={props.anchorEl} open={Boolean(props.anchorEl)} onClose={handleClose}>

@@ -12,6 +12,7 @@ import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
 import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '../../constants'
+import { ComponentStatusSchema } from '../../types'
 import { getDayjs } from '../utils/app.utils'
 
 interface FormWrapperProps {
@@ -26,7 +27,7 @@ interface FormWrapperProps {
 
 interface FormTextFieldProps {
   componentLabel: string
-  name?: string
+  name: string
   required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
@@ -47,6 +48,7 @@ interface FormTextFieldProps {
 
 interface FormCommentFieldProps {
   componentLabel: string
+  name: string
   required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
@@ -63,7 +65,7 @@ interface FormCommentFieldProps {
 
 interface FormSelectFieldProps {
   componentLabel: string
-  name?: string
+  name: string
   required?: boolean
   formControlSx?: object
   error?: boolean
@@ -78,21 +80,24 @@ interface FormSelectFieldProps {
 
 interface StateSelectProps {
   componentLabel: string
+  name: string
   required?: boolean
   formControlSx?: object
   error?: boolean
+  helperText?: string
   inputLabelSx?: object
   variant?: TextFieldVariants
-  value: string | undefined
+  value: string | number | undefined
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 }
 
 interface StatusSelectProps extends StateSelectProps {
-  statusList: string[]
+  statusList: ComponentStatusSchema[]
 }
 
 interface DatePickerProps {
   componentLabel: string
+  name: string
   value: Dayjs | null | undefined
   onChange: (value: Dayjs | null) => void
   defaultValue?: Dayjs
@@ -194,6 +199,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
 
 export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
   componentLabel,
+  name,
   required = false,
   fullWidth = true,
   autoFocus = false,
@@ -209,6 +215,7 @@ export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
   return (
     <FormTextField
       componentLabel={componentLabel}
+      name={name}
       required={required}
       fullWidth={fullWidth}
       autoFocus={autoFocus}
@@ -271,48 +278,57 @@ const getStateItems = () =>
 
 export const FormSelectStateField: React.FC<StateSelectProps> = ({
   componentLabel,
+  name = '',
   required = false,
   error = false,
   value,
   onChange,
+  helperText = '',
 }) => (
   <FormSelectField
     componentLabel={componentLabel}
+    name={name}
     value={value || ''}
     onChange={onChange}
     menuItems={getStateItems()}
     required={required}
     error={error}
+    helperText={helperText}
   />
 )
 
-const getStatusItems = (statusList: string[]) =>
+const getStatusItems = (statusList: ComponentStatusSchema[]) =>
   statusList.map((status) => (
-    <MenuItem key={status} value={status}>
-      {status}
+    <MenuItem key={status.id} value={status.id}>
+      {status.statusName}
     </MenuItem>
   ))
 
 export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
   componentLabel,
+  name,
   required = true,
   error = false,
+  helperText = '',
   value,
   onChange,
   statusList,
 }) => (
   <FormSelectField
     componentLabel={componentLabel}
+    name={name}
     value={value || ''}
     onChange={onChange}
     menuItems={getStatusItems(statusList)}
     required={required}
     error={error}
+    helperText={helperText}
   />
 )
 
 export const FormDatePickerField: React.FC<DatePickerProps> = ({
   componentLabel,
+  name,
   value,
   onChange,
   disableFuture = false,
@@ -325,13 +341,13 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   required = false,
   views,
 }) => {
-  const { label, id } = getComponentLabelAndId(componentLabel)
+  const { label } = getComponentLabelAndId(componentLabel)
   const dayjsValue = getDayjs(value)
   const isError = dayjsValue ? !dayjsValue.isValid() : required
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        name={id}
+        name={name}
         label={label}
         value={dayjsValue}
         onChange={onChange}

@@ -7,116 +7,126 @@ import {
   FormSelectStateField,
   FormSelectStatusField,
   FormTextField,
-  getComments,
-  getString,
   GridFormWrapper,
+  handleFormChange,
 } from '../../app'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { CourtSchema } from '../types/courts.data.types'
-import { handleCourtFormOnChange, isCourtFormFieldError } from '../utils/courts.utils'
+import { ComponentStatusSchema } from '../../types'
+import { CourtFormData, CourtFormErrorData } from '../types/courts.data.types'
 
 interface CourtFormProps {
-  selectedCourt: CourtSchema
-  setSelectedCourt: (selectedCourt: CourtSchema) => void
-  courtStatusList: string[]
+  formData: CourtFormData
+  setFormData: (formData: CourtFormData) => void
+  formErrors: CourtFormErrorData
+  setFormErrors: (formErrors: CourtFormErrorData) => void
+  courtStatusList: ComponentStatusSchema[]
   isShowOneCourt: boolean
 }
 
 const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedCourt, setSelectedCourt, courtStatusList, isShowOneCourt } = props
+  const { formData, formErrors, setFormData, setFormErrors, courtStatusList, isShowOneCourt } = props
 
   const courtName = () => (
     <FormTextField
-      componentLabel="Court--Name"
+      componentLabel="COURT--NAME"
       autoFocus={!isShowOneCourt}
-      value={selectedCourt.name}
-      onChange={(e) => handleCourtFormOnChange('name', e.target.value, selectedCourt, setSelectedCourt, getString)}
-      error={isCourtFormFieldError(selectedCourt.name)}
+      name="name"
+      value={formData.name}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.name}
+      helperText={formErrors.name}
     />
   )
 
   const courtStreetAddress = () => (
     <FormTextField
-      componentLabel="Court--Street Address"
-      value={selectedCourt.streetAddress}
-      onChange={(e) =>
-        handleCourtFormOnChange('streetAddress', e.target.value, selectedCourt, setSelectedCourt, getString)
-      }
-      error={isCourtFormFieldError(selectedCourt.streetAddress)}
+      componentLabel="COURT--STREET ADDRESS"
+      name="streetAddress"
+      value={formData.streetAddress}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.streetAddress}
+      helperText={formErrors.streetAddress}
     />
   )
 
   const courtCity = () => (
     <FormTextField
-      componentLabel="Court--City"
-      value={selectedCourt.city}
-      onChange={(e) => handleCourtFormOnChange('city', e.target.value, selectedCourt, setSelectedCourt, getString)}
-      error={isCourtFormFieldError(selectedCourt.city)}
+      componentLabel="COURT--CITY"
+      name="city"
+      value={formData.city}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.city}
+      helperText={formErrors.city}
     />
   )
 
   const courtState = () => (
     <FormSelectStateField
-      componentLabel="Court--State"
-      value={selectedCourt.state}
-      onChange={(e) => handleCourtFormOnChange('state', e.target.value, selectedCourt, setSelectedCourt, getString)}
-      required={true}
-      error={isCourtFormFieldError(selectedCourt.state)}
+      componentLabel="COURT--STATE"
+      name="state"
+      value={formData.state}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.state}
+      helperText={formErrors.state}
     />
   )
 
   const courtZipCode = () => (
     <FormTextField
-      componentLabel="Court--Zip Code"
+      componentLabel="COURT--ZIP CODE"
       maxLength={5}
-      value={selectedCourt.zipCode}
-      onChange={(e) => handleCourtFormOnChange('zipCode', e.target.value, selectedCourt, setSelectedCourt, getString)}
-      error={isCourtFormFieldError(selectedCourt.zipCode, true)}
+      name="zipCode"
+      value={formData.zipCode}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.zipCode}
+      helperText={formErrors.zipCode}
     />
   )
 
   const courtPhoneNumber = () => (
     <FormTextField
-      componentLabel="Court--Phone"
+      componentLabel="COURT--PHONE"
       maxLength={15}
-      value={selectedCourt.phoneNumber}
-      onChange={(e) =>
-        handleCourtFormOnChange('phoneNumber', e.target.value, selectedCourt, setSelectedCourt, getString)
-      }
-      error={isCourtFormFieldError(selectedCourt.phoneNumber, false, true)}
+      name="phoneNumber"
+      value={formData.phoneNumber}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.phoneNumber}
+      helperText={formErrors.phoneNumber}
     />
   )
 
   const courtDhsAddress = () => (
     <FormTextField
-      componentLabel="Court--DHS Address"
+      componentLabel="COURT--DHS ADDRESS"
       required={false}
       maxLength={199}
-      value={selectedCourt.dhsAddress}
-      onChange={(e) =>
-        handleCourtFormOnChange('dhsAddress', e.target.value, selectedCourt, setSelectedCourt, getString)
-      }
+      name="dhsAddress"
+      value={formData.dhsAddress}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.dhsAddress}
+      helperText={formErrors.dhsAddress}
     />
   )
 
   const courtStatus = () => (
     <FormSelectStatusField
-      componentLabel="Court--Status"
-      value={selectedCourt.status}
-      onChange={(e) => handleCourtFormOnChange('status', e.target.value, selectedCourt, setSelectedCourt, getString)}
+      componentLabel="COURT--STATUS"
+      name="componentStatusId"
+      value={formData.componentStatusId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.componentStatusError}
+      helperText={formErrors.componentStatusError}
       statusList={courtStatusList}
-      error={isCourtFormFieldError(selectedCourt.status)}
     />
   )
 
   const courtComments = () => (
     <FormCommentsField
-      componentLabel="Court--Comments"
-      value={selectedCourt.comments}
-      onChange={(e) =>
-        handleCourtFormOnChange('comments', e.target.value, selectedCourt, setSelectedCourt, getComments)
-      }
+      componentLabel="COURT--COMMENTS"
+      name="comments"
+      value={formData.comments}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />
   )
 

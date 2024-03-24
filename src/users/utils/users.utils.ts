@@ -5,6 +5,7 @@ import {
   ID_DEFAULT,
   LOGIN_SHOW_FORM_TYPE,
   LoginShowFormType,
+  REF_TYPES_REGISTRY,
   REGEX_LOGIN_INPUT_PATTERN,
   REGEX_LOGIN_PASSWORD_PATTERN,
 } from '../../constants'
@@ -59,16 +60,17 @@ export const checkUserHasPermission = (
     componentName = componentName.replaceAll('/', '')
   }
   if (
-    ['component_status', 'case_type', 'collection_method', 'filing_type', 'hearing_type', 'task_type'].includes(
+    [REF_TYPES_REGISTRY.COMPONENT_STATUS.toString(), REF_TYPES_REGISTRY.CASE_TYPE.toString(), REF_TYPES_REGISTRY.COLLECTION_METHOD.toString(),
+      REF_TYPES_REGISTRY.FILING_TYPE.toString(), REF_TYPES_REGISTRY.HEARING_TYPE.toString(), REF_TYPES_REGISTRY.TASK_TYPE.toString()].includes(
       componentName,
     )
   ) {
-    componentName = 'ref_types'
+    componentName = 'REF_TYPES'
   }
-  // user_management is only accessible to super-users only, not permission checked
-  if (!componentName.endsWith('s')) {
+  // user_management is only accessible to super-users only, hence permission not checked
+  if (!componentName.endsWith('S')) {
     // this is added for single page load (court, judge, client, court_case, filing, calendar, collection)
-    componentName = componentName.concat('s')
+    componentName = componentName.concat('S')
   }
   if (appUserDetails && appUserDetails.appRoles && appUserDetails.appRoles) {
     const permission = componentName.concat('_', action)

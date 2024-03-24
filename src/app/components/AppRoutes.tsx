@@ -211,16 +211,12 @@ function RequireAuth({ children, path }: { children: React.ReactElement; path: s
   const location = useLocation()
   const appUserDetails = isLoggedIn()
   if (appUserDetails) {
-    if (checkUserHasPermission(path.toUpperCase(), 'READ', appUserDetails)) {
+    if (path === '/home') {
+      return children
+    } else if (checkUserHasPermission(path.toUpperCase(), 'READ', appUserDetails)) {
       return children
     } else {
-      if (path === '/home') {
-        return children
-      } else {
-        return (
-          <Navigate to="/home" replace state={{ message: INCOMPLETE_PERMISSION, alertType: ALERT_TYPES.WARNING }} />
-        )
-      }
+      return <Navigate to="/home" replace state={{ message: INCOMPLETE_PERMISSION, alertType: ALERT_TYPES.WARNING }} />
     }
   } else {
     return <Navigate to="/" replace state={{ redirect: location.pathname }} />

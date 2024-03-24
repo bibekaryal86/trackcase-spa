@@ -22,6 +22,7 @@ import {
   checkUserHasPermission,
   isSuperuser,
 } from '../../users'
+import { ModalState } from '../types/app.data.types'
 
 type FormData =
   | AppUserFormData
@@ -38,11 +39,6 @@ type FormErrorData =
   | AppRolePermissionFormErrorData
   | CourtFormErrorData
 
-interface ModalState {
-  showModal: boolean
-  toggleModalView: () => void
-}
-
 export const pageTitleComponent = (title: string) => (
   <>
     <Typography component="h1" variant="h6" color="primary">
@@ -52,8 +48,8 @@ export const pageTitleComponent = (title: string) => (
   </>
 )
 
-export const tableAddButtonComponent = (component: string, addModalState: ModalState) =>
-  checkUserHasPermission(component, ACTION_TYPES.CREATE) ? (
+export const tableAddButtonComponent = (componentName: string, addModalState: ModalState) =>
+  checkUserHasPermission(componentName, ACTION_TYPES.CREATE) ? (
     <Button onClick={() => addModalState.toggleModalView()}>{ACTION_TYPES.CREATE} NEW</Button>
   ) : undefined
 

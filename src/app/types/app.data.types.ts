@@ -1,6 +1,11 @@
 import { Dayjs } from 'dayjs'
 import React, { ReactElement } from 'react'
 
+export interface ModalState {
+  showModal: boolean
+  toggleModalView: () => void
+}
+
 export type TableOrder = 'asc' | 'desc'
 
 export type TableRowsPerPage = 10 | 20 | 50 | 100

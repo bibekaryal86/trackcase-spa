@@ -31,7 +31,7 @@ export const validateCourt = (formData: CourtFormData, setFormErrors: (formError
   }
   if (getNumber(formData.componentStatusId) <= 0) {
     hasValidationErrors = true
-    formErrorsLocal.phoneNumber = 'REQUIRED'
+    formErrorsLocal.componentStatusError = 'REQUIRED'
   }
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)
