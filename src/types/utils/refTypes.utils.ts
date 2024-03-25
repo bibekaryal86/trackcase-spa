@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { getString, TableData, TableHeaderData } from '../../app'
-import { ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import {
   ComponentStatusSchema,
@@ -82,7 +82,10 @@ export const refTypeTableHeader = (refType: RefTypesRegistry): TableHeaderData[]
       label: 'IS DELETED?',
     })
   }
-  if (checkUserHasPermission('REF_TYPES', 'UPDATE') || checkUserHasPermission('REF_TYPES', 'DELETE')) {
+  if (
+    checkUserHasPermission(COMPONENT_STATUS_NAME.REF_TYPES, ACTION_TYPES.UPDATE) ||
+    checkUserHasPermission(COMPONENT_STATUS_NAME.REF_TYPES, ACTION_TYPES.DELETE)
+  ) {
     tableHeaderData.push({
       id: 'actions',
       label: 'ACTIONS',

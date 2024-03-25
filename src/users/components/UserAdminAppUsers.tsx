@@ -96,15 +96,13 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
       getNumber(formData.id) > 0
     ) {
       const appUserRequest: AppUserRequest = { ...formData }
-      appUserResponse = await (
-        appUsersAdmin({
-          action: action,
-          appUserRequest: appUserRequest,
-          id: formData.id,
-          isRestore: action === ACTION_TYPES.RESTORE,
-          isHardDelete: formData.isHardDelete,
-        })
-      )(dispatch)
+      appUserResponse = await appUsersAdmin({
+        action: action,
+        appUserRequest: appUserRequest,
+        id: formData.id,
+        isRestore: action === ACTION_TYPES.RESTORE,
+        isHardDelete: formData.isHardDelete,
+      })(dispatch)
     }
 
     if (appUserResponse && !appUserResponse.detail) {

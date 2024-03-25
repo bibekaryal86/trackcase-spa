@@ -65,15 +65,13 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
       getNumber(formData.id) > 0
     ) {
       const appUserRoleRequest: AppUserRoleSchema = { ...formData }
-      appUserRoleResponse = await (
-        appUsersRolesAdmin({
-          action: action,
-          appUserRoleRequest: appUserRoleRequest,
-          id: formData.id,
-          isRestore: action === ACTION_TYPES.RESTORE,
-          isHardDelete: formData.isHardDelete,
-        })
-      )(dispatch)
+      appUserRoleResponse = await appUsersRolesAdmin({
+        action: action,
+        appUserRoleRequest: appUserRoleRequest,
+        id: formData.id,
+        isRestore: action === ACTION_TYPES.RESTORE,
+        isHardDelete: formData.isHardDelete,
+      })(dispatch)
     }
 
     if (appUserRoleResponse && !appUserRoleResponse.detail) {

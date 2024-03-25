@@ -33,6 +33,9 @@ export const courtsAction = ({
   isHardDelete?: boolean
 }) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<CourtResponse> => {
+    if (action === ACTION_TYPES.RESTORE) {
+      action = ACTION_TYPES.UPDATE
+    }
     const typeRequest = `COURTS_${action}_REQUEST`
     const typeSuccess = `COURTS_${action}_SUCCESS`
     const typeFailure = `COURTS_${action}_FAILURE`
@@ -47,7 +50,7 @@ export const courtsAction = ({
         method: 'POST',
         requestBody: { ...courtsRequest },
       }
-    } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
+    } else if (action === ACTION_TYPES.UPDATE) {
       endpoint = getEndpoint(process.env.COURT_UPDATE as string)
       options = {
         method: 'PUT',

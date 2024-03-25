@@ -23,6 +23,7 @@ import {
   isSuperuser,
 } from '../../users'
 import { ModalState } from '../types/app.data.types'
+import { getNumericOnly, isNumericOnly } from '../utils/app.utils'
 
 type FormData =
   | AppUserFormData
@@ -146,6 +147,17 @@ export const hardDeleteCheckboxComponent = <T extends FormData, U extends FormEr
     />
   ) : undefined
 
+const handleFormChangeHelper = (name: string, value: string): string => {
+  if (name === 'aNumber') {
+    value = getNumericOnly(value, 9)
+  } else if (name === 'phoneNumber' || name === 'amount') {
+    value = getNumericOnly(value, 10)
+  } else if (name === 'zipCode') {
+    value = isNumericOnly(value) ? value : getNumericOnly(value, 5)
+  }
+  return value
+}
+
 export const handleFormChange = <T extends FormData, U extends FormErrorData>(
   event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>,
   formData: T,
@@ -159,10 +171,12 @@ export const handleFormChange = <T extends FormData, U extends FormErrorData>(
     checked = event.target.checked
   }
 
+  const changedValue = handleFormChangeHelper(name, value)
+
   if (name.startsWith('is') || name.startsWith('has')) {
     setFormData({ ...formData, [name]: checked })
   } else {
-    setFormData({ ...formData, [name]: value })
+    setFormData({ ...formData, [name]: changedValue })
   }
   if (name in formErrors) {
     setFormErrors({ ...formErrors, [name]: '' })

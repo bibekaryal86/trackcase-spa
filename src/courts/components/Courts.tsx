@@ -118,6 +118,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
         DefaultCourtFromErrorData,
       )
       isForceFetch.current = true
+      courtsList.length === 0 && getCourts({})
     }
   }
 

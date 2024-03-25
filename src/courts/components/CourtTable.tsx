@@ -82,6 +82,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
       city: x.city,
       state: x.state,
       zipCode: x.zipCode,
+      phoneNumber: x.phoneNumber,
       dhsAddress: x.dhsAddress,
       comments: x.comments,
       isHardDelete: false,

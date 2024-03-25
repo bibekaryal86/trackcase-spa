@@ -103,6 +103,7 @@ export const COMPONENT_STATUS_NAME = Object.freeze({
   FILINGS: 'FILINGS',
   JUDGES: 'JUDGES',
   APP_USERS: 'APP_USERS',
+  REF_TYPES: 'REF_TYPES',
 })
 export type ComponentStatusName = keyof typeof COMPONENT_STATUS_NAME
 
