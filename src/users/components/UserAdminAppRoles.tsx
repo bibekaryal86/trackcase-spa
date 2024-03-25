@@ -59,7 +59,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
     ) {
       const appRoleRequest: AppRoleSchema = { ...formData }
       appRoleResponse = await (
-        await appRolesAdmin({
+        appRolesAdmin({
           action: action,
           appRoleRequest: appRoleRequest,
           id: formData.id,

@@ -162,7 +162,7 @@ function createGuestPassword() {
   return result
 }
 
-export const appUsersAdmin = async ({
+export const appUsersAdmin = ({
   action,
   appUserRequest,
   id,
@@ -238,11 +238,11 @@ export const getAppRoles = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
-  const dispatchFunction = await appRolesAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
+  const dispatchFunction = appRolesAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
   return await dispatchFunction(dispatch)
 }
 
-export const appRolesAdmin = async ({
+export const appRolesAdmin = ({
   action,
   appRoleRequest,
   id,
@@ -318,11 +318,11 @@ export const getAppPermissions = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
-  const dispatchFunction = await appPermissionsAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
+  const dispatchFunction = appPermissionsAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
   return await dispatchFunction(dispatch)
 }
 
-export const appPermissionsAdmin = async ({
+export const appPermissionsAdmin = ({
   action,
   appPermissionRequest,
   id,
@@ -398,11 +398,11 @@ export const getAppUsersRoles = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
-  const dispatchFunction = await appUsersRolesAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
+  const dispatchFunction = appUsersRolesAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
   return await dispatchFunction(dispatch)
 }
 
-export const appUsersRolesAdmin = async ({
+export const appUsersRolesAdmin = ({
   action,
   appUserRoleRequest,
   id,
@@ -478,14 +478,14 @@ export const getAppRolesPermissions = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
-  const dispatchFunction = await appRolesPermissionsAdmin({
+  const dispatchFunction = appRolesPermissionsAdmin({
     action: ACTION_TYPES.READ,
     requestMetadata: requestMetadata,
   })
   return await dispatchFunction(dispatch)
 }
 
-export const appRolesPermissionsAdmin = async ({
+export const appRolesPermissionsAdmin = ({
   action,
   appRolesPermissionsRequest,
   id,

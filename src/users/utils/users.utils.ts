@@ -60,10 +60,14 @@ export const checkUserHasPermission = (
     componentName = componentName.replaceAll('/', '')
   }
   if (
-    [REF_TYPES_REGISTRY.COMPONENT_STATUS.toString(), REF_TYPES_REGISTRY.CASE_TYPE.toString(), REF_TYPES_REGISTRY.COLLECTION_METHOD.toString(),
-      REF_TYPES_REGISTRY.FILING_TYPE.toString(), REF_TYPES_REGISTRY.HEARING_TYPE.toString(), REF_TYPES_REGISTRY.TASK_TYPE.toString()].includes(
-      componentName,
-    )
+    [
+      REF_TYPES_REGISTRY.COMPONENT_STATUS.toString(),
+      REF_TYPES_REGISTRY.CASE_TYPE.toString(),
+      REF_TYPES_REGISTRY.COLLECTION_METHOD.toString(),
+      REF_TYPES_REGISTRY.FILING_TYPE.toString(),
+      REF_TYPES_REGISTRY.HEARING_TYPE.toString(),
+      REF_TYPES_REGISTRY.TASK_TYPE.toString(),
+    ].includes(componentName)
   ) {
     componentName = 'REF_TYPES'
   }

@@ -97,7 +97,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
     ) {
       const appUserRequest: AppUserRequest = { ...formData }
       appUserResponse = await (
-        await appUsersAdmin({
+        appUsersAdmin({
           action: action,
           appUserRequest: appUserRequest,
           id: formData.id,

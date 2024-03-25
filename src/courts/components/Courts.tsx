@@ -39,7 +39,7 @@ const mapStateToProps = ({ refTypes, courts }: GlobalState) => {
 
 const mapDispatchToProps = {
   getRefType: () => getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS),
-  getCourts: (requestMetadata: Partial<FetchRequestMetadata>) => getCourts({ requestMetadata: requestMetadata }),
+  getCourts: (requestMetadata: Partial<FetchRequestMetadata>) => getCourts(requestMetadata),
 }
 
 interface CourtsProps {
@@ -92,21 +92,19 @@ const Courts = (props: CourtsProps): React.ReactElement => {
     let courtResponse: CourtResponse = { data: [], detail: { error: INVALID_INPUT } }
     if (action === ACTION_TYPES.CREATE) {
       const courtsRequest: CourtBase = { ...formData }
-      courtResponse = await (await courtsAction({ action, courtsRequest }))(dispatch)
+      courtResponse = await courtsAction({ action, courtsRequest })(dispatch)
     } else if (
       (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
       getNumber(formData.id) > 0
     ) {
       const courtsRequest: CourtBase = { ...formData }
-      courtResponse = await (
-        await courtsAction({
-          action: action,
-          courtsRequest: courtsRequest,
-          id: formData.id,
-          isRestore: action === ACTION_TYPES.RESTORE,
-          isHardDelete: formData.isHardDelete,
-        })
-      )(dispatch)
+      courtResponse = await courtsAction({
+        action: action,
+        courtsRequest: courtsRequest,
+        id: formData.id,
+        isRestore: action === ACTION_TYPES.RESTORE,
+        isHardDelete: formData.isHardDelete,
+      })(dispatch)
     }
 
     if (courtResponse && !courtResponse.detail) {

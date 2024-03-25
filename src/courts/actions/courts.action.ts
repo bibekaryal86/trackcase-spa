@@ -19,7 +19,7 @@ import {
 import { CourtBase, CourtResponse, CourtSchema } from '../types/courts.data.types'
 import { courtDispatch } from '../utils/courts.utils'
 
-export const courtsAction = async ({
+export const courtsAction = ({
   action,
   courtsRequest,
   id,
@@ -85,7 +85,7 @@ export const courtsAction = async ({
   }
 }
 
-export const getCourts = async ({ requestMetadata }: { requestMetadata?: Partial<FetchRequestMetadata> }) => {
+export const getCourts = (requestMetadata?: Partial<FetchRequestMetadata>) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(courtDispatch({ type: COURTS_READ_REQUEST }))
 
