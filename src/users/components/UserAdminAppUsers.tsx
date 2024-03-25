@@ -90,7 +90,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
     let appUserResponse: AppUserResponse = { data: [] }
     if (action === ACTION_TYPES.CREATE) {
       const appUserRequest: AppUserRequest = { ...formData }
-      appUserResponse = await (await appUsersAdmin({ action, appUserRequest }))(dispatch)
+      appUserResponse = await appUsersAdmin({ action, appUserRequest })(dispatch)
     } else if (
       (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
       getNumber(formData.id) > 0

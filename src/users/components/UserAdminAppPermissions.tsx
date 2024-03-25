@@ -57,7 +57,7 @@ const UserAdminAppPermissions = (): React.ReactElement => {
     let appPermissionResponse: AppPermissionResponse = { data: [] }
     if (action === ACTION_TYPES.CREATE) {
       const appPermissionRequest: AppPermissionSchema = { ...formData }
-      appPermissionResponse = await (await appPermissionsAdmin({ action, appPermissionRequest }))(dispatch)
+      appPermissionResponse = await appPermissionsAdmin({ action, appPermissionRequest })(dispatch)
     } else if (
       (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
       getNumber(formData.id) > 0

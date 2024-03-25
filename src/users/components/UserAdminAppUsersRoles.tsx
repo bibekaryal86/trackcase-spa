@@ -59,7 +59,7 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
     let appUserRoleResponse: AppUserRoleResponse = { data: [] }
     if (action === ACTION_TYPES.CREATE) {
       const appUserRoleRequest: AppUserRoleSchema = { ...formData }
-      appUserRoleResponse = await (await appUsersRolesAdmin({ action, appUserRoleRequest }))(dispatch)
+      appUserRoleResponse = await appUsersRolesAdmin({ action, appUserRoleRequest })(dispatch)
     } else if (
       (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
       getNumber(formData.id) > 0
