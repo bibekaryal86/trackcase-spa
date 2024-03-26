@@ -124,16 +124,13 @@ export const getCourts = (requestMetadata?: Partial<FetchRequestMetadata>) => {
   }
 }
 
-export const getCourt = async (courtId: number) => {
-  return async (
-    dispatch: React.Dispatch<GlobalDispatch>,
-    getStore: () => GlobalState,
-  ): Promise<CourtSchema | undefined> => {
+export const getCourt = (courtId: number) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, state: GlobalState): Promise<CourtSchema | undefined> => {
     dispatch(courtDispatch({ type: COURTS_READ_REQUEST }))
     let oneCourt = undefined
 
     try {
-      const courtsInStore = getStore().courts.courts
+      const courtsInStore = state.courts.courts
       if (courtsInStore) {
         oneCourt = courtsInStore.find((x) => x.id === courtId)
       }

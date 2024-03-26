@@ -10,9 +10,10 @@ import {
   TableData,
   TableHeaderData,
 } from '../../app'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '../../constants'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import { CourtFormData, CourtSchema } from '../types/courts.data.types'
+import { getCourtFormDataFromSchema } from '../utils/courts.utils'
 
 interface CourtTableProps {
   courtsList: CourtSchema[]
@@ -73,24 +74,6 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
 
   const linkToCourt = (x: CourtSchema) => <Link text={`${x.name}, ${x.state}`} navigateToPage={`/court/${x.id}`} />
 
-  const getCourtFormDataForModal = (x: CourtSchema): CourtFormData => {
-    return {
-      id: x.id || ID_DEFAULT,
-      name: x.name,
-      componentStatusId: x.componentStatusId,
-      streetAddress: x.streetAddress,
-      city: x.city,
-      state: x.state,
-      zipCode: x.zipCode,
-      phoneNumber: x.phoneNumber,
-      dhsAddress: x.dhsAddress,
-      comments: x.comments,
-      isHardDelete: false,
-      isShowSoftDeleted: false,
-      isDeleted: x.isDeleted,
-    }
-  }
-
   const courtsTableData = (): TableData[] => {
     return Array.from(courtsList, (x) => {
       return {
@@ -100,7 +83,7 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
         dhsAddress: x.dhsAddress,
         status: x.componentStatus?.statusName,
         isDeleted: x.isDeleted,
-        actions: actionButtons(getCourtFormDataForModal(x)),
+        actions: actionButtons(getCourtFormDataFromSchema(x)),
       }
     })
   }

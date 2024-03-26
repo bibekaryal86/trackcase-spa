@@ -1,4 +1,5 @@
 import { SelectChangeEvent } from '@mui/material'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import Divider from '@mui/material/Divider'
@@ -6,6 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 
+import Link from './Link'
 import { Modal2 } from './Modal'
 import { ACTION_TYPES, ActionTypes } from '../../constants'
 import { CourtFormData, CourtFormErrorData } from '../../courts'
@@ -40,13 +42,40 @@ type FormErrorData =
   | AppRolePermissionFormErrorData
   | CourtFormErrorData
 
-export const pageTitleComponent = (title: string) => (
+export const pageTitleComponent = (component: string, componentName?: string) => (
   <>
     <Typography component="h1" variant="h6" color="primary">
-      {title}
+      {component}
+      {componentName ? `: ${componentName}` : ''}
     </Typography>
     <Divider />
   </>
+)
+
+export const pageTopLinksComponent = (
+  viewAllComponent: string,
+  viewAllLink: string,
+  searchQueryParams: URLSearchParams,
+) => {
+  const backToPageText = 'BACK TO PREV PAGE'
+  const backToPageLink = searchQueryParams.get('backTo') || ''
+  const viewAllText = `VIEW ALL ${viewAllComponent}`
+  return (
+    <Box sx={{ display: 'flex' }}>
+      {backToPageLink && (
+        <Box sx={{ mr: 2 }}>
+          <Link text={backToPageText} navigateToPage={backToPageLink} color="primary" />
+        </Box>
+      )}
+      <Link text={viewAllText} navigateToPage={viewAllLink} color="primary" />
+    </Box>
+  )
+}
+
+export const noIdSelectedComponent = (component: string) => (
+  <Typography component="h1" variant="h6" color="error" gutterBottom>
+    {`ITEM NOT SELECTED! NOTHING TO DISPLAY!! GO TO ${component} PAGE AND CLICK ONE TO SELECT!!!`}
+  </Typography>
 )
 
 export const tableAddButtonComponent = (componentName: string, addModalState: ModalState) =>

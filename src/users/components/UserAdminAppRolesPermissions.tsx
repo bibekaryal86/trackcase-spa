@@ -63,8 +63,7 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
     let appRolePermissionResponse: AppRolePermissionResponse = { data: [] }
     if (action === ACTION_TYPES.CREATE) {
       const appRolesPermissionsRequest: AppRolePermissionSchema = { ...formData }
-      appRolePermissionResponse = await appRolesPermissionsAdmin({ action, appRolesPermissionsRequest })
-      (dispatch)
+      appRolePermissionResponse = await appRolesPermissionsAdmin({ action, appRolesPermissionsRequest })(dispatch)
     } else if (
       (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
       getNumber(formData.id) > 0
