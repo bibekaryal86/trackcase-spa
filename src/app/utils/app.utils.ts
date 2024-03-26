@@ -166,3 +166,10 @@ export const convertToTitleCase = (input: string, delimiter: string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ')
 }
+
+export const isValidId = (id: string | undefined): boolean => {
+  if (id) {
+    return getNumber(id) > 0
+  }
+  return false
+}

@@ -2,6 +2,19 @@ import { FetchRequestMetadata, getNumber, validateAddress, validatePhoneNumber }
 import { ID_DEFAULT } from '../../constants'
 import { CourtFormData, CourtFormErrorData, CourtSchema, DefaultCourtFromErrorData } from '../types/courts.data.types'
 
+export const isAreTwoCourtsSame = (one: CourtFormData | CourtSchema, two: CourtFormData | CourtSchema) =>
+  one &&
+  two &&
+  one.name === two.name &&
+  one.dhsAddress === two.dhsAddress &&
+  one.componentStatusId === two.componentStatusId &&
+  one.comments === two.comments &&
+  one.streetAddress === two.streetAddress &&
+  one.city === two.city &&
+  one.state === two.state &&
+  one.zipCode === two.zipCode &&
+  one.phoneNumber === two.phoneNumber
+
 export const validateCourt = (formData: CourtFormData, setFormErrors: (formErrors: CourtFormErrorData) => void) => {
   let hasValidationErrors = false
   const formErrorsLocal: CourtFormErrorData = { ...DefaultCourtFromErrorData }

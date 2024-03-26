@@ -72,10 +72,31 @@ export const pageTopLinksComponent = (
   )
 }
 
-export const noIdSelectedComponent = (component: string) => (
+export const pageNotSelectedComponent = (component: string) => (
   <Typography component="h1" variant="h6" color="error" gutterBottom>
     {`ITEM NOT SELECTED! NOTHING TO DISPLAY!! GO TO ${component} PAGE AND CLICK ONE TO SELECT!!!`}
   </Typography>
+)
+
+export const pageActionButtonsComponent = <T extends FormData>(
+  componentName: string,
+  courtFormData: T,
+  updateAction: () => void,
+  cancelAction: () => void,
+  isDisabled: boolean,
+) => (
+  <>
+    {checkUserHasPermission(componentName, ACTION_TYPES.UPDATE) && (
+      <Button onClick={updateAction} disabled={isDisabled || courtFormData.isDeleted}>
+        {ACTION_TYPES.UPDATE}
+      </Button>
+    )}
+    {checkUserHasPermission(componentName, ACTION_TYPES.DELETE) && (
+      <Button onClick={cancelAction} disabled={isDisabled || courtFormData.isDeleted}>
+        {ACTION_TYPES.CANCEL}
+      </Button>
+    )}
+  </>
 )
 
 export const tableAddButtonComponent = (componentName: string, addModalState: ModalState) =>
