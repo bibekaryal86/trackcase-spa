@@ -1,5 +1,5 @@
 // actions
-import { courtsAction, getCourt } from './actions/courts.action'
+import { courtsAction, getCourt, getCourts } from './actions/courts.action'
 // components
 import Court from './components/Court'
 import Courts from './components/Courts'
@@ -13,18 +13,9 @@ import {
   CourtsAction,
   CourtSchema,
   CourtsState,
-  HistoryCourtSchema,
 } from './types/courts.data.types'
 
-export { getCourt, courtsAction }
+export { getCourt, getCourts, courtsAction }
 export { Court, Courts }
 export { courts }
-export type {
-  CourtFormData,
-  CourtFormErrorData,
-  CourtResponse,
-  CourtsAction,
-  CourtSchema,
-  CourtsState,
-  HistoryCourtSchema,
-}
+export type { CourtFormData, CourtFormErrorData, CourtResponse, CourtsAction, CourtSchema, CourtsState }
