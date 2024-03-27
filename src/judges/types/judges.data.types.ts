@@ -7,7 +7,7 @@ import { ComponentStatusSchema } from '../../types'
 export interface JudgeBase {
   name: string
   webex?: string
-  courtId:  number
+  courtId: number
   componentStatusId: number
   comments?: string
 }
