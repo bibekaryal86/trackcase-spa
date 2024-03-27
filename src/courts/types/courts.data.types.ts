@@ -23,14 +23,9 @@ export interface CourtResponse extends ResponseBase {
   data: CourtSchema[]
 }
 
-export interface HistoryCourtSchema extends AddressBaseSchema, BaseModelSchema {
+export interface HistoryCourtSchema extends Partial<CourtBase>, BaseModelSchema {
   appUserId: number
   courtId: number
-  // from court schema, need everything optional here so can't extend
-  name?: string
-  componentStatusId?: number
-  dhsAddress?: string
-  comments?: string
   // orm mode
   court?: CourtSchema
   appUser?: AppUserSchema
