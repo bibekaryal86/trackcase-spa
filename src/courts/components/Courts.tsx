@@ -26,7 +26,7 @@ import {
   CourtResponse,
   CourtSchema,
   DefaultCourtFormData,
-  DefaultCourtFromErrorData,
+  DefaultCourtFormErrorData,
 } from '../types/courts.data.types'
 import { validateCourt } from '../utils/courts.utils'
 
@@ -60,7 +60,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
 
   const [formData, setFormData] = useState(DefaultCourtFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultCourtFormData)
-  const [formErrors, setFormErrors] = useState(DefaultCourtFromErrorData)
+  const [formErrors, setFormErrors] = useState(DefaultCourtFormErrorData)
 
   const courtStatusList = useCallback(() => {
     return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURTS)
@@ -115,7 +115,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
         setFormData,
         setFormErrors,
         DefaultCourtFormData,
-        DefaultCourtFromErrorData,
+        DefaultCourtFormErrorData,
       )
       isForceFetch.current = true
       courtsList.length === 0 && getCourts({})
@@ -146,7 +146,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
       setFormData,
       setFormErrors,
       DefaultCourtFormData,
-      DefaultCourtFromErrorData,
+      DefaultCourtFormErrorData,
       formDataReset,
     )
 
@@ -161,7 +161,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
       setFormData,
       setFormErrors,
       DefaultCourtFormData,
-      DefaultCourtFromErrorData,
+      DefaultCourtFormErrorData,
       formDataReset,
     )
 
@@ -180,7 +180,7 @@ const Courts = (props: CourtsProps): React.ReactElement => {
       setFormData,
       setFormErrors,
       DefaultCourtFormData,
-      DefaultCourtFromErrorData,
+      DefaultCourtFormErrorData,
       formData,
       formErrors,
     )

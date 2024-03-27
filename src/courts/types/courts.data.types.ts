@@ -79,7 +79,7 @@ export const DefaultCourtFormData: CourtFormData = {
   isDeleted: false,
 }
 
-export const DefaultCourtFromErrorData: CourtFormErrorData = {
+export const DefaultCourtFormErrorData: CourtFormErrorData = {
   ...DefaultCourtFormData,
   componentStatusError: '',
 }

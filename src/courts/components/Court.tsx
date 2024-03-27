@@ -18,7 +18,7 @@ import {
 import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT, REF_TYPES_REGISTRY } from '../../constants'
 import { ComponentStatusSchema, getRefType } from '../../types'
 import { courtsAction, getCourt } from '../actions/courts.action'
-import { CourtBase, CourtResponse, DefaultCourtFormData, DefaultCourtFromErrorData } from '../types/courts.data.types'
+import { CourtBase, CourtResponse, DefaultCourtFormData, DefaultCourtFormErrorData } from '../types/courts.data.types'
 import { getCourtFormDataFromSchema, isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
@@ -48,7 +48,7 @@ const Court = (props: CourtProps): React.ReactElement => {
 
   const [formData, setFormData] = useState(DefaultCourtFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultCourtFormData)
-  const [formErrors, setFormErrors] = useState(DefaultCourtFromErrorData)
+  const [formErrors, setFormErrors] = useState(DefaultCourtFormErrorData)
 
   const courtStatusList = useCallback(() => {
     return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURTS)
