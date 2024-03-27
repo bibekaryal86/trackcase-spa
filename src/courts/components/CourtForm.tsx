@@ -43,6 +43,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="COURT--STREET ADDRESS"
       name="streetAddress"
+      required={false}
       value={formData.streetAddress}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.streetAddress}
@@ -54,6 +55,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="COURT--CITY"
       name="city"
+      required={false}
       value={formData.city}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.city}
@@ -65,6 +67,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormSelectStateField
       componentLabel="COURT--STATE"
       name="state"
+      required={false}
       value={formData.state}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.state}
@@ -77,6 +80,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       componentLabel="COURT--ZIP CODE"
       maxLength={5}
       name="zipCode"
+      required={false}
       value={formData.zipCode}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.zipCode}
@@ -125,6 +129,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="COURT--COMMENTS"
       name="comments"
+      required={false}
       value={formData.comments}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />
