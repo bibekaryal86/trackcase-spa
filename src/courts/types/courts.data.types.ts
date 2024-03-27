@@ -61,11 +61,6 @@ export const DefaultCourtSchema: CourtSchema = {
   comments: '',
 }
 
-export const DefaultCourtState: CourtsState = {
-  courts: [],
-  requestMetadata: {},
-}
-
 export const DefaultCourtFormData: CourtFormData = {
   ...DefaultCourtSchema,
   id: ID_DEFAULT,
@@ -77,4 +72,9 @@ export const DefaultCourtFormData: CourtFormData = {
 export const DefaultCourtFormErrorData: CourtFormErrorData = {
   ...DefaultCourtFormData,
   componentStatusError: '',
+}
+
+export const DefaultCourtState: CourtsState = {
+  courts: [],
+  requestMetadata: {},
 }

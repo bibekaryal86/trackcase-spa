@@ -12,8 +12,10 @@ import {
   GlobalState,
 } from '../../app'
 import {
+  ACTION_TYPES,
   CREATE_SUCCESS,
   DELETE_SUCCESS,
+  HTTP_METHODS,
   REF_TYPES_REGISTRY,
   RefTypesRegistry,
   SOMETHING_WENT_WRONG,
@@ -82,7 +84,7 @@ export const getRefTypes = () => {
       if (requestComponents.length > 0) {
         const urlPath = getEndpoint(process.env.REF_TYPES as string)
         const options: Partial<FetchOptions> = {
-          method: 'GET',
+          method: HTTP_METHODS.GET,
           queryParams: {
             components: requestComponents.join(','),
           },
@@ -137,7 +139,7 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
     dispatch(refTypesDispatch({ type: `${refType}_CREATE_REQUEST` }))
 
     try {
-      const urlPath = getUrlPath(refType, 'CREATE')
+      const urlPath = getUrlPath(refType, ACTION_TYPES.CREATE)
       let requestBody
       if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
         requestBody = {
@@ -152,7 +154,7 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
         }
       }
       const options: Partial<FetchOptions> = {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         requestBody: requestBody,
       }
       const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
@@ -223,9 +225,9 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
       }
 
       if (refTypeList.length === 0) {
-        const urlPath = getUrlPath(refType, 'READ')
+        const urlPath = getUrlPath(refType, ACTION_TYPES.READ)
         const options: Partial<FetchOptions> = {
-          method: 'GET',
+          method: HTTP_METHODS.GET,
           metadataParams: requestMetadata,
         }
         const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
@@ -261,7 +263,7 @@ export const editRefType = (
 
     try {
       const refTypeId = `${refType}_ID`.toLowerCase()
-      const urlPath = getUrlPath(refType, 'UPDATE')
+      const urlPath = getUrlPath(refType, ACTION_TYPES.UPDATE)
       let requestBody
       if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
         requestBody = {
@@ -276,7 +278,7 @@ export const editRefType = (
         }
       }
       const options: Partial<FetchOptions> = {
-        method: 'PUT',
+        method: HTTP_METHODS.PUT,
         queryParams: { is_restore: isRestore || false },
         pathParams: { [refTypeId]: id },
         requestBody: requestBody,
@@ -304,9 +306,9 @@ export const deleteRefType = (refType: RefTypesRegistry, id: number, isHardDelet
 
     try {
       const refTypeId = `${refType}_ID`.toLowerCase()
-      const urlPath = getUrlPath(refType, 'DELETE')
+      const urlPath = getUrlPath(refType, ACTION_TYPES.DELETE)
       const options: Partial<FetchOptions> = {
-        method: 'DELETE',
+        method: HTTP_METHODS.DELETE,
         pathParams: { [refTypeId]: id, is_hard_delete: isHardDelete },
       }
       const refTypeResponse = (await Async.fetch(urlPath, options)) as RefTypeResponse
@@ -330,86 +332,86 @@ export const deleteRefType = (refType: RefTypesRegistry, id: number, isHardDelet
 // hence this workaround
 const getUrlPath = (refType: RefTypesRegistry, action: string) => {
   if (refType === REF_TYPES_REGISTRY.COMPONENT_STATUS) {
-    if (action === 'CREATE') {
+    if (action === ACTION_TYPES.CREATE) {
       return getEndpoint(process.env.COMPONENT_STATUS_CREATE as string)
     }
-    if (action === 'READ') {
+    if (action === ACTION_TYPES.READ) {
       return getEndpoint(process.env.COMPONENT_STATUS_READ as string)
     }
-    if (action === 'UPDATE') {
+    if (action === ACTION_TYPES.UPDATE) {
       return getEndpoint(process.env.COMPONENT_STATUS_UPDATE as string)
     }
-    if (action === 'DELETE') {
+    if (action === ACTION_TYPES.DELETE) {
       return getEndpoint(process.env.COMPONENT_STATUS_DELETE as string)
     }
   }
   if (refType === REF_TYPES_REGISTRY.CASE_TYPE) {
-    if (action === 'CREATE') {
+    if (action === ACTION_TYPES.CREATE) {
       return getEndpoint(process.env.CASE_TYPE_CREATE as string)
     }
-    if (action === 'READ') {
+    if (action === ACTION_TYPES.READ) {
       return getEndpoint(process.env.CASE_TYPE_READ as string)
     }
-    if (action === 'UPDATE') {
+    if (action === ACTION_TYPES.UPDATE) {
       return getEndpoint(process.env.CASE_TYPE_UPDATE as string)
     }
-    if (action === 'DELETE') {
+    if (action === ACTION_TYPES.DELETE) {
       return getEndpoint(process.env.CASE_TYPE_DELETE as string)
     }
   }
   if (refType === REF_TYPES_REGISTRY.COLLECTION_METHOD) {
-    if (action === 'CREATE') {
+    if (action === ACTION_TYPES.CREATE) {
       return getEndpoint(process.env.COLLECTION_METHOD_CREATE as string)
     }
-    if (action === 'READ') {
+    if (action === ACTION_TYPES.READ) {
       return getEndpoint(process.env.COLLECTION_METHOD_READ as string)
     }
-    if (action === 'UPDATE') {
+    if (action === ACTION_TYPES.UPDATE) {
       return getEndpoint(process.env.COLLECTION_METHOD_UPDATE as string)
     }
-    if (action === 'DELETE') {
+    if (action === ACTION_TYPES.DELETE) {
       return getEndpoint(process.env.COLLECTION_METHOD_DELETE as string)
     }
   }
   if (refType === REF_TYPES_REGISTRY.FILING_TYPE) {
-    if (action === 'CREATE') {
+    if (action === ACTION_TYPES.CREATE) {
       return getEndpoint(process.env.FILING_TYPE_CREATE as string)
     }
-    if (action === 'READ') {
+    if (action === ACTION_TYPES.READ) {
       return getEndpoint(process.env.FILING_TYPE_READ as string)
     }
-    if (action === 'UPDATE') {
+    if (action === ACTION_TYPES.UPDATE) {
       return getEndpoint(process.env.FILING_TYPE_UPDATE as string)
     }
-    if (action === 'DELETE') {
+    if (action === ACTION_TYPES.DELETE) {
       return getEndpoint(process.env.FILING_TYPE_DELETE as string)
     }
   }
   if (refType === REF_TYPES_REGISTRY.HEARING_TYPE) {
-    if (action === 'CREATE') {
+    if (action === ACTION_TYPES.CREATE) {
       return getEndpoint(process.env.HEARING_TYPE_CREATE as string)
     }
-    if (action === 'READ') {
+    if (action === ACTION_TYPES.READ) {
       return getEndpoint(process.env.HEARING_TYPE_READ as string)
     }
-    if (action === 'UPDATE') {
+    if (action === ACTION_TYPES.UPDATE) {
       return getEndpoint(process.env.HEARING_TYPE_UPDATE as string)
     }
-    if (action === 'DELETE') {
+    if (action === ACTION_TYPES.DELETE) {
       return getEndpoint(process.env.HEARING_TYPE_DELETE as string)
     }
   }
   if (refType === REF_TYPES_REGISTRY.TASK_TYPE) {
-    if (action === 'CREATE') {
+    if (action === ACTION_TYPES.CREATE) {
       return getEndpoint(process.env.TASK_TYPE_CREATE as string)
     }
-    if (action === 'READ') {
+    if (action === ACTION_TYPES.READ) {
       return getEndpoint(process.env.TASK_TYPE_READ as string)
     }
-    if (action === 'UPDATE') {
+    if (action === ACTION_TYPES.UPDATE) {
       return getEndpoint(process.env.TASK_TYPE_UPDATE as string)
     }
-    if (action === 'DELETE') {
+    if (action === ACTION_TYPES.DELETE) {
       return getEndpoint(process.env.TASK_TYPE_DELETE as string)
     }
   }

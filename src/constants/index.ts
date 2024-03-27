@@ -53,7 +53,15 @@ export const CREATE_SUCCESS = (what: string) => `CREATE ${what} SUCCESS!`
 export const UPDATE_SUCCESS = (what: string) => `UPDATE ${what} SUCCESS!`
 export const DELETE_SUCCESS = (what: string) => `DELETE ${what} SUCCESS!`
 
-// user signin/signup/reset/validate page
+export const HTTP_METHODS = Object.freeze({
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+  DELETE: 'DELETE',
+})
+export type HttpMethods = keyof typeof HTTP_METHODS
+
 export const LOGIN_SHOW_FORM_TYPE = Object.freeze({
   SIGNIN: 'SIGNIN',
   SIGNUP: 'SIGNUP',
@@ -71,7 +79,6 @@ export const ALERT_TYPES = Object.freeze({
 })
 export type AlertTypes = keyof typeof ALERT_TYPES
 
-// actions
 export const ACTION_TYPES = Object.freeze({
   CREATE: 'CREATE',
   READ: 'READ',
@@ -83,7 +90,6 @@ export const ACTION_TYPES = Object.freeze({
 })
 export type ActionTypes = keyof typeof ACTION_TYPES
 
-// REF TYPES
 export const REF_TYPES_REGISTRY = Object.freeze({
   COMPONENT_STATUS: 'COMPONENT_STATUS',
   CASE_TYPE: 'CASE_TYPE',

@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs'
 
 import { LocalStorage, SessionStorage } from './storage.utils'
-import { FORCE_LOGOUT } from '../../constants'
+import { FORCE_LOGOUT, HttpMethods } from '../../constants'
 import { ErrorDetail } from '../types/app.data.types'
 
 type FetchParamObjects = { [key: string]: string | number | boolean }
@@ -45,7 +45,7 @@ interface FetchExtraOptions {
 }
 
 interface FetchRequestOptions {
-  method: string
+  method: HttpMethods
   requestBody: unknown
   requestHeaders: FetchParamObjects
   noAuth: boolean

@@ -9,7 +9,14 @@ import {
   GlobalDispatch,
   GlobalState,
 } from '../../app'
-import { ACTION_SUCCESS, ACTION_TYPES, ActionTypes, ID_DEFAULT, SOMETHING_WENT_WRONG } from '../../constants'
+import {
+  ACTION_SUCCESS,
+  ACTION_TYPES,
+  ActionTypes,
+  HTTP_METHODS,
+  ID_DEFAULT,
+  SOMETHING_WENT_WRONG,
+} from '../../constants'
 import {
   COURTS_COMPLETE,
   COURTS_READ_FAILURE,
@@ -47,13 +54,13 @@ export const courtsAction = ({
     if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.COURT_CREATE as string)
       options = {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         requestBody: { ...courtsRequest },
       }
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint = getEndpoint(process.env.COURT_UPDATE as string)
       options = {
-        method: 'PUT',
+        method: HTTP_METHODS.PUT,
         requestBody: courtsRequest,
         queryParams: { is_restore: isRestore || false },
         pathParams: { court_id: id || ID_DEFAULT },
@@ -61,7 +68,7 @@ export const courtsAction = ({
     } else if (action === ACTION_TYPES.DELETE) {
       endpoint = getEndpoint(process.env.COURT_DELETE as string)
       options = {
-        method: 'DELETE',
+        method: HTTP_METHODS.DELETE,
         pathParams: { court_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
       }
     }
@@ -100,7 +107,7 @@ export const getCourts = (requestMetadata?: Partial<FetchRequestMetadata>) => {
     }
     const endpoint = getEndpoint(process.env.COURT_READ as string)
     const options: Partial<FetchOptions> = {
-      method: 'GET',
+      method: HTTP_METHODS.GET,
       metadataParams: requestMetadata,
     }
 
@@ -143,7 +150,7 @@ export const getCourt = (courtId: number) => {
           schemaModelId: courtId,
         }
         const options: Partial<FetchOptions> = {
-          method: 'GET',
+          method: HTTP_METHODS.GET,
           metadataParams: requestMetadata,
         }
         const courtResponse = (await Async.fetch(endpoint, options)) as CourtResponse

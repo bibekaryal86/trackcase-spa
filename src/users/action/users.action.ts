@@ -13,7 +13,14 @@ import {
   SessionStorage,
 } from '../../app'
 import { USER_LOGOUT } from '../../app/types/app.action.types'
-import { ACTION_TYPES, ActionTypes, ID_DEFAULT, IS_DARK_MODE, SOMETHING_WENT_WRONG } from '../../constants'
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  HTTP_METHODS,
+  ID_DEFAULT,
+  IS_DARK_MODE,
+  SOMETHING_WENT_WRONG,
+} from '../../constants'
 import {
   APP_PERMISSIONS_COMPLETE,
   APP_ROLES_COMPLETE,
@@ -43,7 +50,7 @@ export const signup = async (username: string, password: string, fullName: strin
   try {
     const signupEndpoint = getEndpoint(process.env.APP_USER_CREATE as string)
     const options: Partial<FetchOptions> = {
-      method: 'POST',
+      method: HTTP_METHODS.POST,
       noAuth: true,
       requestBody: {
         email: username,
@@ -68,7 +75,7 @@ export const login = async (username: string, password: string): Promise<AppUser
       password,
     }
     const options: Partial<FetchOptions> = {
-      method: 'POST',
+      method: HTTP_METHODS.POST,
       noAuth: true,
       requestBody: loginRequest,
     }
@@ -96,7 +103,7 @@ export const validateInit = async (username: string): Promise<FetchResponse> => 
   try {
     const validateInitEndpoint = getEndpoint(process.env.USER_VALIDATE_INIT as string)
     const options: Partial<FetchOptions> = {
-      method: 'GET',
+      method: HTTP_METHODS.GET,
       noAuth: true,
       queryParams: {
         to_validate: username,
@@ -113,7 +120,7 @@ export const resetInit = async (username: string): Promise<FetchResponse> => {
   try {
     const resetInitEndpoint = getEndpoint(process.env.USER_RESET_INIT as string)
     const options: Partial<FetchOptions> = {
-      method: 'GET',
+      method: HTTP_METHODS.GET,
       noAuth: true,
       queryParams: {
         to_reset: username,
@@ -130,7 +137,7 @@ export const resetExit = async (username: string, password: string): Promise<Fet
   try {
     const resetExitEndpoint = getEndpoint(process.env.USER_RESET_EXIT as string)
     const options: Partial<FetchOptions> = {
-      method: 'POST',
+      method: HTTP_METHODS.POST,
       noAuth: true,
       requestBody: {
         username,
@@ -187,20 +194,20 @@ export const appUsersAdmin = ({
     if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.APP_USER_CREATE as string)
       options = {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         // send as validatedTrue, but with random password so that guests must reset before logging in
         requestBody: { ...appUserRequest, isGuestUser: true, isValidated: true, password: createGuestPassword() },
       }
     } else if (action === ACTION_TYPES.READ) {
       endpoint = getEndpoint(process.env.APP_USER_READ as string)
       options = {
-        method: 'GET',
+        method: HTTP_METHODS.GET,
         metadataParams: requestMetadata,
       }
     } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
       endpoint = getEndpoint(process.env.APP_USER_UPDATE as string)
       options = {
-        method: 'PUT',
+        method: HTTP_METHODS.PUT,
         requestBody: appUserRequest,
         queryParams: { is_restore: isRestore || false },
         pathParams: { app_user_id: id || ID_DEFAULT },
@@ -208,7 +215,7 @@ export const appUsersAdmin = ({
     } else if (action === ACTION_TYPES.DELETE) {
       endpoint = getEndpoint(process.env.APP_USER_DELETE as string)
       options = {
-        method: 'DELETE',
+        method: HTTP_METHODS.DELETE,
         pathParams: { app_user_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
       }
     }
@@ -267,20 +274,20 @@ export const appRolesAdmin = ({
     if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.APP_ROLE_CREATE as string)
       options = {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         // send as validatedTrue, but with random password so that guests must reset before logging in
         requestBody: { name: appRoleRequest?.name, description: appRoleRequest?.description },
       }
     } else if (action === ACTION_TYPES.READ) {
       endpoint = getEndpoint(process.env.APP_ROLE_READ as string)
       options = {
-        method: 'GET',
+        method: HTTP_METHODS.GET,
         metadataParams: requestMetadata,
       }
     } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
       endpoint = getEndpoint(process.env.APP_ROLE_UPDATE as string)
       options = {
-        method: 'PUT',
+        method: HTTP_METHODS.PUT,
         requestBody: { name: appRoleRequest?.name, description: appRoleRequest?.description },
         queryParams: { is_restore: isRestore || false },
         pathParams: { app_role_id: id || ID_DEFAULT },
@@ -288,7 +295,7 @@ export const appRolesAdmin = ({
     } else if (action === ACTION_TYPES.DELETE) {
       endpoint = getEndpoint(process.env.APP_ROLE_DELETE as string)
       options = {
-        method: 'DELETE',
+        method: HTTP_METHODS.DELETE,
         pathParams: { app_role_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
       }
     }
@@ -347,20 +354,20 @@ export const appPermissionsAdmin = ({
     if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.APP_PERMISSION_CREATE as string)
       options = {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         // send as validatedTrue, but with random password so that guests must reset before logging in
         requestBody: { name: appPermissionRequest?.name, description: appPermissionRequest?.description },
       }
     } else if (action === ACTION_TYPES.READ) {
       endpoint = getEndpoint(process.env.APP_PERMISSION_READ as string)
       options = {
-        method: 'GET',
+        method: HTTP_METHODS.GET,
         metadataParams: requestMetadata,
       }
     } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
       endpoint = getEndpoint(process.env.APP_PERMISSION_UPDATE as string)
       options = {
-        method: 'PUT',
+        method: HTTP_METHODS.PUT,
         requestBody: { name: appPermissionRequest?.name, description: appPermissionRequest?.description },
         queryParams: { is_restore: isRestore || false },
         pathParams: { app_role_id: id || ID_DEFAULT },
@@ -368,7 +375,7 @@ export const appPermissionsAdmin = ({
     } else if (action === ACTION_TYPES.DELETE) {
       endpoint = getEndpoint(process.env.APP_PERMISSION_DELETE as string)
       options = {
-        method: 'DELETE',
+        method: HTTP_METHODS.DELETE,
         pathParams: { app_role_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
       }
     }
@@ -427,20 +434,20 @@ export const appUsersRolesAdmin = ({
     if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.APP_USER_ROLE_CREATE as string)
       options = {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         // send as validatedTrue, but with random password so that guests must reset before logging in
         requestBody: { appUserId: appUserRoleRequest?.appUserId, appRoleId: appUserRoleRequest?.appRoleId },
       }
     } else if (action === ACTION_TYPES.READ) {
       endpoint = getEndpoint(process.env.APP_USER_ROLE_READ as string)
       options = {
-        method: 'GET',
+        method: HTTP_METHODS.GET,
         metadataParams: requestMetadata,
       }
     } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
       endpoint = getEndpoint(process.env.APP_USER_ROLE_UPDATE as string)
       options = {
-        method: 'PUT',
+        method: HTTP_METHODS.PUT,
         requestBody: { appUserId: appUserRoleRequest?.appUserId, appRoleId: appUserRoleRequest?.appRoleId },
         queryParams: { is_restore: isRestore || false },
         pathParams: { app_user_role_id: id || ID_DEFAULT },
@@ -448,7 +455,7 @@ export const appUsersRolesAdmin = ({
     } else if (action === ACTION_TYPES.DELETE) {
       endpoint = getEndpoint(process.env.APP_USER_ROLE_DELETE as string)
       options = {
-        method: 'DELETE',
+        method: HTTP_METHODS.DELETE,
         pathParams: { app_user_role_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
       }
     }
@@ -510,7 +517,7 @@ export const appRolesPermissionsAdmin = ({
     if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.APP_ROLE_PERMISSION_CREATE as string)
       options = {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         // send as validatedTrue, but with random password so that guests must reset before logging in
         requestBody: {
           appRoleId: appRolesPermissionsRequest?.appRoleId,
@@ -520,13 +527,13 @@ export const appRolesPermissionsAdmin = ({
     } else if (action === ACTION_TYPES.READ) {
       endpoint = getEndpoint(process.env.APP_ROLE_PERMISSION_READ as string)
       options = {
-        method: 'GET',
+        method: HTTP_METHODS.GET,
         metadataParams: requestMetadata,
       }
     } else if (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) {
       endpoint = getEndpoint(process.env.APP_ROLE_PERMISSION_UPDATE as string)
       options = {
-        method: 'PUT',
+        method: HTTP_METHODS.PUT,
         requestBody: {
           appRoleId: appRolesPermissionsRequest?.appRoleId,
           appPermissionId: appRolesPermissionsRequest?.appPermissionId,
@@ -537,7 +544,7 @@ export const appRolesPermissionsAdmin = ({
     } else if (action === ACTION_TYPES.DELETE) {
       endpoint = getEndpoint(process.env.APP_ROLE_PERMISSION_DELETE as string)
       options = {
-        method: 'DELETE',
+        method: HTTP_METHODS.DELETE,
         pathParams: { app_role_permission_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
       }
     }
