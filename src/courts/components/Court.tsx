@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -16,6 +17,7 @@ import {
   pageTopLinksComponent,
 } from '../../app'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT, REF_TYPES_REGISTRY } from '../../constants'
+import { JudgeSchema, JudgeTable } from '../../judges'
 import { ComponentStatusSchema, getRefType } from '../../types'
 import { courtsAction, getCourt } from '../actions/courts.action'
 import { CourtBase, CourtResponse, DefaultCourtFormData, DefaultCourtFormErrorData } from '../types/courts.data.types'
@@ -49,6 +51,7 @@ const Court = (props: CourtProps): React.ReactElement => {
   const [formData, setFormData] = useState(DefaultCourtFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultCourtFormData)
   const [formErrors, setFormErrors] = useState(DefaultCourtFormErrorData)
+  const [judgesList, setJudgesList] = useState([] as JudgeSchema[])
 
   const courtStatusList = useCallback(() => {
     return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURTS)
@@ -57,7 +60,7 @@ const Court = (props: CourtProps): React.ReactElement => {
   useEffect(() => {
     if (isForceFetch.current) {
       const fetchCourt = async (id: number) => {
-        return await getCourt(id)(dispatch, store)
+        return await getCourt(id, true)(dispatch, store)
       }
       if (isValidId(id)) {
         fetchCourt(getNumber(id)).then((oneCourt) => {
@@ -65,6 +68,7 @@ const Court = (props: CourtProps): React.ReactElement => {
             const oneCourtFormData = getCourtFormDataFromSchema(oneCourt)
             setFormData(oneCourtFormData)
             setFormDataReset(oneCourtFormData)
+            setJudgesList(oneCourt.judges || [])
           }
         })
       }
@@ -120,6 +124,10 @@ const Court = (props: CourtProps): React.ReactElement => {
       !isValidId(id) || isAreTwoCourtsSame(formData, formDataReset),
     )
 
+  const judgesTable = () => (
+    <JudgeTable judgesList={judgesList} selectedCourt={formData} componentStatusList={componentStatusList} />
+  )
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
@@ -138,9 +146,11 @@ const Court = (props: CourtProps): React.ReactElement => {
               {courtButtons()}
             </Grid>
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Divider />
               <Typography component="h1" variant="h6" color="primary">
                 JUDGES IN COURT:
               </Typography>
+              {judgesTable()}
             </Grid>
           </>
         )}
