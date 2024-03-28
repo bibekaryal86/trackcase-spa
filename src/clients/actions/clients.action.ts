@@ -6,6 +6,7 @@ import {
   FetchRequestMetadata,
   getEndpoint,
   getErrMsg,
+  getNumber,
   GlobalDispatch,
   GlobalState,
 } from '../../app'
@@ -51,6 +52,9 @@ export const clientsAction = ({
     let endpoint = ''
     let options: Partial<FetchOptions> = {}
 
+    if (clientsRequest && getNumber(clientsRequest.judgeId) <= 0) {
+      clientsRequest.judgeId = undefined
+    }
     if (action === ACTION_TYPES.CREATE) {
       endpoint = getEndpoint(process.env.CLIENT_CREATE as string)
       options = {

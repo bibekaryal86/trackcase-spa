@@ -155,7 +155,6 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     <FormSelectField
       componentLabel="CLIENT--JUDGE"
       name="judgeId"
-      required
       value={formData.judgeId || ID_DEFAULT}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       menuItems={judgesListForSelect()}

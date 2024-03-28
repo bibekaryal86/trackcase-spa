@@ -30,7 +30,7 @@ export const validateClient = (formData: ClientFormData, setFormErrors: (formErr
     hasValidationErrors = true
     formErrorsLocal.name = 'REQUIRED'
   }
-  if (!validateAddress(formData.streetAddress, formData.city, formData.state, formData.zipCode, true)) {
+  if (!validateAddress(formData.streetAddress, formData.city, formData.state, formData.zipCode, false)) {
     hasValidationErrors = true
     formErrorsLocal.streetAddress = 'INCOMPLETE ADDRESS'
   }

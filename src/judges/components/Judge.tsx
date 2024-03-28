@@ -16,6 +16,7 @@ import {
   pageTitleComponent,
   pageTopLinksComponent,
 } from '../../app'
+import { ClientSchema, ClientTable } from '../../clients'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT, REF_TYPES_REGISTRY } from '../../constants'
 import { CourtSchema, getCourts } from '../../courts'
 import { ComponentStatusSchema, getRefType } from '../../types'
@@ -56,6 +57,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   const [formData, setFormData] = useState(DefaultJudgeFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultJudgeFormData)
   const [formErrors, setFormErrors] = useState(DefaultJudgeFormErrorData)
+  const [clientsList, setClientsList] = useState([] as ClientSchema[])
 
   const judgeStatusList = useCallback(() => {
     return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.JUDGES)
@@ -72,6 +74,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
             const oneJudgeFormData = getJudgeFormDataFromSchema(oneJudge)
             setFormData(oneJudgeFormData)
             setFormDataReset(oneJudgeFormData)
+            setClientsList(oneJudge.clients || [])
           }
         })
       }
@@ -129,6 +132,10 @@ const Judge = (props: JudgeProps): React.ReactElement => {
       !isValidId(id) || isAreTwoJudgesSame(formData, formDataReset),
     )
 
+  const clientsTable = () => (
+    <ClientTable clientsList={clientsList} selectedJudge={formData} componentStatusList={componentStatusList} />
+  )
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
@@ -151,6 +158,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
               <Typography component="h1" variant="h6" color="primary">
                 CLIENTS ASSIGNED TO JUDGE:
               </Typography>
+              {clientsTable()}
             </Grid>
           </>
         )}
