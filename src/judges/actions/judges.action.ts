@@ -131,7 +131,7 @@ export const getJudges = (requestMetadata?: Partial<FetchRequestMetadata>) => {
   }
 }
 
-export const getJudge = (judgeId: number) => {
+export const getJudge = (judgeId: number, isIncludeExtra?: boolean) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, state: GlobalState): Promise<JudgeSchema | undefined> => {
     dispatch(judgeDispatch({ type: JUDGES_READ_REQUEST }))
     let oneJudge = undefined
@@ -140,6 +140,10 @@ export const getJudge = (judgeId: number) => {
       const judgesInStore = state.judges.judges
       if (judgesInStore) {
         oneJudge = judgesInStore.find((x) => x.id === judgeId)
+
+        if (isIncludeExtra && oneJudge && (!oneJudge.clients || !oneJudge.clients.length)) {
+          oneJudge = undefined
+        }
       }
 
       if (oneJudge) {

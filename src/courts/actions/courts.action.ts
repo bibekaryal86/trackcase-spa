@@ -131,7 +131,7 @@ export const getCourts = (requestMetadata?: Partial<FetchRequestMetadata>) => {
   }
 }
 
-export const getCourt = (courtId: number, isIncludeJudges?: boolean) => {
+export const getCourt = (courtId: number, isIncludeExtra?: boolean) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, state: GlobalState): Promise<CourtSchema | undefined> => {
     dispatch(courtDispatch({ type: COURTS_READ_REQUEST }))
     let oneCourt = undefined
@@ -141,7 +141,7 @@ export const getCourt = (courtId: number, isIncludeJudges?: boolean) => {
       if (courtsInStore) {
         oneCourt = courtsInStore.find((x) => x.id === courtId)
 
-        if (isIncludeJudges && oneCourt && (!oneCourt.judges || !oneCourt.judges.length)) {
+        if (isIncludeExtra && oneCourt && (!oneCourt.judges || !oneCourt.judges.length)) {
           oneCourt = undefined
         }
       }
@@ -152,7 +152,7 @@ export const getCourt = (courtId: number, isIncludeJudges?: boolean) => {
         const endpoint = getEndpoint(process.env.COURT_READ as string)
         const requestMetadata: Partial<FetchRequestMetadata> = {
           schemaModelId: courtId,
-          isIncludeExtra: isIncludeJudges === true,
+          isIncludeExtra: isIncludeExtra === true,
         }
         const options: Partial<FetchOptions> = {
           method: HTTP_METHODS.GET,

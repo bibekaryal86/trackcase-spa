@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -63,7 +64,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   useEffect(() => {
     if (isForceFetch.current) {
       const fetchJudge = async (id: number) => {
-        return await getJudge(id)(dispatch, store)
+        return await getJudge(id, true)(dispatch, store)
       }
       if (isValidId(id)) {
         fetchJudge(getNumber(id)).then((oneJudge) => {
@@ -146,6 +147,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
               {judgeButtons()}
             </Grid>
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Divider />
               <Typography component="h1" variant="h6" color="primary">
                 CLIENTS ASSIGNED TO JUDGE:
               </Typography>
