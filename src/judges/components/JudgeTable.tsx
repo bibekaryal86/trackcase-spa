@@ -87,7 +87,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
     if (x.componentStatus) {
       return x.componentStatus.statusName
     } else {
-      const componentStatus = componentStatusList?.find((y) => (y.id === x.componentStatusId))
+      const componentStatus = componentStatusList?.find((y) => y.id === x.componentStatusId)
       return componentStatus?.statusName
     }
   }

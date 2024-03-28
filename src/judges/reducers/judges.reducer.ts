@@ -10,7 +10,6 @@ export default function judges(state = DefaultJudgeState, action: JudgesAction):
   switch (action.type) {
     case JUDGES_READ_SUCCESS:
       return {
-
         judges: action.judges,
         requestMetadata: action.requestMetadata,
       }
