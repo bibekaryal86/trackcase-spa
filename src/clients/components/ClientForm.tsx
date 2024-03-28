@@ -9,131 +9,129 @@ import {
   FormSelectStateField,
   FormSelectStatusField,
   FormTextField,
-  getComments,
   getNumber,
-  getString,
   GridFormWrapper,
-  StatusSchema,
+  handleFormChange,
 } from '../../app'
 import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { JudgeSchema } from '../../judges'
-import { ClientSchema } from '../types/clients.data.types'
-import { handleClientFormOnChange, isClientFormFieldError } from '../utils/clients.utils'
+import { ComponentStatusSchema } from '../../types'
+import { ClientFormData, ClientFormErrorData } from '../types/clients.data.types'
 
 interface ClientFormProps {
-  selectedClient: ClientSchema
-  setSelectedClient: (selectedClient: ClientSchema) => void
-  clientStatusList: string[]
+  formData: ClientFormData
+  setFormData: (formData: ClientFormData) => void
+  formErrors: ClientFormErrorData
+  setFormErrors: (formErrors: ClientFormErrorData) => void
+  clientStatusList: ComponentStatusSchema[]
   isShowOneClient: boolean
+  judgeId?: number
   judgesList: JudgeSchema[]
-  judgeId?: string
-  statusList: StatusSchema<string>
 }
 
 const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedClient, setSelectedClient, clientStatusList, isShowOneClient, judgesList } = props
-  const { judgeId, statusList } = props
+  const { formData, formErrors, setFormData, setFormErrors, clientStatusList, isShowOneClient } = props
+  const { judgeId, judgesList } = props
 
   const clientName = () => (
     <FormTextField
-      componentLabel="Client--Name"
+      componentLabel="CLIENT--NAME"
       autoFocus={!isShowOneClient}
-      value={selectedClient.name}
-      onChange={(e) => handleClientFormOnChange('name', e.target.value, selectedClient, setSelectedClient, getString)}
-      error={isClientFormFieldError('name', selectedClient.name, selectedClient)}
+      name="name"
+      value={formData.name}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.name}
+      helperText={formErrors.name}
     />
   )
 
   const clientANumber = () => (
     <FormTextField
-      componentLabel="Client--A Number"
+      componentLabel="CLIENT--A NUMBER"
+      name="aNumber"
       required={false}
-      value={selectedClient.aNumber}
-      onChange={(e) =>
-        handleClientFormOnChange('aNumber', e.target.value, selectedClient, setSelectedClient, getString)
-      }
+      value={formData.aNumber}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.aNumber}
+      helperText={formErrors.aNumber}
     />
   )
 
   const clientEmail = () => (
     <FormTextField
-      componentLabel="Client--Email"
-      value={selectedClient.email}
-      onChange={(e) => handleClientFormOnChange('email', e.target.value, selectedClient, setSelectedClient, getString)}
-      error={isClientFormFieldError('email', selectedClient.email, selectedClient)}
+      componentLabel="CLIENT--EMAIL"
+      name="email"
+      value={formData.email}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.email}
+      helperText={formErrors.email}
     />
   )
 
   const clientPhoneNumber = () => (
     <FormTextField
-      componentLabel="Client--Phone"
+      componentLabel="CLIENT--PHONE"
+      name="phoneNumber"
       maxLength={15}
-      value={selectedClient.phoneNumber}
-      onChange={(e) =>
-        handleClientFormOnChange('phoneNumber', e.target.value, selectedClient, setSelectedClient, getString)
-      }
-      error={isClientFormFieldError('phoneNumber', selectedClient.phoneNumber, selectedClient)}
+      value={formData.phoneNumber}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.phoneNumber}
+      helperText={formErrors.phoneNumber}
     />
   )
 
   const clientStreetAddress = () => (
     <FormTextField
-      componentLabel="Client--Street Address"
+      componentLabel="CLIENT--STREET ADDRESS"
       required={false}
-      value={selectedClient.streetAddress}
-      onChange={(e) =>
-        handleClientFormOnChange('streetAddress', e.target.value, selectedClient, setSelectedClient, getString)
-      }
-      error={isClientFormFieldError('streetAddress', selectedClient.streetAddress, selectedClient)}
+      name="streetAddress"
+      value={formData.streetAddress}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.streetAddress}
+      helperText={formErrors.streetAddress}
     />
   )
 
   const clientCity = () => (
     <FormTextField
-      componentLabel="Client--City"
+      componentLabel="CLIENT--CITY"
       required={false}
-      value={selectedClient.city}
-      onChange={(e) => handleClientFormOnChange('city', e.target.value, selectedClient, setSelectedClient, getString)}
-      error={isClientFormFieldError('city', selectedClient.city, selectedClient)}
+      name="city"
+      value={formData.city}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.city}
+      helperText={formErrors.city}
     />
   )
 
   const clientState = () => (
     <FormSelectStateField
-      componentLabel="Client--State"
-      value={selectedClient.state}
-      onChange={(e) => handleClientFormOnChange('state', e.target.value, selectedClient, setSelectedClient, getString)}
-      error={isClientFormFieldError('state', selectedClient.state, selectedClient)}
+      componentLabel="CLIENT--STATE"
+      name="state"
+      value={formData.state}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.state}
+      helperText={formErrors.state}
     />
   )
 
   const clientZipCode = () => (
     <FormTextField
-      componentLabel="Client--Zip Code"
+      componentLabel="CLIENT--ZIP CODE"
       required={false}
       maxLength={5}
-      value={selectedClient.zipCode}
-      onChange={(e) =>
-        handleClientFormOnChange('zipCode', e.target.value, selectedClient, setSelectedClient, getString)
-      }
-      error={isClientFormFieldError('zipCode', selectedClient.zipCode, selectedClient)}
-    />
-  )
-
-  const clientStatus = () => (
-    <FormSelectStatusField
-      componentLabel="Client--Status"
-      value={selectedClient.status}
-      onChange={(e) => handleClientFormOnChange('status', e.target.value, selectedClient, setSelectedClient, getString)}
-      statusList={clientStatusList}
-      error={isClientFormFieldError('status', selectedClient.status, selectedClient)}
+      name="zipCode"
+      value={formData.zipCode}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.zipCode}
+      helperText={formErrors.zipCode}
     />
   )
 
   const judgesListForSelect = () => {
     if (getNumber(judgeId) > 0) {
-      const selectedJudge = judgesList.find((x) => x.id === Number(judgeId))
+      const selectedJudge = judgesList.find((x) => x.id === judgeId)
       if (selectedJudge) {
         return [
           <MenuItem key={selectedJudge.id} value={selectedJudge.id}>
@@ -143,7 +141,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       }
     } else {
       return judgesList
-        .filter((x) => selectedClient.judgeId === x.id || statusList.judge.active.includes(x.status))
+        .filter((x) => formData.judgeId === x.id || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
             {x.name}
@@ -155,22 +153,35 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientJudgesList = () => (
     <FormSelectField
-      componentLabel="Client--Judge"
-      value={selectedClient.judgeId || ID_DEFAULT}
-      onChange={(e) =>
-        handleClientFormOnChange('judgeId', e.target.value.toString(), selectedClient, setSelectedClient, getNumber)
-      }
+      componentLabel="CLIENT--JUDGE"
+      name="judgeId"
+      required
+      value={formData.judgeId || ID_DEFAULT}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       menuItems={judgesListForSelect()}
+      error={!!formErrors.judgeError}
+      helperText={formErrors.judgeError}
+    />
+  )
+
+  const clientStatus = () => (
+    <FormSelectStatusField
+      componentLabel="CLIENT--STATUS"
+      name="componentStatusId"
+      value={formData.componentStatusId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.componentStatusError}
+      helperText={formErrors.componentStatusError}
+      statusList={clientStatusList}
     />
   )
 
   const clientComments = () => (
     <FormCommentsField
-      componentLabel="Client--Comments"
-      value={selectedClient.comments}
-      onChange={(e) =>
-        handleClientFormOnChange('comments', e.target.value, selectedClient, setSelectedClient, getComments)
-      }
+      componentLabel="CLIENT--COMMENTS"
+      name="comments"
+      value={formData.comments}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />
   )
 

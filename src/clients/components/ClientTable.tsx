@@ -1,33 +1,37 @@
-import Button from '@mui/material/Button'
 import React from 'react'
 
-import { getFullAddress, Link, Table, TableData, TableHeaderData } from '../../app'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_DELETE,
-  BUTTON_UPDATE,
-  ID_ACTION_BUTTON,
-} from '../../constants'
-import { JudgeSchema } from '../../judges'
-import { ClientSchema } from '../types/clients.data.types'
+  FetchRequestMetadata,
+  getFullAddress,
+  Link,
+  ModalState,
+  Table,
+  tableAddButtonComponent,
+  TableData,
+  TableHeaderData,
+} from '../../app'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
+import { JudgeFormData, JudgeSchema } from '../../judges'
+import { ComponentStatusSchema } from '../../types'
+import { checkUserHasPermission, isSuperuser } from '../../users'
+import { ClientFormData, ClientSchema } from '../types/clients.data.types'
+import { getClientFormDataFromSchema } from '../utils/clients.utils'
 
 interface ClientTableProps {
   clientsList: ClientSchema[]
-  setModal?: (action: string) => void
-  setSelectedId?: (id: number) => void
-  setSelectedClient?: (client: ClientSchema) => void
-  setSelectedClientForReset?: (client: ClientSchema) => void
-  selectedJudge?: JudgeSchema
+  actionButtons?: (formDataForModal: ClientFormData) => React.JSX.Element
+  addModalState?: ModalState
+  softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  selectedJudge?: JudgeSchema | JudgeFormData
+  componentStatusList?: ComponentStatusSchema[]
 }
 
 const ClientTable = (props: ClientTableProps): React.ReactElement => {
-  const { clientsList, selectedJudge } = props
-  const { setModal, setSelectedId, setSelectedClient, setSelectedClientForReset } = props
+  const { clientsList, actionButtons, addModalState, softDeleteCallback } = props
+  const { selectedJudge, componentStatusList } = props
 
   const clientsTableHeaderData = (): TableHeaderData[] => {
-    return [
+    const tableHeaderData: TableHeaderData[] = [
       {
         id: 'name',
         label: 'Name',
@@ -60,38 +64,28 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
         id: 'status',
         label: 'Status',
       },
-      {
-        id: 'actions',
-        label: 'Actions',
-        align: 'center' as const,
-        isDisableSorting: true,
-      },
     ]
-  }
+    if (isSuperuser()) {
+      tableHeaderData.push({
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      })
+    }
+    if (
+      (checkUserHasPermission(COMPONENT_STATUS_NAME.CLIENTS, ACTION_TYPES.UPDATE) ||
+        checkUserHasPermission(COMPONENT_STATUS_NAME.CLIENTS, ACTION_TYPES.DELETE)) &&
+      !selectedJudge
+    ) {
+      tableHeaderData.push({
+        id: 'actions',
+        label: 'ACTIONS',
+        isDisableSorting: true,
+        align: 'center' as const,
+      })
+    }
 
-  const actionButtons = (id: number, client: ClientSchema) => (
-    <>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_UPDATE)
-          setSelectedId && setSelectedId(id)
-          setSelectedClient && setSelectedClient(client)
-          setSelectedClientForReset && setSelectedClientForReset(client)
-        }}
-      >
-        {BUTTON_UPDATE}
-      </Button>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_DELETE)
-          setSelectedId && setSelectedId(id)
-          setSelectedClient && setSelectedClient(client)
-        }}
-      >
-        {BUTTON_DELETE}
-      </Button>
-    </>
-  )
+    return tableHeaderData
+  }
 
   const linkToJudge = (x?: JudgeSchema) =>
     selectedJudge ? (
@@ -104,35 +98,38 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
 
   const linkToClient = (x: ClientSchema) => <Link text={x.name} navigateToPage={`/client/${x.id}`} />
 
-  const clientsTableDataCommon = (x: ClientSchema) => {
-    return {
-      name: linkToClient(x),
-      aNumber: x.aNumber,
-      email: x.email,
-      phone: x.phoneNumber,
-      address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-      judge: linkToJudge(x.judge),
-      status: x.status,
+  const getComponentStatus = (x: ClientSchema) => {
+    if (x.componentStatus) {
+      return x.componentStatus.statusName
+    } else {
+      const componentStatus = componentStatusList?.find((y) => y.id === x.componentStatusId)
+      return componentStatus?.statusName
     }
   }
 
   const clientsTableData = (): TableData[] => {
     return Array.from(clientsList, (x) => {
       return {
-        ...clientsTableDataCommon(x),
-        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+        name: linkToClient(x),
+        aNumber: x.aNumber,
+        email: x.email,
+        phone: x.phoneNumber,
+        address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
+        judge: linkToJudge(x.judge),
+        status: getComponentStatus(x),
+        isDeleted: x.isDeleted,
+        actions: actionButtons ? actionButtons(getClientFormDataFromSchema(x)) : undefined,
       }
     })
   }
 
-  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Client</Button>
-
   return (
     <Table
-      componentName="Client"
+      componentName={COMPONENT_STATUS_NAME.CLIENTS}
       headerData={clientsTableHeaderData()}
       tableData={clientsTableData()}
-      addModelComponent={addButton()}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.CLIENTS, addModalState)}
+      getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )
 }
