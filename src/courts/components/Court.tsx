@@ -141,7 +141,6 @@ const Court = (props: CourtProps): React.ReactElement => {
               <Typography component="h1" variant="h6" color="primary">
                 JUDGES IN COURT:
               </Typography>
-              {/*<Judges courtId={id} />*/}
             </Grid>
           </>
         )}

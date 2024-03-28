@@ -68,7 +68,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       }
     } else {
       return courtsList
-        .filter((x) => formData.courtId === x.id)
+        .filter((x) => formData.courtId === x.id || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
             {x.name}
@@ -82,6 +82,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormSelectField
       componentLabel="JUDGE--COURT"
       name="courtId"
+      required
       value={formData.courtId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       menuItems={courtsListForSelect()}
