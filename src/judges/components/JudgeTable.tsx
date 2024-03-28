@@ -10,22 +10,24 @@ import {
   TableHeaderData,
 } from '../../app'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
-import { CourtSchema } from '../../courts'
+import { CourtFormData, CourtSchema } from '../../courts'
+import { ComponentStatusSchema } from '../../types'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import { JudgeFormData, JudgeSchema } from '../types/judges.data.types'
 import { getJudgeFormDataFromSchema } from '../utils/judges.utils'
 
 interface JudgeTableProps {
   judgesList: JudgeSchema[]
-  actionButtons: (formDataForModal: JudgeFormData) => React.JSX.Element
-  addModalState: ModalState
-  softDeleteCallback: (requestMetadata: Partial<FetchRequestMetadata>) => void
-  selectedCourt?: CourtSchema
+  actionButtons?: (formDataForModal: JudgeFormData) => React.JSX.Element
+  addModalState?: ModalState
+  softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  selectedCourt?: CourtSchema | CourtFormData
+  componentStatusList?: ComponentStatusSchema[]
 }
 
 const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
   const { judgesList, actionButtons, addModalState, softDeleteCallback } = props
-  const { selectedCourt } = props
+  const { selectedCourt, componentStatusList } = props
 
   const judgesTableHeaderData = (): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = [
@@ -54,8 +56,9 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
       })
     }
     if (
-      checkUserHasPermission(COMPONENT_STATUS_NAME.JUDGES, ACTION_TYPES.UPDATE) ||
-      checkUserHasPermission(COMPONENT_STATUS_NAME.JUDGES, ACTION_TYPES.DELETE)
+      (checkUserHasPermission(COMPONENT_STATUS_NAME.JUDGES, ACTION_TYPES.UPDATE) ||
+        checkUserHasPermission(COMPONENT_STATUS_NAME.JUDGES, ACTION_TYPES.DELETE)) &&
+      !selectedCourt
     ) {
       tableHeaderData.push({
         id: 'actions',
@@ -80,15 +83,26 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
 
   const linkToJudge = (x: JudgeSchema) => <Link text={x.name} navigateToPage={`/judge/${x.id}`} />
 
+  const getComponentStatus = (x: JudgeSchema) => {
+    if (x.componentStatus) {
+      return x.componentStatus.statusName
+    } else {
+      const componentStatus = componentStatusList?.find((y) => (y.id = x.componentStatusId))
+      console.log(componentStatus)
+      return ''
+      // return componentStatus?.statusName
+    }
+  }
+
   const judgesTableData = (): TableData[] => {
     return Array.from(judgesList, (x) => {
       return {
         name: linkToJudge(x),
         court: linkToCourt(x.court),
         webex: linkToWebex(x.webex),
-        status: x.componentStatus?.statusName,
+        status: getComponentStatus(x),
         isDeleted: x.isDeleted,
-        actions: actionButtons(getJudgeFormDataFromSchema(x)),
+        actions: actionButtons ? actionButtons(getJudgeFormDataFromSchema(x)) : undefined,
       }
     })
   }
@@ -99,7 +113,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
       headerData={judgesTableHeaderData()}
       tableData={judgesTableData()}
       addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.JUDGES, addModalState)}
-      getSoftDeletedCallback={() => softDeleteCallback({ isIncludeDeleted: true })}
+      getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )
 }

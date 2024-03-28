@@ -25,13 +25,13 @@ import { getJudgeFormDataFromSchema, isAreTwoJudgesSame, validateJudge } from '.
 const mapStateToProps = ({ refTypes, courts }: GlobalState) => {
   return {
     componentStatusList: refTypes.componentStatus,
-    courtsList: courts.courts
+    courtsList: courts.courts,
   }
 }
 
 const mapDispatchToProps = {
   getRefType: () => getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS),
-  getCourts: () => getCourts()
+  getCourts: () => getCourts(),
 }
 
 interface JudgeProps {
