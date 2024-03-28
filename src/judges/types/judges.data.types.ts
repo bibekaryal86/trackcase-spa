@@ -61,7 +61,7 @@ export const DefaultJudgeSchema: JudgeSchema = {
   comments: '',
 }
 
-export const DefaultFormState: JudgesState = {
+export const DefaultJudgeState: JudgesState = {
   judges: [],
   requestMetadata: {},
 }
@@ -78,9 +78,4 @@ export const DefaultJudgeFormErrorData: JudgeFormErrorData = {
   ...DefaultJudgeFormData,
   courtError: '',
   componentStatusError: '',
-}
-
-export const DefaultJudgeState: JudgesState = {
-  judges: [],
-  requestMetadata: {},
 }

@@ -73,18 +73,9 @@ export const courtDispatch = ({
 
 export const getCourtFormDataFromSchema = (x: CourtSchema): CourtFormData => {
   return {
+    ...x,
     id: x.id || ID_DEFAULT,
-    name: x.name,
-    componentStatusId: x.componentStatusId,
-    streetAddress: x.streetAddress,
-    city: x.city,
-    state: x.state,
-    zipCode: x.zipCode,
-    phoneNumber: x.phoneNumber,
-    dhsAddress: x.dhsAddress,
-    comments: x.comments,
     isHardDelete: false,
     isShowSoftDeleted: false,
-    isDeleted: x.isDeleted,
   }
 }

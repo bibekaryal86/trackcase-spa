@@ -65,14 +65,9 @@ export const judgeDispatch = ({
 
 export const getJudgeFormDataFromSchema = (x: JudgeSchema): JudgeFormData => {
   return {
+    ...x,
     id: x.id || ID_DEFAULT,
-    name: x.name,
-    webex: x.webex,
-    courtId: x.courtId,
-    componentStatusId: x.componentStatusId,
-    comments: x.comments,
     isHardDelete: false,
     isShowSoftDeleted: false,
-    isDeleted: x.isDeleted,
   }
 }
