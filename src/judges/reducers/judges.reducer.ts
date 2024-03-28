@@ -10,7 +10,7 @@ export default function judges(state = DefaultJudgeState, action: JudgesAction):
   switch (action.type) {
     case JUDGES_READ_SUCCESS:
       return {
-        ...state,
+
         judges: action.judges,
         requestMetadata: action.requestMetadata,
       }
@@ -18,8 +18,8 @@ export default function judges(state = DefaultJudgeState, action: JudgesAction):
     case JUDGES_UPDATE_SUCCESS:
     case JUDGES_DELETE_SUCCESS:
       return {
+        ...state,
         judges: [],
-        requestMetadata: {},
       }
     default:
       return state

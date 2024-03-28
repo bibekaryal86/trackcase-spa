@@ -10,7 +10,6 @@ export default function courts(state = DefaultCourtState, action: CourtsAction):
   switch (action.type) {
     case COURTS_READ_SUCCESS:
       return {
-        ...state,
         courts: action.courts,
         requestMetadata: action.requestMetadata,
       }
@@ -18,8 +17,8 @@ export default function courts(state = DefaultCourtState, action: CourtsAction):
     case COURTS_UPDATE_SUCCESS:
     case COURTS_DELETE_SUCCESS:
       return {
+        ...state,
         courts: [],
-        requestMetadata: {},
       }
     default:
       return state
