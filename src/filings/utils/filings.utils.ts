@@ -1,13 +1,13 @@
 import dayjs, { Dayjs } from 'dayjs'
 
 import { getDayjs, getNumber } from '../../app'
-import { FormSchema } from '../types/forms.data.types'
+import { FormSchema } from '../types/filings.data.types'
 
 export const validateForm = (form: FormSchema) => {
   const errors: string[] = []
 
   if (getNumber(form.formTypeId) <= 0) {
-    errors.push('Form Type is required!')
+    errors.push('Filing Type is required!')
   }
   if (getNumber(form.courtCaseId) <= 0) {
     errors.push('Case is required!')

@@ -12,7 +12,7 @@ import {
   ID_ACTION_BUTTON,
 } from '../../constants'
 import { FilingTypeSchema } from '../../types'
-import { FormSchema } from '../types/forms.data.types'
+import { FormSchema } from '../types/filings.data.types'
 
 interface FormTableProps {
   formsList: FormSchema[]
@@ -25,7 +25,7 @@ interface FormTableProps {
   formTypesList: FilingTypeSchema[]
 }
 
-const FormTable = (props: FormTableProps): React.ReactElement => {
+const FilingTable = (props: FormTableProps): React.ReactElement => {
   const { formsList, courtCasesList, selectedCourtCase, formTypesList } = props
   const { setModal, setSelectedId, setSelectedForm, setSelectedFormForReset } = props
 
@@ -172,7 +172,7 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
 
   return (
     <Table
-      componentName="Form"
+      componentName="Filing"
       headerData={formsTableHeaderData()}
       tableData={formsTableData()}
       addModelComponent={addButton()}
@@ -180,4 +180,4 @@ const FormTable = (props: FormTableProps): React.ReactElement => {
   )
 }
 
-export default FormTable
+export default FilingTable

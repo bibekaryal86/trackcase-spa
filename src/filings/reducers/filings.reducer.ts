@@ -6,8 +6,8 @@ import {
   FORMS_READ_SUCCESS,
   FORMS_UNMOUNT,
   SET_SELECTED_FORM,
-} from '../types/forms.action.types'
-import { DefaultFormSchema, DefaultFormState, FormsAction, FormsState } from '../types/forms.data.types'
+} from '../types/filings.action.types'
+import { DefaultFormSchema, DefaultFormState, FormsAction, FormsState } from '../types/filings.data.types'
 
 export default function forms(state = DefaultFormState, action: FormsAction): FormsState {
   const matchesRequest = /^FORM_(CREATE|UPDATE|DELETE)_REQUEST$/.exec(action.type)

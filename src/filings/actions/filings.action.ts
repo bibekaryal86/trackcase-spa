@@ -17,9 +17,9 @@ import {
   FORMS_READ_REQUEST,
   FORMS_READ_SUCCESS,
   SET_SELECTED_FORM,
-} from '../types/forms.action.types'
-import { FormResponse, FormSchema } from '../types/forms.data.types'
-import { validateForm } from '../utils/forms.utils'
+} from '../types/filings.action.types'
+import { FormResponse, FormSchema } from '../types/filings.data.types'
+import { validateForm } from '../utils/filings.utils'
 
 export const addForm = (form: FormSchema) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
@@ -46,7 +46,7 @@ export const addForm = (form: FormSchema) => {
         dispatch(formsSuccess(FORM_CREATE_SUCCESS, CREATE_SUCCESS('Form'), []))
       }
     } catch (error) {
-      console.log('Add Form Error: ', error)
+      console.log('Add Filing Error: ', error)
       dispatch(formsFailure(FORM_CREATE_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(formsComplete())
@@ -78,7 +78,7 @@ export const getForms = (isForceFetch: boolean = false) => {
         dispatch(formsSuccess(FORMS_READ_SUCCESS, '', formsInStore))
       }
     } catch (error) {
-      console.log('Get Forms Error: ', error)
+      console.log('Get Filings Error: ', error)
       dispatch(formsFailure(FORMS_READ_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(formsComplete())
@@ -151,7 +151,7 @@ export const editForm = (id: number, form: FormSchema) => {
         dispatch(formsSuccess(FORM_UPDATE_SUCCESS, UPDATE_SUCCESS('Form'), []))
       }
     } catch (error) {
-      console.log('Edit Form Error: ', error)
+      console.log('Edit Filing Error: ', error)
       dispatch(formsFailure(FORM_UPDATE_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(formsComplete())
@@ -178,7 +178,7 @@ export const deleteForm = (id: number) => {
         dispatch(formsSuccess(FORM_DELETE_SUCCESS, DELETE_SUCCESS('Form'), []))
       }
     } catch (error) {
-      console.log('Delete Form Error: ', error)
+      console.log('Delete Filing Error: ', error)
       dispatch(formsFailure(FORM_UPDATE_FAILURE, SOMETHING_WENT_WRONG))
     } finally {
       dispatch(formsComplete())

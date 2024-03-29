@@ -19,8 +19,8 @@ import {
 import { CourtCaseSchema } from '../../cases'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { FilingTypeSchema } from '../../types'
-import { FormSchema } from '../types/forms.data.types'
-import { handleFormDateOnChange, handleFormFormOnChange, isFormFormFieldError } from '../utils/forms.utils'
+import { FormSchema } from '../types/filings.data.types'
+import { handleFormDateOnChange, handleFormFormOnChange, isFormFormFieldError } from '../utils/filings.utils'
 
 interface FormFormProps {
   selectedForm: FormSchema
@@ -33,7 +33,7 @@ interface FormFormProps {
   statusList: StatusSchema<string>
 }
 
-const FormForm = (props: FormFormProps): React.ReactElement => {
+const FilingForm = (props: FormFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { selectedForm, setSelectedForm, formStatusList, isShowOneForm } = props
   const { courtCaseId, statusList } = props
@@ -70,7 +70,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formType = () => (
     <FormSelectField
-      componentLabel="Form--Filing Type"
+      componentLabel="Filing--Filing Type"
       required={true}
       value={selectedForm.formTypeId}
       onChange={(e) => handleFormFormOnChange('formTypeId', e.target.value, selectedForm, setSelectedForm, getNumber)}
@@ -81,7 +81,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formCourtCase = () => (
     <FormSelectField
-      componentLabel="Form--Client, Case"
+      componentLabel="Filing--Client, Case"
       required={true}
       value={selectedForm.courtCaseId}
       onChange={(e) => handleFormFormOnChange('courtCaseId', e.target.value, selectedForm, setSelectedForm, getNumber)}
@@ -92,7 +92,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formSubmitDate = () => (
     <FormDatePickerField
-      componentLabel="Form--Submit Date"
+      componentLabel="Filing--Submit Date"
       value={selectedForm.submitDate}
       onChange={(newValue) => handleFormDateOnChange('submitDate', newValue, selectedForm, setSelectedForm)}
       minDate={dayjs().subtract(1, 'week')}
@@ -102,7 +102,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formReceiptDate = () => (
     <FormDatePickerField
-      componentLabel="Form--Receipt Date"
+      componentLabel="Filing--Receipt Date"
       value={selectedForm.receiptDate}
       onChange={(newValue) => handleFormDateOnChange('receiptDate', newValue, selectedForm, setSelectedForm)}
       minDate={dayjs().subtract(1, 'month')}
@@ -112,7 +112,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formReceiptNumber = () => (
     <FormTextField
-      componentLabel="Form--Receipt Number"
+      componentLabel="Filing--Receipt Number"
       required={false}
       value={selectedForm.receiptNumber}
       onChange={(e) =>
@@ -123,7 +123,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formPriorityDate = () => (
     <FormDatePickerField
-      componentLabel="Form--Priority Date"
+      componentLabel="Filing--Priority Date"
       value={selectedForm.priorityDate}
       onChange={(newValue) => handleFormDateOnChange('priorityDate', newValue, selectedForm, setSelectedForm)}
       minDate={dayjs().subtract(1, 'month')}
@@ -133,7 +133,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formRfeDate = () => (
     <FormDatePickerField
-      componentLabel="Form--RFE Date"
+      componentLabel="Filing--RFE Date"
       value={selectedForm.rfeDate}
       onChange={(newValue) => handleFormDateOnChange('rfeDate', newValue, selectedForm, setSelectedForm)}
       minDate={dayjs().subtract(1, 'month')}
@@ -143,7 +143,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formRfeSubmitDate = () => (
     <FormDatePickerField
-      componentLabel="Form--RFE Submit Date"
+      componentLabel="Filing--RFE Submit Date"
       value={selectedForm.rfeSubmitDate}
       onChange={(newValue) => handleFormDateOnChange('rfeSubmitDate', newValue, selectedForm, setSelectedForm)}
       minDate={dayjs().subtract(1, 'month')}
@@ -153,7 +153,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formDecisionDate = () => (
     <FormDatePickerField
-      componentLabel="Form--Decision Date"
+      componentLabel="Filing--Decision Date"
       value={selectedForm.decisionDate}
       onChange={(newValue) => handleFormDateOnChange('decisionDate', newValue, selectedForm, setSelectedForm)}
       minDate={dayjs().subtract(1, 'month')}
@@ -163,7 +163,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formStatus = () => (
     <FormSelectStatusField
-      componentLabel="Form--Status"
+      componentLabel="Filing--Status"
       value={selectedForm.status}
       onChange={(e) => handleFormFormOnChange('status', e.target.value, selectedForm, setSelectedForm, getString)}
       statusList={formStatusList}
@@ -173,7 +173,7 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
 
   const formComments = () => (
     <FormCommentsField
-      componentLabel="Form--Comments"
+      componentLabel="Filing--Comments"
       value={selectedForm.comments}
       onChange={(e) => handleFormFormOnChange('comments', e.target.value, selectedForm, setSelectedForm, getComments)}
     />
@@ -224,4 +224,4 @@ const FormForm = (props: FormFormProps): React.ReactElement => {
   )
 }
 
-export default FormForm
+export default FilingForm

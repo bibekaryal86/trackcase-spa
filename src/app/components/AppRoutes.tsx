@@ -22,7 +22,7 @@ import { Client, Clients } from '../../clients'
 import { Collections } from '../../collections'
 import { ALERT_TYPES, INCOMPLETE_PERMISSION, REF_TYPES_REGISTRY } from '../../constants'
 import { Court, Courts } from '../../courts'
-import { Form, Forms } from '../../filings'
+import { Filing, Filings } from '../../filings'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
 import { RefTypes } from '../../types'
@@ -81,16 +81,16 @@ export const protectedRoutes: RoutesType[] = [
   {
     path: '/filings',
     display: 'Filings',
-    element: <Forms />,
+    element: <Filings />,
     icon: <FileOpenIcon />,
   },
   {
     path: '/filing',
-    element: <Form />,
+    element: <Filing />,
     subroutes: [
       {
         path: ':id',
-        element: <Form />,
+        element: <Filing />,
       },
     ],
   },

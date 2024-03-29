@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Forms = (): React.ReactElement => {
+const Filings = (): React.ReactElement => {
   const pageText = () => (
     <>
       <h5>This is the CashCollection!</h5>
@@ -10,4 +10,4 @@ const Forms = (): React.ReactElement => {
   return <>{pageText()}</>
 }
 
-export default Forms
+export default Filings
