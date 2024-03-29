@@ -16,26 +16,26 @@ import {
   pageTitleComponent,
   pageTopLinksComponent,
 } from '../../app'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT, REF_TYPES_REGISTRY } from '../../constants'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { JudgeSchema, JudgeTable } from '../../judges'
-import { ComponentStatusSchema, getRefType } from '../../types'
+import { getRefTypes, RefTypesState } from '../../types'
 import { courtsAction, getCourt } from '../actions/courts.action'
 import { CourtBase, CourtResponse, DefaultCourtFormData, DefaultCourtFormErrorData } from '../types/courts.data.types'
 import { getCourtFormDataFromSchema, isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    componentStatusList: refTypes.componentStatus,
+    refTypes: refTypes,
   }
 }
 
 const mapDispatchToProps = {
-  getRefType: () => getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS),
+  getRefTypes: () => getRefTypes(),
 }
 
 interface CourtProps {
-  componentStatusList: ComponentStatusSchema[]
-  getRefType: () => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
 }
 
 const Court = (props: CourtProps): React.ReactElement => {
@@ -46,7 +46,7 @@ const Court = (props: CourtProps): React.ReactElement => {
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
 
-  const { componentStatusList, getRefType } = props
+  const { refTypes, getRefTypes } = props
 
   const [formData, setFormData] = useState(DefaultCourtFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultCourtFormData)
@@ -54,8 +54,8 @@ const Court = (props: CourtProps): React.ReactElement => {
   const [judgesList, setJudgesList] = useState([] as JudgeSchema[])
 
   const courtStatusList = useCallback(() => {
-    return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURTS)
-  }, [componentStatusList])
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURTS)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
@@ -72,10 +72,10 @@ const Court = (props: CourtProps): React.ReactElement => {
           }
         })
       }
-      componentStatusList.length === 0 && getRefType()
+      refTypes.componentStatus.length === 0 && getRefTypes()
     }
     isForceFetch.current = false
-  }, [componentStatusList.length, dispatch, getRefType, id, store])
+  }, [dispatch, getRefTypes, id, refTypes.componentStatus.length, store])
 
   useEffect(() => {
     return () => {
@@ -125,7 +125,7 @@ const Court = (props: CourtProps): React.ReactElement => {
     )
 
   const judgesTable = () => (
-    <JudgeTable judgesList={judgesList} selectedCourt={formData} componentStatusList={componentStatusList} />
+    <JudgeTable judgesList={judgesList} selectedCourt={formData} componentStatusList={refTypes.componentStatus} />
   )
 
   return (

@@ -17,15 +17,9 @@ import {
   pageTopLinksComponent,
 } from '../../app'
 import { CourtCaseSchema, CourtCaseTable } from '../../cases'
-import {
-  ACTION_TYPES,
-  COMPONENT_STATUS_NAME,
-  INVALID_INPUT,
-  REF_TYPES_REGISTRY,
-  RefTypesRegistry,
-} from '../../constants'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { getJudges, JudgeSchema } from '../../judges'
-import { CaseTypeSchema, ComponentStatusSchema, getRefType } from '../../types'
+import { getRefTypes, RefTypesState } from '../../types'
 import { clientsAction, getClient } from '../actions/clients.action'
 import {
   ClientBase,
@@ -37,21 +31,20 @@ import { getClientFormDataFromSchema, isAreTwoClientsSame, validateClient } from
 
 const mapStateToProps = ({ refTypes, judges }: GlobalState) => {
   return {
-    componentStatusList: refTypes.componentStatus,
+    refTypes: refTypes,
     caseTypesList: refTypes.caseType,
     judgesList: judges.judges,
   }
 }
 
 const mapDispatchToProps = {
-  getRefType: (refType: RefTypesRegistry) => getRefType(refType),
+  getRefTypes: () => getRefTypes(),
   getJudges: () => getJudges(),
 }
 
 interface ClientProps {
-  componentStatusList: ComponentStatusSchema[]
-  caseTypesList: CaseTypeSchema[]
-  getRefType: (refType: RefTypesRegistry) => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   judgesList: JudgeSchema[]
   getJudges: () => void
 }
@@ -64,7 +57,7 @@ const Client = (props: ClientProps): React.ReactElement => {
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
 
-  const { componentStatusList, caseTypesList, getRefType } = props
+  const { refTypes, getRefTypes } = props
   const { judgesList, getJudges } = props
 
   const [formData, setFormData] = useState(DefaultClientFormData)
@@ -73,8 +66,8 @@ const Client = (props: ClientProps): React.ReactElement => {
   const [courtCasesList, setCourtCasesList] = useState([] as CourtCaseSchema[])
 
   const clientStatusList = useCallback(() => {
-    return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CLIENTS)
-  }, [componentStatusList])
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CLIENTS)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
@@ -91,12 +84,23 @@ const Client = (props: ClientProps): React.ReactElement => {
           }
         })
       }
-      componentStatusList.length === 0 && getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS)
-      caseTypesList.length === 0 && getRefType(REF_TYPES_REGISTRY.CASE_TYPE)
+
+      if (refTypes.componentStatus.length === 0 || refTypes.caseType.length === 0) {
+        getRefTypes()
+      }
       judgesList.length === 0 && getJudges()
     }
     isForceFetch.current = false
-  }, [componentStatusList.length, caseTypesList.length, judgesList.length, dispatch, getJudges, getRefType, id, store])
+  }, [
+    dispatch,
+    getJudges,
+    getRefTypes,
+    id,
+    judgesList.length,
+    refTypes.caseType.length,
+    refTypes.componentStatus.length,
+    store,
+  ])
 
   useEffect(() => {
     return () => {
@@ -147,7 +151,7 @@ const Client = (props: ClientProps): React.ReactElement => {
     )
 
   const courtCasesTable = () => (
-    <CourtCaseTable courtCasesList={courtCasesList} selectedClient={formData} caseTypesList={caseTypesList} />
+    <CourtCaseTable courtCasesList={courtCasesList} selectedClient={formData} caseTypesList={refTypes.caseType} />
   )
 
   return (

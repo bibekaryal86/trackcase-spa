@@ -18,15 +18,8 @@ import {
   useModal,
 } from '../../app'
 import { ClientSchema, getClients } from '../../clients'
-import {
-  ACTION_TYPES,
-  ActionTypes,
-  COMPONENT_STATUS_NAME,
-  INVALID_INPUT,
-  REF_TYPES_REGISTRY,
-  RefTypesRegistry,
-} from '../../constants'
-import { CaseTypeSchema, ComponentStatusSchema, getRefType } from '../../types'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
+import { getRefTypes, RefTypesState } from '../../types'
 import { courtCasesAction, getCourtCases } from '../actions/courtCases.action'
 import {
   CourtCaseBase,
@@ -40,15 +33,14 @@ import { validateCourtCase } from '../utils/courtCases.utils'
 
 const mapStateToProps = ({ refTypes, courtCases, clients }: GlobalState) => {
   return {
-    componentStatusList: refTypes.componentStatus,
-    caseTypesList: refTypes.caseType,
+    refTypes: refTypes,
     courtCasesList: courtCases.courtCases,
     clientsList: clients.clients,
   }
 }
 
 const mapDispatchToProps = {
-  getRefType: (refType: RefTypesRegistry) => getRefType(refType),
+  getRefTypes: () => getRefTypes(),
   getCourtCases: (requestMetadata: Partial<FetchRequestMetadata>) => getCourtCases(requestMetadata),
   getClients: () => getClients(),
 }
@@ -56,9 +48,8 @@ const mapDispatchToProps = {
 interface CourtCasesProps {
   courtCasesList: CourtCaseSchema[]
   getCourtCases: (requestMetadata: Partial<FetchRequestMetadata>) => void
-  componentStatusList: ComponentStatusSchema[]
-  caseTypesList: CaseTypeSchema[]
-  getRefType: (refType: RefTypesRegistry) => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   clientsList: ClientSchema[]
   getClients: () => void
 }
@@ -70,7 +61,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const { courtCasesList, getCourtCases } = props
-  const { caseTypesList, componentStatusList, getRefType } = props
+  const { refTypes, getRefTypes } = props
   const { clientsList, getClients } = props
 
   const [formData, setFormData] = useState(DefaultCourtCaseFormData)
@@ -78,24 +69,26 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   const [formErrors, setFormErrors] = useState(DefaultCourtCaseFormErrorData)
 
   const courtCaseStatusList = useCallback(() => {
-    return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURT_CASES)
-  }, [componentStatusList])
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURT_CASES)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
       courtCasesList.length === 0 && getCourtCases({})
-      caseTypesList.length === 0 && getRefType(REF_TYPES_REGISTRY.CASE_TYPE)
-      componentStatusList.length === 0 && getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS)
       clientsList.length === 0 && getClients()
+
+      if (refTypes.componentStatus.length === 0 || refTypes.caseType.length === 0) {
+        getRefTypes()
+      }
     }
   }, [
-    caseTypesList.length,
-    componentStatusList.length,
-    courtCasesList.length,
-    getCourtCases,
-    getRefType,
     clientsList.length,
+    courtCasesList.length,
     getClients,
+    getCourtCases,
+    getRefTypes,
+    refTypes.caseType.length,
+    refTypes.componentStatus.length,
   ])
 
   useEffect(() => {
@@ -157,7 +150,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
         courtCaseStatusList={courtCaseStatusList()}
         isShowOneCourtCase={false}
         clientsList={clientsList}
-        caseTypesList={caseTypesList}
+        caseTypesList={refTypes.caseType}
       />
     </Box>
   )
@@ -193,7 +186,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
     )
 
   const getClientCaseType = () => {
-    const selectedCaseType = caseTypesList.find((x) => x.id === formData.caseTypeId)
+    const selectedCaseType = refTypes.caseType.find((x) => x.id === formData.caseTypeId)
     const selectedClient = clientsList.find((x) => x.id === formData.clientId)
     if (selectedCaseType && selectedClient) {
       return ': ' + selectedClient.name + ', ' + selectedCaseType.name

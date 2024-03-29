@@ -17,28 +17,28 @@ import {
   pageTopLinksComponent,
 } from '../../app'
 import { ClientSchema, ClientTable } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT, REF_TYPES_REGISTRY } from '../../constants'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { CourtSchema, getCourts } from '../../courts'
-import { ComponentStatusSchema, getRefType } from '../../types'
+import { getRefTypes, RefTypesState } from '../../types'
 import { getJudge, judgesAction } from '../actions/judges.action'
 import { DefaultJudgeFormData, DefaultJudgeFormErrorData, JudgeBase, JudgeResponse } from '../types/judges.data.types'
 import { getJudgeFormDataFromSchema, isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
 
 const mapStateToProps = ({ refTypes, courts }: GlobalState) => {
   return {
-    componentStatusList: refTypes.componentStatus,
+    refTypes: refTypes,
     courtsList: courts.courts,
   }
 }
 
 const mapDispatchToProps = {
-  getRefType: () => getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS),
+  getRefTypes: () => getRefTypes(),
   getCourts: () => getCourts(),
 }
 
 interface JudgeProps {
-  componentStatusList: ComponentStatusSchema[]
-  getRefType: () => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   courtsList: CourtSchema[]
   getCourts: () => void
 }
@@ -51,7 +51,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
 
-  const { componentStatusList, getRefType } = props
+  const { refTypes, getRefTypes } = props
   const { courtsList, getCourts } = props
 
   const [formData, setFormData] = useState(DefaultJudgeFormData)
@@ -60,8 +60,8 @@ const Judge = (props: JudgeProps): React.ReactElement => {
   const [clientsList, setClientsList] = useState([] as ClientSchema[])
 
   const judgeStatusList = useCallback(() => {
-    return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.JUDGES)
-  }, [componentStatusList])
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.JUDGES)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
@@ -78,11 +78,11 @@ const Judge = (props: JudgeProps): React.ReactElement => {
           }
         })
       }
-      componentStatusList.length === 0 && getRefType()
+      refTypes.componentStatus.length === 0 && getRefTypes()
       courtsList.length === 0 && getCourts()
     }
     isForceFetch.current = false
-  }, [componentStatusList.length, courtsList.length, dispatch, getCourts, getRefType, id, store])
+  }, [courtsList.length, dispatch, getCourts, getRefTypes, id, refTypes.componentStatus.length, store])
 
   useEffect(() => {
     return () => {
@@ -133,7 +133,7 @@ const Judge = (props: JudgeProps): React.ReactElement => {
     )
 
   const clientsTable = () => (
-    <ClientTable clientsList={clientsList} selectedJudge={formData} componentStatusList={componentStatusList} />
+    <ClientTable clientsList={clientsList} selectedJudge={formData} componentStatusList={refTypes.componentStatus} />
   )
 
   return (

@@ -21,14 +21,8 @@ import {
   updateModalComponent,
   useModal,
 } from '../../app'
-import {
-  ACTION_TYPES,
-  ActionTypes,
-  COMPONENT_STATUS_NAME,
-  REF_TYPES_REGISTRY,
-  USER_ADMIN_REGISTRY,
-} from '../../constants'
-import { ComponentStatusSchema, getRefType } from '../../types'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, USER_ADMIN_REGISTRY } from '../../constants'
+import { getRefTypes, RefTypesState } from '../../types'
 import { appUsersAdmin, getAppUsers } from '../action/users.action'
 import {
   AppUserFormData,
@@ -42,24 +36,24 @@ import { appUsersTableData, appUsersTableHeader, validateAppUser } from '../util
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    componentStatusList: refTypes.componentStatus,
+    refTypes: refTypes,
   }
 }
 
 const mapDispatchToProps = {
-  getRefType: () => getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS),
+  getRefTypes: () => getRefTypes(),
 }
 
 interface AppUserProps {
-  componentStatusList: ComponentStatusSchema[]
-  getRefType: () => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
 }
 
 const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   const dispatch = useDispatch()
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
-  const { componentStatusList, getRefType } = props
+  const { refTypes, getRefTypes } = props
 
   const [appUsersList, setAppUsersList] = useState([] as AppUserSchema[])
   const [formData, setFormData] = useState(DefaultAppUserFormData)
@@ -74,8 +68,8 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   }, [dispatch])
 
   useEffect(() => {
-    componentStatusList.length === 0 && getRefType()
-  }, [componentStatusList.length, getRefType])
+    refTypes.componentStatus.length === 0 && getRefTypes()
+  }, [getRefTypes, refTypes.componentStatus.length])
 
   const getAppUsersWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
     getAppUsers(dispatch, requestMetadata).then((r) => setAppUsersList(r.data))
@@ -120,7 +114,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   }
 
   const componentStatusMenuItems = () =>
-    componentStatusList
+    refTypes.componentStatus
       .filter((x) => x.componentName === COMPONENT_STATUS_NAME.APP_USERS)
       .map((x) => (
         <MenuItem key={x.id} value={x.id}>

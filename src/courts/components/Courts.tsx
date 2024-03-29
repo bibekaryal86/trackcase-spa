@@ -17,8 +17,8 @@ import {
   updateModalComponent,
   useModal,
 } from '../../app'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT, REF_TYPES_REGISTRY } from '../../constants'
-import { ComponentStatusSchema, getRefType } from '../../types'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
+import { getRefTypes, RefTypesState } from '../../types'
 import { courtsAction, getCourts } from '../actions/courts.action'
 import {
   CourtBase,
@@ -32,21 +32,21 @@ import { validateCourt } from '../utils/courts.utils'
 
 const mapStateToProps = ({ refTypes, courts }: GlobalState) => {
   return {
-    componentStatusList: refTypes.componentStatus,
+    refTypes: refTypes,
     courtsList: courts.courts,
   }
 }
 
 const mapDispatchToProps = {
-  getRefType: () => getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS),
+  getRefTypes: () => getRefTypes(),
   getCourts: (requestMetadata: Partial<FetchRequestMetadata>) => getCourts(requestMetadata),
 }
 
 interface CourtsProps {
   courtsList: CourtSchema[]
   getCourts: (requestMetadata: Partial<FetchRequestMetadata>) => void
-  componentStatusList: ComponentStatusSchema[]
-  getRefType: () => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
 }
 
 const Courts = (props: CourtsProps): React.ReactElement => {
@@ -56,22 +56,22 @@ const Courts = (props: CourtsProps): React.ReactElement => {
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const { courtsList, getCourts } = props
-  const { componentStatusList, getRefType } = props
+  const { refTypes, getRefTypes } = props
 
   const [formData, setFormData] = useState(DefaultCourtFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultCourtFormData)
   const [formErrors, setFormErrors] = useState(DefaultCourtFormErrorData)
 
   const courtStatusList = useCallback(() => {
-    return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURTS)
-  }, [componentStatusList])
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURTS)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
       courtsList.length === 0 && getCourts({})
-      componentStatusList.length === 0 && getRefType()
+      refTypes.componentStatus.length === 0 && getRefTypes()
     }
-  }, [componentStatusList.length, courtsList.length, getCourts, getRefType])
+  }, [courtsList.length, getCourts, getRefTypes, refTypes.componentStatus.length])
 
   useEffect(() => {
     return () => {

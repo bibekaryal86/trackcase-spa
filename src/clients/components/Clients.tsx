@@ -17,9 +17,9 @@ import {
   updateModalComponent,
   useModal,
 } from '../../app'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT, REF_TYPES_REGISTRY } from '../../constants'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { getJudges, JudgeSchema } from '../../judges'
-import { ComponentStatusSchema, getRefType } from '../../types'
+import { getRefTypes, RefTypesState } from '../../types'
 import { clientsAction, getClients } from '../actions/clients.action'
 import {
   ClientBase,
@@ -33,14 +33,14 @@ import { validateClient } from '../utils/clients.utils'
 
 const mapStateToProps = ({ refTypes, clients, judges }: GlobalState) => {
   return {
-    componentStatusList: refTypes.componentStatus,
+    refTypes: refTypes,
     clientsList: clients.clients,
     judgesList: judges.judges,
   }
 }
 
 const mapDispatchToProps = {
-  getRefType: () => getRefType(REF_TYPES_REGISTRY.COMPONENT_STATUS),
+  getRefTypes: () => getRefTypes(),
   getClients: (requestMetadata: Partial<FetchRequestMetadata>) => getClients(requestMetadata),
   getJudges: () => getJudges(),
 }
@@ -48,8 +48,8 @@ const mapDispatchToProps = {
 interface ClientsProps {
   clientsList: ClientSchema[]
   getClients: (requestMetadata: Partial<FetchRequestMetadata>) => void
-  componentStatusList: ComponentStatusSchema[]
-  getRefType: () => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   judgesList: JudgeSchema[]
   getJudges: () => void
 }
@@ -61,7 +61,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const { clientsList, getClients } = props
-  const { componentStatusList, getRefType } = props
+  const { refTypes, getRefTypes } = props
   const { judgesList, getJudges } = props
 
   const [formData, setFormData] = useState(DefaultClientFormData)
@@ -69,16 +69,16 @@ const Clients = (props: ClientsProps): React.ReactElement => {
   const [formErrors, setFormErrors] = useState(DefaultClientFormErrorData)
 
   const clientStatusList = useCallback(() => {
-    return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CLIENTS)
-  }, [componentStatusList])
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CLIENTS)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
       clientsList.length === 0 && getClients({})
-      componentStatusList.length === 0 && getRefType()
+      refTypes.componentStatus.length === 0 && getRefTypes()
       judgesList.length === 0 && getJudges()
     }
-  }, [componentStatusList.length, clientsList.length, getClients, getRefType, judgesList.length, getJudges])
+  }, [clientsList.length, getClients, getJudges, getRefTypes, judgesList.length, refTypes.componentStatus.length])
 
   useEffect(() => {
     return () => {
