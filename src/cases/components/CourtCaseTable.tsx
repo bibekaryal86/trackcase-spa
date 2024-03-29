@@ -75,7 +75,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     if (x.caseType) {
       return <Link text={`${x.caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
     } else {
-      const caseType = caseTypesList?.find(y => y.id === x.caseTypeId)
+      const caseType = caseTypesList?.find((y) => y.id === x.caseTypeId)
       return <Link text={`${caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
     }
   }

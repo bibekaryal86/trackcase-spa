@@ -165,7 +165,7 @@ export const getCourtCase = (courtCaseId: number, isIncludeExtra?: boolean) => {
         const endpoint = getEndpoint(process.env.COURT_CASE_READ as string)
         const requestMetadata: Partial<FetchRequestMetadata> = {
           schemaModelId: courtCaseId,
-          isIncludeExtra: isIncludeExtra === true
+          isIncludeExtra: isIncludeExtra === true,
         }
         const options: Partial<FetchOptions> = {
           method: HTTP_METHODS.GET,

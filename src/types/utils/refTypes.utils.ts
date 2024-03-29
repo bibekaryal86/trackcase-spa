@@ -10,7 +10,16 @@ import {
   RefTypeLessStatusSchema,
   RefTypeSchema,
   RefTypesRequestMetadataState,
+  RefTypesState,
 } from '../types/refTypes.data.types'
+
+export const isRefTypesStateEmpty = (refTypesState: RefTypesState) =>
+  refTypesState.componentStatus.length === 0 ||
+  refTypesState.filingType.length === 0 ||
+  refTypesState.collectionMethod.length === 0 ||
+  refTypesState.caseType.length === 0 ||
+  refTypesState.hearingType.length === 0 ||
+  refTypesState.taskType.length === 0
 
 export const refTypesDispatch = ({
   type = '',

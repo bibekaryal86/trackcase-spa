@@ -48,6 +48,8 @@ import {
   TaskTypeResponse,
   TaskTypeSchema,
 } from './types/refTypes.data.types'
+// utils
+import { isRefTypesStateEmpty } from './utils/refTypes.utils'
 
 export { getRefType, getRefTypes }
 export { RefTypes }
@@ -94,3 +96,4 @@ export type {
   TaskTypeSchema,
   TaskTypeResponse,
 }
+export { isRefTypesStateEmpty }

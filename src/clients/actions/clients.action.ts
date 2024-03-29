@@ -160,7 +160,7 @@ export const getClient = (clientId: number, isIncludeExtra?: boolean) => {
         const endpoint = getEndpoint(process.env.CLIENT_READ as string)
         const requestMetadata: Partial<FetchRequestMetadata> = {
           schemaModelId: clientId,
-          isIncludeExtra: isIncludeExtra === true
+          isIncludeExtra: isIncludeExtra === true,
         }
         const options: Partial<FetchOptions> = {
           method: HTTP_METHODS.GET,
