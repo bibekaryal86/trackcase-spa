@@ -19,7 +19,7 @@ import {
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
 import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { FormSchema } from '../../forms'
+import { FormSchema } from '../../filings'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 import {

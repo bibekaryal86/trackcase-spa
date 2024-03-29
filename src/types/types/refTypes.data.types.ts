@@ -3,7 +3,7 @@ import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CashCollectionSchema } from '../../collections'
 import { ID_DEFAULT, RefTypesRegistry } from '../../constants'
-import { FormSchema } from '../../forms'
+import { FormSchema } from '../../filings'
 
 export interface ComponentStatusSchema extends BaseModelSchema {
   componentName: string

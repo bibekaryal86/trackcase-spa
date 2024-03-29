@@ -11,7 +11,7 @@ import {
   BUTTON_UPDATE,
   ID_ACTION_BUTTON,
 } from '../../constants'
-import { FormSchema } from '../../forms'
+import { FormSchema } from '../../filings'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
 import { isHearingCalendar } from '../utils/calendars.utils'

@@ -3,7 +3,7 @@ import { Dayjs } from 'dayjs'
 import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
-import { FormSchema } from '../../forms'
+import { FormSchema } from '../../filings'
 import { HearingTypeSchema, TaskTypeSchema } from '../../types'
 
 export interface CalendarEvents {

@@ -3,7 +3,7 @@ import { HearingCalendarSchema } from '../../calendars'
 import { ClientSchema } from '../../clients'
 import { CaseCollectionSchema } from '../../collections'
 import { ID_DEFAULT } from '../../constants'
-import { FormSchema } from '../../forms'
+import { FormSchema } from '../../filings'
 import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
 
 export interface CourtCaseBase {
