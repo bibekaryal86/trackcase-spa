@@ -37,6 +37,3 @@
         * show deleted date column
 
 how to make page numbers appear if not all data pulled in?
-
-
-add judges to one court
