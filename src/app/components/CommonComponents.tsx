@@ -9,8 +9,11 @@ import React from 'react'
 
 import Link from './Link'
 import { Modal2 } from './Modal'
+import { CourtCaseFormData, CourtCaseFormErrorData } from '../../cases'
+import { ClientFormData, ClientFormErrorData } from '../../clients'
 import { ACTION_TYPES, ActionTypes } from '../../constants'
 import { CourtFormData, CourtFormErrorData } from '../../courts'
+import { JudgeFormData, JudgeFormErrorData } from '../../judges'
 import { RefTypeFormData } from '../../types'
 import {
   AppPermissionFormData,
@@ -35,12 +38,19 @@ type FormData =
   | AppRolePermissionFormData
   | RefTypeFormData
   | CourtFormData
+  | JudgeFormData
+  | ClientFormData
+  | CourtCaseFormData
+
 type FormErrorData =
   | FormData
   | AppUserFormErrorData
   | AppUserRoleFormErrorData
   | AppRolePermissionFormErrorData
   | CourtFormErrorData
+  | JudgeFormErrorData
+  | ClientFormErrorData
+  | CourtCaseFormErrorData
 
 export const pageTitleComponent = (component: string, componentName?: string) => (
   <>
