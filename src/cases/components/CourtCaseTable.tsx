@@ -11,7 +11,7 @@ import {
 } from '../../app'
 import { ClientFormData, ClientSchema } from '../../clients'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
-import { ComponentStatusSchema } from '../../types'
+import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import { CourtCaseFormData, CourtCaseSchema } from '../types/courtCases.data.types'
 import { getCourtCaseFormDataFromSchema } from '../utils/courtCases.utils'
@@ -23,11 +23,12 @@ interface CourtCaseTableProps {
   softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
   selectedClient?: ClientSchema | ClientFormData
   componentStatusList?: ComponentStatusSchema[]
+  caseTypesList?: CaseTypeSchema[]
 }
 
 const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
   const { courtCasesList, actionButtons, addModalState, softDeleteCallback } = props
-  const { selectedClient, componentStatusList } = props
+  const { selectedClient, componentStatusList, caseTypesList } = props
 
   const courtCasesTableHeaderData = (): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = [
@@ -70,9 +71,14 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     return tableHeaderData
   }
 
-  const linkToCourtCase = (x: CourtCaseSchema) => (
-    <Link text={`${x.caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
-  )
+  const linkToCourtCase = (x: CourtCaseSchema) => {
+    if (x.caseType) {
+      return <Link text={`${x.caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
+    } else {
+      const caseType = caseTypesList?.find(y => y.id === x.caseTypeId)
+      return <Link text={`${caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
+    }
+  }
 
   const linkToClient = (x: CourtCaseSchema) =>
     selectedClient ? (
