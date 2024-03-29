@@ -1,17 +1,22 @@
-import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
 import { HearingCalendarSchema } from '../../calendars'
 import { ClientSchema } from '../../clients'
 import { CaseCollectionSchema } from '../../collections'
 import { ID_DEFAULT } from '../../constants'
 import { FormSchema } from '../../forms'
-import { CaseTypeSchema } from '../../types'
+import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
 
-export interface CourtCaseSchema extends StatusBaseSchema, BaseModelSchema {
+export interface CourtCaseBase {
   caseTypeId: number
   clientId: number
+  componentStatusId: number
+  comments?: string
+}
+export interface CourtCaseSchema extends CourtCaseBase, BaseModelSchema {
   // orm_mode
   caseType?: CaseTypeSchema
   client?: ClientSchema
+  componentStatus?: ComponentStatusSchema
   forms?: FormSchema[]
   caseCollections?: CaseCollectionSchema[]
   hearingCalendars?: HearingCalendarSchema[]
@@ -20,41 +25,60 @@ export interface CourtCaseSchema extends StatusBaseSchema, BaseModelSchema {
 }
 
 export interface CourtCaseResponse extends ResponseBase {
-  courtCases: CourtCaseSchema[]
+  data: CourtCaseSchema[]
 }
 
-export interface HistoryCourtCaseSchema extends BaseModelSchema {
-  userName: string
+export interface HistoryCourtCaseSchema extends Partial<CourtCaseBase>, BaseModelSchema {
+  appUserId: number
   courtCaseId: number
-  // from court case schema, need everything optional here so can't extend
-  status?: string
-  comments?: string
-  caseTypeId?: number
-  clientId?: number
   // orm_mode
   caseType?: CaseTypeSchema
   client?: ClientSchema
+  componentStatus?: ComponentStatusSchema
 }
 
 export interface CourtCasesState {
-  isCloseModal: boolean
   courtCases: CourtCaseSchema[]
-  selectedCourtCase: CourtCaseSchema
+  requestMetadata: Partial<FetchRequestMetadata>
 }
 
 export interface CourtCasesAction extends CourtCasesState {
   type: string
 }
 
+export interface CourtCaseFormData extends CourtCaseSchema {
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+}
+
+export interface CourtCaseFormErrorData extends CourtCaseSchema {
+  caseTypeError: string
+  clientError: string
+  componentStatusError: string
+}
+
 export const DefaultCourtCaseSchema: CourtCaseSchema = {
   caseTypeId: ID_DEFAULT,
   clientId: ID_DEFAULT,
-  status: '',
+  componentStatusId: ID_DEFAULT,
   comments: '',
 }
 
 export const DefaultCourtCaseState: CourtCasesState = {
-  isCloseModal: true,
   courtCases: [],
-  selectedCourtCase: DefaultCourtCaseSchema,
+  requestMetadata: {},
+}
+
+export const DefaultCourtCaseFormData: CourtCaseFormData = {
+  ...DefaultCourtCaseSchema,
+  id: ID_DEFAULT,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+}
+
+export const DefaultCourtCaseFormErrorData: CourtCaseFormErrorData = {
+  ...DefaultCourtCaseFormData,
+  caseTypeError: '',
+  clientError: '',
+  componentStatusError: '',
 }

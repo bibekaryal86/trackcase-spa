@@ -7,34 +7,31 @@ import {
   FormCommentsField,
   FormSelectField,
   FormSelectStatusField,
-  getComments,
   getNumber,
-  getString,
   GridFormWrapper,
-  StatusSchema,
+  handleFormChange,
 } from '../../app'
 import { ClientSchema } from '../../clients'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { CaseTypeSchema } from '../../types'
-import { CourtCaseSchema } from '../types/courtCases.data.types'
-import { handleCourtCaseFormOnChange, isCourtCaseFormFieldError } from '../utils/courtCases.utils'
+import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
+import { CourtCaseFormData, CourtCaseFormErrorData } from '../types/courtCases.data.types'
 
 interface CourtCaseFormProps {
-  selectedCourtCase: CourtCaseSchema
-  setSelectedCourtCase: (selectedCourtCase: CourtCaseSchema) => void
-  courtCaseStatusList: string[]
+  formData: CourtCaseFormData
+  setFormData: (formData: CourtCaseFormData) => void
+  formErrors: CourtCaseFormErrorData
+  setFormErrors: (formErrors: CourtCaseFormErrorData) => void
+  courtCaseStatusList: ComponentStatusSchema[]
   isShowOneCourtCase: boolean
   caseTypesList: CaseTypeSchema[]
   clientsList: ClientSchema[]
-  clientId?: string
-  statusList: StatusSchema<string>
+  clientId?: number
 }
 
 const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedCourtCase, setSelectedCourtCase, courtCaseStatusList, isShowOneCourtCase } = props
-  const { caseTypesList, clientsList } = props
-  const { clientId, statusList } = props
+  const { formData, formErrors, setFormData, setFormErrors, courtCaseStatusList, isShowOneCourtCase } = props
+  const { caseTypesList, clientsList, clientId } = props
 
   const caseTypesListForSelect = () =>
     caseTypesList.map((x) => (
@@ -43,9 +40,22 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       </MenuItem>
     ))
 
+  const courtCaseType = () => (
+    <FormSelectField
+      componentLabel="COURT CASE--CASE TYPE"
+      required
+      name="caseTypeId"
+      value={formData.caseTypeId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.caseTypeError}
+      helperText={formErrors.caseTypeError}
+      menuItems={caseTypesListForSelect()}
+    />
+  )
+
   const clientsListForSelect = () => {
     if (getNumber(clientId) > 0) {
-      const selectedClient = clientsList.find((x) => x.id === Number(clientId))
+      const selectedClient = clientsList.find((x) => x.id === clientId)
       if (selectedClient) {
         return [
           <MenuItem key={selectedClient.id} value={selectedClient.id}>
@@ -55,7 +65,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       }
     } else {
       return clientsList
-        .filter((x) => selectedCourtCase.clientId === x.id || statusList.client.active.includes(x.status))
+        .filter((x) => formData.clientId === x.id || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
             {x.name}
@@ -65,51 +75,37 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
     return []
   }
 
-  const courtCaseType = () => (
-    <FormSelectField
-      componentLabel="Court Case--Case Type"
-      required={true}
-      value={selectedCourtCase.caseTypeId}
-      onChange={(e) =>
-        handleCourtCaseFormOnChange('caseTypeId', e.target.value, selectedCourtCase, setSelectedCourtCase, getNumber)
-      }
-      error={isCourtCaseFormFieldError('caseTypeId', selectedCourtCase.caseTypeId)}
-      menuItems={caseTypesListForSelect()}
-    />
-  )
-
   const courtCaseClient = () => (
     <FormSelectField
-      componentLabel="Court Case--Client"
-      required={true}
-      value={selectedCourtCase.clientId}
-      onChange={(e) =>
-        handleCourtCaseFormOnChange('clientId', e.target.value, selectedCourtCase, setSelectedCourtCase, getNumber)
-      }
-      error={isCourtCaseFormFieldError('clientId', selectedCourtCase.clientId)}
+      componentLabel="COURT CASE--CLIENT"
+      required
+      name="clientId"
+      value={formData.clientId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.clientError}
+      helperText={formErrors.clientError}
       menuItems={clientsListForSelect()}
     />
   )
 
   const courtCaseStatus = () => (
     <FormSelectStatusField
-      componentLabel="Court Case--Status"
-      value={selectedCourtCase.status}
-      onChange={(e) =>
-        handleCourtCaseFormOnChange('status', e.target.value, selectedCourtCase, setSelectedCourtCase, getString)
-      }
+      componentLabel="COURT_CASE--STATUS"
+      name="componentStatusId"
+      value={formData.componentStatusId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.componentStatusError}
+      helperText={formErrors.componentStatusError}
       statusList={courtCaseStatusList}
-      error={isCourtCaseFormFieldError('status', selectedCourtCase.status)}
     />
   )
 
   const courtCaseComments = () => (
     <FormCommentsField
-      componentLabel="Court Case--Comments"
-      value={selectedCourtCase.comments}
-      onChange={(e) =>
-        handleCourtCaseFormOnChange('comments', e.target.value, selectedCourtCase, setSelectedCourtCase, getComments)
-      }
+      componentLabel="COURT_CASE--COMMENTS"
+      name="comments"
+      value={formData.comments}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />
   )
 

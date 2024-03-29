@@ -1,242 +1,190 @@
 import React from 'react'
 
-import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
-import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
-  COURT_CASE_CREATE_FAILURE,
-  COURT_CASE_CREATE_REQUEST,
-  COURT_CASE_CREATE_SUCCESS,
-  COURT_CASE_DELETE_FAILURE,
-  COURT_CASE_DELETE_REQUEST,
-  COURT_CASE_DELETE_SUCCESS,
-  COURT_CASE_UPDATE_FAILURE,
-  COURT_CASE_UPDATE_REQUEST,
-  COURT_CASE_UPDATE_SUCCESS,
+  Async,
+  FetchOptions,
+  FetchRequestMetadata,
+  getEndpoint,
+  getErrMsg,
+  GlobalDispatch,
+  GlobalState,
+} from '../../app'
+import {
+  ACTION_SUCCESS,
+  ACTION_TYPES,
+  ActionTypes,
+  HTTP_METHODS,
+  ID_DEFAULT,
+  SOMETHING_WENT_WRONG,
+} from '../../constants'
+import {
   COURT_CASES_COMPLETE,
   COURT_CASES_READ_FAILURE,
   COURT_CASES_READ_REQUEST,
   COURT_CASES_READ_SUCCESS,
-  SET_SELECTED_COURT_CASE,
 } from '../types/courtCases.action.types'
-import { CourtCaseResponse, CourtCaseSchema } from '../types/courtCases.data.types'
-import { validateCourtCase } from '../utils/courtCases.utils'
+import { CourtCaseBase, CourtCaseResponse, CourtCaseSchema } from '../types/courtCases.data.types'
+import { courtCaseDispatch } from '../utils/courtCases.utils'
 
-export const addCourtCase = (courtCase: CourtCaseSchema) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    const validationErrors = validateCourtCase(courtCase)
-    if (validationErrors) {
-      dispatch(courtCasesFailure(COURT_CASE_CREATE_FAILURE, validationErrors))
-      return
+export const courtCasesAction = ({
+  action,
+  courtCasesRequest,
+  id,
+  isRestore,
+  isHardDelete,
+}: {
+  action: ActionTypes
+  courtCasesRequest?: CourtCaseBase
+  id?: number
+  isRestore?: boolean
+  isHardDelete?: boolean
+}) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<CourtCaseResponse> => {
+    if (action === ACTION_TYPES.RESTORE) {
+      action = ACTION_TYPES.UPDATE
+    }
+    const typeRequest = `COURT_CASES_${action}_REQUEST`
+    const typeSuccess = `COURT_CASES_${action}_SUCCESS`
+    const typeFailure = `COURT_CASES_${action}_FAILURE`
+    dispatch(courtCaseDispatch({ type: typeRequest }))
+
+    let endpoint = ''
+    let options: Partial<FetchOptions> = {}
+
+    if (action === ACTION_TYPES.CREATE) {
+      endpoint = getEndpoint(process.env.COURT_CASE_CREATE as string)
+      options = {
+        method: HTTP_METHODS.POST,
+        requestBody: { ...courtCasesRequest },
+      }
+    } else if (action === ACTION_TYPES.UPDATE) {
+      endpoint = getEndpoint(process.env.COURT_CASE_UPDATE as string)
+      options = {
+        method: HTTP_METHODS.PUT,
+        requestBody: courtCasesRequest,
+        queryParams: { is_restore: isRestore || false },
+        pathParams: { court_case_id: id || ID_DEFAULT },
+      }
+    } else if (action === ACTION_TYPES.DELETE) {
+      endpoint = getEndpoint(process.env.COURT_CASE_DELETE as string)
+      options = {
+        method: HTTP_METHODS.DELETE,
+        pathParams: { court_case_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
+      }
     }
 
-    dispatch(courtCasesRequest(COURT_CASE_CREATE_REQUEST))
-
     try {
-      const urlPath = getEndpoint(process.env.COURT_CASE_CREATE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'POST',
-        requestBody: getRequestBody(courtCase),
-      }
-
-      const courtCaseResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
-
+      const courtCaseResponse = (await Async.fetch(endpoint, options)) as CourtCaseResponse
       if (courtCaseResponse.detail) {
-        dispatch(courtCasesFailure(COURT_CASE_CREATE_FAILURE, getErrMsg(courtCaseResponse.detail)))
+        dispatch(courtCaseDispatch({ type: typeFailure, error: getErrMsg(courtCaseResponse.detail) }))
       } else {
-        dispatch(courtCasesSuccess(COURT_CASE_CREATE_SUCCESS, CREATE_SUCCESS('CourtCase'), []))
-      }
-    } catch (error) {
-      console.log('Add CourtCase Error: ', error)
-      dispatch(courtCasesFailure(COURT_CASE_CREATE_FAILURE, SOMETHING_WENT_WRONG))
-    } finally {
-      dispatch(courtCasesComplete())
-    }
-  }
-}
-
-export const getCourtCases = (isForceFetch: boolean = false) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(courtCasesRequest(COURT_CASES_READ_REQUEST))
-
-    try {
-      let courtCasesResponse: CourtCaseResponse
-      const courtCasesInStore: CourtCaseSchema[] = getStore().courtCases.courtCases
-
-      if (isForceFetch || courtCasesInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.COURT_CASES_READ_ENDPOINT as string)
-        const options: Partial<FetchOptions> = {
-          method: 'GET',
-        }
-        courtCasesResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
-
-        if (courtCasesResponse.detail) {
-          dispatch(courtCasesFailure(COURT_CASES_READ_FAILURE, getErrMsg(courtCasesResponse.detail)))
+        if (action === ACTION_TYPES.READ) {
+          dispatch(courtCaseDispatch({ type: typeSuccess, courtCases: courtCaseResponse.data }))
         } else {
-          dispatch(courtCasesSuccess(COURT_CASES_READ_SUCCESS, '', courtCasesResponse.courtCases))
+          dispatch(courtCaseDispatch({ type: typeSuccess, success: ACTION_SUCCESS(action, 'COURT_CASE') }))
         }
-      } else {
-        dispatch(courtCasesSuccess(COURT_CASES_READ_SUCCESS, '', courtCasesInStore))
       }
+      return courtCaseResponse
     } catch (error) {
-      console.log('Get CourtCases Error: ', error)
-      dispatch(courtCasesFailure(COURT_CASES_READ_FAILURE, SOMETHING_WENT_WRONG))
+      console.log(`CourtCase ${action} Error: `, error)
+      dispatch(courtCaseDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
     } finally {
-      dispatch(courtCasesComplete())
+      dispatch(courtCaseDispatch({ type: COURT_CASES_COMPLETE }))
     }
   }
 }
 
-export const getOneCourtCase = async (courtCaseId: number) => {
-  try {
-    const urlPath = getEndpoint(process.env.COURT_CASE_READ_ENDPOINT as string)
-    const options: Partial<FetchOptions> = {
-      method: 'GET',
-      pathParams: { court_case_id: courtCaseId },
-      extraParams: {
-        isIncludeExtra: true,
-        isIncludeHistory: true,
-      },
-    }
-
-    return Async.fetch(urlPath, options)
-  } catch (error) {
-    console.log('Get OneCourtCase Error: ', error)
-    const errorResponse: CourtCaseResponse = { courtCases: [], detail: { error: error as string } }
-    return Promise.resolve(errorResponse)
-  }
-}
-
-export const getCourtCase = (courtCaseId: number) => {
+export const getCourtCases = (requestMetadata?: Partial<FetchRequestMetadata>) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(courtCasesRequest(COURT_CASES_READ_REQUEST))
+    dispatch(courtCaseDispatch({ type: COURT_CASES_READ_REQUEST }))
 
-    // call api, if it fails fallback to store
-    try {
-      const courtCaseResponse = (await getOneCourtCase(courtCaseId)) as CourtCaseResponse
-      if (courtCaseResponse.detail) {
-        dispatch(courtCasesFailure(COURT_CASES_READ_FAILURE, getErrMsg(courtCaseResponse.detail)))
-        setSelectedCourtCaseFromStore(getStore(), dispatch, courtCaseId)
-      } else {
-        dispatch(courtCaseSelect(courtCaseResponse.courtCases[0]))
-      }
-    } finally {
-      dispatch(courtCasesComplete())
+    let courtCaseResponse: CourtCaseResponse = { data: [] }
+
+    if (requestMetadata === getStore().courtCases.requestMetadata) {
+      // no need to fetch request, metadata is same
+      courtCaseResponse.data = getStore().courtCases.courtCases
     }
-  }
-}
-
-export const editCourtCase = (id: number, courtCase: CourtCaseSchema) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    const validationErrors = validateCourtCase(courtCase)
-    if (validationErrors) {
-      dispatch(courtCasesFailure(COURT_CASE_UPDATE_FAILURE, validationErrors))
-      return
+    const endpoint = getEndpoint(process.env.COURT_CASE_READ as string)
+    const options: Partial<FetchOptions> = {
+      method: HTTP_METHODS.GET,
+      metadataParams: requestMetadata,
     }
 
-    dispatch(courtCasesRequest(COURT_CASE_UPDATE_REQUEST))
-
     try {
-      const urlPath = getEndpoint(process.env.COURT_CASE_UPDATE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'PUT',
-        pathParams: { court_case_id: id },
-        requestBody: getRequestBody(courtCase),
+      if (courtCaseResponse.data.length <= 0) {
+        courtCaseResponse = (await Async.fetch(endpoint, options)) as CourtCaseResponse
       }
-
-      const courtCaseResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
-
       if (courtCaseResponse.detail) {
-        dispatch(courtCasesFailure(COURT_CASE_UPDATE_FAILURE, getErrMsg(courtCaseResponse.detail)))
+        dispatch(courtCaseDispatch({ type: COURT_CASES_READ_FAILURE, error: getErrMsg(courtCaseResponse.detail) }))
       } else {
-        dispatch(courtCasesSuccess(COURT_CASE_UPDATE_SUCCESS, UPDATE_SUCCESS('CourtCase'), []))
+        dispatch(
+          courtCaseDispatch({
+            type: COURT_CASES_READ_SUCCESS,
+            courtCases: courtCaseResponse.data,
+            requestMetadata: requestMetadata,
+          }),
+        )
       }
     } catch (error) {
-      console.log('Edit CourtCase Error: ', error)
-      dispatch(courtCasesFailure(COURT_CASE_UPDATE_FAILURE, SOMETHING_WENT_WRONG))
+      console.log(`Get CourtCases Error: `, error)
+      dispatch(courtCaseDispatch({ type: COURT_CASES_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
     } finally {
-      dispatch(courtCasesComplete())
+      dispatch(courtCaseDispatch({ type: COURT_CASES_COMPLETE }))
     }
   }
 }
 
-export const deleteCourtCase = (id: number) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    dispatch(courtCasesRequest(COURT_CASE_DELETE_REQUEST))
+export const getCourtCase = (courtCaseId: number, isIncludeExtra?: boolean) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, state: GlobalState): Promise<CourtCaseSchema | undefined> => {
+    dispatch(courtCaseDispatch({ type: COURT_CASES_READ_REQUEST }))
+    let oneCourtCase = undefined
 
     try {
-      const urlPath = getEndpoint(process.env.COURT_CASE_DELETE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'DELETE',
-        pathParams: { court_case_id: id },
+      const courtCasesInStore = state.courtCases.courtCases
+      if (courtCasesInStore) {
+        oneCourtCase = courtCasesInStore.find((x) => x.id === courtCaseId)
+
+        if (
+          isIncludeExtra &&
+          oneCourtCase &&
+          (!oneCourtCase.forms ||
+            !oneCourtCase.forms.length ||
+            !oneCourtCase.caseCollections ||
+            !oneCourtCase.caseCollections.length ||
+            !oneCourtCase.forms ||
+            !oneCourtCase.forms.length)
+        ) {
+          oneCourtCase = undefined
+        }
       }
 
-      const courtCaseResponse = (await Async.fetch(urlPath, options)) as CourtCaseResponse
-
-      if (courtCaseResponse.detail) {
-        dispatch(courtCasesFailure(COURT_CASE_DELETE_FAILURE, getErrMsg(courtCaseResponse.detail)))
+      if (oneCourtCase) {
+        return oneCourtCase
       } else {
-        dispatch(courtCasesSuccess(COURT_CASE_DELETE_SUCCESS, DELETE_SUCCESS('CourtCase'), []))
+        const endpoint = getEndpoint(process.env.COURT_CASE_READ as string)
+        const requestMetadata: Partial<FetchRequestMetadata> = {
+          schemaModelId: courtCaseId,
+          isIncludeExtra: isIncludeExtra === true
+        }
+        const options: Partial<FetchOptions> = {
+          method: HTTP_METHODS.GET,
+          metadataParams: requestMetadata,
+        }
+        const courtCaseResponse = (await Async.fetch(endpoint, options)) as CourtCaseResponse
+        if (courtCaseResponse.detail) {
+          dispatch(courtCaseDispatch({ type: COURT_CASES_READ_FAILURE, error: getErrMsg(courtCaseResponse.detail) }))
+        } else {
+          oneCourtCase = courtCaseResponse.data.find((x) => x.id === courtCaseId)
+        }
       }
+      return oneCourtCase
     } catch (error) {
-      console.log('Delete CourtCase Error: ', error)
-      dispatch(courtCasesFailure(COURT_CASE_UPDATE_FAILURE, SOMETHING_WENT_WRONG))
+      console.log(`Get CourtCase Error: `, error)
+      dispatch(courtCaseDispatch({ type: COURT_CASES_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
+      return oneCourtCase
     } finally {
-      dispatch(courtCasesComplete())
+      dispatch(courtCaseDispatch({ type: COURT_CASES_COMPLETE }))
     }
-  }
-}
-
-const courtCasesRequest = (type: string) => ({
-  type: type,
-})
-
-const courtCasesSuccess = (type: string, success: string, courtCases: CourtCaseSchema[]) => {
-  if (success) {
-    return {
-      type: type,
-      success: success,
-    }
-  } else {
-    return {
-      type: type,
-      courtCases: courtCases,
-    }
-  }
-}
-
-const courtCasesFailure = (type: string, errMsg: string) => ({
-  type: type,
-  error: errMsg,
-})
-
-const courtCaseSelect = (selectedCourtCase: CourtCaseSchema) => ({
-  type: SET_SELECTED_COURT_CASE,
-  selectedCourtCase,
-})
-
-const courtCasesComplete = () => ({
-  type: COURT_CASES_COMPLETE,
-})
-
-const getRequestBody = (courtCase: CourtCaseSchema) => {
-  return {
-    case_type_id: courtCase.caseTypeId,
-    client_id: courtCase.clientId,
-    status: courtCase.status,
-    comments: courtCase.comments,
-  }
-}
-
-const setSelectedCourtCaseFromStore = (
-  store: GlobalState,
-  dispatch: React.Dispatch<GlobalDispatch>,
-  courtCaseId: number,
-) => {
-  const courtCasesInStore: CourtCaseSchema[] = store.courtCases.courtCases
-  const courtCaseInStore: CourtCaseSchema | undefined = courtCasesInStore.find(
-    (courtCase) => courtCase.id === courtCaseId,
-  )
-  if (courtCaseInStore) {
-    dispatch(courtCaseSelect(courtCaseInStore))
   }
 }

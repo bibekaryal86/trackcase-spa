@@ -1,33 +1,36 @@
-import Button from '@mui/material/Button'
 import React from 'react'
 
-import { convertDateToLocaleString, Link, Table, TableData, TableHeaderData } from '../../app'
-import { ClientSchema } from '../../clients'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_DELETE,
-  BUTTON_UPDATE,
-  ID_ACTION_BUTTON,
-} from '../../constants'
-import { CourtCaseSchema } from '../types/courtCases.data.types'
+  FetchRequestMetadata,
+  Link,
+  ModalState,
+  Table,
+  tableAddButtonComponent,
+  TableData,
+  TableHeaderData,
+} from '../../app'
+import { ClientFormData, ClientSchema } from '../../clients'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
+import { ComponentStatusSchema } from '../../types'
+import { checkUserHasPermission, isSuperuser } from '../../users'
+import { CourtCaseFormData, CourtCaseSchema } from '../types/courtCases.data.types'
+import { getCourtCaseFormDataFromSchema } from '../utils/courtCases.utils'
 
 interface CourtCaseTableProps {
   courtCasesList: CourtCaseSchema[]
-  setModal?: (action: string) => void
-  setSelectedId?: (id: number) => void
-  setSelectedCourtCase?: (courtCase: CourtCaseSchema) => void
-  setSelectedCourtCaseForReset?: (courtCase: CourtCaseSchema) => void
-  selectedClient?: ClientSchema
+  actionButtons?: (formDataForModal: CourtCaseFormData) => React.JSX.Element
+  addModalState?: ModalState
+  softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  selectedClient?: ClientSchema | ClientFormData
+  componentStatusList?: ComponentStatusSchema[]
 }
 
 const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
-  const { courtCasesList, selectedClient } = props
-  const { setModal, setSelectedId, setSelectedCourtCase, setSelectedCourtCaseForReset } = props
+  const { courtCasesList, actionButtons, addModalState, softDeleteCallback } = props
+  const { selectedClient, componentStatusList } = props
 
   const courtCasesTableHeaderData = (): TableHeaderData[] => {
-    return [
+    const tableHeaderData: TableHeaderData[] = [
       {
         id: 'clientCaseType',
         label: 'Case',
@@ -44,38 +47,28 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
         id: 'created',
         label: 'Created',
       },
-      {
-        id: 'actions',
-        label: 'Actions',
-        align: 'center' as const,
-        isDisableSorting: true,
-      },
     ]
-  }
+    if (isSuperuser()) {
+      tableHeaderData.push({
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      })
+    }
+    if (
+      (checkUserHasPermission(COMPONENT_STATUS_NAME.COURT_CASES, ACTION_TYPES.UPDATE) ||
+        checkUserHasPermission(COMPONENT_STATUS_NAME.COURT_CASES, ACTION_TYPES.DELETE)) &&
+      !selectedClient
+    ) {
+      tableHeaderData.push({
+        id: 'actions',
+        label: 'ACTIONS',
+        isDisableSorting: true,
+        align: 'center' as const,
+      })
+    }
 
-  const actionButtons = (id: number, courtCase: CourtCaseSchema) => (
-    <>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_UPDATE)
-          setSelectedId && setSelectedId(id)
-          setSelectedCourtCase && setSelectedCourtCase(courtCase)
-          setSelectedCourtCaseForReset && setSelectedCourtCaseForReset(courtCase)
-        }}
-      >
-        {BUTTON_UPDATE}
-      </Button>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_DELETE)
-          setSelectedId && setSelectedId(id)
-          setSelectedCourtCase && setSelectedCourtCase(courtCase)
-        }}
-      >
-        {BUTTON_DELETE}
-      </Button>
-    </>
-  )
+    return tableHeaderData
+  }
 
   const linkToCourtCase = (x: CourtCaseSchema) => (
     <Link text={`${x.caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
@@ -85,35 +78,37 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     selectedClient ? (
       selectedClient.name
     ) : (
-      <Link text={x.client?.name} navigateToPage={`/client/${x.id}?backTo=${window.location.pathname}`} />
+      <Link text={x.client?.name} navigateToPage={`/client/${x.clientId}?backTo=${window.location.pathname}`} />
     )
 
-  const courtCasesTableDataCommon = (x: CourtCaseSchema) => {
-    return {
-      clientCaseType: linkToCourtCase(x),
-      client: linkToClient(x),
-      status: x.status,
+  const getComponentStatus = (x: CourtCaseSchema) => {
+    if (x.componentStatus) {
+      return x.componentStatus.statusName
+    } else {
+      const componentStatus = componentStatusList?.find((y) => y.id === x.componentStatusId)
+      return componentStatus?.statusName
     }
   }
 
   const courtCasesTableData = (): TableData[] => {
     return Array.from(courtCasesList, (x) => {
       return {
-        ...courtCasesTableDataCommon(x),
-        created: convertDateToLocaleString(x.created, true),
-        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+        clientCaseType: linkToCourtCase(x),
+        client: linkToClient(x),
+        status: getComponentStatus(x),
+        isDeleted: x.isDeleted,
+        actions: actionButtons ? actionButtons(getCourtCaseFormDataFromSchema(x)) : undefined,
       }
     })
   }
 
-  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Case</Button>
-
   return (
     <Table
-      componentName="Case"
+      componentName={COMPONENT_STATUS_NAME.COURT_CASES}
       headerData={courtCasesTableHeaderData()}
       tableData={courtCasesTableData()}
-      addModelComponent={addButton()}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COURT_CASES, addModalState)}
+      getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )
 }

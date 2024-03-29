@@ -1,51 +1,83 @@
-import { getNumber } from '../../app'
-import { CourtCaseSchema } from '../types/courtCases.data.types'
+import { FetchRequestMetadata, getNumber } from '../../app'
+import { ID_DEFAULT } from '../../constants'
+import {
+  CourtCaseFormData,
+  CourtCaseFormErrorData,
+  CourtCaseSchema,
+  DefaultCourtCaseFormErrorData,
+} from '../types/courtCases.data.types'
 
-export const validateCourtCase = (courtCase: CourtCaseSchema) => {
-  const errors: string[] = []
-
-  if (getNumber(courtCase.caseTypeId) <= 0) {
-    errors.push('Case Type is required')
-  }
-  if (getNumber(courtCase.clientId) <= 0) {
-    errors.push('Client is required')
-  }
-  if (!courtCase.status.trim()) {
-    errors.push('Status is required')
-  }
-
-  return errors.length ? errors.join(', ') : ''
-}
-
-export const isAreTwoCourtCasesSame = (one: CourtCaseSchema, two: CourtCaseSchema) =>
+export const isAreTwoCourtCasesSame = (
+  one: CourtCaseFormData | CourtCaseSchema,
+  two: CourtCaseFormData | CourtCaseSchema,
+) =>
   one &&
   two &&
   one.caseTypeId === two.caseTypeId &&
   one.clientId === two.clientId &&
-  one.status === two.status &&
+  one.componentStatusId === two.componentStatusId &&
   one.comments === two.comments
 
-export const isCourtCaseFormFieldError = (name: string, value: string | number | undefined) => {
-  switch (name) {
-    case 'caseTypeId':
-    case 'clientId':
-      return !value || getNumber(value) <= 0
-    case 'status':
-      return !value || value.toString().trim() === ''
+export const validateCourtCase = (
+  formData: CourtCaseFormData,
+  setFormErrors: (formErrors: CourtCaseFormErrorData) => void,
+) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: CourtCaseFormErrorData = { ...DefaultCourtCaseFormErrorData }
+
+  if (getNumber(formData.caseTypeId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.caseTypeError = 'REQUIRED'
   }
-  return false
+  if (getNumber(formData.clientId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.clientError = 'REQUIRED'
+  }
+  if (getNumber(formData.componentStatusId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.componentStatusError = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
 }
 
-export const handleCourtCaseFormOnChange = (
-  name: string,
-  value: string | number,
-  selectedCourtCase: CourtCaseSchema,
-  setSelectedCourtCase: (updatedCourtCase: CourtCaseSchema) => void,
-  getValue: (value: string | number) => string | number,
-) => {
-  const updatedCourtCase = {
-    ...selectedCourtCase,
-    [name]: getValue(value),
+export const courtCaseDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  courtCases = [] as CourtCaseSchema[],
+  requestMetadata = {} as Partial<FetchRequestMetadata>,
+} = {}) => {
+  if (error) {
+    return {
+      type,
+      error,
+    }
+  } else if (success) {
+    return {
+      type,
+      success,
+    }
+  } else if (courtCases) {
+    return {
+      type,
+      courtCases,
+      requestMetadata,
+    }
+  } else {
+    return {
+      type,
+    }
   }
-  setSelectedCourtCase(updatedCourtCase)
+}
+
+export const getCourtCaseFormDataFromSchema = (x: CourtCaseSchema): CourtCaseFormData => {
+  return {
+    ...x,
+    id: x.id || ID_DEFAULT,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+  }
 }
