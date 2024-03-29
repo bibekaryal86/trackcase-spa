@@ -16,6 +16,7 @@ import {
   pageTitleComponent,
   pageTopLinksComponent,
 } from '../../app'
+import { CourtCaseSchema, CourtCaseTable } from '../../cases'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT, REF_TYPES_REGISTRY } from '../../constants'
 import { getJudges, JudgeSchema } from '../../judges'
 import { ComponentStatusSchema, getRefType } from '../../types'
@@ -61,6 +62,7 @@ const Client = (props: ClientProps): React.ReactElement => {
   const [formData, setFormData] = useState(DefaultClientFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultClientFormData)
   const [formErrors, setFormErrors] = useState(DefaultClientFormErrorData)
+  const [courtCasesList, setCourtCasesList] = useState([] as CourtCaseSchema[])
 
   const clientStatusList = useCallback(() => {
     return componentStatusList.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CLIENTS)
@@ -77,6 +79,7 @@ const Client = (props: ClientProps): React.ReactElement => {
             const oneClientFormData = getClientFormDataFromSchema(oneClient)
             setFormData(oneClientFormData)
             setFormDataReset(oneClientFormData)
+            setCourtCasesList(oneClient.courtCases || [])
           }
         })
       }
@@ -134,6 +137,10 @@ const Client = (props: ClientProps): React.ReactElement => {
       !isValidId(id) || isAreTwoClientsSame(formData, formDataReset),
     )
 
+  const courtCasesTable = () => (
+    <CourtCaseTable  courtCasesList={courtCasesList}/>
+  )
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
@@ -156,6 +163,7 @@ const Client = (props: ClientProps): React.ReactElement => {
               <Typography component="h1" variant="h6" color="primary">
                 COURT CASES OF CLIENT:
               </Typography>
+              {courtCasesTable()}
             </Grid>
           </>
         )}

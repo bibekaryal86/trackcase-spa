@@ -152,6 +152,7 @@ export const getJudge = (judgeId: number, isIncludeExtra?: boolean) => {
         const endpoint = getEndpoint(process.env.JUDGE_READ as string)
         const requestMetadata: Partial<FetchRequestMetadata> = {
           schemaModelId: judgeId,
+          isIncludeExtra: isIncludeExtra,
         }
         const options: Partial<FetchOptions> = {
           method: HTTP_METHODS.GET,
