@@ -1,241 +1,181 @@
 import React from 'react'
 
-import { Async, FetchOptions, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
-import { CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
 import {
-  FORM_CREATE_FAILURE,
-  FORM_CREATE_REQUEST,
-  FORM_CREATE_SUCCESS,
-  FORM_DELETE_FAILURE,
-  FORM_DELETE_REQUEST,
-  FORM_DELETE_SUCCESS,
-  FORM_UPDATE_FAILURE,
-  FORM_UPDATE_REQUEST,
-  FORM_UPDATE_SUCCESS,
-  FORMS_COMPLETE,
-  FORMS_READ_FAILURE,
-  FORMS_READ_REQUEST,
-  FORMS_READ_SUCCESS,
-  SET_SELECTED_FORM,
+  Async,
+  FetchOptions,
+  FetchRequestMetadata,
+  getEndpoint,
+  getErrMsg,
+  GlobalDispatch,
+  GlobalState,
+} from '../../app'
+import {
+  ACTION_SUCCESS,
+  ACTION_TYPES,
+  ActionTypes,
+  HTTP_METHODS,
+  ID_DEFAULT,
+  SOMETHING_WENT_WRONG,
+} from '../../constants'
+import {
+  FILINGS_COMPLETE,
+  FILINGS_READ_FAILURE,
+  FILINGS_READ_REQUEST,
+  FILINGS_READ_SUCCESS,
 } from '../types/filings.action.types'
-import { FormResponse, FormSchema } from '../types/filings.data.types'
-import { validateForm } from '../utils/filings.utils'
+import { FilingBase, FilingResponse, FilingSchema } from '../types/filings.data.types'
+import { filingDispatch } from '../utils/filings.utils'
 
-export const addForm = (form: FormSchema) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    const validationErrors = validateForm(form)
-    if (validationErrors) {
-      dispatch(formsFailure(FORM_CREATE_FAILURE, validationErrors))
-      return
+export const filingsAction = ({
+  action,
+  filingsRequest,
+  id,
+  isRestore,
+  isHardDelete,
+}: {
+  action: ActionTypes
+  filingsRequest?: FilingBase
+  id?: number
+  isRestore?: boolean
+  isHardDelete?: boolean
+}) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<FilingResponse> => {
+    if (action === ACTION_TYPES.RESTORE) {
+      action = ACTION_TYPES.UPDATE
+    }
+    const typeRequest = `FILINGS_${action}_REQUEST`
+    const typeSuccess = `FILINGS_${action}_SUCCESS`
+    const typeFailure = `FILINGS_${action}_FAILURE`
+    dispatch(filingDispatch({ type: typeRequest }))
+
+    let endpoint = ''
+    let options: Partial<FetchOptions> = {}
+
+    if (action === ACTION_TYPES.CREATE) {
+      endpoint = getEndpoint(process.env.FILING_CREATE as string)
+      options = {
+        method: HTTP_METHODS.POST,
+        requestBody: { ...filingsRequest },
+      }
+    } else if (action === ACTION_TYPES.UPDATE) {
+      endpoint = getEndpoint(process.env.FILING_UPDATE as string)
+      options = {
+        method: HTTP_METHODS.PUT,
+        requestBody: filingsRequest,
+        queryParams: { is_restore: isRestore || false },
+        pathParams: { court_case_id: id || ID_DEFAULT },
+      }
+    } else if (action === ACTION_TYPES.DELETE) {
+      endpoint = getEndpoint(process.env.FILING_DELETE as string)
+      options = {
+        method: HTTP_METHODS.DELETE,
+        pathParams: { court_case_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
+      }
     }
 
-    dispatch(formsRequest(FORM_CREATE_REQUEST))
-
     try {
-      const urlPath = getEndpoint(process.env.FORM_CREATE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'POST',
-        requestBody: getRequestBody(form),
-      }
-
-      const formResponse = (await Async.fetch(urlPath, options)) as FormResponse
-
-      if (formResponse.detail) {
-        dispatch(formsFailure(FORM_CREATE_FAILURE, getErrMsg(formResponse.detail)))
+      const filingResponse = (await Async.fetch(endpoint, options)) as FilingResponse
+      if (filingResponse.detail) {
+        dispatch(filingDispatch({ type: typeFailure, error: getErrMsg(filingResponse.detail) }))
       } else {
-        dispatch(formsSuccess(FORM_CREATE_SUCCESS, CREATE_SUCCESS('Form'), []))
-      }
-    } catch (error) {
-      console.log('Add Filing Error: ', error)
-      dispatch(formsFailure(FORM_CREATE_FAILURE, SOMETHING_WENT_WRONG))
-    } finally {
-      dispatch(formsComplete())
-    }
-  }
-}
-
-export const getForms = (isForceFetch: boolean = false) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(formsRequest(FORMS_READ_REQUEST))
-
-    try {
-      let formsResponse: FormResponse
-      const formsInStore: FormSchema[] = getStore().forms.forms
-
-      if (isForceFetch || formsInStore.length === 0) {
-        const urlPath = getEndpoint(process.env.FORMS_READ_ENDPOINT as string)
-        const options: Partial<FetchOptions> = {
-          method: 'GET',
-        }
-        formsResponse = (await Async.fetch(urlPath, options)) as FormResponse
-
-        if (formsResponse.detail) {
-          dispatch(formsFailure(FORMS_READ_FAILURE, getErrMsg(formsResponse.detail)))
+        if (action === ACTION_TYPES.READ) {
+          dispatch(filingDispatch({ type: typeSuccess, filings: filingResponse.data }))
         } else {
-          dispatch(formsSuccess(FORMS_READ_SUCCESS, '', formsResponse.forms))
+          dispatch(filingDispatch({ type: typeSuccess, success: ACTION_SUCCESS(action, 'FILING') }))
         }
-      } else {
-        dispatch(formsSuccess(FORMS_READ_SUCCESS, '', formsInStore))
       }
+      return filingResponse
     } catch (error) {
-      console.log('Get Filings Error: ', error)
-      dispatch(formsFailure(FORMS_READ_FAILURE, SOMETHING_WENT_WRONG))
+      console.log(`Filing ${action} Error: `, error)
+      dispatch(filingDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
     } finally {
-      dispatch(formsComplete())
+      dispatch(filingDispatch({ type: FILINGS_COMPLETE }))
     }
   }
 }
 
-export const getOneForm = (formId: number) => {
-  try {
-    const urlPath = getEndpoint(process.env.FORM_READ_ENDPOINT as string)
-    const options: Partial<FetchOptions> = {
-      method: 'GET',
-      pathParams: { form_id: formId },
-      extraParams: {
-        isIncludeExtra: true,
-        isIncludeHistory: true,
-      },
-    }
-
-    return Async.fetch(urlPath, options)
-  } catch (error) {
-    console.log('Get OneForm Error: ', error)
-    const errorResponse: FormResponse = { forms: [], detail: { error: error as string } }
-    return Promise.resolve(errorResponse)
-  }
-}
-
-export const getForm = (formId: number) => {
+export const getFilings = (requestMetadata?: Partial<FetchRequestMetadata>) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(formsRequest(FORMS_READ_REQUEST))
+    dispatch(filingDispatch({ type: FILINGS_READ_REQUEST }))
 
-    // call api, if it fails fallback to store
-    try {
-      const formResponse = (await getOneForm(formId)) as FormResponse
-      if (formResponse.detail) {
-        dispatch(formsFailure(FORMS_READ_FAILURE, getErrMsg(formResponse.detail)))
-        setSelectedFormFromStore(getStore(), dispatch, formId)
-      } else {
-        dispatch(formSelect(formResponse.forms[0]))
-      }
-    } finally {
-      dispatch(formsComplete())
+    let filingResponse: FilingResponse = { data: [] }
+
+    if (requestMetadata === getStore().filings.requestMetadata) {
+      // no need to fetch request, metadata is same
+      filingResponse.data = getStore().filings.filings
     }
-  }
-}
-
-export const editForm = (id: number, form: FormSchema) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    const validationErrors = validateForm(form)
-    if (validationErrors) {
-      dispatch(formsFailure(FORM_UPDATE_FAILURE, validationErrors))
-      return
+    const endpoint = getEndpoint(process.env.FILING_READ as string)
+    const options: Partial<FetchOptions> = {
+      method: HTTP_METHODS.GET,
+      metadataParams: requestMetadata,
     }
 
-    dispatch(formsRequest(FORM_UPDATE_REQUEST))
-
     try {
-      const urlPath = getEndpoint(process.env.FORM_UPDATE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'PUT',
-        pathParams: { form_id: id },
-        requestBody: getRequestBody(form),
+      if (filingResponse.data.length <= 0) {
+        filingResponse = (await Async.fetch(endpoint, options)) as FilingResponse
       }
-
-      const formResponse = (await Async.fetch(urlPath, options)) as FormResponse
-
-      if (formResponse.detail) {
-        dispatch(formsFailure(FORM_UPDATE_FAILURE, getErrMsg(formResponse.detail)))
+      if (filingResponse.detail) {
+        dispatch(filingDispatch({ type: FILINGS_READ_FAILURE, error: getErrMsg(filingResponse.detail) }))
       } else {
-        dispatch(formsSuccess(FORM_UPDATE_SUCCESS, UPDATE_SUCCESS('Form'), []))
+        dispatch(
+          filingDispatch({
+            type: FILINGS_READ_SUCCESS,
+            filings: filingResponse.data,
+            requestMetadata: requestMetadata,
+          }),
+        )
       }
     } catch (error) {
-      console.log('Edit Filing Error: ', error)
-      dispatch(formsFailure(FORM_UPDATE_FAILURE, SOMETHING_WENT_WRONG))
+      console.log(`Get Filings Error: `, error)
+      dispatch(filingDispatch({ type: FILINGS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
     } finally {
-      dispatch(formsComplete())
+      dispatch(filingDispatch({ type: FILINGS_COMPLETE }))
     }
   }
 }
 
-export const deleteForm = (id: number) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    dispatch(formsRequest(FORM_DELETE_REQUEST))
+export const getFiling = (filingId: number, isIncludeExtra?: boolean) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, state: GlobalState): Promise<FilingSchema | undefined> => {
+    dispatch(filingDispatch({ type: FILINGS_READ_REQUEST }))
+    let oneFiling = undefined
 
     try {
-      const urlPath = getEndpoint(process.env.FORM_DELETE_ENDPOINT as string)
-      const options: Partial<FetchOptions> = {
-        method: 'DELETE',
-        pathParams: { form_id: id },
+      const filingsInStore = state.filings.filings
+      if (filingsInStore) {
+        oneFiling = filingsInStore.find((x) => x.id === filingId)
+
+        if (isIncludeExtra && oneFiling && (!oneFiling.taskCalendars || !oneFiling.taskCalendars.length)) {
+          oneFiling = undefined
+        }
       }
 
-      const formResponse = (await Async.fetch(urlPath, options)) as FormResponse
-
-      if (formResponse.detail) {
-        dispatch(formsFailure(FORM_DELETE_FAILURE, getErrMsg(formResponse.detail)))
+      if (oneFiling) {
+        return oneFiling
       } else {
-        dispatch(formsSuccess(FORM_DELETE_SUCCESS, DELETE_SUCCESS('Form'), []))
+        const endpoint = getEndpoint(process.env.FILING_READ as string)
+        const requestMetadata: Partial<FetchRequestMetadata> = {
+          schemaModelId: filingId,
+          isIncludeExtra: isIncludeExtra === true,
+        }
+        const options: Partial<FetchOptions> = {
+          method: HTTP_METHODS.GET,
+          metadataParams: requestMetadata,
+        }
+        const filingResponse = (await Async.fetch(endpoint, options)) as FilingResponse
+        if (filingResponse.detail) {
+          dispatch(filingDispatch({ type: FILINGS_READ_FAILURE, error: getErrMsg(filingResponse.detail) }))
+        } else {
+          oneFiling = filingResponse.data.find((x) => x.id === filingId)
+        }
       }
+      return oneFiling
     } catch (error) {
-      console.log('Delete Filing Error: ', error)
-      dispatch(formsFailure(FORM_UPDATE_FAILURE, SOMETHING_WENT_WRONG))
+      console.log(`Get Filing Error: `, error)
+      dispatch(filingDispatch({ type: FILINGS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
+      return oneFiling
     } finally {
-      dispatch(formsComplete())
+      dispatch(filingDispatch({ type: FILINGS_COMPLETE }))
     }
-  }
-}
-
-const formsRequest = (type: string) => ({
-  type: type,
-})
-
-const formsSuccess = (type: string, success: string, forms: FormSchema[]) => {
-  if (success) {
-    return {
-      type: type,
-      success: success,
-    }
-  } else {
-    return {
-      type: type,
-      forms: forms,
-    }
-  }
-}
-
-const formsFailure = (type: string, errMsg: string) => ({
-  type: type,
-  error: errMsg,
-})
-
-const formSelect = (selectedForm: FormSchema) => ({
-  type: SET_SELECTED_FORM,
-  selectedForm,
-})
-
-const formsComplete = () => ({
-  type: FORMS_COMPLETE,
-})
-
-const getRequestBody = (form: FormSchema) => {
-  return {
-    form_type_id: form.formTypeId,
-    court_case_id: form.courtCaseId,
-    submit_date: form.submitDate,
-    receipt_date: form.receiptDate,
-    rfe_date: form.rfeDate,
-    rfe_submit_date: form.rfeSubmitDate,
-    decision_date: form.decisionDate,
-    status: form.status,
-    comments: form.comments,
-  }
-}
-
-const setSelectedFormFromStore = (store: GlobalState, dispatch: React.Dispatch<GlobalDispatch>, formId: number) => {
-  const formsInStore: FormSchema[] = store.forms.forms
-  const formInStore: FormSchema | undefined = formsInStore.find((form) => form.id === formId)
-  if (formInStore) {
-    dispatch(formSelect(formInStore))
   }
 }

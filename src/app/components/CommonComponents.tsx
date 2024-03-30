@@ -5,6 +5,7 @@ import Checkbox from '@mui/material/Checkbox'
 import Divider from '@mui/material/Divider'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Typography from '@mui/material/Typography'
+import { Dayjs } from 'dayjs'
 import React from 'react'
 
 import Link from './Link'
@@ -13,6 +14,7 @@ import { CourtCaseFormData, CourtCaseFormErrorData } from '../../cases'
 import { ClientFormData, ClientFormErrorData } from '../../clients'
 import { ACTION_TYPES, ActionTypes } from '../../constants'
 import { CourtFormData, CourtFormErrorData } from '../../courts'
+import { FilingFormData, FilingFormErrorData } from '../../filings'
 import { JudgeFormData, JudgeFormErrorData } from '../../judges'
 import { RefTypeFormData } from '../../types'
 import {
@@ -41,6 +43,7 @@ type FormData =
   | JudgeFormData
   | ClientFormData
   | CourtCaseFormData
+  | FilingFormData
 
 type FormErrorData =
   | FormData
@@ -51,6 +54,7 @@ type FormErrorData =
   | JudgeFormErrorData
   | ClientFormErrorData
   | CourtCaseFormErrorData
+  | FilingFormErrorData
 
 export const pageTitleComponent = (component: string, componentName?: string) => (
   <>
@@ -238,6 +242,20 @@ export const handleFormChange = <T extends FormData, U extends FormErrorData>(
   } else {
     setFormData({ ...formData, [name]: changedValue })
   }
+  if (name in formErrors) {
+    setFormErrors({ ...formErrors, [name]: '' })
+  }
+}
+
+export const handleFormDateChange = <T extends FormData, U extends FormErrorData>(
+  name: string,
+  value: Dayjs | null,
+  formData: T,
+  formErrors: U,
+  setFormData: (formData: T) => void,
+  setFormErrors: (formErrorData: U) => void,
+) => {
+  setFormData({ ...formData, [name]: value })
   if (name in formErrors) {
     setFormErrors({ ...formErrors, [name]: '' })
   }

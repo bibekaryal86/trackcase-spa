@@ -10,7 +10,7 @@ import { courtCases, CourtCasesState } from '../../cases'
 import { clients, ClientsState } from '../../clients'
 import { collections, CollectionsState } from '../../collections'
 import { courts, CourtsState } from '../../courts'
-import { forms, FormsState } from '../../filings'
+import { FilingsState, forms } from '../../filings'
 import { judges, JudgesState } from '../../judges'
 import { refTypes, RefTypesState } from '../../types'
 import alert from '../reducers/alert.reducer'
@@ -32,7 +32,7 @@ export interface GlobalState {
   judges: JudgesState
   clients: ClientsState
   courtCases: CourtCasesState
-  forms: FormsState
+  filings: FilingsState
   calendars: CalendarsState
   collections: CollectionsState
 }

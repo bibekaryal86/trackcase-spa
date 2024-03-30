@@ -1,88 +1,18 @@
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 
-import { getDayjs, getNumber } from '../../app'
-import { FormSchema } from '../types/filings.data.types'
+import { FetchRequestMetadata, getDayjs, getNumber } from '../../app'
+import { ID_DEFAULT } from '../../constants'
+import {
+  DefaultFilingFormErrorData,
+  FilingFormData,
+  FilingFormErrorData,
+  FilingSchema,
+} from '../types/filings.data.types'
 
-export const validateForm = (form: FormSchema) => {
-  const errors: string[] = []
-
-  if (getNumber(form.formTypeId) <= 0) {
-    errors.push('Filing Type is required!')
-  }
-  if (getNumber(form.courtCaseId) <= 0) {
-    errors.push('Case is required!')
-  }
-  if (!form.status.trim()) {
-    errors.push('Status is required!')
-  }
-  const submitDate = getDayjs(form.submitDate)
-  if (submitDate) {
-    if (!submitDate.isValid() || submitDate.isBefore(dayjs(), 'day')) {
-      errors.push('Submit Date is invalid or in the past!')
-    }
-  }
-  const receiptDate = getDayjs(form.receiptDate)
-  if (receiptDate) {
-    if (!receiptDate.isValid() || receiptDate.isBefore(dayjs(), 'day')) {
-      errors.push('Receipt Date is invalid or in the past!')
-    }
-    if (!submitDate || receiptDate.isBefore(submitDate, 'day')) {
-      errors.push('Submit Date is invalid or is after Receipt Date!')
-    }
-  }
-  const priorityDate = getDayjs(form.priorityDate)
-  if (priorityDate) {
-    if (!priorityDate.isValid() || priorityDate.isBefore(dayjs(), 'day')) {
-      errors.push('Priority Date is invalid or in the past!')
-    }
-    if (!submitDate || priorityDate.isBefore(receiptDate, 'day')) {
-      errors.push('Receipt Date is invalid or is after Priority Date!')
-    }
-  }
-  const rfeDate = getDayjs(form.rfeDate)
-  if (rfeDate) {
-    if (!rfeDate.isValid() || rfeDate.isBefore(dayjs(), 'day')) {
-      errors.push('RFE Date is invalid or in the past!')
-    }
-    if (!priorityDate || priorityDate.isBefore(rfeDate, 'day')) {
-      errors.push('Priority Date is invalid or is after RFE Date!')
-    }
-  }
-  const rfeSubmitDate = getDayjs(form.rfeSubmitDate)
-  if (rfeSubmitDate) {
-    if (!rfeSubmitDate.isValid() || rfeSubmitDate.isBefore(dayjs(), 'day')) {
-      errors.push('RFE Submit Date is invalid or in the past!')
-    }
-    if (!rfeDate || rfeSubmitDate.isBefore(rfeDate, 'day')) {
-      errors.push('RFE Date is invalid or is after RFE Submit Date!')
-    }
-  }
-  const decisionDate = getDayjs(form.decisionDate)
-  if (decisionDate) {
-    if (!decisionDate.isValid() || decisionDate.isBefore(dayjs(), 'day')) {
-      errors.push('Decision Date is invalid or in the past!')
-    }
-    if (!priorityDate) {
-      if (!rfeSubmitDate) {
-        errors.push('Priority Date or RFE Submit Date is required for Decision Date!')
-      } else if (rfeSubmitDate.isBefore(decisionDate)) {
-        errors.push('RFE Submit Date is after Decision Date!')
-      }
-    } else if (priorityDate.isBefore(decisionDate)) {
-      errors.push('Priority Date is after Decision Date!')
-    }
-  }
-  if (submitDate && ['OPEN', 'PROCESSING', 'PENDING'].includes(form.status)) {
-    errors.push('Invalid Status for submitted form!')
-  }
-
-  return errors.length ? errors.join(', ') : ''
-}
-
-export const isAreTwoFormsSame = (one: FormSchema, two: FormSchema) =>
+export const isAreTwoFilingsSame = (one: FilingSchema | FilingFormData, two: FilingSchema | FilingFormData) =>
   one &&
   two &&
-  one.formTypeId === two.formTypeId &&
+  one.filingTypeId === two.filingTypeId &&
   one.courtCaseId === two.courtCaseId &&
   one.submitDate === two.submitDate &&
   one.receiptDate === two.receiptDate &&
@@ -91,43 +21,137 @@ export const isAreTwoFormsSame = (one: FormSchema, two: FormSchema) =>
   one.rfeDate === two.rfeDate &&
   one.rfeSubmitDate === two.rfeSubmitDate &&
   one.decisionDate === two.decisionDate &&
-  one.status === two.status &&
+  one.componentStatusId === two.componentStatusId &&
   one.comments === two.comments
 
-export const isFormFormFieldError = (name: string, value: string | number | undefined) => {
-  switch (name) {
-    case 'formTypeId':
-    case 'courtCaseId':
-      return !value || getNumber(value) <= 0
-    case 'status':
-      return !value || value.toString().trim() === ''
+export const validateFiling = (formData: FilingFormData, setFormErrors: (formErrors: FilingFormErrorData) => void) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: FilingFormErrorData = { ...DefaultFilingFormErrorData }
+
+  if (getNumber(formData.filingTypeId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.filingTypeError = 'REQUIRED'
   }
-  return false
+  if (getNumber(formData.courtCaseId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.courtCaseError = 'REQUIRED'
+  }
+  if (getNumber(formData.componentStatusId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.componentStatusError = 'REQUIRED'
+  }
+  const submitDate = getDayjs(formData.submitDate)
+  if (submitDate) {
+    if (!submitDate.isValid() || submitDate.isBefore(dayjs(), 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.submitDateError = 'SUBMIT DATE INVALID OR IN THE PAST'
+    }
+  }
+  const receiptDate = getDayjs(formData.receiptDate)
+  if (receiptDate) {
+    if (!receiptDate.isValid() || receiptDate.isBefore(dayjs(), 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.receiptDateError = 'RECEIPT DATE INVALID OR IN THE PAST'
+    }
+    if (!submitDate || receiptDate.isBefore(submitDate, 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.submitDateError = 'SUBMIT DATE INVALID OR AFTER RECEIPT DATE'
+    }
+  }
+  const priorityDate = getDayjs(formData.priorityDate)
+  if (priorityDate) {
+    if (!priorityDate.isValid() || priorityDate.isBefore(dayjs(), 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.priorityDateError = 'PRIORITY DATE INVALID OR IN THE PAST'
+    }
+    if (!receiptDate || priorityDate.isBefore(receiptDate, 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.receiptDateError = 'RECEIPT DATE INVALID OR AFTER PRIORITY DATE'
+    }
+  }
+  const rfeDate = getDayjs(formData.rfeDate)
+  if (rfeDate) {
+    if (!rfeDate.isValid() || rfeDate.isBefore(dayjs(), 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.rfeDateError = 'RFE DATE INVALID OR IN THE PAST'
+    }
+    if (!priorityDate || priorityDate.isBefore(rfeDate, 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.priorityDateError = 'PRIORITY DATE INVALID OR IS AFTER RFE DATE'
+    }
+  }
+  const rfeSubmitDate = getDayjs(formData.rfeSubmitDate)
+  if (rfeSubmitDate) {
+    if (!rfeSubmitDate.isValid() || rfeSubmitDate.isBefore(dayjs(), 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.rfeSubmitDateError = 'RFE SUBMIT DATE INVALID OR IN THE PAST'
+    }
+    if (!rfeDate || rfeSubmitDate.isBefore(rfeDate, 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.rfeDateError = 'RFE DATE INVALID OR IS AFTER RFE SUBMIT DATE'
+    }
+  }
+  const decisionDate = getDayjs(formData.decisionDate)
+  if (decisionDate) {
+    if (!decisionDate.isValid() || decisionDate.isBefore(dayjs(), 'day')) {
+      hasValidationErrors = true
+      formErrorsLocal.decisionDateError = 'DECISION DATE INVALID OR IN THE PAST'
+    }
+    if (!priorityDate) {
+      if (!rfeSubmitDate) {
+        hasValidationErrors = true
+        formErrorsLocal.priorityDateError = 'PRIORITY DATE OR RFE SUBMIT DATE REQUIRED FOR DECISION DATE'
+        formErrorsLocal.rfeSubmitDateError = 'PRIORITY DATE OR RFE SUBMIT DATE REQUIRED FOR DECISION DATE'
+      } else if (rfeSubmitDate.isBefore(decisionDate)) {
+        hasValidationErrors = true
+        formErrorsLocal.rfeSubmitDateError = 'RFE SUBMIT DATE IS AFTER DECISION DATE'
+      }
+    } else if (priorityDate.isBefore(decisionDate)) {
+      hasValidationErrors = true
+      formErrorsLocal.priorityDateError = 'PRIORITY DATE IS AFTER DECISION DATE'
+    }
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
 }
 
-export const handleFormDateOnChange = (
-  name: string,
-  value: Dayjs | null,
-  selectedForm: FormSchema,
-  setSelectedForm: (updatedForm: FormSchema) => void,
-) => {
-  const updatedForm = {
-    ...selectedForm,
-    [name]: value,
+export const filingDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  filings = [] as FilingSchema[],
+  requestMetadata = {} as Partial<FetchRequestMetadata>,
+} = {}) => {
+  if (error) {
+    return {
+      type,
+      error,
+    }
+  } else if (success) {
+    return {
+      type,
+      success,
+    }
+  } else if (filings) {
+    return {
+      type,
+      filings,
+      requestMetadata,
+    }
+  } else {
+    return {
+      type,
+    }
   }
-  setSelectedForm(updatedForm)
 }
 
-export const handleFormFormOnChange = (
-  name: string,
-  value: string | number,
-  selectedForm: FormSchema,
-  setSelectedForm: (updatedForm: FormSchema) => void,
-  getValue: (value: string | number) => string | number,
-) => {
-  const updatedForm = {
-    ...selectedForm,
-    [name]: getValue(value),
+export const getFilingFormDataFromSchema = (x: FilingSchema): FilingFormData => {
+  return {
+    ...x,
+    id: x.id || ID_DEFAULT,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
   }
-  setSelectedForm(updatedForm)
 }

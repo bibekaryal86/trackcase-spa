@@ -10,55 +10,66 @@ import {
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
-  getComments,
   getNumber,
-  getString,
   GridFormWrapper,
-  StatusSchema,
+  handleFormChange,
+  handleFormDateChange,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { FilingTypeSchema } from '../../types'
-import { FormSchema } from '../types/filings.data.types'
-import { handleFormDateOnChange, handleFormFormOnChange, isFormFormFieldError } from '../utils/filings.utils'
+import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
+import { FilingFormData, FilingFormErrorData } from '../types/filings.data.types'
 
-interface FormFormProps {
-  selectedForm: FormSchema
-  setSelectedForm: (selectedForm: FormSchema) => void
-  formStatusList: string[]
-  isShowOneForm: boolean
-  formTypesList: FilingTypeSchema[]
+interface FilingFormProps {
+  formData: FilingFormData
+  setFormData: (formData: FilingFormData) => void
+  formErrors: FilingFormErrorData
+  setFormErrors: (formErrors: FilingFormErrorData) => void
+  filingStatusList: ComponentStatusSchema[]
+  isShowOneFiling: boolean
+  filingTypesList: CaseTypeSchema[]
   courtCasesList: CourtCaseSchema[]
-  courtCaseId?: string
-  statusList: StatusSchema<string>
+  courtCaseId?: number
 }
 
-const FilingForm = (props: FormFormProps): React.ReactElement => {
+const FilingForm = (props: FilingFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedForm, setSelectedForm, formStatusList, isShowOneForm } = props
-  const { courtCaseId, statusList } = props
-  const { formTypesList, courtCasesList } = props
+  const { formData, formErrors, setFormData, setFormErrors, filingStatusList, isShowOneFiling } = props
+  const { filingTypesList, courtCasesList, courtCaseId } = props
 
-  const formTypesListForSelect = () =>
-    formTypesList.map((x) => (
+  const filingTypesListForSelect = () =>
+    filingTypesList.map((x) => (
       <MenuItem key={x.id} value={x.id}>
         {x.name}
       </MenuItem>
     ))
 
+  const filingType = () => (
+    <FormSelectField
+      componentLabel="FILING--FILING TYPE"
+      required
+      name="filingTypeId"
+      value={formData.filingTypeId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.filingTypeError}
+      helperText={formErrors.filingTypeError}
+      menuItems={filingTypesListForSelect()}
+    />
+  )
+
   const courtCasesListForSelect = () => {
     if (getNumber(courtCaseId) > 0) {
-      const selectedClient = courtCasesList.find((x) => x.id === Number(courtCaseId))
-      if (selectedClient) {
+      const selectedCourtCase = courtCasesList.find((x) => x.id === courtCaseId)
+      if (selectedCourtCase) {
         return [
-          <MenuItem key={selectedClient.id} value={selectedClient.id}>
-            {selectedClient.client?.name}, {selectedClient.caseType?.name}
+          <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
+            {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
           </MenuItem>,
         ]
       }
     } else {
       return courtCasesList
-        .filter((x) => selectedForm.courtCaseId === x.id || statusList.court_case.active.includes(x.status))
+        .filter((x) => formData.courtCaseId === x.id || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
             {x.client?.name}, {x.caseType?.name}
@@ -68,156 +79,169 @@ const FilingForm = (props: FormFormProps): React.ReactElement => {
     return []
   }
 
-  const formType = () => (
+  const filingCourtCase = () => (
     <FormSelectField
-      componentLabel="Filing--Filing Type"
-      required={true}
-      value={selectedForm.formTypeId}
-      onChange={(e) => handleFormFormOnChange('formTypeId', e.target.value, selectedForm, setSelectedForm, getNumber)}
-      error={isFormFormFieldError('formTypeId', selectedForm.formTypeId)}
-      menuItems={formTypesListForSelect()}
-    />
-  )
-
-  const formCourtCase = () => (
-    <FormSelectField
-      componentLabel="Filing--Client, Case"
-      required={true}
-      value={selectedForm.courtCaseId}
-      onChange={(e) => handleFormFormOnChange('courtCaseId', e.target.value, selectedForm, setSelectedForm, getNumber)}
-      error={isFormFormFieldError('courtCaseId', selectedForm.courtCaseId)}
+      componentLabel="FILING--COURT CASE"
+      required
+      name="courtCaseId"
+      value={formData.courtCaseId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.courtCaseError}
+      helperText={formErrors.courtCaseError}
       menuItems={courtCasesListForSelect()}
     />
   )
 
-  const formSubmitDate = () => (
+  const filingSubmitDate = () => (
     <FormDatePickerField
-      componentLabel="Filing--Submit Date"
-      value={selectedForm.submitDate}
-      onChange={(newValue) => handleFormDateOnChange('submitDate', newValue, selectedForm, setSelectedForm)}
+      componentLabel="FILING--SUBMIT DATE"
+      name="submitDate"
+      value={formData.submitDate}
+      onChange={(value) => handleFormDateChange('submitDate', value, formData, formErrors, setFormData, setFormErrors)}
       minDate={dayjs().subtract(1, 'week')}
       maxDate={dayjs().add(1, 'week')}
+      helperText={formErrors.submitDateError}
     />
   )
 
-  const formReceiptDate = () => (
+  const filingReceiptDate = () => (
     <FormDatePickerField
-      componentLabel="Filing--Receipt Date"
-      value={selectedForm.receiptDate}
-      onChange={(newValue) => handleFormDateOnChange('receiptDate', newValue, selectedForm, setSelectedForm)}
-      minDate={dayjs().subtract(1, 'month')}
-      maxDate={dayjs().add(1, 'month')}
+      componentLabel="FILING--RECEIPT DATE"
+      name="receiptDate"
+      value={formData.receiptDate}
+      onChange={(value) => handleFormDateChange('receiptDate', value, formData, formErrors, setFormData, setFormErrors)}
+      minDate={dayjs().subtract(1, 'week')}
+      maxDate={dayjs().add(1, 'week')}
+      helperText={formErrors.receiptDateError}
     />
   )
 
-  const formReceiptNumber = () => (
+  const filingReceiptNumber = () => (
     <FormTextField
-      componentLabel="Filing--Receipt Number"
+      componentLabel="FILING--RECEIPT NUMBER"
+      name="receiptNumber"
       required={false}
-      value={selectedForm.receiptNumber}
-      onChange={(e) =>
-        handleFormFormOnChange('receiptNumber', e.target.value, selectedForm, setSelectedForm, getString)
+      value={formData.receiptNumber}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.receiptNumberError}
+      helperText={formErrors.receiptNumberError}
+    />
+  )
+
+  const filingPriorityDate = () => (
+    <FormDatePickerField
+      componentLabel="FILING--PRIORITY DATE"
+      name="priorityDate"
+      value={formData.priorityDate}
+      onChange={(value) =>
+        handleFormDateChange('priorityDate', value, formData, formErrors, setFormData, setFormErrors)
       }
-    />
-  )
-
-  const formPriorityDate = () => (
-    <FormDatePickerField
-      componentLabel="Filing--Priority Date"
-      value={selectedForm.priorityDate}
-      onChange={(newValue) => handleFormDateOnChange('priorityDate', newValue, selectedForm, setSelectedForm)}
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
+      helperText={formErrors.priorityDateError}
     />
   )
 
-  const formRfeDate = () => (
+  const filingRfeDate = () => (
     <FormDatePickerField
-      componentLabel="Filing--RFE Date"
-      value={selectedForm.rfeDate}
-      onChange={(newValue) => handleFormDateOnChange('rfeDate', newValue, selectedForm, setSelectedForm)}
+      componentLabel="FILING--RFE DATE"
+      name="rfeDate"
+      value={formData.rfeDate}
+      onChange={(value) => handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)}
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
+      helperText={formErrors.rfeDateError}
     />
   )
 
-  const formRfeSubmitDate = () => (
+  const filingRfeSubmitDate = () => (
     <FormDatePickerField
-      componentLabel="Filing--RFE Submit Date"
-      value={selectedForm.rfeSubmitDate}
-      onChange={(newValue) => handleFormDateOnChange('rfeSubmitDate', newValue, selectedForm, setSelectedForm)}
+      componentLabel="FILING--RFE SUBMIT DATE"
+      name="rfeSubmitDate"
+      value={formData.rfeSubmitDate}
+      onChange={(value) =>
+        handleFormDateChange('rfeSubmitDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
+      helperText={formErrors.rfeSubmitDateError}
     />
   )
 
-  const formDecisionDate = () => (
+  const filingDecisionDate = () => (
     <FormDatePickerField
-      componentLabel="Filing--Decision Date"
-      value={selectedForm.decisionDate}
-      onChange={(newValue) => handleFormDateOnChange('decisionDate', newValue, selectedForm, setSelectedForm)}
+      componentLabel="FILING--DECISION DATE"
+      name="decisionDate"
+      value={formData.decisionDate}
+      onChange={(value) =>
+        handleFormDateChange('decisionDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
+      helperText={formErrors.decisionDateError}
     />
   )
 
-  const formStatus = () => (
+  const filingStatus = () => (
     <FormSelectStatusField
-      componentLabel="Filing--Status"
-      value={selectedForm.status}
-      onChange={(e) => handleFormFormOnChange('status', e.target.value, selectedForm, setSelectedForm, getString)}
-      statusList={formStatusList}
-      error={isFormFormFieldError('status', selectedForm.status)}
+      componentLabel="FILING--STATUS"
+      name="componentStatusId"
+      value={formData.componentStatusId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.componentStatusError}
+      helperText={formErrors.componentStatusError}
+      statusList={filingStatusList}
     />
   )
 
-  const formComments = () => (
+  const filingComments = () => (
     <FormCommentsField
-      componentLabel="Filing--Comments"
-      value={selectedForm.comments}
-      onChange={(e) => handleFormFormOnChange('comments', e.target.value, selectedForm, setSelectedForm, getComments)}
+      componentLabel="FILING--COMMENTS"
+      name="comments"
+      value={formData.comments}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />
   )
 
   return (
     <GridFormWrapper
       isSmallScreen={isSmallScreen}
-      isShowOne={isShowOneForm}
-      justifyContent={isShowOneForm ? 'flex-start' : 'flex-end'}
+      isShowOne={isShowOneFiling}
+      justifyContent={isShowOneFiling ? 'flex-start' : 'flex-end'}
     >
       <Grid item xs={12}>
-        {formCourtCase()}
+        {filingCourtCase()}
       </Grid>
       <Grid item xs={6}>
-        {formType()}
+        {filingType()}
       </Grid>
       <Grid item xs={6}>
-        {formReceiptNumber()}
+        {filingReceiptNumber()}
       </Grid>
       <Grid item xs={6}>
-        {formSubmitDate()}
+        {filingSubmitDate()}
       </Grid>
       <Grid item xs={6}>
-        {formReceiptDate()}
+        {filingReceiptDate()}
       </Grid>
       <Grid item xs={6}>
-        {formPriorityDate()}
+        {filingPriorityDate()}
       </Grid>
       <Grid item xs={6}>
-        {formRfeDate()}
+        {filingRfeDate()}
       </Grid>
       <Grid item xs={6}>
-        {formRfeSubmitDate()}
+        {filingRfeSubmitDate()}
       </Grid>
       <Grid item xs={6}>
-        {formDecisionDate()}
+        {filingDecisionDate()}
       </Grid>
       <Grid item xs={6}>
-        {formStatus()}
+        {filingStatus()}
       </Grid>
-      {isShowOneForm && (
+      {isShowOneFiling && (
         <Grid item xs={12}>
-          {formComments()}
+          {filingComments()}
         </Grid>
       )}
     </GridFormWrapper>

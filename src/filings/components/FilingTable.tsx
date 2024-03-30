@@ -1,43 +1,46 @@
-import Button from '@mui/material/Button'
 import React from 'react'
 
-import { convertDateToLocaleString, getNumber, Link, Table, TableData, TableHeaderData } from '../../app'
-import { CourtCaseSchema } from '../../cases'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_DELETE,
-  BUTTON_UPDATE,
-  ID_ACTION_BUTTON,
-} from '../../constants'
-import { FilingTypeSchema } from '../../types'
-import { FormSchema } from '../types/filings.data.types'
+  convertDateToLocaleString,
+  FetchRequestMetadata,
+  Link,
+  ModalState,
+  Table,
+  tableAddButtonComponent,
+  TableData,
+  TableHeaderData,
+} from '../../app'
+import { CourtCaseFormData, CourtCaseSchema } from '../../cases'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
+import { ComponentStatusSchema, FilingTypeSchema } from '../../types'
+import { checkUserHasPermission, isSuperuser } from '../../users'
+import { FilingFormData, FilingSchema } from '../types/filings.data.types'
+import { getFilingFormDataFromSchema } from '../utils/filings.utils'
 
-interface FormTableProps {
-  formsList: FormSchema[]
-  setModal?: (action: string) => void
-  setSelectedId?: (id: number) => void
-  setSelectedForm?: (form: FormSchema) => void
-  setSelectedFormForReset?: (form: FormSchema) => void
+interface FilingTableProps {
+  filingsList: FilingSchema[]
+  actionButtons?: (formDataForModal: FilingFormData) => React.JSX.Element
+  addModalState?: ModalState
+  softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  selectedCourtCase?: CourtCaseSchema | CourtCaseFormData
+  componentStatusList: ComponentStatusSchema[]
+  filingTypesList: FilingTypeSchema[]
   courtCasesList: CourtCaseSchema[]
-  selectedCourtCase?: CourtCaseSchema
-  formTypesList: FilingTypeSchema[]
 }
 
-const FilingTable = (props: FormTableProps): React.ReactElement => {
-  const { formsList, courtCasesList, selectedCourtCase, formTypesList } = props
-  const { setModal, setSelectedId, setSelectedForm, setSelectedFormForReset } = props
+const FilingTable = (props: FilingTableProps): React.ReactElement => {
+  const { filingsList, actionButtons, addModalState, softDeleteCallback } = props
+  const { selectedCourtCase, componentStatusList, filingTypesList, courtCasesList } = props
 
-  const formsTableHeaderData = (): TableHeaderData[] => {
-    return [
+  const filingsTableHeaderData = (): TableHeaderData[] => {
+    const tableHeaderData: TableHeaderData[] = [
       {
         id: 'type',
         label: 'Filing',
       },
       {
         id: 'client',
-        label: 'Client',
+        label: 'CourtCase',
       },
       {
         id: 'case',
@@ -75,53 +78,42 @@ const FilingTable = (props: FormTableProps): React.ReactElement => {
         id: 'status',
         label: 'Status',
       },
-      {
-        id: 'actions',
-        label: 'Actions',
-        align: 'center' as const,
-        isDisableSorting: true,
-      },
     ]
+    if (isSuperuser()) {
+      tableHeaderData.push({
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      })
+    }
+    if (
+      (checkUserHasPermission(COMPONENT_STATUS_NAME.FILINGS, ACTION_TYPES.UPDATE) ||
+        checkUserHasPermission(COMPONENT_STATUS_NAME.FILINGS, ACTION_TYPES.DELETE)) &&
+      !selectedCourtCase
+    ) {
+      tableHeaderData.push({
+        id: 'actions',
+        label: 'ACTIONS',
+        isDisableSorting: true,
+        align: 'center' as const,
+      })
+    }
+
+    return tableHeaderData
   }
 
-  const actionButtons = (id: number, form: FormSchema) => (
-    <>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_UPDATE)
-          setSelectedId && setSelectedId(id)
-          setSelectedForm && setSelectedForm(form)
-          setSelectedFormForReset && setSelectedFormForReset(form)
-        }}
-      >
-        {BUTTON_UPDATE}
-      </Button>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_DELETE)
-          setSelectedId && setSelectedId(id)
-          setSelectedForm && setSelectedForm(form)
-        }}
-      >
-        {BUTTON_DELETE}
-      </Button>
-    </>
-  )
-
-  const linkToForm = (x: FormSchema) => {
-    let formType = x.formType
-    if (!formType) {
-      formType = formTypesList.find((y) => y.id === x.formTypeId)
+  const linkToFiling = (x: FilingSchema) => {
+    let filingType = x.filingType
+    if (!filingType) {
+      filingType = filingTypesList?.find((y) => y.id === x.filingTypeId)
     }
-    return <Link text={formType?.name} navigateToPage={`/form/${x.id}`} />
+    return <Link text={filingType?.name} navigateToPage={`/filing/${x.id}`} />
   }
 
-  const linkToClient = (x: FormSchema) => {
-    let courtCaseId = x.courtCaseId
-    if (selectedCourtCase) {
-      courtCaseId = getNumber(selectedCourtCase.id)
+  const linkToClient = (x: FilingSchema) => {
+    let courtCase = selectedCourtCase || x.courtCase
+    if (!courtCase) {
+      courtCase = courtCasesList.find((y) => y.id === x.courtCaseId)
     }
-    const courtCase = courtCasesList.find((y) => y.id === courtCaseId)
     return (
       <Link
         text={courtCase?.client?.name}
@@ -130,7 +122,7 @@ const FilingTable = (props: FormTableProps): React.ReactElement => {
     )
   }
 
-  const linkToCourtCase = (x: FormSchema) => {
+  const linkToCourtCase = (x: FilingSchema) => {
     if (selectedCourtCase) {
       return selectedCourtCase?.caseType?.name
     }
@@ -143,39 +135,42 @@ const FilingTable = (props: FormTableProps): React.ReactElement => {
     )
   }
 
-  const formsTableDataCommon = (x: FormSchema) => {
-    return {
-      type: linkToForm(x),
-      client: linkToClient(x),
-      case: linkToCourtCase(x),
-      submit: convertDateToLocaleString(x.submitDate),
-      receipt: convertDateToLocaleString(x.receiptDate),
-      receiptNumber: x.receiptNumber,
-      priority: convertDateToLocaleString(x.priorityDate),
-      rfe: convertDateToLocaleString(x.rfeDate),
-      rfeSubmit: convertDateToLocaleString(x.rfeSubmitDate),
-      decision: convertDateToLocaleString(x.decisionDate),
-      status: x.status,
+  const getComponentStatus = (x: FilingSchema) => {
+    if (x.componentStatus) {
+      return x.componentStatus.statusName
+    } else {
+      const componentStatus = componentStatusList?.find((y) => y.id === x.componentStatusId)
+      return componentStatus?.statusName
     }
   }
 
-  const formsTableData = (): TableData[] => {
-    return Array.from(formsList, (x) => {
+  const filingsTableData = (): TableData[] => {
+    return Array.from(filingsList, (x) => {
       return {
-        ...formsTableDataCommon(x),
-        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+        type: linkToFiling(x),
+        client: linkToClient(x),
+        case: linkToCourtCase(x),
+        submit: convertDateToLocaleString(x.submitDate),
+        receipt: convertDateToLocaleString(x.receiptDate),
+        receiptNumber: x.receiptNumber,
+        priority: convertDateToLocaleString(x.priorityDate),
+        rfe: convertDateToLocaleString(x.rfeDate),
+        rfeSubmit: convertDateToLocaleString(x.rfeSubmitDate),
+        decision: convertDateToLocaleString(x.decisionDate),
+        status: getComponentStatus(x),
+        isDeleted: x.isDeleted,
+        actions: actionButtons ? actionButtons(getFilingFormDataFromSchema(x)) : undefined,
       }
     })
   }
 
-  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Filing</Button>
-
   return (
     <Table
-      componentName="Filing"
-      headerData={formsTableHeaderData()}
-      tableData={formsTableData()}
-      addModelComponent={addButton()}
+      componentName={COMPONENT_STATUS_NAME.FILINGS}
+      headerData={filingsTableHeaderData()}
+      tableData={filingsTableData()}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.FILINGS, addModalState)}
+      getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )
 }

@@ -1,47 +1,24 @@
 import {
-  FORM_CREATE_SUCCESS,
-  FORM_DELETE_SUCCESS,
-  FORM_UPDATE_SUCCESS,
-  FORMS_READ_REQUEST,
-  FORMS_READ_SUCCESS,
-  FORMS_UNMOUNT,
-  SET_SELECTED_FORM,
+  FILINGS_CREATE_SUCCESS,
+  FILINGS_DELETE_SUCCESS,
+  FILINGS_READ_SUCCESS,
+  FILINGS_UPDATE_SUCCESS,
 } from '../types/filings.action.types'
-import { DefaultFormSchema, DefaultFormState, FormsAction, FormsState } from '../types/filings.data.types'
+import { DefaultFilingState, FilingsAction, FilingsState } from '../types/filings.data.types'
 
-export default function forms(state = DefaultFormState, action: FormsAction): FormsState {
-  const matchesRequest = /^FORM_(CREATE|UPDATE|DELETE)_REQUEST$/.exec(action.type)
-  if (matchesRequest || action.type === FORMS_READ_REQUEST) {
-    return {
-      ...state,
-      isCloseModal: false,
-    }
-  }
-
+export default function filings(state = DefaultFilingState, action: FilingsAction): FilingsState {
   switch (action.type) {
-    case FORMS_READ_SUCCESS:
+    case FILINGS_READ_SUCCESS:
+      return {
+        filings: action.filings,
+        requestMetadata: action.requestMetadata,
+      }
+    case FILINGS_CREATE_SUCCESS:
+    case FILINGS_UPDATE_SUCCESS:
+    case FILINGS_DELETE_SUCCESS:
       return {
         ...state,
-        isCloseModal: true,
-        forms: action.forms,
-      }
-    case FORM_CREATE_SUCCESS:
-    case FORM_UPDATE_SUCCESS:
-    case FORM_DELETE_SUCCESS:
-      return {
-        isCloseModal: true,
-        forms: [],
-        selectedForm: DefaultFormSchema,
-      }
-    case SET_SELECTED_FORM:
-      return {
-        ...state,
-        selectedForm: action.selectedForm,
-      }
-    case FORMS_UNMOUNT:
-      return {
-        ...state,
-        selectedForm: DefaultFormSchema,
+        filings: [],
       }
     default:
       return state

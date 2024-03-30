@@ -1,13 +1,13 @@
 import { Dayjs } from 'dayjs'
 
-import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
 import { TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
-import { FilingTypeSchema } from '../../types'
+import { ComponentStatusSchema, FilingTypeSchema } from '../../types'
 
-export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
-  formTypeId: number
+export interface FilingBase {
+  filingTypeId: number
   courtCaseId: number
   submitDate?: Dayjs
   receiptDate?: Dayjs
@@ -16,51 +16,63 @@ export interface FormSchema extends StatusBaseSchema, BaseModelSchema {
   rfeDate?: Dayjs
   rfeSubmitDate?: Dayjs
   decisionDate?: Dayjs
+  componentStatusId: number
+  comments?: string
+}
+
+export interface FilingSchema extends FilingBase, BaseModelSchema {
   // orm_mode
-  formType?: FilingTypeSchema
+  filingType?: FilingTypeSchema
   courtCase?: CourtCaseSchema
+  componentStatus?: ComponentStatusSchema
   taskCalendars?: TaskCalendarSchema[]
   // history
-  historyForms?: HistoryFormSchema[]
+  historyFilings?: HistoryFilingSchema[]
 }
 
-export interface FormResponse extends ResponseBase {
-  forms: FormSchema[]
+export interface FilingResponse extends ResponseBase {
+  data: FilingSchema[]
 }
 
-export interface HistoryFormSchema extends BaseModelSchema {
-  userName: string
-  formId: number
-  // from form schema, need everything optional here so can't extend
-  formTypeId?: number
-  courtCaseId?: number
-  submitDate?: Dayjs
-  receiptDate?: Dayjs
-  receiptNumber?: string
-  priorityDate?: Dayjs
-  rfeDate?: Dayjs
-  rfeSubmitDate?: Dayjs
-  decisionDate?: Dayjs
-  status?: string
-  comments?: string
+export interface HistoryFilingSchema extends Partial<FilingBase>, BaseModelSchema {
+  appUserId: number
+  filingId: number
   // orm_mode
-  form?: FormSchema
-  formType?: FilingTypeSchema
+  filing?: FilingSchema
+  filingType?: FilingTypeSchema
   courtCase?: CourtCaseSchema
+  componentStatus?: ComponentStatusSchema
 }
 
-export interface FormsState {
-  isCloseModal: boolean
-  forms: FormSchema[]
-  selectedForm: FormSchema
+export interface FilingsState {
+  filings: FilingSchema[]
+  requestMetadata: Partial<FetchRequestMetadata>
 }
 
-export interface FormsAction extends FormsState {
+export interface FilingsAction extends FilingsState {
   type: string
 }
 
-export const DefaultFormSchema: FormSchema = {
-  formTypeId: ID_DEFAULT,
+export interface FilingFormData extends FilingSchema {
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+}
+
+export interface FilingFormErrorData extends FilingSchema {
+  filingTypeError: string
+  courtCaseError: string
+  submitDateError: string
+  receiptDateError: string
+  receiptNumberError: string
+  priorityDateError: string
+  rfeDateError: string
+  rfeSubmitDateError: string
+  decisionDateError: string
+  componentStatusError: string
+}
+
+export const DefaultFilingSchema: FilingSchema = {
+  filingTypeId: ID_DEFAULT,
   courtCaseId: ID_DEFAULT,
   submitDate: undefined,
   receiptDate: undefined,
@@ -69,12 +81,32 @@ export const DefaultFormSchema: FormSchema = {
   rfeDate: undefined,
   rfeSubmitDate: undefined,
   decisionDate: undefined,
-  status: '',
+  componentStatusId: ID_DEFAULT,
   comments: '',
 }
 
-export const DefaultFormState: FormsState = {
-  isCloseModal: true,
-  forms: [],
-  selectedForm: DefaultFormSchema,
+export const DefaultFilingState: FilingsState = {
+  filings: [],
+  requestMetadata: {},
+}
+
+export const DefaultFilingFormData: FilingFormData = {
+  ...DefaultFilingSchema,
+  id: ID_DEFAULT,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+}
+
+export const DefaultFilingFormErrorData: FilingFormErrorData = {
+  ...DefaultFilingFormData,
+  filingTypeError: '',
+  courtCaseError: '',
+  submitDateError: '',
+  receiptDateError: '',
+  receiptNumberError: '',
+  priorityDateError: '',
+  rfeDateError: '',
+  rfeSubmitDateError: '',
+  decisionDateError: '',
+  componentStatusError: '',
 }
