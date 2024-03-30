@@ -10,7 +10,7 @@ import { courtCases, CourtCasesState } from '../../cases'
 import { clients, ClientsState } from '../../clients'
 import { collections, CollectionsState } from '../../collections'
 import { courts, CourtsState } from '../../courts'
-import { FilingsState, forms } from '../../filings'
+import { filings, FilingsState } from '../../filings'
 import { judges, JudgesState } from '../../judges'
 import { refTypes, RefTypesState } from '../../types'
 import alert from '../reducers/alert.reducer'
@@ -50,7 +50,7 @@ const appReducers = combineReducers({
   judges,
   clients,
   courtCases,
-  forms,
+  filings,
   calendars,
   collections,
 })
