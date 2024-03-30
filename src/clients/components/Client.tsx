@@ -151,7 +151,7 @@ const Client = (props: ClientProps): React.ReactElement => {
     )
 
   const courtCasesTable = () => (
-    <CourtCaseTable courtCasesList={courtCasesList} selectedClient={formData} caseTypesList={refTypes.caseType} />
+    <CourtCaseTable courtCasesList={courtCasesList} selectedClient={formData} componentStatusList={refTypes.componentStatus} caseTypesList={refTypes.caseType} />
   )
 
   return (

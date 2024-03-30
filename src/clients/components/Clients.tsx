@@ -209,6 +209,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       actionButtons={actionButtons}
       addModalState={addModalState}
       softDeleteCallback={getClientsWithMetadata}
+      componentStatusList={refTypes.componentStatus}
     />
   )
 

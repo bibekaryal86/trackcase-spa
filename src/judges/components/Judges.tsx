@@ -209,6 +209,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       actionButtons={actionButtons}
       addModalState={addModalState}
       softDeleteCallback={getJudgesWithMetadata}
+      componentStatusList={refTypes.componentStatus}
     />
   )
 

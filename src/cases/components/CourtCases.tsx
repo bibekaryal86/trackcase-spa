@@ -230,7 +230,8 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       actionButtons={actionButtons}
       addModalState={addModalState}
       softDeleteCallback={getCourtCasesWithMetadata}
-    />
+      componentStatusList={refTypes.componentStatus}
+     caseTypesList={refTypes.caseType} />
   )
 
   return (

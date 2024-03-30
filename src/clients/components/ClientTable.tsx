@@ -23,7 +23,7 @@ interface ClientTableProps {
   addModalState?: ModalState
   softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
   selectedJudge?: JudgeSchema | JudgeFormData
-  componentStatusList?: ComponentStatusSchema[]
+  componentStatusList: ComponentStatusSchema[]
 }
 
 const ClientTable = (props: ClientTableProps): React.ReactElement => {
@@ -102,7 +102,7 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     if (x.componentStatus) {
       return x.componentStatus.statusName
     } else {
-      const componentStatus = componentStatusList?.find((y) => y.id === x.componentStatusId)
+      const componentStatus = componentStatusList.find((y) => y.id === x.componentStatusId)
       return componentStatus?.statusName
     }
   }

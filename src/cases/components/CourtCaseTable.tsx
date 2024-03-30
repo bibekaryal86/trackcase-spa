@@ -22,8 +22,8 @@ interface CourtCaseTableProps {
   addModalState?: ModalState
   softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
   selectedClient?: ClientSchema | ClientFormData
-  componentStatusList?: ComponentStatusSchema[]
-  caseTypesList?: CaseTypeSchema[]
+  componentStatusList: ComponentStatusSchema[]
+  caseTypesList: CaseTypeSchema[]
 }
 
 const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
@@ -72,12 +72,11 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
   }
 
   const linkToCourtCase = (x: CourtCaseSchema) => {
-    if (x.caseType) {
-      return <Link text={`${x.caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
-    } else {
-      const caseType = caseTypesList?.find((y) => y.id === x.caseTypeId)
-      return <Link text={`${caseType?.name}`} navigateToPage={`/court_case/${x.id}`} />
+    let caseType = x.caseType
+    if (!caseType) {
+      caseType = caseTypesList.find((y) => y.id === x.caseTypeId)
     }
+    return <Link text={caseType?.name} navigateToPage={`/court_case/${x.id}`} />
   }
 
   const linkToClient = (x: CourtCaseSchema) =>
@@ -91,7 +90,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     if (x.componentStatus) {
       return x.componentStatus.statusName
     } else {
-      const componentStatus = componentStatusList?.find((y) => y.id === x.componentStatusId)
+      const componentStatus = componentStatusList.find((y) => y.id === x.componentStatusId)
       return componentStatus?.statusName
     }
   }
