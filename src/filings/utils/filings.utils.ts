@@ -27,6 +27,7 @@ export const isAreTwoFilingsSame = (one: FilingSchema | FilingFormData, two: Fil
 export const validateFiling = (formData: FilingFormData, setFormErrors: (formErrors: FilingFormErrorData) => void) => {
   let hasValidationErrors = false
   const formErrorsLocal: FilingFormErrorData = { ...DefaultFilingFormErrorData }
+  const oneWeekBeforeDate = dayjs().subtract(1, 'week')
 
   if (getNumber(formData.filingTypeId) <= 0) {
     hasValidationErrors = true
@@ -42,58 +43,58 @@ export const validateFiling = (formData: FilingFormData, setFormErrors: (formErr
   }
   const submitDate = getDayjs(formData.submitDate)
   if (submitDate) {
-    if (!submitDate.isValid() || submitDate.isBefore(dayjs(), 'day')) {
+    if (!submitDate.isValid() || submitDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
       formErrorsLocal.submitDateError = 'SUBMIT DATE INVALID OR IN THE PAST'
     }
   }
   const receiptDate = getDayjs(formData.receiptDate)
   if (receiptDate) {
-    if (!receiptDate.isValid() || receiptDate.isBefore(dayjs(), 'day')) {
+    if (!receiptDate.isValid() || receiptDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
       formErrorsLocal.receiptDateError = 'RECEIPT DATE INVALID OR IN THE PAST'
     }
-    if (!submitDate || receiptDate.isBefore(submitDate, 'day')) {
+    if (!submitDate || receiptDate.isBefore(submitDate)) {
       hasValidationErrors = true
       formErrorsLocal.submitDateError = 'SUBMIT DATE INVALID OR AFTER RECEIPT DATE'
     }
   }
   const priorityDate = getDayjs(formData.priorityDate)
   if (priorityDate) {
-    if (!priorityDate.isValid() || priorityDate.isBefore(dayjs(), 'day')) {
+    if (!priorityDate.isValid() || priorityDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
       formErrorsLocal.priorityDateError = 'PRIORITY DATE INVALID OR IN THE PAST'
     }
-    if (!receiptDate || priorityDate.isBefore(receiptDate, 'day')) {
+    if (!receiptDate || priorityDate.isBefore(receiptDate)) {
       hasValidationErrors = true
       formErrorsLocal.receiptDateError = 'RECEIPT DATE INVALID OR AFTER PRIORITY DATE'
     }
   }
   const rfeDate = getDayjs(formData.rfeDate)
   if (rfeDate) {
-    if (!rfeDate.isValid() || rfeDate.isBefore(dayjs(), 'day')) {
+    if (!rfeDate.isValid() || rfeDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
       formErrorsLocal.rfeDateError = 'RFE DATE INVALID OR IN THE PAST'
     }
-    if (!priorityDate || priorityDate.isBefore(rfeDate, 'day')) {
+    if (!priorityDate || priorityDate.isBefore(rfeDate)) {
       hasValidationErrors = true
       formErrorsLocal.priorityDateError = 'PRIORITY DATE INVALID OR IS AFTER RFE DATE'
     }
   }
   const rfeSubmitDate = getDayjs(formData.rfeSubmitDate)
   if (rfeSubmitDate) {
-    if (!rfeSubmitDate.isValid() || rfeSubmitDate.isBefore(dayjs(), 'day')) {
+    if (!rfeSubmitDate.isValid() || rfeSubmitDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
       formErrorsLocal.rfeSubmitDateError = 'RFE SUBMIT DATE INVALID OR IN THE PAST'
     }
-    if (!rfeDate || rfeSubmitDate.isBefore(rfeDate, 'day')) {
+    if (!rfeDate || rfeSubmitDate.isBefore(rfeDate)) {
       hasValidationErrors = true
       formErrorsLocal.rfeDateError = 'RFE DATE INVALID OR IS AFTER RFE SUBMIT DATE'
     }
   }
   const decisionDate = getDayjs(formData.decisionDate)
   if (decisionDate) {
-    if (!decisionDate.isValid() || decisionDate.isBefore(dayjs(), 'day')) {
+    if (!decisionDate.isValid() || decisionDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
       formErrorsLocal.decisionDateError = 'DECISION DATE INVALID OR IN THE PAST'
     }

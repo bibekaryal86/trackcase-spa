@@ -11,7 +11,8 @@ import {
   TableHeaderData,
 } from '../../app'
 import { CourtCaseFormData, CourtCaseSchema } from '../../cases'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
+import { ClientSchema } from '../../clients'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '../../constants'
 import { ComponentStatusSchema, FilingTypeSchema } from '../../types'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import { FilingFormData, FilingSchema } from '../types/filings.data.types'
@@ -26,11 +27,12 @@ interface FilingTableProps {
   componentStatusList: ComponentStatusSchema[]
   filingTypesList: FilingTypeSchema[]
   courtCasesList: CourtCaseSchema[]
+  clientsList: ClientSchema[]
 }
 
 const FilingTable = (props: FilingTableProps): React.ReactElement => {
   const { filingsList, actionButtons, addModalState, softDeleteCallback } = props
-  const { selectedCourtCase, componentStatusList, filingTypesList, courtCasesList } = props
+  const { selectedCourtCase, componentStatusList, filingTypesList, courtCasesList, clientsList } = props
 
   const filingsTableHeaderData = (): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = [
@@ -40,7 +42,7 @@ const FilingTable = (props: FilingTableProps): React.ReactElement => {
       },
       {
         id: 'client',
-        label: 'CourtCase',
+        label: 'Client',
       },
       {
         id: 'case',
@@ -110,16 +112,28 @@ const FilingTable = (props: FilingTableProps): React.ReactElement => {
   }
 
   const linkToClient = (x: FilingSchema) => {
-    let courtCase = selectedCourtCase || x.courtCase
-    if (!courtCase) {
-      courtCase = courtCasesList.find((y) => y.id === x.courtCaseId)
+    let clientId = ID_DEFAULT
+    let clientName = ''
+    if (selectedCourtCase && selectedCourtCase.client) {
+      clientId = selectedCourtCase.clientId
+      clientName = selectedCourtCase.client.name
+    } else {
+      const courtCase = courtCasesList.find((y) => y.id === x.courtCaseId)
+      if (courtCase && courtCase.client) {
+        clientId = courtCase.clientId
+        clientName = courtCase.client.name
+      } else if (courtCase && !courtCase.client) {
+        const client = clientsList.find((y) => y.id === x.courtCaseId)
+        if (client) {
+          clientId = courtCase.clientId
+          clientName = client.name
+        }
+      }
     }
-    return (
-      <Link
-        text={courtCase?.client?.name}
-        navigateToPage={`/client/${courtCase?.client?.id}?backTo=${window.location.pathname}`}
-      />
-    )
+    if (clientName) {
+      return <Link text={clientName} navigateToPage={`/client/${clientId}?backTo=${window.location.pathname}`} />
+    }
+    return ''
   }
 
   const linkToCourtCase = (x: FilingSchema) => {

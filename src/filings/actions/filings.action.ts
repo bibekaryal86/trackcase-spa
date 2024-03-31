@@ -63,13 +63,13 @@ export const filingsAction = ({
         method: HTTP_METHODS.PUT,
         requestBody: filingsRequest,
         queryParams: { is_restore: isRestore || false },
-        pathParams: { court_case_id: id || ID_DEFAULT },
+        pathParams: { filing_id: id || ID_DEFAULT },
       }
     } else if (action === ACTION_TYPES.DELETE) {
       endpoint = getEndpoint(process.env.FILING_DELETE as string)
       options = {
         method: HTTP_METHODS.DELETE,
-        pathParams: { court_case_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
+        pathParams: { filing_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
       }
     }
 
