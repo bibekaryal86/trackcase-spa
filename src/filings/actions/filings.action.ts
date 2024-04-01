@@ -96,14 +96,14 @@ export const filingsAction = ({
 }
 
 export const getFilings = (requestMetadata?: Partial<FetchRequestMetadata>) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, store: GlobalState): Promise<void> => {
     dispatch(filingDispatch({ type: FILINGS_READ_REQUEST }))
 
     let filingResponse: FilingResponse = { data: [] }
 
-    if (requestMetadata === getStore().filings.requestMetadata) {
+    if (requestMetadata === store.filings.requestMetadata) {
       // no need to fetch request, metadata is same
-      filingResponse.data = getStore().filings.filings
+      filingResponse.data = store.filings.filings
     }
     const endpoint = getEndpoint(process.env.FILING_READ as string)
     const options: Partial<FetchOptions> = {

@@ -100,14 +100,14 @@ export const clientsAction = ({
 }
 
 export const getClients = (requestMetadata?: Partial<FetchRequestMetadata>) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, store: GlobalState): Promise<void> => {
     dispatch(clientDispatch({ type: CLIENTS_READ_REQUEST }))
 
     let clientResponse: ClientResponse = { data: [] }
 
-    if (requestMetadata === getStore().clients.requestMetadata) {
+    if (requestMetadata === store.clients.requestMetadata) {
       // no need to fetch request, metadata is same
-      clientResponse.data = getStore().clients.clients
+      clientResponse.data = store.clients.clients
     }
     const endpoint = getEndpoint(process.env.CLIENT_READ as string)
     const options: Partial<FetchOptions> = {

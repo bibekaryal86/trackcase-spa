@@ -45,71 +45,71 @@ export const validateFiling = (formData: FilingFormData, setFormErrors: (formErr
   if (submitDate) {
     if (!submitDate.isValid() || submitDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.submitDateError = 'SUBMIT DATE INVALID OR IN THE PAST'
+      formErrorsLocal.submitDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
   }
   const receiptDate = getDayjs(formData.receiptDate)
   if (receiptDate) {
     if (!receiptDate.isValid() || receiptDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.receiptDateError = 'RECEIPT DATE INVALID OR IN THE PAST'
+      formErrorsLocal.receiptDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
     if (!submitDate || receiptDate.isBefore(submitDate)) {
       hasValidationErrors = true
-      formErrorsLocal.submitDateError = 'SUBMIT DATE INVALID OR AFTER RECEIPT DATE'
+      formErrorsLocal.submitDateError = 'REQUIRED/INVALID (AFTER RECEIPT DATE)'
     }
   }
   const priorityDate = getDayjs(formData.priorityDate)
   if (priorityDate) {
     if (!priorityDate.isValid() || priorityDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.priorityDateError = 'PRIORITY DATE INVALID OR IN THE PAST'
+      formErrorsLocal.priorityDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
     if (!receiptDate || priorityDate.isBefore(receiptDate)) {
       hasValidationErrors = true
-      formErrorsLocal.receiptDateError = 'RECEIPT DATE INVALID OR AFTER PRIORITY DATE'
+      formErrorsLocal.receiptDateError = 'REQUIRED/INVALID (AFTER PRIORITY DATE)'
     }
   }
   const rfeDate = getDayjs(formData.rfeDate)
   if (rfeDate) {
     if (!rfeDate.isValid() || rfeDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.rfeDateError = 'RFE DATE INVALID OR IN THE PAST'
+      formErrorsLocal.rfeDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
     if (!priorityDate || priorityDate.isBefore(rfeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.priorityDateError = 'PRIORITY DATE INVALID OR IS AFTER RFE DATE'
+      formErrorsLocal.priorityDateError = 'REQUIRED/INVALID (AFTER PRIORITY DATE)'
     }
   }
   const rfeSubmitDate = getDayjs(formData.rfeSubmitDate)
   if (rfeSubmitDate) {
     if (!rfeSubmitDate.isValid() || rfeSubmitDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.rfeSubmitDateError = 'RFE SUBMIT DATE INVALID OR IN THE PAST'
+      formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
     if (!rfeDate || rfeSubmitDate.isBefore(rfeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.rfeDateError = 'RFE DATE INVALID OR IS AFTER RFE SUBMIT DATE'
+      formErrorsLocal.rfeDateError = 'REQUIRED/INVALID (AFTER RFE SUBMIT DATE)'
     }
   }
   const decisionDate = getDayjs(formData.decisionDate)
   if (decisionDate) {
     if (!decisionDate.isValid() || decisionDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.decisionDateError = 'DECISION DATE INVALID OR IN THE PAST'
+      formErrorsLocal.decisionDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
     if (!priorityDate) {
       if (!rfeSubmitDate) {
         hasValidationErrors = true
-        formErrorsLocal.priorityDateError = 'PRIORITY DATE OR RFE SUBMIT DATE REQUIRED FOR DECISION DATE'
-        formErrorsLocal.rfeSubmitDateError = 'PRIORITY DATE OR RFE SUBMIT DATE REQUIRED FOR DECISION DATE'
+        formErrorsLocal.priorityDateError = 'REQUIRED/INVALID (REQUIRED FOR DECISION DATE)'
+        formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (REQUIRED FOR DECISION DATE)'
       } else if (rfeSubmitDate.isBefore(decisionDate)) {
         hasValidationErrors = true
-        formErrorsLocal.rfeSubmitDateError = 'RFE SUBMIT DATE IS AFTER DECISION DATE'
+        formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (AFTER DECISION DATE)'
       }
     } else if (priorityDate.isBefore(decisionDate)) {
       hasValidationErrors = true
-      formErrorsLocal.priorityDateError = 'PRIORITY DATE IS AFTER DECISION DATE'
+      formErrorsLocal.priorityDateError = 'REQUIRED/INVALID (AFTER DECISION DATE)'
     }
   }
   if (hasValidationErrors) {

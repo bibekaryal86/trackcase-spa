@@ -96,14 +96,14 @@ export const judgesAction = ({
 }
 
 export const getJudges = (requestMetadata?: Partial<FetchRequestMetadata>) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, store: GlobalState): Promise<void> => {
     dispatch(judgeDispatch({ type: JUDGES_READ_REQUEST }))
 
     let judgeResponse: JudgeResponse = { data: [] }
 
-    if (requestMetadata === getStore().judges.requestMetadata) {
+    if (requestMetadata === store.judges.requestMetadata) {
       // no need to fetch request, metadata is same
-      judgeResponse.data = getStore().judges.judges
+      judgeResponse.data = store.judges.judges
     }
     const endpoint = getEndpoint(process.env.JUDGE_READ as string)
     const options: Partial<FetchOptions> = {
