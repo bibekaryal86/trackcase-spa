@@ -25,14 +25,7 @@ import {
 } from 'react-big-calendar'
 
 import { getDayjs, getNumber, getString, Modal } from '../../app'
-import {
-  ACTION_ADD,
-  ACTION_UPDATE,
-  BUTTON_CANCEL,
-  CALENDAR_TYPES,
-  DATE_FORMAT,
-  USE_MEDIA_QUERY_INPUT,
-} from '../../constants'
+import { ACTION_TYPES, CALENDAR_TYPES, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import {
   CalendarEvents,
   DefaultCalendarSchema,
@@ -210,7 +203,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
       setSelectedCalendarForReset({ ...DefaultCalendarSchema, taskDate: selectedDate || dayjs() })
     }
     setSelectedType(type)
-    setModal(ACTION_ADD)
+    setModal(ACTION_TYPES.CREATE)
   }
 
   const addCalendarModal = () => {
@@ -220,7 +213,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
           isOpen={true}
           setIsOpen={setShowAddModal}
           title={'Add Calendar Event'}
-          primaryButtonText={BUTTON_CANCEL}
+          primaryButtonText={ACTION_TYPES.CANCEL}
           primaryButtonCallback={() => setShowAddModal(false)}
           contentText={`Selected Date is not within the allowed range of between ${minCalendarDate.format(
             DATE_FORMAT,
@@ -237,7 +230,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         primaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.HEARING_CALENDAR)}
         secondaryButtonText={CALENDAR_TYPES.TASK_CALENDAR.split('_')[0]}
         secondaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.TASK_CALENDAR)}
-        resetButtonText={BUTTON_CANCEL}
+        resetButtonText={ACTION_TYPES.CANCEL}
         resetButtonCallback={() => setShowAddModal(false)}
         contentText="Select Calendar Type to Add..."
       />
@@ -316,7 +309,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     setSelectedType(calendarType)
     setSelectedCalendar(calendar)
     setSelectedCalendarForReset(calendar)
-    setModal(ACTION_UPDATE)
+    setModal(ACTION_TYPES.UPDATE)
     // prevent default action, return nothing
     return
   }

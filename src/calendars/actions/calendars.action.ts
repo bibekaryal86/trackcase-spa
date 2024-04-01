@@ -1,427 +1,273 @@
 import React from 'react'
 
-import { Async, FetchOptions, getEndpoint, getErrMsg, getNumber, GlobalDispatch, GlobalState } from '../../app'
-import { CALENDAR_TYPES, CREATE_SUCCESS, DELETE_SUCCESS, SOMETHING_WENT_WRONG, UPDATE_SUCCESS } from '../../constants'
+import {
+  Async,
+  FetchOptions,
+  FetchRequestMetadata,
+  getEndpoint,
+  getErrMsg,
+  GlobalDispatch,
+  GlobalState,
+} from '../../app'
+import {
+  ACTION_SUCCESS,
+  ACTION_TYPES,
+  ActionTypes,
+  CALENDAR_TYPES,
+  CalendarTypesRegistry,
+  HTTP_METHODS,
+  ID_DEFAULT,
+  SOMETHING_WENT_WRONG,
+} from '../../constants'
 import {
   CALENDARS_COMPLETE,
   CALENDARS_READ_FAILURE,
   CALENDARS_READ_REQUEST,
   CALENDARS_READ_SUCCESS,
-  SET_SELECTED_HEARING_CALENDAR,
-  SET_SELECTED_TASK_CALENDAR,
+  HEARING_CALENDARS_COMPLETE,
+  HEARING_CALENDARS_READ_FAILURE,
+  HEARING_CALENDARS_READ_REQUEST,
+  TASK_CALENDARS_COMPLETE,
+  TASK_CALENDARS_READ_FAILURE,
+  TASK_CALENDARS_READ_REQUEST,
 } from '../types/calendars.action.types'
 import {
-  CalendarEvents,
   CalendarResponse,
+  HearingCalendarBase,
   HearingCalendarResponse,
   HearingCalendarSchema,
+  TaskCalendarBase,
   TaskCalendarResponse,
   TaskCalendarSchema,
 } from '../types/calendars.data.types'
-import { isHearingCalendar, validateCalendar } from '../utils/calendars.utils'
+import { calendarDispatch } from '../utils/calendars.utils'
 
-export const addCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema, calendarType: string) => {
-  const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    let hearingCalendar = undefined
-    if (calendarType === CALENDAR_TYPES.TASK_CALENDAR) {
-      hearingCalendar = getSelectedCalendarFromStore(
-        getStore(),
-        CALENDAR_TYPES.HEARING_CALENDAR,
-        (calendar as TaskCalendarSchema).hearingCalendarId,
-      )
+export const calendarsAction = ({
+  type,
+  action,
+  calendarsRequest,
+  id,
+  isRestore,
+  isHardDelete,
+}: {
+  type: CalendarTypesRegistry
+  action: ActionTypes
+  calendarsRequest?: HearingCalendarBase | TaskCalendarBase
+  id?: number
+  isRestore?: boolean
+  isHardDelete?: boolean
+}) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<HearingCalendarResponse | TaskCalendarResponse> => {
+    if (action === ACTION_TYPES.RESTORE) {
+      action = ACTION_TYPES.UPDATE
     }
+    const typeRequest = `${type}S_${action}_REQUEST`
+    const typeSuccess = `${type}S_${action}_SUCCESS`
+    const typeFailure = `${type}S_${action}_FAILURE`
+    const typeComplete = `${type}S_COMPLETE`
+    dispatch(calendarDispatch({ type: typeRequest }))
 
-    const validationErrors = validateCalendar(
-      calendarType,
-      calendar,
-      hearingCalendar ? (hearingCalendar as HearingCalendarSchema) : undefined,
-    )
-    if (validationErrors) {
-      dispatch(calendarsFailure(`${calendarType}_CREATE_FAILURE`, validationErrors))
-      return
+    let endpoint = ''
+    let options: Partial<FetchOptions> = {}
+
+    if (action === ACTION_TYPES.CREATE) {
+      endpoint =
+        type === CALENDAR_TYPES.HEARING_CALENDAR
+          ? getEndpoint(process.env.CALENDAR_HEARING_CREATE as string)
+          : getEndpoint(process.env.CALENDAR_TASK_CREATE as string)
+      options = {
+        method: HTTP_METHODS.POST,
+        requestBody: { ...calendarsRequest },
+      }
+    } else if (action === ACTION_TYPES.UPDATE) {
+      endpoint =
+        type === CALENDAR_TYPES.HEARING_CALENDAR
+          ? getEndpoint(process.env.CALENDAR_HEARING_UPDATE as string)
+          : getEndpoint(process.env.CALENDAR_TASK_UPDATE as string)
+      options = {
+        method: HTTP_METHODS.PUT,
+        requestBody: calendarsRequest,
+        queryParams: { is_restore: isRestore || false },
+        pathParams: { calendar_id: id || ID_DEFAULT },
+      }
+    } else if (action === ACTION_TYPES.DELETE) {
+      endpoint =
+        type === CALENDAR_TYPES.HEARING_CALENDAR
+          ? getEndpoint(process.env.CALENDAR_HEARING_DELETE as string)
+          : getEndpoint(process.env.CALENDAR_TASK_DELETE as string)
+      options = {
+        method: HTTP_METHODS.DELETE,
+        pathParams: { calendar_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
+      }
     }
-
-    dispatch(calendarsRequest(`${calendarType}_CREATE_REQUEST`))
 
     try {
-      let calendarResponse: HearingCalendarResponse | TaskCalendarResponse
-      const options: Partial<FetchOptions> = {
-        method: 'POST',
-        requestBody: getRequestBody(calendar, isHearingCalendarRequest),
-      }
-      if (isHearingCalendarRequest) {
-        const urlPath = getEndpoint(process.env.HEARING_CALENDAR_CREATE_ENDPOINT as string)
-        calendarResponse = (await Async.fetch(urlPath, options)) as HearingCalendarResponse
-      } else {
-        const urlPath = getEndpoint(process.env.TASK_CALENDAR_CREATE_ENDPOINT as string)
-        calendarResponse = (await Async.fetch(urlPath, options)) as TaskCalendarResponse
-      }
-
+      const calendarResponse = (await Async.fetch(endpoint, options)) as HearingCalendarResponse | TaskCalendarResponse
       if (calendarResponse.detail) {
-        dispatch(calendarsFailure(`${calendarType}_CREATE_FAILURE`, getErrMsg(calendarResponse.detail)))
+        dispatch(calendarDispatch({ type: typeFailure, error: getErrMsg(calendarResponse.detail) }))
       } else {
-        dispatch(calendarsSuccess(`${calendarType}_CREATE_SUCCESS`, CREATE_SUCCESS(calendarType), calendarType, []))
+        if (action === ACTION_TYPES.READ) {
+          type === CALENDAR_TYPES.HEARING_CALENDAR
+            ? dispatch(calendarDispatch({ type: typeSuccess, hearingCalendars: calendarResponse.data as HearingCalendarSchema[] }))
+            : dispatch(calendarDispatch({ type: typeSuccess, taskCalendars: calendarResponse.data as TaskCalendarSchema[] }))
+        } else {
+          dispatch(calendarDispatch({ type: typeSuccess, success: ACTION_SUCCESS(action, 'CALENDAR') }))
+        }
       }
+      return calendarResponse
     } catch (error) {
-      console.log(`Add ${calendarType} Error: `, error)
-      dispatch(calendarsFailure(`${calendarType}_CREATE_FAILURE`, SOMETHING_WENT_WRONG))
+      console.log(`${type} ${action} Error: `, error)
+      dispatch(calendarDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
     } finally {
-      dispatch(calendarsComplete(`${calendarType}S_COMPLETE`))
+      dispatch(calendarDispatch({ type: typeComplete }))
     }
   }
 }
 
-export const getCalendarsWithEvents = (isForceFetch: boolean = false) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(calendarsRequest(CALENDARS_READ_REQUEST))
+export const getCalendars = (requestMetadata?: Partial<FetchRequestMetadata>) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, store: GlobalState): Promise<void> => {
+    dispatch(calendarDispatch({ type: CALENDARS_READ_REQUEST }))
+
+    let calendarResponse: CalendarResponse = { calendarEvents: [], hearingCalendars: [], taskCalendars: [] }
+
+    if (requestMetadata === store.calendars.requestMetadata) {
+      // no need to fetch request, metadata is same
+      calendarResponse.calendarEvents = store.calendars.calendarEvents
+      calendarResponse.hearingCalendars = store.calendars.hearingCalendars
+      calendarResponse.taskCalendars = store.calendars.taskCalendars
+    }
+    const endpoint = getEndpoint(process.env.CALENDARS_ALL as string)
+    const options: Partial<FetchOptions> = {
+      method: HTTP_METHODS.GET,
+      metadataParams: requestMetadata,
+    }
 
     try {
-      let calendarResponse: CalendarResponse
-      const options: Partial<FetchOptions> = {
-        method: 'GET',
+      if (calendarResponse.calendarEvents.length <= 0) {
+        calendarResponse = (await Async.fetch(endpoint, options)) as CalendarResponse
       }
-
-      const calendarEventsInStore = getStore().calendars.calendarEvents
-      const hearingCalendarsInStore = getStore().calendars.hearingCalendars
-      const taskCalendarsInStore = getStore().calendars.taskCalendars
-
-      if (
-        isForceFetch ||
-        calendarEventsInStore.length === 0 ||
-        hearingCalendarsInStore.length === 0 ||
-        taskCalendarsInStore.length === 0
-      ) {
-        const urlPath = getEndpoint(process.env.CALENDARS_WITH_EVENTS_ENDPOINT as string)
-        calendarResponse = (await Async.fetch(urlPath, options)) as CalendarResponse
-
-        if (calendarResponse.detail) {
-          dispatch(calendarsFailure(CALENDARS_READ_FAILURE, getErrMsg(calendarResponse.detail)))
-        } else {
-          dispatch(
-            calendarsWithEventsSuccess(
-              CALENDARS_READ_SUCCESS,
-              calendarResponse.calendarEvents,
-              calendarResponse.hearingCalendars,
-              calendarResponse.taskCalendars,
-            ),
-          )
-        }
+      if (calendarResponse.detail) {
+        dispatch(calendarDispatch({ type: CALENDARS_READ_FAILURE, error: getErrMsg(calendarResponse.detail) }))
       } else {
         dispatch(
-          calendarsWithEventsSuccess(
-            CALENDARS_READ_SUCCESS,
-            calendarEventsInStore,
-            hearingCalendarsInStore,
-            taskCalendarsInStore,
-          ),
+          calendarDispatch({
+            type: CALENDARS_READ_SUCCESS,
+            calendarEvents: calendarResponse.calendarEvents,
+            hearingCalendars: calendarResponse.hearingCalendars,
+            taskCalendars: calendarResponse.taskCalendars,
+            requestMetadata: requestMetadata,
+          }),
         )
       }
     } catch (error) {
-      console.log('Get Calendars with Events Error: ', error)
-      dispatch(calendarsFailure(CALENDARS_READ_FAILURE, SOMETHING_WENT_WRONG))
+      console.log(`Get Calendars Error: `, error)
+      dispatch(calendarDispatch({ type: CALENDARS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
     } finally {
-      dispatch(calendarsComplete(CALENDARS_COMPLETE))
+      dispatch(calendarDispatch({ type: CALENDARS_COMPLETE }))
     }
   }
 }
 
-export const getCalendars = (calendarType: string, isForceFetch: boolean = false) => {
-  const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(calendarsRequest(`${calendarType}S_READ_REQUEST`))
+export const getHearingCalendar = (calendarId: number, isIncludeExtra?: boolean) => {
+  return async (
+    dispatch: React.Dispatch<GlobalDispatch>,
+    state: GlobalState,
+  ): Promise<HearingCalendarSchema | undefined> => {
+    dispatch(calendarDispatch({ type: HEARING_CALENDARS_READ_REQUEST }))
+    let oneHearingCalendar = undefined
 
     try {
-      let calendarResponse: HearingCalendarResponse | TaskCalendarResponse
-      const options: Partial<FetchOptions> = {
-        method: 'GET',
-      }
-      const calendarsInStore: HearingCalendarSchema[] | TaskCalendarSchema[] = isHearingCalendarRequest
-        ? getStore().calendars.hearingCalendars
-        : getStore().calendars.taskCalendars
+      const hearingCalendarsInStore = state.calendars.hearingCalendars
+      if (hearingCalendarsInStore) {
+        oneHearingCalendar = hearingCalendarsInStore.find((x) => x.id === calendarId)
 
-      if (isForceFetch || calendarsInStore.length === 0) {
-        if (isHearingCalendarRequest) {
-          const urlPath = getEndpoint(process.env.HEARING_CALENDARS_READ_ENDPOINT as string)
-          calendarResponse = (await Async.fetch(urlPath, options)) as HearingCalendarResponse
-        } else {
-          const urlPath = getEndpoint(process.env.TASK_CALENDARS_READ_ENDPOINT as string)
-          calendarResponse = (await Async.fetch(urlPath, options)) as TaskCalendarResponse
+        if (
+          isIncludeExtra &&
+          oneHearingCalendar &&
+          (!oneHearingCalendar.taskCalendars || !oneHearingCalendar.taskCalendars.length)
+        ) {
+          oneHearingCalendar = undefined
         }
+      }
 
-        if (calendarResponse.detail) {
-          dispatch(calendarsFailure(`${calendarType}S_READ_FAILURE`, getErrMsg(calendarResponse.detail)))
-        } else {
-          const calendars =
-            'hearingCalendars' in calendarResponse ? calendarResponse.hearingCalendars : calendarResponse.taskCalendars
-          dispatch(calendarsSuccess(`${calendarType}S_READ_SUCCESS`, '', calendarType, calendars))
+      if (oneHearingCalendar) {
+        return oneHearingCalendar
+      } else {
+        const endpoint = getEndpoint(process.env.CALENDAR_HEARING_READ as string)
+        const requestMetadata: Partial<FetchRequestMetadata> = {
+          schemaModelId: calendarId,
+          isIncludeExtra: isIncludeExtra === true,
         }
-      } else {
-        dispatch(calendarsSuccess(`${calendarType}S_READ_SUCCESS`, '', calendarType, calendarsInStore))
+        const options: Partial<FetchOptions> = {
+          method: HTTP_METHODS.GET,
+          metadataParams: requestMetadata,
+        }
+        const hearingCalendarResponse = (await Async.fetch(endpoint, options)) as HearingCalendarResponse
+        if (hearingCalendarResponse.detail) {
+          dispatch(
+            calendarDispatch({
+              type: HEARING_CALENDARS_READ_FAILURE,
+              error: getErrMsg(hearingCalendarResponse.detail),
+            }),
+          )
+        } else {
+          oneHearingCalendar = hearingCalendarResponse.data.find((x) => x.id === calendarId)
+        }
       }
+      return oneHearingCalendar
     } catch (error) {
-      console.log(`Get ${calendarType}S Error: `, error)
-      dispatch(calendarsFailure(`${calendarType}S_READ_FAILURE`, SOMETHING_WENT_WRONG))
+      console.log(`Get Hearing Calendar Error: `, error)
+      dispatch(calendarDispatch({ type: HEARING_CALENDARS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
+      return oneHearingCalendar
     } finally {
-      dispatch(calendarsComplete(`${calendarType}S_COMPLETE`))
+      dispatch(calendarDispatch({ type: HEARING_CALENDARS_COMPLETE }))
     }
   }
 }
 
-export const getOneCalendar = async (calendarId: number, calendarType: string) => {
-  const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  try {
-    let urlPath: string
-    const options: Partial<FetchOptions> = {
-      method: 'GET',
-      extraParams: {
-        isIncludeExtra: true,
-        isIncludeHistory: true,
-      },
-    }
-
-    if (isHearingCalendarRequest) {
-      urlPath = getEndpoint(process.env.HEARING_CALENDAR_READ_ENDPOINT as string)
-      options['pathParams'] = { hearing_calendar_id: calendarId }
-    } else {
-      urlPath = getEndpoint(process.env.TASK_CALENDAR_READ_ENDPOINT as string)
-      options['pathParams'] = { task_calendar_id: calendarId }
-    }
-
-    return Async.fetch(urlPath, options)
-  } catch (error) {
-    console.log(`Get One ${calendarType} Error: `, error)
-    const errorResponse: HearingCalendarResponse | TaskCalendarResponse = {
-      hearingCalendars: [],
-      taskCalendars: [],
-      detail: { error: error as string },
-    }
-    return Promise.resolve(errorResponse)
-  }
-}
-
-export const getCalendar = (calendarId: number, calendarType: string) => {
-  const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(calendarsRequest(`${calendarType}_READ_REQUEST`))
-
-    // call api, if it fails fallback to store
-    try {
-      let calendarResponse: HearingCalendarResponse | TaskCalendarResponse
-      if (isHearingCalendarRequest) {
-        calendarResponse = (await getOneCalendar(calendarId, calendarType)) as HearingCalendarResponse
-      } else {
-        calendarResponse = (await getOneCalendar(calendarId, calendarType)) as TaskCalendarResponse
-      }
-
-      if (calendarResponse.detail) {
-        dispatch(calendarsFailure(`${calendarType}_READ_FAILURE`, getErrMsg(calendarResponse.detail)))
-        setSelectedCalendarFromStore(getStore(), dispatch, calendarId, calendarType)
-      } else {
-        const calendar: HearingCalendarSchema | TaskCalendarSchema =
-          'hearingCalendars' in calendarResponse
-            ? calendarResponse.hearingCalendars[0]
-            : calendarResponse.taskCalendars[0]
-        dispatch(calendarSelect(calendar, calendarType))
-      }
-    } finally {
-      dispatch(calendarsComplete(`${calendarType}S_COMPLETE`))
-    }
-  }
-}
-
-export const editCalendar = (
-  id: number,
-  calendarType: string,
-  calendar: HearingCalendarSchema | TaskCalendarSchema,
-) => {
-  const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    let hearingCalendar = undefined
-    if (calendarType === CALENDAR_TYPES.TASK_CALENDAR) {
-      hearingCalendar = getSelectedCalendarFromStore(
-        getStore(),
-        CALENDAR_TYPES.HEARING_CALENDAR,
-        (calendar as TaskCalendarSchema).hearingCalendarId,
-      )
-    }
-
-    const validationErrors = validateCalendar(
-      calendarType,
-      calendar,
-      hearingCalendar ? (hearingCalendar as HearingCalendarSchema) : undefined,
-    )
-    if (validationErrors) {
-      dispatch(calendarsFailure(`${calendarType}_UPDATE_FAILURE`, validationErrors))
-      return
-    }
-
-    dispatch(calendarsRequest(`${calendarType}_UPDATE_REQUEST`))
+export const getTaskCalendar = (calendarId: number, isIncludeExtra?: boolean) => {
+  return async (
+    dispatch: React.Dispatch<GlobalDispatch>,
+    state: GlobalState,
+  ): Promise<TaskCalendarSchema | undefined> => {
+    dispatch(calendarDispatch({ type: TASK_CALENDARS_READ_REQUEST }))
+    let oneTaskCalendar = undefined
 
     try {
-      let calendarResponse: HearingCalendarResponse | TaskCalendarResponse
-      const options: Partial<FetchOptions> = {
-        method: 'PUT',
-        requestBody: getRequestBody(calendar, isHearingCalendarRequest),
-      }
-      if (isHearingCalendarRequest) {
-        const urlPath = getEndpoint(process.env.HEARING_CALENDAR_UPDATE_ENDPOINT as string)
-        options['pathParams'] = { hearing_calendar_id: id }
-        calendarResponse = (await Async.fetch(urlPath, options)) as HearingCalendarResponse
-      } else {
-        const urlPath = getEndpoint(process.env.TASK_CALENDAR_UPDATE_ENDPOINT as string)
-        options['pathParams'] = { task_calendar_id: id }
-        calendarResponse = (await Async.fetch(urlPath, options)) as TaskCalendarResponse
+      const taskCalendarsInStore = state.calendars.taskCalendars
+      if (taskCalendarsInStore) {
+        oneTaskCalendar = taskCalendarsInStore.find((x) => x.id === calendarId)
       }
 
-      if (calendarResponse.detail) {
-        dispatch(calendarsFailure(`${calendarType}_UPDATE_FAILURE`, getErrMsg(calendarResponse.detail)))
+      if (oneTaskCalendar) {
+        return oneTaskCalendar
       } else {
-        dispatch(calendarsSuccess(`${calendarType}_UPDATE_SUCCESS`, UPDATE_SUCCESS(calendarType), calendarType, []))
+        const endpoint = getEndpoint(process.env.CALENDAR_TASK_READ as string)
+        const requestMetadata: Partial<FetchRequestMetadata> = {
+          schemaModelId: calendarId,
+          isIncludeExtra: isIncludeExtra === true,
+        }
+        const options: Partial<FetchOptions> = {
+          method: HTTP_METHODS.GET,
+          metadataParams: requestMetadata,
+        }
+        const taskCalendarResponse = (await Async.fetch(endpoint, options)) as TaskCalendarResponse
+        if (taskCalendarResponse.detail) {
+          dispatch(
+            calendarDispatch({ type: TASK_CALENDARS_READ_FAILURE, error: getErrMsg(taskCalendarResponse.detail) }),
+          )
+        } else {
+          oneTaskCalendar = taskCalendarResponse.data.find((x) => x.id === calendarId)
+        }
       }
+      return oneTaskCalendar
     } catch (error) {
-      console.log(`Edit ${calendarType} Error: `, error)
-      dispatch(calendarsFailure(`${calendarType}_UPDATE_FAILURE`, SOMETHING_WENT_WRONG))
+      console.log(`Get Task Calendar Error: `, error)
+      dispatch(calendarDispatch({ type: TASK_CALENDARS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
+      return oneTaskCalendar
     } finally {
-      dispatch(calendarsComplete(`${calendarType}S_COMPLETE`))
+      dispatch(calendarDispatch({ type: TASK_CALENDARS_COMPLETE }))
     }
-  }
-}
-
-export const deleteCalendar = (id: number, calendarType: string) => {
-  const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    dispatch(calendarsRequest(`${calendarType}_DELETE_REQUEST`))
-
-    try {
-      let calendarResponse: HearingCalendarResponse | TaskCalendarResponse
-      const options: Partial<FetchOptions> = {
-        method: 'DELETE',
-      }
-
-      if (isHearingCalendarRequest) {
-        const urlPath = getEndpoint(process.env.HEARING_CALENDAR_DELETE_ENDPOINT as string)
-        options['pathParams'] = { hearing_calendar_id: id }
-        calendarResponse = (await Async.fetch(urlPath, options)) as HearingCalendarResponse
-      } else {
-        const urlPath = getEndpoint(process.env.TASK_CALENDAR_DELETE_ENDPOINT as string)
-        options['pathParams'] = { task_calendar_id: id }
-        calendarResponse = (await Async.fetch(urlPath, options)) as TaskCalendarResponse
-      }
-
-      if (calendarResponse.detail) {
-        dispatch(calendarsFailure(`${calendarType}_DELETE_FAILURE`, getErrMsg(calendarResponse.detail)))
-      } else {
-        dispatch(calendarsSuccess(`${calendarType}_DELETE_SUCCESS`, DELETE_SUCCESS(calendarType), calendarType, []))
-      }
-    } catch (error) {
-      console.log(`Delete ${calendarType} Error: `, error)
-      dispatch(calendarsFailure(`${calendarType}_DELETE_FAILURE`, SOMETHING_WENT_WRONG))
-    } finally {
-      dispatch(calendarsComplete(`${calendarType}S_COMPLETE`))
-    }
-  }
-}
-
-const calendarsRequest = (type: string) => ({
-  type: type,
-})
-
-const calendarsSuccess = (
-  type: string,
-  success: string,
-  calendarType: string,
-  calendars: HearingCalendarSchema[] | TaskCalendarSchema[],
-) => {
-  const isHearingCalendarRequest = isHearingCalendar(calendarType)
-  if (success) {
-    return {
-      type: type,
-      success: success,
-    }
-  } else if (isHearingCalendarRequest) {
-    return {
-      type: type,
-      hearingCalendars: calendars,
-    }
-  } else if (calendarType === CALENDAR_TYPES.TASK_CALENDAR) {
-    return {
-      type: type,
-      taskCalendars: calendars,
-    }
-  } else {
-    return calendarsFailure(type, 'Something went wrong! Went from Success to failure!!')
-  }
-}
-
-const calendarsWithEventsSuccess = (
-  type: string,
-  calendarEvents: CalendarEvents[],
-  hearingCalendars: HearingCalendarSchema[],
-  taskCalendars: TaskCalendarSchema[],
-) => ({
-  type: type,
-  calendarEvents: calendarEvents,
-  hearingCalendars: hearingCalendars,
-  taskCalendars: taskCalendars,
-})
-
-const calendarsFailure = (type: string, errMsg: string) => ({
-  type: type,
-  error: errMsg,
-})
-
-const calendarsComplete = (type: string) => ({
-  type: type,
-})
-
-const calendarSelect = (selectedCalendar: HearingCalendarSchema | TaskCalendarSchema, calendarType: string) => ({
-  type: isHearingCalendar(calendarType) ? SET_SELECTED_HEARING_CALENDAR : SET_SELECTED_TASK_CALENDAR,
-  selectedCalendar,
-})
-
-const setSelectedCalendarFromStore = (
-  store: GlobalState,
-  dispatch: React.Dispatch<GlobalDispatch>,
-  calendarId: number,
-  calendarType: string,
-) => {
-  const calendarsInStore: HearingCalendarSchema[] | TaskCalendarSchema[] = isHearingCalendar(calendarType)
-    ? store.calendars.hearingCalendars
-    : store.calendars.taskCalendars
-  const calendarInStore: HearingCalendarSchema | TaskCalendarSchema | undefined = calendarsInStore.find(
-    (calendar) => calendar.id === calendarId,
-  )
-  if (calendarInStore) {
-    dispatch(calendarSelect(calendarInStore, calendarType))
-  }
-}
-
-const getSelectedCalendarFromStore = (store: GlobalState, calendarType: string, calendarId?: number) => {
-  const calendarsInStore: HearingCalendarSchema[] | TaskCalendarSchema[] = isHearingCalendar(calendarType)
-    ? store.calendars.hearingCalendars
-    : store.calendars.taskCalendars
-  return calendarsInStore.find((calendar) => calendar.id === calendarId)
-}
-
-const getRequestBody = (calendar: HearingCalendarSchema | TaskCalendarSchema, isHearingCalendarRequest: boolean) => {
-  return {
-    // common
-    status: calendar.status,
-    comments: calendar.comments,
-    // hearing calendar
-    court_case_id: isHearingCalendarRequest && 'courtCaseId' in calendar ? calendar.courtCaseId : undefined,
-    hearing_date: isHearingCalendarRequest && 'hearingDate' in calendar ? calendar.hearingDate : undefined,
-    hearing_type_id: isHearingCalendarRequest && 'hearingTypeId' in calendar ? calendar.hearingTypeId : undefined,
-    // task calendar
-    task_date: !isHearingCalendarRequest && 'taskDate' in calendar ? calendar.taskDate : undefined,
-    task_type_id: !isHearingCalendarRequest && 'taskTypeId' in calendar ? calendar.taskTypeId : undefined,
-    due_date: !isHearingCalendarRequest && 'dueDate' in calendar ? calendar.dueDate : undefined,
-    hearing_calendar_id:
-      !isHearingCalendarRequest && 'hearingCalendarId' in calendar && getNumber(calendar.hearingCalendarId) > 0
-        ? calendar.hearingCalendarId
-        : undefined,
-    form_id:
-      !isHearingCalendarRequest && 'formId' in calendar && getNumber(calendar.formId) > 0 ? calendar.formId : undefined,
   }
 }
