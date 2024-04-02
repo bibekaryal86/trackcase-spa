@@ -140,14 +140,14 @@ export const CALENDAR_TYPES = Object.freeze({
   HEARING_CALENDAR: 'HEARING_CALENDAR',
   TASK_CALENDAR: 'TASK_CALENDAR',
 })
-export type CalendarTypesRegistry = keyof typeof CALENDAR_TYPES
+export type CalendarTypes = keyof typeof CALENDAR_TYPES
 
 // COLLECTION TYPES
 export const COLLECTION_TYPES = Object.freeze({
   CASE_COLLECTION: 'CASE_COLLECTION',
   CASH_COLLECTION: 'CASH_COLLECTION',
 })
-export type CollectionTypesRegistry = keyof typeof COLLECTION_TYPES
+export type CollectionTypes = keyof typeof COLLECTION_TYPES
 
 // CASE PAGE TABS
 export const CASE_TABS = Object.freeze({

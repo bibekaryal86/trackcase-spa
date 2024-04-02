@@ -14,7 +14,7 @@ import {
   ACTION_TYPES,
   ActionTypes,
   CALENDAR_TYPES,
-  CalendarTypesRegistry,
+  CalendarTypes,
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
@@ -50,7 +50,7 @@ export const calendarsAction = ({
   isRestore,
   isHardDelete,
 }: {
-  type: CalendarTypesRegistry
+  type: CalendarTypes
   action: ActionTypes
   calendarsRequest?: HearingCalendarBase | TaskCalendarBase
   id?: number

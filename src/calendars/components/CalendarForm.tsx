@@ -17,7 +17,7 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { CALENDAR_TYPES, CalendarTypesRegistry, ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { CALENDAR_TYPES, CalendarTypes, ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { FilingSchema } from '../../filings'
 import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '../../types'
 import {
@@ -29,7 +29,7 @@ import {
 } from '../types/calendars.data.types'
 
 interface CalendarFormProps {
-  calendarType: CalendarTypesRegistry
+  calendarType: CalendarTypes
   formData: HearingCalendarFormData | TaskCalendarFormData
   setFormData: (formData: HearingCalendarFormData | TaskCalendarFormData) => void
   formErrors: HearingCalendarFormErrorData | TaskCalendarFormErrorData
