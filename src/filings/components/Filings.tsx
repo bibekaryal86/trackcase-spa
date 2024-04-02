@@ -84,7 +84,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       courtCasesList.length === 0 && getCourtCases()
       clientsList.length === 0 && getClients()
 
-      if (refTypes.componentStatus.length === 0) {
+      if (refTypes.componentStatus.length === 0 || refTypes.caseType.length === 0) {
         getRefTypes()
       }
     }
@@ -96,6 +96,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
     getCourtCases,
     getFilings,
     getRefTypes,
+    refTypes.caseType.length,
     refTypes.componentStatus.length,
   ])
 
