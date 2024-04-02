@@ -77,7 +77,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       courtCasesList.length === 0 && getCourtCases({})
       clientsList.length === 0 && getClients()
 
-      if (refTypes.componentStatus.length === 0 || refTypes.caseType.length === 0) {
+      if (refTypes.componentStatus.length === 0) {
         getRefTypes()
       }
     }
@@ -87,7 +87,6 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
     getClients,
     getCourtCases,
     getRefTypes,
-    refTypes.caseType.length,
     refTypes.componentStatus.length,
   ])
 
