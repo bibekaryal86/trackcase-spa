@@ -108,8 +108,15 @@ export const calendarsAction = ({
       } else {
         if (action === ACTION_TYPES.READ) {
           type === CALENDAR_TYPES.HEARING_CALENDAR
-            ? dispatch(calendarDispatch({ type: typeSuccess, hearingCalendars: calendarResponse.data as HearingCalendarSchema[] }))
-            : dispatch(calendarDispatch({ type: typeSuccess, taskCalendars: calendarResponse.data as TaskCalendarSchema[] }))
+            ? dispatch(
+                calendarDispatch({
+                  type: typeSuccess,
+                  hearingCalendars: calendarResponse.data as HearingCalendarSchema[],
+                }),
+              )
+            : dispatch(
+                calendarDispatch({ type: typeSuccess, taskCalendars: calendarResponse.data as TaskCalendarSchema[] }),
+              )
         } else {
           dispatch(calendarDispatch({ type: typeSuccess, success: ACTION_SUCCESS(action, 'CALENDAR') }))
         }

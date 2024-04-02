@@ -9,82 +9,94 @@ import {
   FormDatePickerField,
   FormSelectField,
   FormSelectStatusField,
-  getComments,
   getDayjsString,
   getNumber,
-  getString,
   GridFormWrapper,
-  StatusSchema,
+  handleFormChange,
+  handleFormDateChange,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { FormSchema } from '../../filings'
-import { HearingTypeSchema, TaskTypeSchema } from '../../types'
-import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
+import { CALENDAR_TYPES, CalendarTypesRegistry, ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { FilingSchema } from '../../filings'
+import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '../../types'
 import {
-  handleCalendarDateOnChange,
-  handleCalendarFormOnChange,
-  isCalendarFormFieldError,
-  isHearingCalendar,
-} from '../utils/calendars.utils'
+  HearingCalendarFormData,
+  HearingCalendarFormErrorData,
+  HearingCalendarSchema,
+  TaskCalendarFormData,
+  TaskCalendarFormErrorData,
+} from '../types/calendars.data.types'
 
 interface CalendarFormProps {
-  calendarType: string
-  selectedCalendar: HearingCalendarSchema | TaskCalendarSchema
-  setSelectedCalendar: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
+  calendarType: CalendarTypesRegistry
+  formData: HearingCalendarFormData | TaskCalendarFormData
+  setFormData: (formData: HearingCalendarFormData | TaskCalendarFormData) => void
+  formErrors: HearingCalendarFormErrorData | TaskCalendarFormErrorData
+  setFormErrors: (formErrors: HearingCalendarFormErrorData | TaskCalendarFormErrorData) => void
+  calendarStatusList: ComponentStatusSchema[]
   calendarTypesList: HearingTypeSchema[] | TaskTypeSchema[]
   courtCasesList: CourtCaseSchema[]
-  formsList: FormSchema[]
+  filingsList: FilingSchema[]
   clientsList: ClientSchema[]
-  calendarStatusList: string[]
   hearingCalendarList: HearingCalendarSchema[]
   isShowOneCalendar: boolean
   minCalendarDate: Dayjs
   maxCalendarDate: Dayjs
-  formId?: string
-  courtCaseId?: string
-  statusList: StatusSchema<string>
+  filingId?: number
+  courtCaseId?: number
 }
 
 const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { calendarType, selectedCalendar, setSelectedCalendar, calendarTypesList, isShowOneCalendar } = props
-  const { courtCasesList, formsList, clientsList, calendarStatusList, hearingCalendarList } = props
-  const { minCalendarDate, maxCalendarDate } = props
-  const { formId, courtCaseId, statusList } = props
-  const isHearingCalendarForm = isHearingCalendar(calendarType)
+  const { calendarType, formData, setFormData, formErrors, setFormErrors } = props
+  const { calendarStatusList, calendarTypesList, courtCasesList, filingsList, clientsList, hearingCalendarList } = props
+  const { isShowOneCalendar, minCalendarDate, maxCalendarDate } = props
+  const { filingId, courtCaseId } = props
+
+  const isHearingCalendarForm = calendarType === CALENDAR_TYPES.HEARING_CALENDAR
 
   const calendarDate = () => {
-    const label = isHearingCalendarForm ? 'Hearing Calendar--Hearing Date' : 'Task Calendar--Task Date'
+    const label = isHearingCalendarForm ? 'HEARING CALENDAR--HEARING DATE' : 'TASK CALENDAR--TASK DATE'
     const value =
-      isHearingCalendarForm && 'hearingDate' in selectedCalendar
-        ? selectedCalendar.hearingDate
-        : !isHearingCalendarForm && 'taskDate' in selectedCalendar
-        ? selectedCalendar.taskDate
+      isHearingCalendarForm && 'hearingDate' in formData
+        ? formData.hearingDate
+        : !isHearingCalendarForm && 'taskDate' in formData
+        ? formData.taskDate
         : undefined
     const name = isHearingCalendarForm ? 'hearingDate' : 'taskDate'
+    const helperText =
+      isHearingCalendarForm && 'hearingDateError' in formErrors
+        ? formErrors.hearingDateError
+        : !isHearingCalendarForm && 'taskDateError' in formErrors
+        ? formErrors.taskDateError
+        : undefined
     return (
       <FormDatePickerField
         componentLabel={label}
+        name={name}
         value={value}
-        onChange={(newValue) => handleCalendarDateOnChange(name, newValue, selectedCalendar, setSelectedCalendar)}
+        onChange={(value) => handleFormDateChange(name, value, formData, formErrors, setFormData, setFormErrors)}
         minDate={minCalendarDate}
         maxDate={maxCalendarDate}
+        helperText={helperText}
         required
       />
     )
   }
 
   const calendarDueDate = () => {
-    const value = !isHearingCalendarForm && 'dueDate' in selectedCalendar ? selectedCalendar.dueDate : undefined
+    const value = !isHearingCalendarForm && 'dueDate' in formData ? formData.dueDate : undefined
+    const helperText = !isHearingCalendarForm && 'dueDateError' in formErrors ? formErrors.dueDateError : undefined
     return (
       <FormDatePickerField
-        componentLabel="Task Calendar--Due Date"
+        componentLabel="TASK CALENDAR--DUE DATE"
+        name="dueDate"
         value={value}
-        onChange={(newValue) => handleCalendarDateOnChange('dueDate', newValue, selectedCalendar, setSelectedCalendar)}
+        onChange={(value) => handleFormDateChange('dueDate', value, formData, formErrors, setFormData, setFormErrors)}
         minDate={minCalendarDate}
         maxDate={maxCalendarDate}
+        helperText={helperText}
         required
       />
     )
@@ -98,23 +110,35 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
     ))
 
   const calendarHearingTaskTypesList = () => {
-    const label = isHearingCalendarForm ? 'Hearing Calendar--Hearing Type' : 'Task Calendar--Task Type'
+    const label = isHearingCalendarForm ? 'HEARING CALENDAR--HEARING TYPE' : 'TASK CALENDAR--TASK TYPE'
     const value =
-      isHearingCalendarForm && 'hearingTypeId' in selectedCalendar
-        ? selectedCalendar.hearingTypeId
-        : !isHearingCalendarForm && 'taskTypeId' in selectedCalendar
-        ? selectedCalendar.taskTypeId
+      isHearingCalendarForm && 'hearingTypeId' in formData
+        ? formData.hearingTypeId
+        : !isHearingCalendarForm && 'taskTypeId' in formData
+        ? formData.taskTypeId
         : ID_DEFAULT
     const name = isHearingCalendarForm ? 'hearingTypeId' : 'taskTypeId'
+    const helperText =
+      isHearingCalendarForm && 'hearingTypeError' in formErrors
+        ? formErrors.hearingTypeError
+        : !isHearingCalendarForm && 'taskTypeError' in formErrors
+        ? formErrors.taskTypeError
+        : undefined
+    const error =
+      isHearingCalendarForm && 'hearingTypeError' in formErrors
+        ? !!formErrors.hearingTypeError
+        : !isHearingCalendarForm && 'taskTypeError' in formErrors
+        ? !!formErrors.taskTypeError
+        : false
     return (
       <FormSelectField
         componentLabel={label}
+        name={name}
         value={value}
-        onChange={(e) =>
-          handleCalendarFormOnChange(name, e.target.value, selectedCalendar, setSelectedCalendar, getNumber)
-        }
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         menuItems={calendarHearingTaskTypesListForSelect()}
-        error={isCalendarFormFieldError(name, value, undefined)}
+        error={error}
+        helperText={helperText}
         required
       />
     )
@@ -132,11 +156,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
       }
     } else {
       return courtCasesList
-        .filter(
-          (x) =>
-            ('courtCaseId' in selectedCalendar && selectedCalendar.courtCaseId === x.id) ||
-            statusList.court_case.active.includes(x.status),
-        )
+        .filter((x) => ('courtCaseId' in formData && formData.courtCaseId === x.id) || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
             {x.client?.name}, {x.caseType?.name}
@@ -147,16 +167,23 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   }
 
   const calendarCourtCasesList = () => {
-    const value = 'courtCaseId' in selectedCalendar ? selectedCalendar.courtCaseId : ID_DEFAULT
+    let value = ID_DEFAULT
+    let error = false
+    let helperText = undefined
+    if ('courtCaseId' in formData && 'courtCaseError' in formErrors) {
+      value = formData.courtCaseId
+      error = !!formErrors.courtCaseError
+      helperText = formErrors.courtCaseError
+    }
     return (
       <FormSelectField
-        componentLabel="Hearing Calendar--Court Case"
+        componentLabel="HEARING CALENDAR--COURT CASE"
+        name="courtCaseId"
         value={value}
-        onChange={(e) =>
-          handleCalendarFormOnChange('courtCaseId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)
-        }
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         menuItems={calendarCourtCasesListForSelect()}
-        error={isCalendarFormFieldError('courtCaseId', value, undefined)}
+        error={error}
+        helperText={helperText}
         required
       />
     )
@@ -182,8 +209,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
       return hearingCalendarList
         .filter(
           (x) =>
-            ('hearingCalendarId' in selectedCalendar && selectedCalendar.hearingCalendarId === x.id) ||
-            statusList.calendars.active.includes(x.status),
+            ('hearingCalendarId' in formData && formData.hearingCalendarId === x.id) || x.componentStatus?.isActive,
         )
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
@@ -195,108 +221,108 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   }
 
   const calendarHearingCalendarList = () => {
-    const value = 'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_DEFAULT
-    const tcFormId = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_DEFAULT
+    let value = ID_DEFAULT
+    let error = false
+    let helperText = undefined
+    if ('hearingCalendarId' in formData && 'hearingCalendarError' in formErrors) {
+      value = getNumber(formData.hearingCalendarId)
+      error = !!formErrors.hearingCalendarError
+      helperText = formErrors.hearingCalendarError
+    }
+    const tcFilingId = 'filingId' in formData ? getNumber(formData.filingId) : getNumber(filingId)
     return (
       <FormSelectField
-        componentLabel="Task Calendar--Hearing Calendar"
+        componentLabel="TASK CALENDAR--HEARING CALENDAR"
+        name="hearingCalendarId"
         value={value}
-        onChange={(e) =>
-          handleCalendarFormOnChange(
-            'hearingCalendarId',
-            e.target.value,
-            selectedCalendar,
-            setSelectedCalendar,
-            getNumber,
-          )
-        }
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         menuItems={calendarHearingCalendarListForSelect()}
-        disabled={tcFormId > 0 || Number(formId) > 0}
+        disabled={tcFilingId > 0}
+        error={error}
+        helperText={helperText}
       />
     )
   }
 
-  const calendarFormForSelect = (x: FormSchema) => {
+  const calendarFilingForSelect = (x: FilingSchema) => {
     const client = clientsList.find((y) => x.courtCase?.clientId === y.id)
     const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
-    return `${client?.name}, ${courtCase?.caseType?.name} [${x.formType?.name}]`
+    return `${client?.name}, ${courtCase?.caseType?.name} [${x.filingType?.name}]`
   }
 
-  const calendarFormListForSelect = () => {
-    if (getNumber(formId) > 0) {
-      const selectedForm = formsList.find((x) => x.id === Number(formId))
-      if (selectedForm) {
+  const calendarFilingListForSelect = () => {
+    if (getNumber(filingId) > 0) {
+      const selectedFiling = filingsList.find((x) => x.id === getNumber(filingId))
+      if (selectedFiling) {
         return [
-          <MenuItem key={selectedForm.id} value={selectedForm.id}>
-            {calendarFormForSelect(selectedForm)}
+          <MenuItem key={selectedFiling.id} value={selectedFiling.id}>
+            {calendarFilingForSelect(selectedFiling)}
           </MenuItem>,
         ]
       }
     } else if (getNumber(courtCaseId) > 0) {
-      const selectedForms = formsList.filter((x) => x.courtCaseId === Number(courtCaseId))
-      return selectedForms
-        .filter(
-          (x) =>
-            ('formId' in selectedCalendar && selectedCalendar.formId === x.id) ||
-            statusList.form.active.includes(x.status),
-        )
+      const selectedFilings = filingsList.filter((x) => x.courtCaseId === Number(courtCaseId))
+      return selectedFilings
+        .filter((x) => ('filingId' in formData && formData.filingId === x.id) || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
-            {calendarFormForSelect(x)}
+            {calendarFilingForSelect(x)}
           </MenuItem>
         ))
     } else {
-      return formsList
-        .filter(
-          (x) =>
-            ('formId' in selectedCalendar && selectedCalendar.formId === x.id) ||
-            statusList.form.active.includes(x.status),
-        )
+      return filingsList
+        .filter((x) => ('filingId' in formData && formData.filingId === x.id) || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
-            {calendarFormForSelect(x)}
+            {calendarFilingForSelect(x)}
           </MenuItem>
         ))
     }
     return []
   }
 
-  const calendarFormList = () => {
-    const value = 'formId' in selectedCalendar ? getNumber(selectedCalendar.formId) : ID_DEFAULT
-    const hearingCalendarId =
-      'hearingCalendarId' in selectedCalendar ? getNumber(selectedCalendar.hearingCalendarId) : ID_DEFAULT
+  const calendarFilingList = () => {
+    let value = ID_DEFAULT
+    let error = false
+    let helperText = undefined
+    if ('filingId' in formData && 'filingError' in formErrors) {
+      value = getNumber(formData.filingId)
+      error = !!formErrors.filingError
+      helperText = formErrors.filingError
+    }
+    const hearingCalendarId = 'hearingCalendarId' in formData ? getNumber(formData.hearingCalendarId) : ID_DEFAULT
     return (
       <FormSelectField
-        componentLabel="Task Calendar--Filing"
+        componentLabel="TASK CALENDAR--FILING"
+        name="filingId"
         value={value}
-        onChange={(e) =>
-          handleCalendarFormOnChange('formId', e.target.value, selectedCalendar, setSelectedCalendar, getNumber)
-        }
-        menuItems={calendarFormListForSelect()}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        menuItems={calendarFilingListForSelect()}
         disabled={hearingCalendarId > 0}
+        error={error}
+        helperText={helperText}
       />
     )
   }
 
   const calendarStatus = () => (
     <FormSelectStatusField
-      componentLabel="Calendar--Status"
-      value={selectedCalendar.status}
-      onChange={(e) =>
-        handleCalendarFormOnChange('status', e.target.value, selectedCalendar, setSelectedCalendar, getString)
-      }
+      componentLabel="CALENDAR--STATUS"
+      name="componentStatusId"
+      value={formData.componentStatusId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       statusList={calendarStatusList}
-      error={isCalendarFormFieldError('status', selectedCalendar.status, undefined)}
+      error={!!formErrors.componentStatusError}
+      helperText={formErrors.componentStatusError}
     />
   )
 
   const calendarComments = () => (
     <FormCommentsField
-      componentLabel="Calendar--Comments"
-      value={selectedCalendar.comments}
-      onChange={(e) =>
-        handleCalendarFormOnChange('comments', e.target.value, selectedCalendar, setSelectedCalendar, getComments)
-      }
+      componentLabel="CALENDAR--COMMENTS"
+      name="comments"
+      value={formData.comments}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />
   )
 
@@ -327,7 +353,7 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
             {calendarHearingCalendarList()}
           </Grid>
           <Grid item xs={6}>
-            {calendarFormList()}
+            {calendarFilingList()}
           </Grid>
         </>
       )}

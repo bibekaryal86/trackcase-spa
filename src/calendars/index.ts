@@ -7,10 +7,14 @@ import calendars from './reducers/calendars.reducer'
 // data types
 import {
   CalendarsState,
+  HearingCalendarFormData,
+  HearingCalendarFormErrorData,
   HearingCalendarResponse,
   HearingCalendarSchema,
   HistoryHearingCalendarSchema,
   HistoryTaskCalendarSchema,
+  TaskCalendarFormData,
+  TaskCalendarFormErrorData,
   TaskCalendarResponse,
   TaskCalendarSchema,
 } from './types/calendars.data.types'
@@ -25,4 +29,8 @@ export type {
   HistoryTaskCalendarSchema,
   TaskCalendarResponse,
   TaskCalendarSchema,
+  HearingCalendarFormData,
+  HearingCalendarFormErrorData,
+  TaskCalendarFormData,
+  TaskCalendarFormErrorData,
 }

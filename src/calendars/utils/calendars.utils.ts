@@ -200,6 +200,11 @@ export const calendarDispatch = ({
   }
 }
 
+export const getCalendarFormDataFromSchema = (x: HearingCalendarSchema | TaskCalendarSchema) =>
+  isHearingCalendar(x)
+    ? getHearingCalendarFormDataFromSchema(x as HearingCalendarSchema)
+    : getTaskCalendarFormDataFromSchema(x as TaskCalendarSchema)
+
 export const getHearingCalendarFormDataFromSchema = (x: HearingCalendarSchema): HearingCalendarFormData => {
   return {
     ...x,
