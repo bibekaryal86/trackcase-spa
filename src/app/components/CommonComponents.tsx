@@ -10,6 +10,12 @@ import React from 'react'
 
 import Link from './Link'
 import { Modal2 } from './Modal'
+import {
+  HearingCalendarFormData,
+  HearingCalendarFormErrorData,
+  TaskCalendarFormData,
+  TaskCalendarFormErrorData,
+} from '../../calendars'
 import { CourtCaseFormData, CourtCaseFormErrorData } from '../../cases'
 import { ClientFormData, ClientFormErrorData } from '../../clients'
 import { ACTION_TYPES, ActionTypes } from '../../constants'
@@ -44,6 +50,8 @@ type FormData =
   | ClientFormData
   | CourtCaseFormData
   | FilingFormData
+  | HearingCalendarFormData
+  | TaskCalendarFormData
 
 type FormErrorData =
   | FormData
@@ -55,6 +63,8 @@ type FormErrorData =
   | ClientFormErrorData
   | CourtCaseFormErrorData
   | FilingFormErrorData
+  | HearingCalendarFormErrorData
+  | TaskCalendarFormErrorData
 
 export const pageTitleComponent = (component: string, componentName?: string) => (
   <>
