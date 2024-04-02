@@ -47,13 +47,13 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
   const filingType = () => (
     <FormSelectField
       componentLabel="FILING--FILING TYPE"
-      required
       name="filingTypeId"
       value={formData.filingTypeId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.filingTypeError}
       helperText={formErrors.filingTypeError}
       menuItems={filingTypesListForSelect()}
+      required
     />
   )
 
@@ -82,13 +82,13 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
   const filingCourtCase = () => (
     <FormSelectField
       componentLabel="FILING--COURT CASE"
-      required
       name="courtCaseId"
       value={formData.courtCaseId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.courtCaseError}
       helperText={formErrors.courtCaseError}
       menuItems={courtCasesListForSelect()}
+      required
     />
   )
 
@@ -120,7 +120,6 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="FILING--RECEIPT NUMBER"
       name="receiptNumber"
-      required={false}
       value={formData.receiptNumber}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.receiptNumberError}
@@ -185,7 +184,6 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
   const filingStatus = () => (
     <FormSelectStatusField
       componentLabel="FILING--STATUS"
-      name="componentStatusId"
       value={formData.componentStatusId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
@@ -197,7 +195,6 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
   const filingComments = () => (
     <FormCommentsField
       componentLabel="FILING--COMMENTS"
-      name="comments"
       value={formData.comments}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />

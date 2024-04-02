@@ -36,13 +36,14 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
 
   const clientName = () => (
     <FormTextField
-      componentLabel="CLIENT--NAME"
       autoFocus={!isShowOneClient}
+      componentLabel="CLIENT--NAME"
       name="name"
       value={formData.name}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.name}
       helperText={formErrors.name}
+      required
     />
   )
 
@@ -50,7 +51,6 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="CLIENT--A NUMBER"
       name="aNumber"
-      required={false}
       value={formData.aNumber}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.aNumber}
@@ -66,6 +66,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.email}
       helperText={formErrors.email}
+      required
     />
   )
 
@@ -78,13 +79,13 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.phoneNumber}
       helperText={formErrors.phoneNumber}
+      required
     />
   )
 
   const clientStreetAddress = () => (
     <FormTextField
       componentLabel="CLIENT--STREET ADDRESS"
-      required={false}
       name="streetAddress"
       value={formData.streetAddress}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
@@ -96,7 +97,6 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const clientCity = () => (
     <FormTextField
       componentLabel="CLIENT--CITY"
-      required={false}
       name="city"
       value={formData.city}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
@@ -108,7 +108,6 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const clientState = () => (
     <FormSelectStateField
       componentLabel="CLIENT--STATE"
-      name="state"
       value={formData.state}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.state}
@@ -119,7 +118,6 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const clientZipCode = () => (
     <FormTextField
       componentLabel="CLIENT--ZIP CODE"
-      required={false}
       maxLength={5}
       name="zipCode"
       value={formData.zipCode}
@@ -166,7 +164,6 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const clientStatus = () => (
     <FormSelectStatusField
       componentLabel="CLIENT--STATUS"
-      name="componentStatusId"
       value={formData.componentStatusId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
@@ -178,7 +175,6 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
   const clientComments = () => (
     <FormCommentsField
       componentLabel="CLIENT--COMMENTS"
-      name="comments"
       value={formData.comments}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />

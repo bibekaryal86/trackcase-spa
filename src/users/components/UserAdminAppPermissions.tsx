@@ -91,20 +91,20 @@ const UserAdminAppPermissions = (): React.ReactElement => {
       <FormTextField
         componentLabel="APP PERMISSION--NAME"
         name="name"
-        required
         value={formData.name}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.name}
         helperText={formErrors.name}
+        required
       />
       <FormTextField
         componentLabel="APP PERMISSION--DESCRIPTION"
         name="description"
-        required
         value={formData.description}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.description}
         helperText={formErrors.description}
+        required
       />
     </Box>
   )

@@ -86,20 +86,20 @@ const UserAdminAppRoles = (): React.ReactElement => {
       <FormTextField
         componentLabel="APP ROLE--NAME"
         name="name"
-        required
         value={formData.name}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.name}
         helperText={formErrors.name}
+        required
       />
       <FormTextField
         componentLabel="APP ROLE--DESCRIPTION"
         name="description"
-        required
         value={formData.description}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.description}
         helperText={formErrors.description}
+        required
       />
     </Box>
   )

@@ -42,6 +42,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.name}
       helperText={formErrors.name}
+      required
     />
   )
 
@@ -49,7 +50,6 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="JUDGE--WEBEX"
       name="webex"
-      required={false}
       value={formData.webex}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       helperText={formErrors.webex}
@@ -82,19 +82,18 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormSelectField
       componentLabel="JUDGE--COURT"
       name="courtId"
-      required
       value={formData.courtId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       menuItems={courtsListForSelect()}
       error={!!formErrors.courtError}
       helperText={formErrors.courtError}
+      required
     />
   )
 
   const judgeStatus = () => (
     <FormSelectStatusField
       componentLabel="JUDGE--STATUS"
-      name="componentStatusId"
       value={formData.componentStatusId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
@@ -106,7 +105,6 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   const judgeComments = () => (
     <FormCommentsField
       componentLabel="JUDGE--COMMENTS"
-      name="comments"
       value={formData.comments}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />

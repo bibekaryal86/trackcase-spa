@@ -36,6 +36,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.name}
       helperText={formErrors.name}
+      required
     />
   )
 
@@ -43,7 +44,6 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="COURT--STREET ADDRESS"
       name="streetAddress"
-      required={false}
       value={formData.streetAddress}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.streetAddress}
@@ -55,7 +55,6 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     <FormTextField
       componentLabel="COURT--CITY"
       name="city"
-      required={false}
       value={formData.city}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.city}
@@ -66,8 +65,6 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const courtState = () => (
     <FormSelectStateField
       componentLabel="COURT--STATE"
-      name="state"
-      required={false}
       value={formData.state}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.state}
@@ -80,7 +77,6 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       componentLabel="COURT--ZIP CODE"
       maxLength={5}
       name="zipCode"
-      required={false}
       value={formData.zipCode}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.zipCode}
@@ -97,13 +93,13 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.phoneNumber}
       helperText={formErrors.phoneNumber}
+      required
     />
   )
 
   const courtDhsAddress = () => (
     <FormTextField
       componentLabel="COURT--DHS ADDRESS"
-      required={false}
       maxLength={199}
       name="dhsAddress"
       value={formData.dhsAddress}
@@ -116,7 +112,6 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const courtStatus = () => (
     <FormSelectStatusField
       componentLabel="COURT--STATUS"
-      name="componentStatusId"
       value={formData.componentStatusId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
@@ -128,8 +123,6 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
   const courtComments = () => (
     <FormCommentsField
       componentLabel="COURT--COMMENTS"
-      name="comments"
-      required={false}
       value={formData.comments}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />

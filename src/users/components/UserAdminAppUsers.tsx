@@ -127,30 +127,30 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
       <FormTextField
         componentLabel="APP USER--EMAIL"
         name="email"
-        required
         value={formData.email}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.email}
         helperText={formErrors.email}
+        required
       />
       <FormTextField
         componentLabel="APP USER--FULL NAME"
         name="fullName"
-        required
         value={formData.fullName}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.fullName}
         helperText={formErrors.fullName}
+        required
       />
       <FormSelectField
         componentLabel="APP USER--STATUS"
         name="componentStatusId"
-        required
         value={formData.componentStatusId}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.componentStatusId}
         helperText={formErrors.componentStatusId}
         menuItems={componentStatusMenuItems()}
+        required
       />
     </Box>
   )

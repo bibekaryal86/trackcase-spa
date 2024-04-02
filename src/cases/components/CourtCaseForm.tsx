@@ -90,8 +90,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
 
   const courtCaseStatus = () => (
     <FormSelectStatusField
-      componentLabel="COURT_CASE--STATUS"
-      name="componentStatusId"
+      componentLabel="COURT CASE--STATUS"
       value={formData.componentStatusId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
@@ -102,8 +101,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
 
   const courtCaseComments = () => (
     <FormCommentsField
-      componentLabel="COURT_CASE--COMMENTS"
-      name="comments"
+      componentLabel="COURT CASE--COMMENTS"
       value={formData.comments}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />

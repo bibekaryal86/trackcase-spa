@@ -308,7 +308,6 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const calendarStatus = () => (
     <FormSelectStatusField
       componentLabel="CALENDAR--STATUS"
-      name="componentStatusId"
       value={formData.componentStatusId}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       statusList={calendarStatusList}
@@ -320,7 +319,6 @@ const CalendarForm = (props: CalendarFormProps): React.ReactElement => {
   const calendarComments = () => (
     <FormCommentsField
       componentLabel="CALENDAR--COMMENTS"
-      name="comments"
       value={formData.comments}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />

@@ -200,20 +200,20 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       <FormTextField
         componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
         name="nameOrComponentName"
-        required
         value={formData.nameOrComponentName}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
         helperText={formErrors.nameOrComponentName}
+        required
       />
       <FormTextField
         componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
         name="descOrStatusName"
-        required
         value={formData.descOrStatusName}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
         helperText={formErrors.descOrStatusName}
+        required
       />
     </>
   )

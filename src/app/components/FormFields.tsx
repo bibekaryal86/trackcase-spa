@@ -48,7 +48,7 @@ interface FormTextFieldProps {
 
 interface FormCommentFieldProps {
   componentLabel: string
-  name: string
+  name?: string
   required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
@@ -80,7 +80,7 @@ interface FormSelectFieldProps {
 
 interface StateSelectProps {
   componentLabel: string
-  name: string
+  name?: string
   required?: boolean
   formControlSx?: object
   error?: boolean
@@ -147,8 +147,8 @@ const getComponentLabelAndId = (componentLabel: string) => {
 export const FormTextField: React.FC<FormTextFieldProps> = ({
   componentLabel,
   name = '',
-  required = true,
-  fullWidth = true,
+  required = false,
+  fullWidth = false,
   autoFocus = false,
   variant = 'standard',
   margin = 'normal',
@@ -199,7 +199,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
 
 export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
   componentLabel,
-  name,
+  name = 'comments',
   required = false,
   fullWidth = true,
   autoFocus = false,
@@ -278,7 +278,7 @@ const getStateItems = () =>
 
 export const FormSelectStateField: React.FC<StateSelectProps> = ({
   componentLabel,
-  name = '',
+  name = 'state',
   required = false,
   error = false,
   value,
@@ -306,7 +306,7 @@ const getStatusItems = (statusList: ComponentStatusSchema[]) =>
 
 export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
   componentLabel,
-  name,
+  name = 'componentStatusId',
   required = true,
   error = false,
   helperText = '',
@@ -335,7 +335,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
   disablePast = false,
   disableOpenPicker = false,
   format = DATE_FORMAT,
-  helperText,
+  helperText = '',
   minDate,
   maxDate,
   required = false,
