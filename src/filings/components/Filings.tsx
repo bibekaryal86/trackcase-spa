@@ -242,7 +242,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       actionButtons={actionButtons}
       addModalState={addModalState}
       softDeleteCallback={getFilingsWithMetadata}
-      componentStatusList={refTypes.componentStatus}
+      componentStatusList={filingStatusList()}
       filingTypesList={refTypes.filingType}
       courtCasesList={courtCasesList}
       clientsList={clientsList}
