@@ -1,5 +1,5 @@
 import * as colors from '@mui/material/colors'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 
 import { FetchRequestMetadata, getDayjs, getNumber } from '../../app'
 import { CALENDAR_TYPES, DUE_AT_HEARING_ID, ID_DEFAULT } from '../../constants'
@@ -24,7 +24,9 @@ export const CALENDAR_EVENT_BG_COLOR = new Map([
   ['DOCUMENT PREPARATION', colors.deepOrange.A400],
 ])
 
-export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSchema): string | undefined => {
+export const getCalendarType = (
+  calendar: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
+): string | undefined => {
   if ('hearingDate' in calendar || 'hearingTypeId' in calendar) {
     return CALENDAR_TYPES.HEARING_CALENDAR
   } else if ('taskDate' in calendar || 'taskTypeId' in calendar) {
@@ -33,8 +35,17 @@ export const getCalendarType = (calendar: HearingCalendarSchema | TaskCalendarSc
   return undefined
 }
 
-export const isHearingCalendar = (calendar: HearingCalendarSchema | TaskCalendarSchema): boolean =>
-  getCalendarType(calendar) === CALENDAR_TYPES.HEARING_CALENDAR
+export const isHearingCalendar = (
+  calendar: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
+): boolean => getCalendarType(calendar) === CALENDAR_TYPES.HEARING_CALENDAR
+
+export const isAreTwoCalendarsSame = (
+  one: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
+  two: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
+) =>
+  isHearingCalendar(one)
+    ? isAreTwoHearingCalendarsSame(one as HearingCalendarFormData, two as HearingCalendarFormData)
+    : isAreTwoTaskCalendarsSame(one as TaskCalendarFormData, two as TaskCalendarFormData)
 
 export const isAreTwoHearingCalendarsSame = (
   one: HearingCalendarFormData | HearingCalendarSchema,
@@ -60,19 +71,6 @@ export const isAreTwoTaskCalendarsSame = (
   one.hearingCalendarId === two.hearingCalendarId &&
   one.componentStatusId === two.componentStatusId &&
   one.comments === two.comments
-
-export const handleCalendarDateOnChange = (
-  name: string,
-  value: Dayjs | null,
-  selectedCalendar: HearingCalendarSchema | TaskCalendarSchema,
-  setSelectedCalendar: (updatedCalendar: HearingCalendarSchema | TaskCalendarSchema) => void,
-) => {
-  const updatedCalendar = {
-    ...selectedCalendar,
-    [name]: value,
-  }
-  setSelectedCalendar(updatedCalendar)
-}
 
 export const validateHearingCalendar = (
   formData: HearingCalendarFormData,
