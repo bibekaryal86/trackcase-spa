@@ -80,7 +80,8 @@ export const validateHearingCalendar = (
   const formErrorsLocal: HearingCalendarFormErrorData = { ...DefaultHearingCalendarFormErrorData }
   const oneWeekBeforeDate = dayjs().subtract(1, 'week')
 
-  if (!formData.hearingDate || !formData.hearingDate.isValid() || formData.hearingDate.isBefore(oneWeekBeforeDate)) {
+  const hearingDate = getDayjs(formData.hearingDate)
+  if (!hearingDate || !hearingDate.isValid() || hearingDate.isBefore(oneWeekBeforeDate)) {
     hasValidationErrors = true
     formErrorsLocal.hearingDateError = 'INVALID/MISSING'
   }
@@ -111,23 +112,25 @@ export const validateTaskCalendar = (
   const formErrorsLocal: TaskCalendarFormErrorData = { ...DefaultTaskCalendarFormErrorData }
   const oneWeekBeforeDate = dayjs().subtract(1, 'week')
 
-  if (!formData.taskDate || !formData.taskDate.isValid() || formData.taskDate.isBefore(oneWeekBeforeDate)) {
+  const taskDate = getDayjs(formData.taskDate)
+  if (!taskDate || !taskDate.isValid() || taskDate.isBefore(oneWeekBeforeDate)) {
     hasValidationErrors = true
     formErrorsLocal.taskDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
   }
-  if (!formData.dueDate || !formData.dueDate.isValid() || formData.dueDate.isBefore(oneWeekBeforeDate)) {
+  const dueDate = getDayjs(formData.dueDate)
+  if (!dueDate || !dueDate.isValid() || dueDate.isBefore(oneWeekBeforeDate)) {
     hasValidationErrors = true
     formErrorsLocal.dueDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
   }
-  if (formData.taskDate && formData.dueDate && formData.dueDate.isBefore(formData.taskDate)) {
+  if (taskDate && dueDate && dueDate.isBefore(taskDate)) {
     hasValidationErrors = true
     formErrorsLocal.dueDateError = 'REQUIRED/INVALID (BEFORE TASK DATE)'
   }
   // due date cannot be after hearing date if hearing calendar is selected
-  if (formData.dueDate && getNumber(formData.hearingCalendarId) > 0) {
+  if (dueDate && getNumber(formData.hearingCalendarId) > 0) {
     const hearingDate = getDayjs(hearingCalendar?.hearingDate)
     if (hearingDate) {
-      if (formData.dueDate.isAfter(hearingDate)) {
+      if (dueDate.isAfter(hearingDate)) {
         hasValidationErrors = true
         formErrorsLocal.dueDateError = 'REQUIRED/INVALID (BEFORE HEARING DATE)'
       }
