@@ -133,16 +133,16 @@ export const calendarsAction = ({
 }
 
 export const getCalendars = (requestMetadata?: Partial<FetchRequestMetadata>) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, store: GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(calendarDispatch({ type: CALENDARS_READ_REQUEST }))
 
-    let calendarResponse: CalendarResponse = { calendarEvents: [], hearingCalendars: [], taskCalendars: [] }
+    let calendarResponse: CalendarResponse = { data: { calendarEvents: [], hearingCalendars: [], taskCalendars: [] } }
 
-    if (requestMetadata === store.calendars.requestMetadata) {
+    if (requestMetadata === getStore().calendars.requestMetadata) {
       // no need to fetch request, metadata is same
-      calendarResponse.calendarEvents = store.calendars.calendarEvents
-      calendarResponse.hearingCalendars = store.calendars.hearingCalendars
-      calendarResponse.taskCalendars = store.calendars.taskCalendars
+      calendarResponse.data.calendarEvents = getStore().calendars.calendarEvents
+      calendarResponse.data.hearingCalendars = getStore().calendars.hearingCalendars
+      calendarResponse.data.taskCalendars = getStore().calendars.taskCalendars
     }
     const endpoint = getEndpoint(process.env.CALENDARS_ALL as string)
     const options: Partial<FetchOptions> = {
@@ -151,7 +151,7 @@ export const getCalendars = (requestMetadata?: Partial<FetchRequestMetadata>) =>
     }
 
     try {
-      if (calendarResponse.calendarEvents.length <= 0) {
+      if (calendarResponse.data.calendarEvents.length <= 0) {
         calendarResponse = (await Async.fetch(endpoint, options)) as CalendarResponse
       }
       if (calendarResponse.detail) {
@@ -160,9 +160,9 @@ export const getCalendars = (requestMetadata?: Partial<FetchRequestMetadata>) =>
         dispatch(
           calendarDispatch({
             type: CALENDARS_READ_SUCCESS,
-            calendarEvents: calendarResponse.calendarEvents,
-            hearingCalendars: calendarResponse.hearingCalendars,
-            taskCalendars: calendarResponse.taskCalendars,
+            calendarEvents: calendarResponse.data.calendarEvents,
+            hearingCalendars: calendarResponse.data.hearingCalendars,
+            taskCalendars: calendarResponse.data.taskCalendars,
             requestMetadata: requestMetadata,
           }),
         )

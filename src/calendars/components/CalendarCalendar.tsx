@@ -24,23 +24,29 @@ import {
   Views,
 } from 'react-big-calendar'
 
-import { getDayjs, getNumber, getString, Modal } from '../../app'
-import { ACTION_TYPES, CALENDAR_TYPES, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { getDayjs, getNumber, getString, Modal, ModalState } from '../../app'
+import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import {
   CalendarEvents,
   DefaultCalendarSchema,
+  DefaultHearingCalendarFormData,
+  DefaultTaskCalendarFormData,
+  HearingCalendarFormData,
   HearingCalendarSchema,
+  TaskCalendarFormData,
   TaskCalendarSchema,
 } from '../types/calendars.data.types'
-import { getCalendarEventBgColor } from '../utils/calendars.utils'
+import { getCalendarEventBgColor, getCalendarFormDataFromSchema } from '../utils/calendars.utils'
 
 interface CalendarViewProps {
+  setType: (calendarType: CalendarTypes) => void
   calendarEvents: CalendarEvents[]
-  setModal: (action: string) => void
-  setSelectedId: (id: number) => void
-  setSelectedType: (type: string) => void
-  setSelectedCalendar: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
-  setSelectedCalendarForReset: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
+  setFormDataHc: (formData: HearingCalendarFormData) => void
+  setFormDataTc: (formData: TaskCalendarFormData) => void
+  setFormDataResetHc: (formData: HearingCalendarFormData) => void
+  setFormDataResetTc: (formData: TaskCalendarFormData) => void
+  addModalState: ModalState
+  updateModalState: ModalState
   minCalendarDate: Dayjs
   maxCalendarDate: Dayjs
   hearingCalendarsList: HearingCalendarSchema[]
@@ -184,7 +190,8 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
   const { calendarEvents } = props
-  const { setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
+  const { setType, setFormDataHc, setFormDataTc, setFormDataResetHc, setFormDataResetTc } = props
+  const { addModalState, updateModalState } = props
   const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
 
@@ -193,17 +200,17 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
   //const [selectedDatePickerDate, setSelectedDatePickerDate] = useState(dayjs())
 
-  const addCalendarModalCallback = (type: string) => {
+  const addCalendarModalCallback = (type: CalendarTypes) => {
     setShowAddModal(false)
     if (type === CALENDAR_TYPES.HEARING_CALENDAR) {
-      setSelectedCalendar({ ...DefaultCalendarSchema, hearingDate: selectedDate || dayjs() })
-      setSelectedCalendarForReset({ ...DefaultCalendarSchema, hearingDate: selectedDate || dayjs() })
+      setFormDataHc({ ...DefaultHearingCalendarFormData, hearingDate: selectedDate || dayjs() })
+      setFormDataResetHc({ ...DefaultHearingCalendarFormData, hearingDate: selectedDate || dayjs() })
     } else {
-      setSelectedCalendar({ ...DefaultCalendarSchema, taskDate: selectedDate || dayjs() })
-      setSelectedCalendarForReset({ ...DefaultCalendarSchema, taskDate: selectedDate || dayjs() })
+      setFormDataTc({ ...DefaultTaskCalendarFormData, taskDate: selectedDate || dayjs() })
+      setFormDataResetTc({ ...DefaultTaskCalendarFormData, taskDate: selectedDate || dayjs() })
     }
-    setSelectedType(type)
-    setModal(ACTION_TYPES.CREATE)
+    setType(type)
+    addModalState.toggleModalView()
   }
 
   const addCalendarModal = () => {
@@ -212,12 +219,12 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         <Modal
           isOpen={true}
           setIsOpen={setShowAddModal}
-          title={'Add Calendar Event'}
+          title="ADD CALENDAR EVENT"
           primaryButtonText={ACTION_TYPES.CANCEL}
           primaryButtonCallback={() => setShowAddModal(false)}
-          contentText={`Selected Date is not within the allowed range of between ${minCalendarDate.format(
+          contentText={`SELECTED DATE IS NOT WITHIN THE ALLOWED RANGE OF BETWEEN ${minCalendarDate.format(
             DATE_FORMAT,
-          )} and ${maxCalendarDate.format(DATE_FORMAT)} to add a new event!`}
+          )} AND ${maxCalendarDate.format(DATE_FORMAT)} TO ADD A NEW EVENT!`}
         />
       )
     }
@@ -225,14 +232,14 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
       <Modal
         isOpen={true}
         setIsOpen={setShowAddModal}
-        title={'Add Calendar Event'}
+        title="ADD CALENDAR EVENT"
         primaryButtonText={CALENDAR_TYPES.HEARING_CALENDAR.split('_')[0]}
         primaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.HEARING_CALENDAR)}
         secondaryButtonText={CALENDAR_TYPES.TASK_CALENDAR.split('_')[0]}
         secondaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.TASK_CALENDAR)}
         resetButtonText={ACTION_TYPES.CANCEL}
         resetButtonCallback={() => setShowAddModal(false)}
-        contentText="Select Calendar Type to Add..."
+        contentText="SELECT CALENDAR TYPE TO ADD..."
       />
     )
   }
@@ -292,7 +299,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     console.log('onSelectSlot is disabled, events handled with onClickDateHeader: ', slot.action)
     return
   }
-  const getSelectedCalendar = (id: number, type: string) => {
+  const getSelectedCalendar = (id: number, type: CalendarTypes) => {
     let calendar: HearingCalendarSchema | TaskCalendarSchema | undefined
     if (type === CALENDAR_TYPES.HEARING_CALENDAR) {
       calendar = hearingCalendarsList.find((h) => h.id === id)
@@ -303,13 +310,18 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   }
   const onSelectEvent = (event: SelectEvent) => {
     const id = getNumber(event.id)
-    const calendarType = getString(event.calendar)
+    const calendarType = getString(event.calendar) as CalendarTypes
     const calendar = getSelectedCalendar(id, calendarType)
-    setSelectedId(id)
-    setSelectedType(calendarType)
-    setSelectedCalendar(calendar)
-    setSelectedCalendarForReset(calendar)
-    setModal(ACTION_TYPES.UPDATE)
+    setType(calendarType)
+    const formData = getCalendarFormDataFromSchema(calendar)
+    if (calendarType === CALENDAR_TYPES.HEARING_CALENDAR) {
+      setFormDataHc(formData as HearingCalendarFormData)
+      setFormDataResetHc(formData as HearingCalendarFormData)
+    } else {
+      setFormDataTc(formData as TaskCalendarFormData)
+      setFormDataResetTc(formData as TaskCalendarFormData)
+    }
+    updateModalState.toggleModalView()
     // prevent default action, return nothing
     return
   }

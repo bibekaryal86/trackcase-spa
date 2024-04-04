@@ -16,10 +16,14 @@ export interface CalendarEvents {
   courtCaseId: number
 }
 
-export interface CalendarResponse extends ResponseBase {
+export interface CalendarResponseData {
   calendarEvents: CalendarEvents[]
   hearingCalendars: HearingCalendarSchema[]
   taskCalendars: TaskCalendarSchema[]
+}
+
+export interface CalendarResponse extends ResponseBase {
+  data: CalendarResponseData
 }
 
 export interface HearingCalendarBase {
