@@ -107,7 +107,6 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const maxCalendarDate = dayjs().add(1, 'year')
 
   const [isShowListView, setIsShowListView] = useState(false)
-  const [type, setType] = useState<CalendarTypes>(CALENDAR_TYPES.HEARING_CALENDAR)
   const [formDataHc, setFormDataHc] = useState(DefaultHearingCalendarFormData)
   const [formDataTc, setFormDataTc] = useState(DefaultTaskCalendarFormData)
   const [formDataResetHc, setFormDataResetHc] = useState(DefaultHearingCalendarFormData)
@@ -158,7 +157,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     getCalendars(requestMetadata)
   }
 
-  const primaryButtonCallback = async (action: ActionTypes) => {
+  const primaryButtonCallback = async (action: ActionTypes, type?: CalendarTypes) => {
     const isHc = type === CALENDAR_TYPES.HEARING_CALENDAR
     const calendarId = isHc ? getNumber(formDataHc.id) : getNumber(formDataTc.id)
     const calendarsRequest: HearingCalendarBase | TaskCalendarBase = isHc ? { ...formDataHc } : { ...formDataTc }
@@ -180,8 +179,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       calendarId > 0
     ) {
       calendarResponse = await calendarsAction({
-        type: type,
-        action: action,
+        type,
+        action,
         calendarsRequest: calendarsRequest,
         id: formDataHc.id,
         isRestore: action === ACTION_TYPES.RESTORE,
@@ -214,167 +213,170 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     }
   }
 
-  const addUpdateModalContent = () =>
-    type === CALENDAR_TYPES.HEARING_CALENDAR ? (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
-        <CalendarFormHc
-          formData={formDataHc}
-          setFormData={setFormDataHc}
-          formErrors={formErrorsHc}
-          setFormErrors={setFormErrorsHc}
-          calendarStatusList={calendarStatusList()}
-          calendarTypesList={refTypes.hearingType}
-          courtCasesList={courtCasesList}
-          isShowOneCalendar={false}
-          minCalendarDate={minCalendarDate}
-          maxCalendarDate={maxCalendarDate}
-        />
-      </Box>
-    ) : (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
-        <CalendarFormTc
-          formData={formDataTc}
-          setFormData={setFormDataTc}
-          formErrors={formErrorsTc}
-          setFormErrors={setFormErrorsTc}
-          filingsList={filingsList}
-          clientsList={clientsList}
-          hearingCalendarList={hearingCalendarsList}
-          calendarStatusList={calendarStatusList()}
-          calendarTypesList={refTypes.taskType}
-          courtCasesList={courtCasesList}
-          isShowOneCalendar={false}
-          minCalendarDate={minCalendarDate}
-          maxCalendarDate={maxCalendarDate}
-        />
-      </Box>
+  const addUpdateModalContentHc = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
+      <CalendarFormHc
+        formData={formDataHc}
+        setFormData={setFormDataHc}
+        formErrors={formErrorsHc}
+        setFormErrors={setFormErrorsHc}
+        calendarStatusList={calendarStatusList()}
+        calendarTypesList={refTypes.hearingType}
+        courtCasesList={courtCasesList}
+        isShowOneCalendar={false}
+        minCalendarDate={minCalendarDate}
+        maxCalendarDate={maxCalendarDate}
+      />
+    </Box>
+  )
+
+  const addUpdateModalContentTc = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
+      <CalendarFormTc
+        formData={formDataTc}
+        setFormData={setFormDataTc}
+        formErrors={formErrorsTc}
+        setFormErrors={setFormErrorsTc}
+        filingsList={filingsList}
+        clientsList={clientsList}
+        hearingCalendarList={hearingCalendarsList}
+        calendarStatusList={calendarStatusList()}
+        calendarTypesList={refTypes.taskType}
+        courtCasesList={courtCasesList}
+        isShowOneCalendar={false}
+        minCalendarDate={minCalendarDate}
+        maxCalendarDate={maxCalendarDate}
+      />
+    </Box>
+  )
+
+  const addModalHc = () =>
+    addModalComponent(
+      COMPONENT_STATUS_NAME.CALENDARS,
+      addUpdateModalContentHc(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormDataHc,
+      setFormErrorsHc,
+      DefaultHearingCalendarFormData,
+      DefaultHearingCalendarFormErrorData,
+      formDataResetHc,
     )
 
-  const addModal = () =>
-    type === CALENDAR_TYPES.HEARING_CALENDAR
-      ? addModalComponent(
-          COMPONENT_STATUS_NAME.CALENDARS,
-          addUpdateModalContent(),
-          primaryButtonCallback,
-          addModalState,
-          updateModalState,
-          deleteModalState,
-          setFormDataHc,
-          setFormErrorsHc,
-          DefaultHearingCalendarFormData,
-          DefaultHearingCalendarFormErrorData,
-          formDataResetHc,
-        )
-      : addModalComponent(
-          COMPONENT_STATUS_NAME.CALENDARS,
-          addUpdateModalContent(),
-          primaryButtonCallback,
-          addModalState,
-          updateModalState,
-          deleteModalState,
-          setFormDataTc,
-          setFormErrorsTc,
-          DefaultTaskCalendarFormData,
-          DefaultTaskCalendarFormErrorData,
-          formDataResetTc,
-        )
+  const addModalTc = () =>
+    addModalComponent(
+      COMPONENT_STATUS_NAME.CALENDARS,
+      addUpdateModalContentTc(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormDataTc,
+      setFormErrorsTc,
+      DefaultTaskCalendarFormData,
+      DefaultTaskCalendarFormErrorData,
+      formDataResetTc,
+    )
 
-  const updateModal = () =>
-    type === CALENDAR_TYPES.HEARING_CALENDAR
-      ? updateModalComponent(
-          COMPONENT_STATUS_NAME.CALENDARS,
-          addUpdateModalContent(),
-          primaryButtonCallback,
-          addModalState,
-          updateModalState,
-          deleteModalState,
-          setFormDataHc,
-          setFormErrorsHc,
-          DefaultHearingCalendarFormData,
-          DefaultHearingCalendarFormErrorData,
-          formDataResetHc,
-        )
-      : updateModalComponent(
-          COMPONENT_STATUS_NAME.CALENDARS,
-          addUpdateModalContent(),
-          primaryButtonCallback,
-          addModalState,
-          updateModalState,
-          deleteModalState,
-          setFormDataTc,
-          setFormErrorsTc,
-          DefaultTaskCalendarFormData,
-          DefaultTaskCalendarFormErrorData,
-          formDataResetTc,
-        )
+  const updateModalHc = () =>
+    updateModalComponent(
+      COMPONENT_STATUS_NAME.CALENDARS,
+      addUpdateModalContentHc(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormDataHc,
+      setFormErrorsHc,
+      DefaultHearingCalendarFormData,
+      DefaultHearingCalendarFormErrorData,
+      formDataResetHc,
+    )
 
-  const deleteModalContextText =
-    type === CALENDAR_TYPES.HEARING_CALENDAR
-      ? `ARE YOU SURE YOU WANT TO ${
-          formDataHc.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
-        } CALENDAR EVENT FOR ${formDataHc.hearingDate}?!?`
-      : `ARE YOU SURE YOU WANT TO ${
-          formDataTc.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
-        } CALENDAR EVENT FOR ${formDataTc.taskDate}?!?`
+  const updateModalTc = () =>
+    updateModalComponent(
+      COMPONENT_STATUS_NAME.CALENDARS,
+      addUpdateModalContentTc(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormDataTc,
+      setFormErrorsTc,
+      DefaultTaskCalendarFormData,
+      DefaultTaskCalendarFormErrorData,
+      formDataResetTc,
+    )
 
-  const deleteModal = () =>
-    type === CALENDAR_TYPES.HEARING_CALENDAR
-      ? deleteModalComponent(
-          COMPONENT_STATUS_NAME.CALENDARS,
-          deleteModalContextText,
-          primaryButtonCallback,
-          addModalState,
-          updateModalState,
-          deleteModalState,
-          setFormDataHc,
-          setFormErrorsHc,
-          DefaultHearingCalendarFormData,
-          DefaultHearingCalendarFormErrorData,
-          formDataHc,
-          formErrorsHc,
-        )
-      : deleteModalComponent(
-          COMPONENT_STATUS_NAME.CALENDARS,
-          deleteModalContextText,
-          primaryButtonCallback,
-          addModalState,
-          updateModalState,
-          deleteModalState,
-          setFormDataTc,
-          setFormErrorsTc,
-          DefaultTaskCalendarFormData,
-          DefaultTaskCalendarFormErrorData,
-          formDataTc,
-          formErrorsTc,
-        )
+  const deleteModalContextTextHc = `ARE YOU SURE YOU WANT TO ${
+    formDataHc.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+  } CALENDAR EVENT FOR ${formDataHc.hearingDate}?!?`
 
-  const actionButtons = (formDataModal: HearingCalendarFormData | TaskCalendarFormData) =>
-    type === CALENDAR_TYPES.HEARING_CALENDAR
-      ? tableActionButtonsComponent(
-          COMPONENT_STATUS_NAME.CALENDARS,
-          formDataModal as HearingCalendarFormData,
-          updateModalState,
-          deleteModalState,
-          setFormDataHc,
-          setFormDataResetHc,
-        )
-      : tableActionButtonsComponent(
-          COMPONENT_STATUS_NAME.CALENDARS,
-          formDataModal as TaskCalendarFormData,
-          updateModalState,
-          deleteModalState,
-          setFormDataTc,
-          setFormDataResetTc,
-        )
+  const deleteModalContextTextTc = `ARE YOU SURE YOU WANT TO ${
+    formDataTc.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+  } CALENDAR EVENT FOR ${formDataTc.taskDate}?!?`
+
+  const deleteModalHc = () =>
+    deleteModalComponent(
+      COMPONENT_STATUS_NAME.CALENDARS,
+      deleteModalContextTextHc,
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormDataHc,
+      setFormErrorsHc,
+      DefaultHearingCalendarFormData,
+      DefaultHearingCalendarFormErrorData,
+      formDataHc,
+      formErrorsHc,
+    )
+
+  const deleteModalTc = () =>
+    deleteModalComponent(
+      COMPONENT_STATUS_NAME.CALENDARS,
+      deleteModalContextTextTc,
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormDataTc,
+      setFormErrorsTc,
+      DefaultTaskCalendarFormData,
+      DefaultTaskCalendarFormErrorData,
+      formDataTc,
+      formErrorsTc,
+    )
+
+  const actionButtonsHc = (formDataModal: HearingCalendarFormData | TaskCalendarFormData) =>
+    tableActionButtonsComponent(
+      COMPONENT_STATUS_NAME.CALENDARS,
+      formDataModal as HearingCalendarFormData,
+      updateModalState,
+      deleteModalState,
+      setFormDataHc,
+      setFormDataResetHc,
+    )
+
+  const actionButtonsTc = (formDataModal: TaskCalendarFormData | HearingCalendarFormData) =>
+    tableActionButtonsComponent(
+      COMPONENT_STATUS_NAME.CALENDARS,
+      formDataModal as TaskCalendarFormData,
+      updateModalState,
+      deleteModalState,
+      setFormDataTc,
+      setFormDataResetTc,
+    )
 
   const hearingCalendarsTable = () => (
     <CalendarTable
       type={CALENDAR_TYPES.HEARING_CALENDAR}
-      setType={setType}
       calendarsList={
         !(courtCaseId && selectedCourtCase) ? hearingCalendarsList : selectedCourtCase.hearingCalendars || []
       }
-      actionButtons={actionButtons}
+      actionButtons={actionButtonsHc}
       addModalState={addModalState}
       softDeleteCallback={getCalendarsWithMetadata}
       courtCasesList={courtCasesList}
@@ -399,11 +401,10 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const taskCalendarsTable = () => (
     <CalendarTable
       type={CALENDAR_TYPES.TASK_CALENDAR}
-      setType={setType}
       calendarsList={
         !(filingId && selectedFiling) ? getTaskCalendarsList(taskCalendarsList) : selectedFiling.taskCalendars || []
       }
-      actionButtons={actionButtons}
+      actionButtons={actionButtonsTc}
       addModalState={addModalState}
       softDeleteCallback={getCalendarsWithMetadata}
       courtCasesList={courtCasesList}
@@ -426,7 +427,6 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const calendarsShowCalendarView = () => (
     <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
       <CalendarCalendar
-        setType={setType}
         calendarEvents={getCourtCaseCalendarEvents(calendarEventsList)}
         setFormDataHc={setFormDataHc}
         setFormDataTc={setFormDataTc}
@@ -456,9 +456,12 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const calendarViewChooser = () => <CalendarChooseView setIsShowListView={setIsShowListView} />
   const showModals = () => (
     <>
-      {addModal()}
-      {updateModal()}
-      {deleteModal()}
+      {addModalHc()}
+      {addModalTc()}
+      {updateModalHc()}
+      {updateModalTc()}
+      {deleteModalHc()}
+      {deleteModalTc()}
     </>
   )
 

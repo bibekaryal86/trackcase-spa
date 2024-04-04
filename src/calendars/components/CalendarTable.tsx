@@ -26,7 +26,6 @@ import { getCalendarFormDataFromSchema, isHearingCalendar } from '../utils/calen
 
 interface CalendarTableProps {
   type: CalendarTypes
-  setType: (type: CalendarTypes) => void
   calendarsList: HearingCalendarSchema[] | TaskCalendarSchema[]
   actionButtons?: (formDataForModal: HearingCalendarFormData | TaskCalendarFormData) => React.JSX.Element
   addModalState?: ModalState
@@ -42,7 +41,7 @@ interface CalendarTableProps {
 }
 
 const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
-  const { type, setType, calendarsList, actionButtons, addModalState, softDeleteCallback } = props
+  const { type, calendarsList, actionButtons, addModalState, softDeleteCallback } = props
   const { courtCasesList, filingsList, componentStatusList, hearingTypesList, taskTypesList, hearingCalendarsList } =
     props
   const { selectedCourtCase, selectedFiling } = props
@@ -275,18 +274,12 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     })
   }
 
-  const setTypeOnAddButtonClick = () => setType(type)
-
   return (
     <Table
       componentName={calendarTypeForDisplay}
       headerData={calendarsTableHeaderData()}
       tableData={calendarsTableData()}
-      addModelComponent={tableAddButtonComponent(
-        COMPONENT_STATUS_NAME.CALENDARS,
-        addModalState,
-        setTypeOnAddButtonClick,
-      )}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.CALENDARS, addModalState)}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )

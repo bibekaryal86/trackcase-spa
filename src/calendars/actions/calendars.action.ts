@@ -50,7 +50,7 @@ export const calendarsAction = ({
   isRestore,
   isHardDelete,
 }: {
-  type: CalendarTypes
+  type?: CalendarTypes
   action: ActionTypes
   calendarsRequest?: HearingCalendarBase | TaskCalendarBase
   id?: number
@@ -58,6 +58,9 @@ export const calendarsAction = ({
   isHardDelete?: boolean
 }) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<HearingCalendarResponse | TaskCalendarResponse> => {
+    if (!type) {
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
+    }
     if (action === ACTION_TYPES.RESTORE) {
       action = ACTION_TYPES.UPDATE
     }

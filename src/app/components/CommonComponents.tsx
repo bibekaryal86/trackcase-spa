@@ -18,7 +18,7 @@ import {
 } from '../../calendars'
 import { CourtCaseFormData, CourtCaseFormErrorData } from '../../cases'
 import { ClientFormData, ClientFormErrorData } from '../../clients'
-import { ACTION_TYPES, ActionTypes } from '../../constants'
+import { ACTION_TYPES, ActionTypes, CalendarTypes } from '../../constants'
 import { CourtFormData, CourtFormErrorData } from '../../courts'
 import { FilingFormData, FilingFormErrorData } from '../../filings'
 import { JudgeFormData, JudgeFormErrorData } from '../../judges'
@@ -285,7 +285,7 @@ export const handleFormDateChange = <T extends FormData, U extends FormErrorData
 export const addModalComponent = <T extends FormData, U extends FormErrorData>(
   componentName: string,
   content: React.JSX.Element,
-  primaryButtonCallback: (action: ActionTypes) => void,
+  primaryButtonCallback: (action: ActionTypes, calendarType?: CalendarTypes) => void,
   addModalState: ModalState,
   updateModalState: ModalState,
   deleteModalState: ModalState,

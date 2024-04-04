@@ -39,7 +39,6 @@ import {
 import { getCalendarEventBgColor, getCalendarFormDataFromSchema } from '../utils/calendars.utils'
 
 interface CalendarViewProps {
-  setType: (calendarType: CalendarTypes) => void
   calendarEvents: CalendarEvents[]
   setFormDataHc: (formData: HearingCalendarFormData) => void
   setFormDataTc: (formData: TaskCalendarFormData) => void
@@ -190,7 +189,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
 
   const { calendarEvents } = props
-  const { setType, setFormDataHc, setFormDataTc, setFormDataResetHc, setFormDataResetTc } = props
+  const { setFormDataHc, setFormDataTc, setFormDataResetHc, setFormDataResetTc } = props
   const { addModalState, updateModalState } = props
   const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
@@ -209,7 +208,6 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
       setFormDataTc({ ...DefaultTaskCalendarFormData, taskDate: selectedDate || dayjs() })
       setFormDataResetTc({ ...DefaultTaskCalendarFormData, taskDate: selectedDate || dayjs() })
     }
-    setType(type)
     addModalState.toggleModalView()
   }
 
@@ -312,7 +310,6 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     const id = getNumber(event.id)
     const calendarType = getString(event.calendar) as CalendarTypes
     const calendar = getSelectedCalendar(id, calendarType)
-    setType(calendarType)
     const formData = getCalendarFormDataFromSchema(calendar)
     if (calendarType === CALENDAR_TYPES.HEARING_CALENDAR) {
       setFormDataHc(formData as HearingCalendarFormData)
