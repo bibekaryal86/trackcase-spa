@@ -176,7 +176,7 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
 }
 
 export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<FetchRequestMetadata>) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, state: GlobalState): Promise<void> => {
     dispatch(refTypesDispatch({ type: `${refType}_READ_REQUEST` }))
 
     try {
@@ -185,7 +185,7 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
 
       let isRequestMetadataSame = false
       let updatedRequestMetadataState = [] as RefTypesRequestMetadataState[]
-      const requestMetadataState: RefTypesRequestMetadataState[] = getStore().refTypes.requestMetadataState
+      const requestMetadataState: RefTypesRequestMetadataState[] = state.refTypes.requestMetadataState
 
       if (requestMetadata) {
         if (requestMetadataState && requestMetadataState.length) {
@@ -218,10 +218,10 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
 
       if (
         isRequestMetadataSame &&
-        getStore().refTypes[refTypeInStoreName] &&
-        getStore().refTypes[refTypeInStoreName].length > 0
+        state.refTypes[refTypeInStoreName] &&
+        state.refTypes[refTypeInStoreName].length > 0
       ) {
-        refTypeList = getStore().refTypes[refTypeInStoreName]
+        refTypeList = state.refTypes[refTypeInStoreName]
       }
 
       if (refTypeList.length === 0) {

@@ -2,6 +2,7 @@ import React from 'react'
 
 import {
   FetchRequestMetadata,
+  getDayjsString,
   Link,
   ModalState,
   Table,
@@ -101,6 +102,7 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
         clientCaseType: linkToCourtCase(x),
         client: linkToClient(x),
         status: getComponentStatus(x),
+        created: getDayjsString(x.created),
         isDeleted: x.isDeleted,
         actions: actionButtons ? actionButtons(getCourtCaseFormDataFromSchema(x)) : undefined,
       }
