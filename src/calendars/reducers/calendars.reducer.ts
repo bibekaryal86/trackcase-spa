@@ -6,8 +6,8 @@ import {
 import { CalendarsAction, CalendarsState, DefaultCalendarsState } from '../types/calendars.data.types'
 
 export default function calendars(state = DefaultCalendarsState, action: CalendarsAction): CalendarsState {
-  const matchesSuccessHc = /^HEARING_CALENDAR_(CREATE|UPDATE|DELETE)_SUCCESS$/.exec(action.type)
-  const matchesSuccessTc = /^TASK_CALENDAR_(CREATE|UPDATE|DELETE)_SUCCESS$/.exec(action.type)
+  const matchesSuccessHc = /^HEARING_CALENDARS_(CREATE|UPDATE|DELETE)_SUCCESS$/.exec(action.type)
+  const matchesSuccessTc = /^TASK_CALENDARS_(CREATE|UPDATE|DELETE)_SUCCESS$/.exec(action.type)
 
   if (matchesSuccessHc || matchesSuccessTc) {
     return {
