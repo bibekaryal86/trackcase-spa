@@ -343,7 +343,7 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
 }) => {
   const { label } = getComponentLabelAndId(componentLabel)
   const dayjsValue = getDayjs(value)
-  const isError = dayjsValue ? !dayjsValue.isValid() : required
+  const error = dayjsValue ? !dayjsValue.isValid() : false
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
@@ -360,9 +360,10 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
         views={views}
         slotProps={{
           textField: {
-            helperText: helperText,
+            error,
+            required,
+            helperText,
             fullWidth: true,
-            error: isError,
           },
           field: { clearable: true },
         }}

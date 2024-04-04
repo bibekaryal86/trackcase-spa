@@ -216,7 +216,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   const addUpdateModalContent = () =>
     type === CALENDAR_TYPES.HEARING_CALENDAR ? (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
         <CalendarFormHc
           formData={formDataHc}
           setFormData={setFormDataHc}
@@ -231,7 +231,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         />
       </Box>
     ) : (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
         <CalendarFormTc
           formData={formDataTc}
           setFormData={setFormDataTc}
