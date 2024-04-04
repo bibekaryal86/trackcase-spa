@@ -369,7 +369,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   const hearingCalendarsTable = () => (
     <CalendarTable
-      calendarType={CALENDAR_TYPES.HEARING_CALENDAR}
+      type={CALENDAR_TYPES.HEARING_CALENDAR}
+      setType={setType}
       calendarsList={
         !(courtCaseId && selectedCourtCase) ? hearingCalendarsList : selectedCourtCase.hearingCalendars || []
       }
@@ -397,7 +398,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
 
   const taskCalendarsTable = () => (
     <CalendarTable
-      calendarType={CALENDAR_TYPES.TASK_CALENDAR}
+      type={CALENDAR_TYPES.TASK_CALENDAR}
+      setType={setType}
       calendarsList={
         !(filingId && selectedFiling) ? getTaskCalendarsList(taskCalendarsList) : selectedFiling.taskCalendars || []
       }

@@ -25,7 +25,8 @@ import {
 import { getCalendarFormDataFromSchema, isHearingCalendar } from '../utils/calendars.utils'
 
 interface CalendarTableProps {
-  calendarType: CalendarTypes
+  type: CalendarTypes
+  setType: (type: CalendarTypes) => void
   calendarsList: HearingCalendarSchema[] | TaskCalendarSchema[]
   actionButtons?: (formDataForModal: HearingCalendarFormData | TaskCalendarFormData) => React.JSX.Element
   addModalState?: ModalState
@@ -41,13 +42,13 @@ interface CalendarTableProps {
 }
 
 const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
-  const { calendarType, calendarsList, actionButtons, addModalState, softDeleteCallback } = props
+  const { type, setType, calendarsList, actionButtons, addModalState, softDeleteCallback } = props
   const { courtCasesList, filingsList, componentStatusList, hearingTypesList, taskTypesList, hearingCalendarsList } =
     props
   const { selectedCourtCase, selectedFiling } = props
 
-  const isHearingCalendarTable = calendarType === CALENDAR_TYPES.HEARING_CALENDAR
-  const calendarTypeForDisplay = calendarType.toString().replace('_', ' ')
+  const isHearingCalendarTable = type === CALENDAR_TYPES.HEARING_CALENDAR
+  const calendarTypeForDisplay = type.toString().replace('_', ' ')
 
   const calendarsTableHeaderData = (): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = [
@@ -274,12 +275,18 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     })
   }
 
+  const setTypeOnAddButtonClick = () => setType(type)
+
   return (
     <Table
       componentName={calendarTypeForDisplay}
       headerData={calendarsTableHeaderData()}
       tableData={calendarsTableData()}
-      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.CALENDARS, addModalState)}
+      addModelComponent={tableAddButtonComponent(
+        COMPONENT_STATUS_NAME.CALENDARS,
+        addModalState,
+        setTypeOnAddButtonClick,
+      )}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )

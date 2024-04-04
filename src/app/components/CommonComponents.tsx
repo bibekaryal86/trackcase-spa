@@ -123,9 +123,20 @@ export const pageActionButtonsComponent = <T extends FormData>(
   </>
 )
 
-export const tableAddButtonComponent = (componentName: string, addModalState?: ModalState) =>
+export const tableAddButtonComponent = (
+  componentName: string,
+  addModalState?: ModalState,
+  extraCallback?: () => void,
+) =>
   addModalState && checkUserHasPermission(componentName, ACTION_TYPES.CREATE) ? (
-    <Button onClick={() => addModalState.toggleModalView()}>{ACTION_TYPES.CREATE} NEW</Button>
+    <Button
+      onClick={() => {
+        addModalState.toggleModalView()
+        extraCallback && extraCallback()
+      }}
+    >
+      {ACTION_TYPES.CREATE} NEW
+    </Button>
   ) : undefined
 
 export const tableActionButtonsComponent = <T extends FormData>(
