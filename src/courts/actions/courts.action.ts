@@ -96,14 +96,14 @@ export const courtsAction = ({
 }
 
 export const getCourts = (requestMetadata?: Partial<FetchRequestMetadata>) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, store: GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(courtDispatch({ type: COURTS_READ_REQUEST }))
 
     let courtResponse: CourtResponse = { data: [] }
 
-    if (requestMetadata === store.courts.requestMetadata) {
+    if (requestMetadata === getStore().courts.requestMetadata) {
       // no need to fetch request, metadata is same
-      courtResponse.data = store.courts.courts
+      courtResponse.data = getStore().courts.courts
     }
     const endpoint = getEndpoint(process.env.COURT_READ as string)
     const options: Partial<FetchOptions> = {

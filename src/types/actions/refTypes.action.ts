@@ -51,7 +51,7 @@ import {
 import { refTypesDispatch } from '../utils/refTypes.utils'
 
 export const getRefTypes = () => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, store: GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(refTypesDispatch({ type: COMPONENT_STATUS_READ_REQUEST }))
     dispatch(refTypesDispatch({ type: CASE_TYPE_READ_REQUEST }))
     dispatch(refTypesDispatch({ type: COLLECTION_METHOD_READ_REQUEST }))
@@ -62,22 +62,22 @@ export const getRefTypes = () => {
     try {
       const requestComponents: string[] = []
 
-      if (store.refTypes.componentStatus.length === 0) {
+      if (getStore().refTypes.componentStatus.length === 0) {
         requestComponents.push(REF_TYPES_REGISTRY.COMPONENT_STATUS)
       }
-      if (store.refTypes.caseType.length === 0) {
+      if (getStore().refTypes.caseType.length === 0) {
         requestComponents.push(REF_TYPES_REGISTRY.CASE_TYPE)
       }
-      if (store.refTypes.collectionMethod.length === 0) {
+      if (getStore().refTypes.collectionMethod.length === 0) {
         requestComponents.push(REF_TYPES_REGISTRY.COLLECTION_METHOD)
       }
-      if (store.refTypes.filingType.length === 0) {
+      if (getStore().refTypes.filingType.length === 0) {
         requestComponents.push(REF_TYPES_REGISTRY.FILING_TYPE)
       }
-      if (store.refTypes.hearingType.length === 0) {
+      if (getStore().refTypes.hearingType.length === 0) {
         requestComponents.push(REF_TYPES_REGISTRY.HEARING_TYPE)
       }
-      if (store.refTypes.taskType.length === 0) {
+      if (getStore().refTypes.taskType.length === 0) {
         requestComponents.push(REF_TYPES_REGISTRY.TASK_TYPE)
       }
 
@@ -176,7 +176,7 @@ export const addRefType = (refType: RefTypesRegistry, name: string, description:
 }
 
 export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<FetchRequestMetadata>) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>, store: GlobalState): Promise<void> => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(refTypesDispatch({ type: `${refType}_READ_REQUEST` }))
 
     try {
@@ -185,7 +185,7 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
 
       let isRequestMetadataSame = false
       let updatedRequestMetadataState = [] as RefTypesRequestMetadataState[]
-      const requestMetadataState: RefTypesRequestMetadataState[] = store.refTypes.requestMetadataState
+      const requestMetadataState: RefTypesRequestMetadataState[] = getStore().refTypes.requestMetadataState
 
       if (requestMetadata) {
         if (requestMetadataState && requestMetadataState.length) {
@@ -218,10 +218,10 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
 
       if (
         isRequestMetadataSame &&
-        store.refTypes[refTypeInStoreName] &&
-        store.refTypes[refTypeInStoreName].length > 0
+        getStore().refTypes[refTypeInStoreName] &&
+        getStore().refTypes[refTypeInStoreName].length > 0
       ) {
-        refTypeList = store.refTypes[refTypeInStoreName]
+        refTypeList = getStore().refTypes[refTypeInStoreName]
       }
 
       if (refTypeList.length === 0) {
