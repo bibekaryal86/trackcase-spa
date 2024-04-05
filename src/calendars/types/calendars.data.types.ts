@@ -158,23 +158,13 @@ export const DefaultCalendarSchema = {
 }
 
 export const DefaultHearingCalendarFormData: HearingCalendarFormData = {
-  hearingDate: undefined,
-  hearingTypeId: ID_DEFAULT,
-  courtCaseId: ID_DEFAULT,
-  componentStatusId: ID_DEFAULT,
-  comments: '',
+  ...DefaultHearingCalendarSchema,
   isHardDelete: false,
   isShowSoftDeleted: false,
 }
 
 export const DefaultTaskCalendarFormData: TaskCalendarFormData = {
-  taskDate: undefined,
-  dueDate: undefined,
-  taskTypeId: ID_DEFAULT,
-  hearingCalendarId: ID_DEFAULT,
-  filingId: ID_DEFAULT,
-  componentStatusId: ID_DEFAULT,
-  comments: '',
+  ...DefaultTaskCalendarSchema,
   isHardDelete: false,
   isShowSoftDeleted: false,
 }
