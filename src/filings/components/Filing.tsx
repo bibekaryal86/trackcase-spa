@@ -16,24 +16,27 @@ import {
   pageTitleComponent,
   pageTopLinksComponent,
 } from '../../app'
+import { CalendarTable, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
+import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { getRefTypes, RefTypesState } from '../../types'
-import { filingsAction, getFiling } from '../actions/filings.action'
+import { filingsAction, getFiling, getFilings } from '../actions/filings.action'
 import {
   DefaultFilingFormData,
   DefaultFilingFormErrorData,
   FilingBase,
   FilingResponse,
+  FilingSchema,
 } from '../types/filings.data.types'
 import { getFilingFormDataFromSchema, isAreTwoFilingsSame, validateFiling } from '../utils/filings.utils'
 
-const mapStateToProps = ({ refTypes, clients, courtCases }: GlobalState) => {
+const mapStateToProps = ({ refTypes, clients, courtCases, filings }: GlobalState) => {
   return {
     refTypes: refTypes,
     clientsList: clients.clients,
     courtCasesList: courtCases.courtCases,
+    filingsList: filings.filings,
   }
 }
 
@@ -41,6 +44,7 @@ const mapDispatchToProps = {
   getRefTypes: () => getRefTypes(),
   getClients: () => getClients(),
   getCourtCases: () => getCourtCases(),
+  getFilings: () => getFilings(),
 }
 
 interface FilingProps {
@@ -50,6 +54,8 @@ interface FilingProps {
   getClients: () => void
   courtCasesList: CourtCaseSchema[]
   getCourtCases: () => void
+  filingsList: FilingSchema[]
+  getFilings: () => void
 }
 
 const Filing = (props: FilingProps): React.ReactElement => {
@@ -63,13 +69,19 @@ const Filing = (props: FilingProps): React.ReactElement => {
   const { refTypes, getRefTypes } = props
   const { clientsList, getClients } = props
   const { courtCasesList, getCourtCases } = props
+  const { filingsList, getFilings } = props
 
   const [formData, setFormData] = useState(DefaultFilingFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultFilingFormData)
   const [formErrors, setFormErrors] = useState(DefaultFilingFormErrorData)
+  const [taskCalendars, setTaskCalendars] = useState([] as TaskCalendarSchema[])
 
   const filingStatusList = useCallback(() => {
     return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.FILINGS)
+  }, [refTypes.componentStatus])
+
+  const calendarStatusList = useCallback(() => {
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CALENDARS)
   }, [refTypes.componentStatus])
 
   useEffect(() => {
@@ -83,6 +95,7 @@ const Filing = (props: FilingProps): React.ReactElement => {
             const oneFilingFormData = getFilingFormDataFromSchema(oneFiling)
             setFormData(oneFilingFormData)
             setFormDataReset(oneFilingFormData)
+            setTaskCalendars(oneFiling.taskCalendars || [])
           }
         })
       }
@@ -92,18 +105,21 @@ const Filing = (props: FilingProps): React.ReactElement => {
       }
       clientsList.length === 0 && getClients()
       courtCasesList.length === 0 && getCourtCases()
+      filingsList.length === 0 && getFilings()
     }
     isForceFetch.current = false
   }, [
     clientsList.length,
     courtCasesList.length,
     dispatch,
+    filingsList.length,
     getClients,
     getCourtCases,
+    getFilings,
     getRefTypes,
     id,
-    refTypes.filingType.length,
     refTypes.componentStatus.length,
+    refTypes.filingType.length,
     store,
   ])
 
@@ -168,6 +184,16 @@ const Filing = (props: FilingProps): React.ReactElement => {
     return ''
   }
 
+  const taskCalendarsTable = () => (
+    <CalendarTable
+      type={CALENDAR_TYPES.TASK_CALENDAR}
+      calendarsList={taskCalendars}
+      courtCasesList={courtCasesList}
+      filingsList={filingsList}
+      componentStatusList={calendarStatusList()}
+    />
+  )
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
@@ -190,6 +216,7 @@ const Filing = (props: FilingProps): React.ReactElement => {
               <Typography component="h1" variant="h6" color="primary">
                 TASK CALENDARS OF FILINGS
               </Typography>
+              {taskCalendarsTable()}
             </Grid>
           </>
         )}

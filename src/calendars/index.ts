@@ -1,6 +1,7 @@
 // actions
 // components
 import Calendars from './components/Calendars'
+import CalendarTable from './components/CalendarTable'
 // reducers
 import calendars from './reducers/calendars.reducer'
 // action types
@@ -19,7 +20,7 @@ import {
   TaskCalendarSchema,
 } from './types/calendars.data.types'
 
-export { Calendars }
+export { Calendars, CalendarTable }
 export { calendars }
 export type {
   CalendarsState,
