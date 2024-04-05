@@ -454,7 +454,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     </>
   )
 
-  const calendarViewChooser = () => <CalendarChooseView setIsShowListView={setIsShowListView} />
+  const calendarViewChooser = () => (
+    <CalendarChooseView isShowListView={isShowListView} setIsShowListView={setIsShowListView} />
+  )
   const showModals = () => (
     <>
       {addModalHc()}

@@ -275,6 +275,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     setSelectedDate(dayjs(date))
     setShowAddModal(true)
   }
+
   const components: Partial<{
     toolbar: (toolbarProps: ToolbarProps<Event>) => React.ReactElement
     month: {
@@ -288,18 +289,23 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
       dateHeader: (dateHeaderProps) => <RbcDateHeader {...dateHeaderProps} onClick={onClickDateHeader} />,
     },
   }
+
   const formats: Partial<Formats> = {
     dateFormat: (date: Date, culture: string = 'en-US', localizer: DateLocalizer = globalLocalizer) =>
       localizer.format(date, 'DD', culture),
     weekdayFormat: (date: Date, culture: string = 'en-US', localizer: DateLocalizer = globalLocalizer) =>
       localizer.format(date, isSmallScreen ? 'ddd' : 'dddd', culture),
   }
+
   const startAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
+
   const endAccessor = (event: { date?: Dayjs }) => getDayjs(event.date)?.toDate() || dayjs().toDate()
+
   const onSelectSlot = (slot: SlotInfo) => {
     console.log('onSelectSlot is disabled, events handled with onClickDateHeader: ', slot.action)
     return
   }
+
   const getSelectedCalendar = (id: number, type: CalendarTypes) => {
     let calendar: HearingCalendarSchema | TaskCalendarSchema | undefined
     if (type === CALENDAR_TYPES.HEARING_CALENDAR) {
@@ -309,6 +315,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     }
     return calendar || DefaultCalendarSchema
   }
+
   const onSelectEvent = (event: SelectEvent) => {
     const id = getNumber(event.id)
     const calendarType = getString(event.calendar) as CalendarTypes
@@ -326,6 +333,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     // prevent default action, return nothing
     return
   }
+
   const eventStyleGetter = (event: SelectEvent) => {
     return {
       style: {
