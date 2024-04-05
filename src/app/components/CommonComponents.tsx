@@ -294,6 +294,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
   defaultFormData: T,
   defaultFormErrorData: U,
   formDataReset: T,
+  calendarType?: CalendarTypes,
 ) => {
   return (
     <Modal2
@@ -304,7 +305,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
       }}
       title={`${ACTION_TYPES.CREATE} ${componentName}`}
       primaryButtonText={ACTION_TYPES.CREATE}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE)}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE, calendarType)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={() =>
         secondaryButtonCallback(
@@ -336,7 +337,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
 export const updateModalComponent = <T extends FormData, U extends FormErrorData>(
   componentName: string,
   content: React.JSX.Element,
-  primaryButtonCallback: (action: ActionTypes) => void,
+  primaryButtonCallback: (action: ActionTypes, calendarType?: CalendarTypes) => void,
   addModalState: ModalState,
   updateModalState: ModalState,
   deleteModalState: ModalState,
@@ -345,6 +346,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
   defaultFormData: T,
   defaultFormErrorData: U,
   formDataReset: T,
+  calendarType?: CalendarTypes,
 ) => {
   return (
     <Modal2
@@ -355,7 +357,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
       }}
       title={`${ACTION_TYPES.UPDATE} ${componentName}`}
       primaryButtonText={ACTION_TYPES.UPDATE}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE)}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE, calendarType)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={() =>
         secondaryButtonCallback(
@@ -387,7 +389,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
 export const deleteModalComponent = <T extends FormData, U extends FormErrorData>(
   componentName: string,
   contentText: string,
-  primaryButtonCallback: (action: ActionTypes) => void,
+  primaryButtonCallback: (action: ActionTypes, calendarType?: CalendarTypes) => void,
   addModalState: ModalState,
   updateModalState: ModalState,
   deleteModalState: ModalState,
@@ -397,6 +399,7 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
   defaultFormErrorData: U,
   formData: T,
   formErrors: U,
+  calendarType?: CalendarTypes,
 ) => {
   return (
     <Modal2
@@ -408,7 +411,7 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
       title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${componentName}`}
       primaryButtonText={formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
       primaryButtonCallback={() =>
-        primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE)
+        primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE, calendarType)
       }
       secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={() =>

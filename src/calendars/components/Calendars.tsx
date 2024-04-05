@@ -29,6 +29,7 @@ import {
   CALENDAR_TYPES,
   CalendarTypes,
   COMPONENT_STATUS_NAME,
+  ID_DEFAULT,
   INVALID_INPUT,
 } from '../../constants'
 import { FilingSchema, getFilings } from '../../filings'
@@ -162,10 +163,25 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const primaryButtonCallback = async (action: ActionTypes, type?: CalendarTypes) => {
     const isHc = type === CALENDAR_TYPES.HEARING_CALENDAR
     const calendarId = isHc ? getNumber(formDataHc.id) : getNumber(formDataTc.id)
+
+    if (!isHc) {
+      if (formDataTc.hearingCalendarId && formDataTc.hearingCalendarId === ID_DEFAULT) {
+        formDataTc.hearingCalendarId = undefined
+      } else if (formDataTc.filingId && formDataTc.filingId === ID_DEFAULT) {
+        formDataTc.filingId = undefined
+      }
+    }
+
     const calendarsRequest: HearingCalendarBase | TaskCalendarBase = isHc ? { ...formDataHc } : { ...formDataTc }
+
+    let hearingCalendarTc = undefined
+    if (!isHc && getNumber(formDataTc.hearingCalendarId) > 0) {
+      hearingCalendarTc = hearingCalendarsList.find((x) => x.id === formDataTc.hearingCalendarId)
+    }
+
     const hasFormErrors = isHc
       ? validateHearingCalendar(formDataHc, setFormErrorsHc)
-      : validateTaskCalendar(formDataTc, setFormErrorsTc)
+      : validateTaskCalendar(formDataTc, setFormErrorsTc, hearingCalendarTc)
     if (hasFormErrors) {
       return
     }
@@ -184,7 +200,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         type,
         action,
         calendarsRequest: calendarsRequest,
-        id: formDataHc.id,
+        id: isHc ? formDataHc.id : formDataTc.id,
         isRestore: action === ACTION_TYPES.RESTORE,
         isHardDelete: formDataHc.isHardDelete,
       })(dispatch)
@@ -265,6 +281,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultHearingCalendarFormData,
       DefaultHearingCalendarFormErrorData,
       formDataResetHc,
+      CALENDAR_TYPES.HEARING_CALENDAR,
     )
 
   const addModalTc = () =>
@@ -280,6 +297,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultTaskCalendarFormData,
       DefaultTaskCalendarFormErrorData,
       formDataResetTc,
+      CALENDAR_TYPES.TASK_CALENDAR,
     )
 
   const updateModalHc = () =>
@@ -295,6 +313,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultHearingCalendarFormData,
       DefaultHearingCalendarFormErrorData,
       formDataResetHc,
+      CALENDAR_TYPES.HEARING_CALENDAR,
     )
 
   const updateModalTc = () =>
@@ -310,6 +329,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultTaskCalendarFormData,
       DefaultTaskCalendarFormErrorData,
       formDataResetTc,
+      CALENDAR_TYPES.TASK_CALENDAR,
     )
 
   const deleteModalContextTextHc = `ARE YOU SURE YOU WANT TO ${
@@ -334,6 +354,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultHearingCalendarFormErrorData,
       formDataHc,
       formErrorsHc,
+      CALENDAR_TYPES.HEARING_CALENDAR,
     )
 
   const deleteModalTc = () =>
@@ -350,6 +371,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultTaskCalendarFormErrorData,
       formDataTc,
       formErrorsTc,
+      CALENDAR_TYPES.TASK_CALENDAR,
     )
 
   const actionButtonsHc = (formDataModal: HearingCalendarFormData | TaskCalendarFormData) =>
