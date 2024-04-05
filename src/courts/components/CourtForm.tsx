@@ -37,6 +37,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       error={!!formErrors.name}
       helperText={formErrors.name}
       required
+      fullWidth
     />
   )
 
@@ -48,6 +49,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.streetAddress}
       helperText={formErrors.streetAddress}
+      fullWidth
     />
   )
 
@@ -59,6 +61,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.city}
       helperText={formErrors.city}
+      fullWidth
     />
   )
 
@@ -81,6 +84,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.zipCode}
       helperText={formErrors.zipCode}
+      fullWidth
     />
   )
 
@@ -94,6 +98,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       error={!!formErrors.phoneNumber}
       helperText={formErrors.phoneNumber}
       required
+      fullWidth
     />
   )
 
@@ -106,6 +111,7 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.dhsAddress}
       helperText={formErrors.dhsAddress}
+      fullWidth
     />
   )
 

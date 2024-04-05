@@ -124,6 +124,7 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.receiptNumberError}
       helperText={formErrors.receiptNumberError}
+      fullWidth
     />
   )
 

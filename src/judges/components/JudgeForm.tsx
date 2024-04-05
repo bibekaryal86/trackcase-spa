@@ -43,6 +43,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       error={!!formErrors.name}
       helperText={formErrors.name}
       required
+      fullWidth
     />
   )
 
@@ -53,6 +54,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       value={formData.webex}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       helperText={formErrors.webex}
+      fullWidth
     />
   )
 

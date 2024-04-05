@@ -44,6 +44,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       error={!!formErrors.name}
       helperText={formErrors.name}
       required
+      fullWidth
     />
   )
 
@@ -55,6 +56,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.aNumber}
       helperText={formErrors.aNumber}
+      fullWidth
     />
   )
 
@@ -67,6 +69,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       error={!!formErrors.email}
       helperText={formErrors.email}
       required
+      fullWidth
     />
   )
 
@@ -80,6 +83,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       error={!!formErrors.phoneNumber}
       helperText={formErrors.phoneNumber}
       required
+      fullWidth
     />
   )
 
@@ -91,6 +95,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.streetAddress}
       helperText={formErrors.streetAddress}
+      fullWidth
     />
   )
 
@@ -102,6 +107,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.city}
       helperText={formErrors.city}
+      fullWidth
     />
   )
 
@@ -124,6 +130,7 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.zipCode}
       helperText={formErrors.zipCode}
+      fullWidth
     />
   )
 
