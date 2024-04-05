@@ -206,7 +206,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     if (type === CALENDAR_TYPES.HEARING_CALENDAR) {
       setFormDataHc({ ...DefaultHearingCalendarFormData, hearingDate: selectedDate || dayjs() })
       setFormDataResetHc({ ...DefaultHearingCalendarFormData, hearingDate: selectedDate || dayjs() })
-      addModalStateHc.toggleModalView
+      addModalStateHc.toggleModalView()
     } else {
       setFormDataTc({ ...DefaultTaskCalendarFormData, taskDate: selectedDate || dayjs() })
       setFormDataResetTc({ ...DefaultTaskCalendarFormData, taskDate: selectedDate || dayjs() })
