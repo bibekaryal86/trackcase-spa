@@ -44,8 +44,10 @@ interface CalendarViewProps {
   setFormDataTc: (formData: TaskCalendarFormData) => void
   setFormDataResetHc: (formData: HearingCalendarFormData) => void
   setFormDataResetTc: (formData: TaskCalendarFormData) => void
-  addModalState: ModalState
-  updateModalState: ModalState
+  addModalStateHc: ModalState
+  updateModalStateHc: ModalState
+  addModalStateTc: ModalState
+  updateModalStateTc: ModalState
   minCalendarDate: Dayjs
   maxCalendarDate: Dayjs
   hearingCalendarsList: HearingCalendarSchema[]
@@ -190,7 +192,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
 
   const { calendarEvents } = props
   const { setFormDataHc, setFormDataTc, setFormDataResetHc, setFormDataResetTc } = props
-  const { addModalState, updateModalState } = props
+  const { addModalStateHc, addModalStateTc, updateModalStateHc, updateModalStateTc } = props
   const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
 
@@ -204,11 +206,12 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     if (type === CALENDAR_TYPES.HEARING_CALENDAR) {
       setFormDataHc({ ...DefaultHearingCalendarFormData, hearingDate: selectedDate || dayjs() })
       setFormDataResetHc({ ...DefaultHearingCalendarFormData, hearingDate: selectedDate || dayjs() })
+      addModalStateHc.toggleModalView
     } else {
       setFormDataTc({ ...DefaultTaskCalendarFormData, taskDate: selectedDate || dayjs() })
       setFormDataResetTc({ ...DefaultTaskCalendarFormData, taskDate: selectedDate || dayjs() })
+      addModalStateTc.toggleModalView()
     }
-    addModalState.toggleModalView()
   }
 
   const addCalendarModal = () => {
@@ -314,11 +317,12 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
     if (calendarType === CALENDAR_TYPES.HEARING_CALENDAR) {
       setFormDataHc(formData as HearingCalendarFormData)
       setFormDataResetHc(formData as HearingCalendarFormData)
+      updateModalStateHc.toggleModalView()
     } else {
       setFormDataTc(formData as TaskCalendarFormData)
       setFormDataResetTc(formData as TaskCalendarFormData)
+      updateModalStateTc.toggleModalView()
     }
-    updateModalState.toggleModalView()
     // prevent default action, return nothing
     return
   }

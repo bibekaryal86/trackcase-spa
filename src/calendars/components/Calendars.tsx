@@ -94,7 +94,14 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
   const dispatch = useDispatch()
-  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
+  const [
+    addModalStateHc,
+    addModalStateTc,
+    updateModalStateHc,
+    updateModalStateTc,
+    deleteModalStateHc,
+    deleteModalStateTc,
+  ] = [useModal(), useModal(), useModal(), useModal(), useModal(), useModal()]
 
   const { calendarEventsList, hearingCalendarsList, taskCalendarsList, getCalendars } = props
   const { refTypes, getRefTypes } = props
@@ -191,18 +198,18 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     if (calendarResponse && !calendarResponse.detail) {
       isHc
         ? secondaryButtonCallback(
-            addModalState,
-            updateModalState,
-            deleteModalState,
+            addModalStateHc,
+            updateModalStateHc,
+            deleteModalStateHc,
             setFormDataHc,
             setFormErrorsHc,
             DefaultHearingCalendarFormData,
             DefaultHearingCalendarFormErrorData,
           )
         : secondaryButtonCallback(
-            addModalState,
-            updateModalState,
-            deleteModalState,
+            addModalStateTc,
+            updateModalStateTc,
+            deleteModalStateTc,
             setFormDataTc,
             setFormErrorsTc,
             DefaultTaskCalendarFormData,
@@ -255,9 +262,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       COMPONENT_STATUS_NAME.CALENDARS,
       addUpdateModalContentHc(),
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
-      deleteModalState,
+      addModalStateHc,
+      updateModalStateHc,
+      deleteModalStateHc,
       setFormDataHc,
       setFormErrorsHc,
       DefaultHearingCalendarFormData,
@@ -270,9 +277,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       COMPONENT_STATUS_NAME.CALENDARS,
       addUpdateModalContentTc(),
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
-      deleteModalState,
+      addModalStateTc,
+      updateModalStateTc,
+      deleteModalStateTc,
       setFormDataTc,
       setFormErrorsTc,
       DefaultTaskCalendarFormData,
@@ -285,9 +292,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       COMPONENT_STATUS_NAME.CALENDARS,
       addUpdateModalContentHc(),
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
-      deleteModalState,
+      addModalStateHc,
+      updateModalStateHc,
+      deleteModalStateHc,
       setFormDataHc,
       setFormErrorsHc,
       DefaultHearingCalendarFormData,
@@ -300,9 +307,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       COMPONENT_STATUS_NAME.CALENDARS,
       addUpdateModalContentTc(),
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
-      deleteModalState,
+      addModalStateTc,
+      updateModalStateTc,
+      deleteModalStateTc,
       setFormDataTc,
       setFormErrorsTc,
       DefaultTaskCalendarFormData,
@@ -323,9 +330,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       COMPONENT_STATUS_NAME.CALENDARS,
       deleteModalContextTextHc,
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
-      deleteModalState,
+      addModalStateHc,
+      updateModalStateHc,
+      deleteModalStateHc,
       setFormDataHc,
       setFormErrorsHc,
       DefaultHearingCalendarFormData,
@@ -339,9 +346,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       COMPONENT_STATUS_NAME.CALENDARS,
       deleteModalContextTextTc,
       primaryButtonCallback,
-      addModalState,
-      updateModalState,
-      deleteModalState,
+      addModalStateTc,
+      updateModalStateTc,
+      deleteModalStateTc,
       setFormDataTc,
       setFormErrorsTc,
       DefaultTaskCalendarFormData,
@@ -354,8 +361,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     tableActionButtonsComponent(
       COMPONENT_STATUS_NAME.CALENDARS,
       formDataModal as HearingCalendarFormData,
-      updateModalState,
-      deleteModalState,
+      updateModalStateHc,
+      deleteModalStateHc,
       setFormDataHc,
       setFormDataResetHc,
     )
@@ -364,8 +371,8 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     tableActionButtonsComponent(
       COMPONENT_STATUS_NAME.CALENDARS,
       formDataModal as TaskCalendarFormData,
-      updateModalState,
-      deleteModalState,
+      updateModalStateTc,
+      deleteModalStateTc,
       setFormDataTc,
       setFormDataResetTc,
     )
@@ -377,7 +384,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         !(courtCaseId && selectedCourtCase) ? hearingCalendarsList : selectedCourtCase.hearingCalendars || []
       }
       actionButtons={actionButtonsHc}
-      addModalState={addModalState}
+      addModalState={addModalStateHc}
       softDeleteCallback={getCalendarsWithMetadata}
       courtCasesList={courtCasesList}
       filingsList={filingsList}
@@ -405,7 +412,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         !(filingId && selectedFiling) ? getTaskCalendarsList(taskCalendarsList) : selectedFiling.taskCalendars || []
       }
       actionButtons={actionButtonsTc}
-      addModalState={addModalState}
+      addModalState={addModalStateTc}
       softDeleteCallback={getCalendarsWithMetadata}
       courtCasesList={courtCasesList}
       filingsList={filingsList}
@@ -432,8 +439,10 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         setFormDataTc={setFormDataTc}
         setFormDataResetHc={setFormDataResetHc}
         setFormDataResetTc={setFormDataResetTc}
-        addModalState={addModalState}
-        updateModalState={updateModalState}
+        addModalStateHc={addModalStateHc}
+        addModalStateTc={addModalStateTc}
+        updateModalStateHc={updateModalStateHc}
+        updateModalStateTc={updateModalStateTc}
         minCalendarDate={minCalendarDate}
         maxCalendarDate={maxCalendarDate}
         hearingCalendarsList={hearingCalendarsList}
