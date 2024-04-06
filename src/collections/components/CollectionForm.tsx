@@ -10,79 +10,72 @@ import {
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
-  getComments,
-  getNumber,
-  getString,
   GridFormWrapper,
-  StatusSchema,
+  handleFormChange,
+  handleFormDateChange,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { CollectionMethodSchema } from '../../types'
-import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
+import { USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
 import {
-  getAmountForDisplay,
-  handleCollectionDateOnChange,
-  handleCollectionFormOnChange,
-  isCaseCollection,
-  isCollectionFormFieldError,
-} from '../utils/collections.utils'
+  CaseCollectionFormData,
+  CaseCollectionFormErrorData,
+  CaseCollectionSchema,
+  CashCollectionFormData,
+  CashCollectionFormErrorData,
+} from '../types/collections.data.types'
+import { getAmountForDisplay } from '../utils/collections.utils'
 
-interface CollectionFormProps {
-  collectionType: string
-  selectedCollection: CaseCollectionSchema | CashCollectionSchema
-  setSelectedCollection: (collection: CaseCollectionSchema | CashCollectionSchema) => void
+interface CollectionFormPropsCase {
+  formData: CaseCollectionFormData
+  setFormData: (formData: CaseCollectionFormData) => void
+  formErrors: CaseCollectionFormErrorData
+  setFormErrors: (formErrors: CaseCollectionFormErrorData) => void
+  courtCasesList: CourtCaseSchema[]
+  collectionStatusList: ComponentStatusSchema[]
+  isShowOneCollection: boolean
+}
+
+interface CollectionFormPropsCash {
+  formData: CashCollectionFormData
+  setFormData: (formData: CashCollectionFormData) => void
+  formErrors: CashCollectionFormErrorData
+  setFormErrors: (formErrors: CashCollectionFormErrorData) => void
   collectionMethodsList: CollectionMethodSchema[]
   courtCasesList: CourtCaseSchema[]
   clientsList: ClientSchema[]
   caseCollectionList: CaseCollectionSchema[]
-  collectionStatusList: string[]
-  isShowOneCollection: boolean
   minCollectionDate: Dayjs
   maxCollectionDate: Dayjs
-  courtCaseId?: string
-  statusList: StatusSchema<string>
+  isShowOneCollection: boolean
 }
 
-const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
+export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { collectionType, selectedCollection, setSelectedCollection, isShowOneCollection } = props
-  const { collectionMethodsList, courtCasesList, caseCollectionList, clientsList, collectionStatusList } = props
-  const { courtCaseId, statusList } = props
-  const { minCollectionDate, maxCollectionDate } = props
-  const isCaseCollectionForm = isCaseCollection(collectionType)
+  const { formData, setFormData, formErrors, setFormErrors } = props
+  const { courtCasesList, collectionStatusList } = props
+  const { isShowOneCollection } = props
 
-  // case collection
   const caseCollectionQuoteAmount = () => {
-    const value = (selectedCollection as CaseCollectionSchema).quoteAmount
     return (
       <FormTextField
-        componentLabel="Case Collection--Quote Amount"
+        componentLabel="CASE COLLECTION--QUOTE AMOUNT"
+        name="quoteAmount"
+        value={getAmountForDisplay(formData.quoteAmount)}
         maxLength={5}
-        value={getAmountForDisplay(value)}
-        onChange={(e) =>
-          handleCollectionFormOnChange(
-            'quoteAmount',
-            e.target.value,
-            selectedCollection,
-            setSelectedCollection,
-            getNumber,
-          )
-        }
-        error={isCollectionFormFieldError('quoteAmount', value, undefined)}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.quoteAmountError}
+        helperText={formErrors.quoteAmountError}
         required
+        fullWidth
       />
     )
   }
 
   const caseCollectionCourtCasesListForSelect = () =>
     courtCasesList
-      .filter(
-        (x) =>
-          ('courtCaseId' in selectedCollection && selectedCollection.courtCaseId === x.id) ||
-          statusList.court_case.active.includes(x.status),
-      )
+      .filter((x) => formData.courtCaseId === x.id || x.componentStatus?.isActive)
       .map((x) => (
         <MenuItem key={x.id} value={x.id}>
           {x.client?.name}, {x.caseType?.name}
@@ -90,132 +83,129 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
       ))
 
   const caseCollectionCourtCasesList = () => {
-    const value = 'courtCaseId' in selectedCollection ? selectedCollection.courtCaseId : ID_DEFAULT
     return (
       <FormSelectField
-        componentLabel="Case Collection--Court Case"
-        value={value}
-        onChange={(e) =>
-          handleCollectionFormOnChange(
-            'courtCaseId',
-            e.target.value,
-            selectedCollection,
-            setSelectedCollection,
-            getNumber,
-          )
-        }
+        componentLabel="CASE COLLECTION--COURT CASE"
+        name="courtCaseId"
+        value={formData.courtCaseId}
         menuItems={caseCollectionCourtCasesListForSelect()}
-        error={isCollectionFormFieldError('courtCaseId', value, undefined)}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.courtCaseError}
+        helperText={formErrors.courtCaseError}
         required
       />
     )
   }
 
-  const caseCollectionStatus = () => {
-    const value = 'status' in selectedCollection ? selectedCollection.status : ''
-    return (
-      <FormSelectStatusField
-        componentLabel="Collection--Status"
-        value={value}
-        onChange={(e) =>
-          handleCollectionFormOnChange('status', e.target.value, selectedCollection, setSelectedCollection, getString)
-        }
-        statusList={collectionStatusList}
-        error={isCollectionFormFieldError('status', value, undefined)}
-      />
-    )
-  }
+  const caseCollectionStatus = () => (
+    <FormSelectStatusField
+      componentLabel="CASE COLLECTION--STATUS"
+      value={formData.componentStatusId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      statusList={collectionStatusList}
+      error={!!formErrors.componentStatusError}
+      helperText={formErrors.componentStatusError}
+    />
+  )
 
   const caseCollectionComments = () => {
-    const value = 'comments' in selectedCollection ? selectedCollection.comments : ''
     return (
       <FormCommentsField
-        componentLabel="Collection--Comments"
-        value={value}
-        onChange={(e) =>
-          handleCollectionFormOnChange(
-            'comments',
-            e.target.value,
-            selectedCollection,
-            setSelectedCollection,
-            getComments,
-          )
-        }
+        componentLabel="CASE COLLECTION--COMMENTS"
+        value={formData.comments}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       />
     )
   }
 
-  // cash collections
+  return (
+    <GridFormWrapper
+      isSmallScreen={isSmallScreen}
+      isShowOne={isShowOneCollection}
+      justifyContent={isShowOneCollection ? 'flex-start' : 'flex-end'}
+    >
+      <Grid item xs={6}>
+        {caseCollectionCourtCasesList()}
+      </Grid>
+      <Grid item xs={6}>
+        {caseCollectionQuoteAmount()}
+      </Grid>
+      <Grid item xs={6}>
+        {caseCollectionStatus()}
+      </Grid>
+      <Grid item xs={12}>
+        {caseCollectionComments()}
+      </Grid>
+    </GridFormWrapper>
+  )
+}
+
+export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactElement => {
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+  const { formData, setFormData, formErrors, setFormErrors } = props
+  const { collectionMethodsList, courtCasesList, clientsList, caseCollectionList } = props
+  const { minCollectionDate, maxCollectionDate, isShowOneCollection } = props
+
   const cashCollectionCollectionDate = () => {
     return (
       <FormDatePickerField
-        componentLabel="Cash Collection--Collection Date"
-        value={(selectedCollection as CashCollectionSchema).collectionDate}
-        onChange={(newValue) =>
-          handleCollectionDateOnChange('collectionDate', newValue, selectedCollection, setSelectedCollection)
+        componentLabel="CASH COLLECTION--COLLECTION DATE"
+        name="collectionDate"
+        value={formData.collectionDate}
+        onChange={(value) =>
+          handleFormDateChange('collectionDate', value, formData, formErrors, setFormData, setFormErrors)
         }
         minDate={minCollectionDate}
         maxDate={maxCollectionDate}
+        helperText={formErrors.collectionDateError}
         required
       />
     )
   }
 
   const cashCollectionCollectedAmount = () => {
-    const value = (selectedCollection as CashCollectionSchema).collectedAmount
     return (
       <FormTextField
-        componentLabel="Case Collection--Collected Amount"
+        componentLabel="CASH COLLECTION--COLLECTED AMOUNT"
+        name="collectedAmount"
+        value={getAmountForDisplay(formData.collectedAmount)}
         maxLength={5}
-        value={getAmountForDisplay(value)}
-        onChange={(e) =>
-          handleCollectionFormOnChange(
-            'collectedAmount',
-            e.target.value,
-            selectedCollection,
-            setSelectedCollection,
-            getNumber,
-          )
-        }
-        error={isCollectionFormFieldError('collectedAmount', value, undefined)}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.collectedAmountError}
+        helperText={formErrors.collectedAmountError}
         required
+        fullWidth
       />
     )
   }
 
   const cashCollectionWaivedAmount = () => {
-    const value = (selectedCollection as CashCollectionSchema).waivedAmount
     return (
       <FormTextField
-        componentLabel="Cash Collection--Waived Amount"
+        componentLabel="CASH COLLECTION--WAIVED AMOUNT"
+        name="waivedAmount"
+        value={getAmountForDisplay(formData.waivedAmount)}
         maxLength={5}
-        value={getAmountForDisplay(value)}
-        onChange={(e) =>
-          handleCollectionFormOnChange(
-            'waivedAmount',
-            e.target.value,
-            selectedCollection,
-            setSelectedCollection,
-            getNumber,
-          )
-        }
-        error={isCollectionFormFieldError('waivedAmount', value, undefined)}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.waivedAmountError}
+        helperText={formErrors.waivedAmountError}
         required
+        fullWidth
       />
     )
   }
 
   const cashCollectionMemo = () => {
-    const value = (selectedCollection as CashCollectionSchema).memo
     return (
       <FormTextField
-        componentLabel="Cash Collection--Memo"
-        value={value}
-        onChange={(e) =>
-          handleCollectionFormOnChange('memo', e.target.value, selectedCollection, setSelectedCollection, getString)
-        }
-        error={isCollectionFormFieldError('memo', value, undefined)}
+        componentLabel="CASH COLLECTION--MEMO"
+        name="memo"
+        value={formData.memo}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.memo}
+        helperText={formErrors.memo}
         required
+        fullWidth
       />
     )
   }
@@ -228,22 +218,15 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
     ))
 
   const cashCollectionCollectionMethodsList = () => {
-    const value = 'collectionMethodId' in selectedCollection ? selectedCollection.collectionMethodId : ID_DEFAULT
     return (
       <FormSelectField
-        componentLabel="Cash Collection--Collection Method"
-        value={value}
-        onChange={(e) =>
-          handleCollectionFormOnChange(
-            'collectionMethodId',
-            e.target.value,
-            selectedCollection,
-            setSelectedCollection,
-            getNumber,
-          )
-        }
+        componentLabel="CASH COLLECTION--COLLECTION METHOD"
+        name="collectionMethodId"
+        value={formData.collectionMethodId}
         menuItems={cashCollectionCollectionMethodsListForSelect()}
-        error={isCollectionFormFieldError('collectionMethodId', value, undefined)}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.collectionMethodError}
+        helperText={formErrors.collectionMethodError}
         required
       />
     )
@@ -255,49 +238,25 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
     return `${client?.name}, ${courtCase?.caseType?.name}`
   }
 
-  const cashCollectionCaseCollectionListForSelect = () => {
-    if (getNumber(courtCaseId) > 0) {
-      const selectedCaseCollection = caseCollectionList.find((x) => x.courtCaseId === Number(courtCaseId))
-      if (selectedCaseCollection) {
-        return [
-          <MenuItem key={selectedCaseCollection.id} value={selectedCaseCollection.id}>
-            {cashCollectionCaseCollectionForSelect(selectedCaseCollection)}
-          </MenuItem>,
-        ]
-      }
-    } else {
-      return caseCollectionList
-        .filter(
-          (x) =>
-            ('caseCollectionId' in selectedCollection && selectedCollection.caseCollectionId === x.id) ||
-            statusList.collections.active.includes(x.status),
-        )
-        .map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {cashCollectionCaseCollectionForSelect(x)}
-          </MenuItem>
-        ))
-    }
-    return []
-  }
+  const cashCollectionCaseCollectionListForSelect = () =>
+    caseCollectionList
+      .filter((x) => formData.caseCollectionId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {cashCollectionCaseCollectionForSelect(x)}
+        </MenuItem>
+      ))
 
   const cashCollectionCaseCollectionList = () => {
-    const value = 'caseCollectionId' in selectedCollection ? selectedCollection.caseCollectionId : ID_DEFAULT
     return (
       <FormSelectField
-        componentLabel="Cash Collection--Case Collection"
-        value={value}
-        onChange={(e) =>
-          handleCollectionFormOnChange(
-            'caseCollectionId',
-            e.target.value,
-            selectedCollection,
-            setSelectedCollection,
-            getNumber,
-          )
-        }
+        componentLabel="CASH COLLECTION--CASE COLLECTION"
+        name="caseCollectionId"
+        value={formData.caseCollectionId}
         menuItems={cashCollectionCaseCollectionListForSelect()}
-        error={isCollectionFormFieldError('caseCollectionId', value, undefined)}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.caseCollectionError}
+        helperText={formErrors.caseCollectionError}
         required
       />
     )
@@ -309,45 +268,24 @@ const CollectionForm = (props: CollectionFormProps): React.ReactElement => {
       isShowOne={isShowOneCollection}
       justifyContent={isShowOneCollection ? 'flex-start' : 'flex-end'}
     >
-      {isCaseCollectionForm ? (
-        <>
-          <Grid item xs={6}>
-            {caseCollectionCourtCasesList()}
-          </Grid>
-          <Grid item xs={6}>
-            {caseCollectionQuoteAmount()}
-          </Grid>
-          <Grid item xs={6}>
-            {caseCollectionStatus()}
-          </Grid>
-          <Grid item xs={12}>
-            {caseCollectionComments()}
-          </Grid>
-        </>
-      ) : (
-        <>
-          <Grid item xs={6}>
-            {cashCollectionCaseCollectionList()}
-          </Grid>
-          <Grid item xs={6}>
-            {cashCollectionCollectionDate()}
-          </Grid>
-          <Grid item xs={6}>
-            {cashCollectionCollectedAmount()}
-          </Grid>
-          <Grid item xs={6}>
-            {cashCollectionCollectionMethodsList()}
-          </Grid>
-          <Grid item xs={6}>
-            {cashCollectionWaivedAmount()}
-          </Grid>
-          <Grid item xs={12}>
-            {cashCollectionMemo()}
-          </Grid>
-        </>
-      )}
+      <Grid item xs={6}>
+        {cashCollectionCaseCollectionList()}
+      </Grid>
+      <Grid item xs={6}>
+        {cashCollectionCollectionDate()}
+      </Grid>
+      <Grid item xs={6}>
+        {cashCollectionCollectedAmount()}
+      </Grid>
+      <Grid item xs={6}>
+        {cashCollectionCollectionMethodsList()}
+      </Grid>
+      <Grid item xs={6}>
+        {cashCollectionWaivedAmount()}
+      </Grid>
+      <Grid item xs={12}>
+        {cashCollectionMemo()}
+      </Grid>
     </GridFormWrapper>
   )
 }
-
-export default CollectionForm

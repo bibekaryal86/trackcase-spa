@@ -191,6 +191,7 @@ const Filing = (props: FilingProps): React.ReactElement => {
       courtCasesList={courtCasesList}
       filingsList={filingsList}
       componentStatusList={calendarStatusList()}
+      selectedFiling={formData}
     />
   )
 

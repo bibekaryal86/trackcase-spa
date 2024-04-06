@@ -18,6 +18,12 @@ import {
 } from '../../calendars'
 import { CourtCaseFormData, CourtCaseFormErrorData } from '../../cases'
 import { ClientFormData, ClientFormErrorData } from '../../clients'
+import {
+  CaseCollectionFormData,
+  CaseCollectionFormErrorData,
+  CashCollectionFormData,
+  CashCollectionFormErrorData,
+} from '../../collections/types/collections.data.types'
 import { ACTION_TYPES, ActionTypes, CalendarTypes } from '../../constants'
 import { CourtFormData, CourtFormErrorData } from '../../courts'
 import { FilingFormData, FilingFormErrorData } from '../../filings'
@@ -52,6 +58,8 @@ type FormData =
   | FilingFormData
   | HearingCalendarFormData
   | TaskCalendarFormData
+  | CaseCollectionFormData
+  | CashCollectionFormData
 
 type FormErrorData =
   | FormData
@@ -65,6 +73,8 @@ type FormErrorData =
   | FilingFormErrorData
   | HearingCalendarFormErrorData
   | TaskCalendarFormErrorData
+  | CaseCollectionFormErrorData
+  | CashCollectionFormErrorData
 
 export const pageTitleComponent = (component: string, componentName?: string) => (
   <>
