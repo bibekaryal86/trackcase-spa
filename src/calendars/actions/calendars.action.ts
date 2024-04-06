@@ -18,6 +18,7 @@ import {
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
+  TYPE_IS_MISSING,
 } from '../../constants'
 import {
   CALENDARS_COMPLETE,
@@ -59,7 +60,7 @@ export const calendarsAction = ({
 }) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<HearingCalendarResponse | TaskCalendarResponse> => {
     if (!type) {
-      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
+      return { data: [], detail: { error: TYPE_IS_MISSING } }
     }
     if (action === ACTION_TYPES.RESTORE) {
       action = ACTION_TYPES.UPDATE

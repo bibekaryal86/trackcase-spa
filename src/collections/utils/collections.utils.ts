@@ -99,27 +99,27 @@ export const validateCashCollection = (
   const formErrorsLocal: CashCollectionFormErrorData = { ...DefaultCashCollectionFormErrorData }
 
   const collectionDate = getDayjs(formData.collectionDate)
-    if (!collectionDate || !collectionDate.isValid()) {
-      hasValidationErrors = true
-      formErrorsLocal.collectionDateError = 'INVALID/MISSING'
-    }
-    if (getNumber(formData.collectedAmount) <= 0 && getNumber(formData.waivedAmount) <= 0) {
-      hasValidationErrors = true
-      formErrorsLocal.collectedAmountError = 'ONE IS REQUIRED'
-      formErrorsLocal.waivedAmountError = 'ONE IS REQUIRED'
-    }
-    if (!formData.memo || !formData.memo.trim()) {
-      hasValidationErrors = true
-      formErrorsLocal.memo = 'REQUIRED'
-    }
-    if (getNumber(formData.caseCollectionId) <= 0) {
-      hasValidationErrors = true
-      formErrorsLocal.caseCollectionError = 'REQUIRED'
-    }
-    if (getNumber(formData.collectionMethodId) <= 0) {
-      hasValidationErrors = true
-      formErrorsLocal.collectionMethodError = 'REQUIRED'
-    }
+  if (!collectionDate || !collectionDate.isValid()) {
+    hasValidationErrors = true
+    formErrorsLocal.collectionDateError = 'INVALID/MISSING'
+  }
+  if (getNumber(formData.collectedAmount) <= 0 && getNumber(formData.waivedAmount) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.collectedAmountError = 'ONE IS REQUIRED'
+    formErrorsLocal.waivedAmountError = 'ONE IS REQUIRED'
+  }
+  if (!formData.memo || !formData.memo.trim()) {
+    hasValidationErrors = true
+    formErrorsLocal.memo = 'REQUIRED'
+  }
+  if (getNumber(formData.caseCollectionId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.caseCollectionError = 'REQUIRED'
+  }
+  if (getNumber(formData.collectionMethodId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.collectionMethodError = 'REQUIRED'
+  }
 
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)
