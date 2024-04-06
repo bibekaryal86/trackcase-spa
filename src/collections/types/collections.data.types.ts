@@ -1,31 +1,39 @@
 import { Dayjs } from 'dayjs'
 
-import { BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { AMOUNT_DEFAULT, ID_DEFAULT } from '../../constants'
-import { CollectionMethodSchema } from '../../types'
+import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
 
-export interface CaseCollectionSchema extends StatusBaseSchema, BaseModelSchema {
+export interface CaseCollectionBase {
   quoteAmount: number
   courtCaseId: number
+  componentStatusId: number
+  comments?: string
+}
+export interface CaseCollectionSchema extends CaseCollectionBase, BaseModelSchema {
   // orm_mode
   courtCase?: CourtCaseSchema
+  componentStatus?: ComponentStatusSchema
   cashCollections?: CashCollectionSchema[]
   // history
   historyCaseCollections?: HistoryCaseCollectionSchema[]
 }
 
 export interface CaseCollectionResponse extends ResponseBase {
-  caseCollections: CaseCollectionSchema[]
+  data: CaseCollectionSchema[]
 }
 
-export interface CashCollectionSchema extends BaseModelSchema {
+export interface CashCollectionBase {
   collectionDate: Dayjs | undefined // set undefined for default object
   collectedAmount: number
   waivedAmount: number
   memo: string
   caseCollectionId: number
   collectionMethodId: number
+}
+
+export interface CashCollectionSchema extends CashCollectionBase, BaseModelSchema {
   // orm_mode
   caseCollection?: CaseCollectionSchema
   collectionMethod?: CollectionMethodSchema
@@ -34,33 +42,20 @@ export interface CashCollectionSchema extends BaseModelSchema {
 }
 
 export interface CashCollectionResponse extends ResponseBase {
-  cashCollections: CashCollectionSchema[]
+  data: CashCollectionSchema[]
 }
 
-export interface HistoryCaseCollectionSchema extends BaseModelSchema {
-  userName: string
+export interface HistoryCaseCollectionSchema extends Partial<CaseCollectionBase>, BaseModelSchema {
+  appUserId: number
   caseCollectionId: number
-  // from case collection schema, need everything optional here so can't extend
-  status?: string
-  comments?: string
-  quoteAmount?: number
-  courtCaseId?: number
   // orm mode
   caseCollection?: CaseCollectionSchema
   courtCase?: CourtCaseSchema
 }
 
-export interface HistoryCashCollectionSchema extends BaseModelSchema {
-  userName: string
+export interface HistoryCashCollectionSchema extends Partial<CashCollectionBase>, BaseModelSchema {
+  appUserId: number
   cashCollectionId: number
-  // from cash collection schema, need everything optional here so can't extend
-  comments?: string
-  collection_date?: Dayjs
-  collectedAmount?: number
-  waivedAmount?: number
-  memo?: string
-  caseCollectionId?: number
-  collectionMethodId?: number
   // orm_mode
   cashCollection?: CashCollectionSchema
   caseCollection?: CaseCollectionSchema
@@ -68,21 +63,44 @@ export interface HistoryCashCollectionSchema extends BaseModelSchema {
 }
 
 export interface CollectionsState {
-  isCloseModal: boolean
   caseCollections: CaseCollectionSchema[]
   cashCollections: CashCollectionSchema[]
-  selectedCaseCollection: CaseCollectionSchema
-  selectedCashCollection: CashCollectionSchema
+  requestMetadata: Partial<FetchRequestMetadata>
 }
 
 export interface CollectionsAction extends CollectionsState {
   type: string
 }
 
+export interface CaseCollectionFormData extends CaseCollectionSchema {
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+}
+
+export interface CashCollectionFormData extends CashCollectionSchema {
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+}
+
+export interface CaseCollectionFormErrorData extends CaseCollectionSchema {
+  quoteAmountError: string
+  courtCaseError: string
+  componentStatusError: string
+}
+
+export interface CashCollectionFormErrorData extends CashCollectionSchema {
+  collectionDateError: string
+  collectedAmountError: string
+  waivedAmountError: string
+  memo: string
+  caseCollectionError: string
+  collectionMethodError: string
+}
+
 export const DefaultCaseCollectionSchema: CaseCollectionSchema = {
   quoteAmount: AMOUNT_DEFAULT,
   courtCaseId: ID_DEFAULT,
-  status: '',
+  componentStatusId: ID_DEFAULT,
   comments: '',
 }
 
@@ -96,14 +114,36 @@ export const DefaultCashCollectionSchema: CashCollectionSchema = {
 }
 
 export const DefaultCollectionsState: CollectionsState = {
-  isCloseModal: true,
   caseCollections: [],
   cashCollections: [],
-  selectedCaseCollection: DefaultCaseCollectionSchema,
-  selectedCashCollection: DefaultCashCollectionSchema,
+  requestMetadata: {},
 }
 
-export const DefaultCollectionSchema = {
+export const DefaultCaseCollectionFormData: CaseCollectionFormData = {
   ...DefaultCaseCollectionSchema,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+}
+
+export const DefaultCashCollectionFormData: CashCollectionFormData = {
   ...DefaultCashCollectionSchema,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+}
+
+export const DefaultCaseCollectionFormErrorData: CaseCollectionFormErrorData = {
+  ...DefaultCaseCollectionFormData,
+  quoteAmountError: '',
+  courtCaseError: '',
+  componentStatusError: '',
+}
+
+export const DefaultCashCollectionFormErrorData: CashCollectionFormErrorData = {
+  ...DefaultCashCollectionFormData,
+  collectionDateError: '',
+  collectedAmountError: '',
+  waivedAmountError: '',
+  memo: '',
+  caseCollectionError: '',
+  collectionMethodError: '',
 }

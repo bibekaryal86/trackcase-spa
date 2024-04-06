@@ -1,12 +1,19 @@
-import { Dayjs } from 'dayjs'
-
-import { getDayjs, getNumber, getNumericOnly } from '../../app'
-import { AMOUNT_DEFAULT, COLLECTION_TYPES } from '../../constants'
-import { CaseCollectionSchema, CashCollectionSchema } from '../types/collections.data.types'
+import { FetchRequestMetadata, getDayjs, getNumber } from '../../app'
+import { AMOUNT_DEFAULT, COLLECTION_TYPES, ID_DEFAULT } from '../../constants'
+import {
+  CaseCollectionFormData,
+  CaseCollectionFormErrorData,
+  CaseCollectionSchema,
+  CashCollectionFormData,
+  CashCollectionFormErrorData,
+  CashCollectionSchema,
+  DefaultCaseCollectionFormErrorData,
+  DefaultCashCollectionFormErrorData,
+} from '../types/collections.data.types'
 
 export const getAmountForDisplay = (value: number) => {
   if (value) {
-    if (Number(value) === AMOUNT_DEFAULT) {
+    if (getNumber(value) === AMOUNT_DEFAULT) {
       return undefined
     } else {
       return String(value)
@@ -15,80 +22,38 @@ export const getAmountForDisplay = (value: number) => {
   return undefined
 }
 
-export const isCaseCollection = (type: string) => COLLECTION_TYPES.CASE === type
-
-export const validateCollectionType = (collectionType: string): boolean =>
-  collectionType === COLLECTION_TYPES.CASE || collectionType === COLLECTION_TYPES.CASH
-
-export const getCashCollections = (caseCollections: CaseCollectionSchema[]) => {
-  const cashCollections: CashCollectionSchema[] = []
-
-  for (const caseCollection of caseCollections) {
-    if (caseCollection.cashCollections) {
-      cashCollections.push(...caseCollection.cashCollections)
-    }
+export const getCollectionType = (
+  collection: CaseCollectionSchema | CashCollectionSchema | CaseCollectionFormData | CashCollectionFormData,
+): string | undefined => {
+  if ('quoteAmount' in collection && 'courtCaseId' in collection) {
+    return COLLECTION_TYPES.CASE_COLLECTION
+  } else if ('collectionDate' in collection && 'collectionAmount' in collection) {
+    return COLLECTION_TYPES.CASH_COLLECTION
   }
-  return cashCollections
+  return undefined
 }
 
-export const validateCollection = (collectionType: string, collection: CaseCollectionSchema | CashCollectionSchema) => {
-  const errors: string[] = []
-
-  if (!validateCollectionType(collectionType)) {
-    return 'Invalid Collection Type!!!'
-  }
-  // case collection
-  if (collectionType === COLLECTION_TYPES.CASE) {
-    const caseCollection = collection as CaseCollectionSchema
-
-    if (!caseCollection.quoteAmount || getNumber(caseCollection.quoteAmount) <= 0) {
-      errors.push('Quote Amount is required!')
-    }
-    if (getNumber(caseCollection.courtCaseId) <= 0) {
-      errors.push('Case is required!')
-    }
-    if (!caseCollection.status.trim()) {
-      errors.push('Status is required!')
-    }
-  } else {
-    // cash collection
-    const cashCollection = collection as CashCollectionSchema
-    const collectionDate = getDayjs(cashCollection.collectionDate)
-    if (!collectionDate || !collectionDate.isValid()) {
-      errors.push('Collection Date is required!')
-    }
-    if (getNumber(cashCollection.collectedAmount) <= 0 && getNumber(cashCollection.waivedAmount) <= 0) {
-      errors.push('Collected Amount or Waived Amount is required!')
-    }
-    if (!cashCollection.memo.trim()) {
-      errors.push('Memo is required!')
-    }
-    if (getNumber(cashCollection.caseCollectionId) <= 0) {
-      errors.push('Case Collection is required!')
-    }
-    if (getNumber(cashCollection.collectionMethodId) <= 0) {
-      errors.push('Collection Method is required!')
-    }
-  }
-
-  return errors.length ? errors.join(', ') : ''
-}
+export const isCaseCollection = (
+  collection: CaseCollectionSchema | CashCollectionSchema | CaseCollectionFormData | CashCollectionFormData,
+) => getCollectionType(collection) === COLLECTION_TYPES.CASE_COLLECTION
 
 export const isAreTwoCollectionsSame = (
-  collectionType: string,
-  one: CaseCollectionSchema | CashCollectionSchema,
-  two: CaseCollectionSchema | CashCollectionSchema,
+  one: CaseCollectionSchema | CashCollectionSchema | CaseCollectionFormData | CashCollectionFormData,
+  two: CaseCollectionSchema | CashCollectionSchema | CaseCollectionFormData | CashCollectionFormData,
 ) =>
-  isCaseCollection(collectionType)
-    ? isAreTwoCaseCollectionsSame(one as CaseCollectionSchema, two as CaseCollectionSchema)
-    : isAreTwoCashCollectionsSame(one as CashCollectionSchema, two as CashCollectionSchema)
+  isCaseCollection(one)
+    ? isAreTwoCaseCollectionsSame(one as CaseCollectionFormData, two as CaseCollectionFormData)
+    : isAreTwoCashCollectionsSame(one as CashCollectionFormData, two as CashCollectionFormData)
 
-export const isAreTwoCaseCollectionsSame = (one: CaseCollectionSchema, two: CaseCollectionSchema) =>
+export const isAreTwoCaseCollectionsSame = (
+  one: CaseCollectionSchema | CaseCollectionFormData,
+  two: CaseCollectionSchema | CaseCollectionFormData,
+) =>
   one &&
   two &&
   one.quoteAmount === two.quoteAmount &&
   one.courtCaseId === two.courtCaseId &&
-  one.status === two.status &&
+  one.componentStatusId === two.componentStatusId &&
   one.comments === two.comments
 
 export const isAreTwoCashCollectionsSame = (one: CashCollectionSchema, two: CashCollectionSchema) =>
@@ -97,56 +62,122 @@ export const isAreTwoCashCollectionsSame = (one: CashCollectionSchema, two: Cash
   one.collectionDate === two.collectionDate &&
   one.collectedAmount === two.collectedAmount &&
   one.waivedAmount === two.waivedAmount &&
-  one.memo.trim() === two.memo.trim() &&
+  one.memo?.trim() === two.memo?.trim() &&
   one.caseCollectionId === two.caseCollectionId &&
   one.collectionMethodId === two.collectionMethodId
 
-export const isCollectionFormFieldError = (
-  name: string,
-  value: string | number | undefined,
-  dateValue: Dayjs | null | undefined,
+export const validateCaseCollection = (
+  formData: CaseCollectionFormData,
+  setFormErrors: (formErrors: CaseCollectionFormErrorData) => void,
 ) => {
-  switch (name) {
-    case 'courtCaseId':
-    case 'quoteAmount':
-    case 'caseCollectionId':
-    case 'collectionMethodId':
-      return !value || getNumber(value) <= 0
-    case 'status':
-    case 'memo':
-      return !value || value.toString().trim() === ''
-    case 'collectionDate':
-      return !dateValue || !dateValue.isValid()
+  let hasValidationErrors = false
+  const formErrorsLocal: CaseCollectionFormErrorData = { ...DefaultCaseCollectionFormErrorData }
+
+  if (!formData.quoteAmount || getNumber(formData.quoteAmount) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.quoteAmountError = 'REQUIRED/INVALID'
   }
-  return false
+  if (getNumber(formData.courtCaseId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.courtCaseError = 'REQUIRED'
+  }
+  if (getNumber(formData.componentStatusId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.componentStatusError = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
 }
 
-export const handleCollectionDateOnChange = (
-  name: string,
-  value: Dayjs | null,
-  selectedCollection: CaseCollectionSchema | CashCollectionSchema,
-  setSelectedCollection: (updatedCollection: CaseCollectionSchema | CashCollectionSchema) => void,
+export const validateCashCollection = (
+  formData: CashCollectionFormData,
+  setFormErrors: (formErrors: CashCollectionFormErrorData) => void,
 ) => {
-  const updatedCollection = {
-    ...selectedCollection,
-    [name]: value,
+  let hasValidationErrors = false
+  const formErrorsLocal: CashCollectionFormErrorData = { ...DefaultCashCollectionFormErrorData }
+
+  const collectionDate = getDayjs(formData.collectionDate)
+    if (!collectionDate || !collectionDate.isValid()) {
+      hasValidationErrors = true
+      formErrorsLocal.collectionDateError = 'INVALID/MISSING'
+    }
+    if (getNumber(formData.collectedAmount) <= 0 && getNumber(formData.waivedAmount) <= 0) {
+      hasValidationErrors = true
+      formErrorsLocal.collectedAmountError = 'ONE IS REQUIRED'
+      formErrorsLocal.waivedAmountError = 'ONE IS REQUIRED'
+    }
+    if (!formData.memo || !formData.memo.trim()) {
+      hasValidationErrors = true
+      formErrorsLocal.memo = 'REQUIRED'
+    }
+    if (getNumber(formData.caseCollectionId) <= 0) {
+      hasValidationErrors = true
+      formErrorsLocal.caseCollectionError = 'REQUIRED'
+    }
+    if (getNumber(formData.collectionMethodId) <= 0) {
+      hasValidationErrors = true
+      formErrorsLocal.collectionMethodError = 'REQUIRED'
+    }
+
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
   }
-  setSelectedCollection(updatedCollection)
+  return hasValidationErrors
 }
 
-export const handleCollectionFormOnChange = (
-  name: string,
-  value: string | number,
-  selectedCollection: CaseCollectionSchema | CashCollectionSchema,
-  setSelectedCollection: (updatedCollection: CaseCollectionSchema | CashCollectionSchema) => void,
-  getValue: (value: string | number) => string | number,
-) => {
-  if (name.toLowerCase().includes('amount')) {
-    value = getNumericOnly(value.toString(), 10)
+export const collectionDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  caseCollections = [] as CaseCollectionSchema[],
+  cashCollections = [] as CashCollectionSchema[],
+  requestMetadata = {} as Partial<FetchRequestMetadata>,
+} = {}) => {
+  if (error) {
+    return {
+      type,
+      error,
+    }
+  } else if (success) {
+    return {
+      type,
+      success,
+    }
+  } else if (caseCollections) {
+    return {
+      type,
+      caseCollections,
+      cashCollections,
+      requestMetadata,
+    }
+  } else {
+    return {
+      type,
+    }
   }
-  const updatedCollection = {
-    ...selectedCollection,
-    [name]: getValue(value),
+}
+
+export const getCollectionFormDataFromSchema = (x: CaseCollectionSchema | CashCollectionSchema) =>
+  isCaseCollection(x)
+    ? getCaseCollectionFormDataFromSchema(x as CaseCollectionSchema)
+    : getCashCollectionFormDataFromSchema(x as CashCollectionSchema)
+
+export const getCaseCollectionFormDataFromSchema = (x: CaseCollectionSchema): CaseCollectionFormData => {
+  return {
+    ...x,
+    id: x.id || ID_DEFAULT,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
   }
-  setSelectedCollection(updatedCollection)
+}
+
+export const getCashCollectionFormDataFromSchema = (x: CashCollectionSchema): CashCollectionFormData => {
+  return {
+    ...x,
+    id: x.id || ID_DEFAULT,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+  }
 }

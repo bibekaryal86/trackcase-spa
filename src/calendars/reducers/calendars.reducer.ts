@@ -21,7 +21,6 @@ export default function calendars(state = DefaultCalendarsState, action: Calenda
   switch (action.type) {
     case CALENDARS_READ_SUCCESS:
       return {
-        ...state,
         calendarEvents: action.calendarEvents,
         hearingCalendars: action.hearingCalendars,
         taskCalendars: action.taskCalendars,
