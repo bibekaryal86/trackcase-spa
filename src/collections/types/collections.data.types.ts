@@ -64,7 +64,6 @@ export interface HistoryCashCollectionSchema extends Partial<CashCollectionBase>
 
 export interface CollectionsState {
   caseCollections: CaseCollectionSchema[]
-  cashCollections: CashCollectionSchema[]
   requestMetadata: Partial<FetchRequestMetadata>
 }
 
@@ -115,7 +114,6 @@ export const DefaultCashCollectionSchema: CashCollectionSchema = {
 
 export const DefaultCollectionsState: CollectionsState = {
   caseCollections: [],
-  cashCollections: [],
   requestMetadata: {},
 }
 

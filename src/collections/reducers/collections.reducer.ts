@@ -9,7 +9,6 @@ export default function collections(state = DefaultCollectionsState, action: Col
     return {
       ...state,
       caseCollections: [],
-      cashCollections: [],
     }
   }
 
@@ -17,7 +16,6 @@ export default function collections(state = DefaultCollectionsState, action: Col
     case CASE_COLLECTIONS_READ_SUCCESS:
       return {
         caseCollections: action.caseCollections,
-        cashCollections: action.cashCollections,
         requestMetadata: action.requestMetadata,
       }
     default:

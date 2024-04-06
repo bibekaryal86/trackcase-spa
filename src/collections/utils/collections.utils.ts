@@ -132,7 +132,6 @@ export const collectionDispatch = ({
   error = '',
   success = '',
   caseCollections = [] as CaseCollectionSchema[],
-  cashCollections = [] as CashCollectionSchema[],
   requestMetadata = {} as Partial<FetchRequestMetadata>,
 } = {}) => {
   if (error) {
@@ -149,7 +148,6 @@ export const collectionDispatch = ({
     return {
       type,
       caseCollections,
-      cashCollections,
       requestMetadata,
     }
   } else {
