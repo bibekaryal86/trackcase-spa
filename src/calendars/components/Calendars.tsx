@@ -27,7 +27,6 @@ import {
   ACTION_TYPES,
   ActionTypes,
   CALENDAR_TYPES,
-  CalendarTypes,
   COMPONENT_STATUS_NAME,
   ID_DEFAULT,
   INVALID_INPUT,
@@ -160,7 +159,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     getCalendars(requestMetadata)
   }
 
-  const primaryButtonCallback = async (action: ActionTypes, type?: CalendarTypes) => {
+  const primaryButtonCallback = async (action: ActionTypes, type?: string) => {
     const isHc = type === CALENDAR_TYPES.HEARING_CALENDAR
     const calendarId = isHc ? getNumber(formDataHc.id) : getNumber(formDataTc.id)
 

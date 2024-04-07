@@ -223,3 +223,7 @@ export const getTaskCalendarFormDataFromSchema = (x: TaskCalendarSchema): TaskCa
     isShowSoftDeleted: false,
   }
 }
+
+export const checkCorrectCalendarTypes = (type: string): boolean => {
+  return type === CALENDAR_TYPES.HEARING_CALENDAR || type === CALENDAR_TYPES.TASK_CALENDAR
+}

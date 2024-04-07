@@ -24,7 +24,7 @@ import {
   CashCollectionFormData,
   CashCollectionFormErrorData,
 } from '../../collections/types/collections.data.types'
-import { ACTION_TYPES, ActionTypes, CalendarTypes } from '../../constants'
+import { ACTION_TYPES, ActionTypes } from '../../constants'
 import { CourtFormData, CourtFormErrorData } from '../../courts'
 import { FilingFormData, FilingFormErrorData } from '../../filings'
 import { JudgeFormData, JudgeFormErrorData } from '../../judges'
@@ -295,7 +295,7 @@ export const handleFormDateChange = <T extends FormData, U extends FormErrorData
 export const addModalComponent = <T extends FormData, U extends FormErrorData>(
   componentName: string,
   content: React.JSX.Element,
-  primaryButtonCallback: (action: ActionTypes, calendarType?: CalendarTypes) => void,
+  primaryButtonCallback: (action: ActionTypes, type?: string) => void,
   addModalState: ModalState,
   updateModalState: ModalState,
   deleteModalState: ModalState,
@@ -304,7 +304,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
   defaultFormData: T,
   defaultFormErrorData: U,
   formDataReset: T,
-  calendarType?: CalendarTypes,
+  type?: string,
 ) => {
   return (
     <Modal2
@@ -315,7 +315,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
       }}
       title={`${ACTION_TYPES.CREATE} ${componentName}`}
       primaryButtonText={ACTION_TYPES.CREATE}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE, calendarType)}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE, type)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={() =>
         secondaryButtonCallback(
@@ -347,7 +347,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
 export const updateModalComponent = <T extends FormData, U extends FormErrorData>(
   componentName: string,
   content: React.JSX.Element,
-  primaryButtonCallback: (action: ActionTypes, calendarType?: CalendarTypes) => void,
+  primaryButtonCallback: (action: ActionTypes, type?: string) => void,
   addModalState: ModalState,
   updateModalState: ModalState,
   deleteModalState: ModalState,
@@ -356,7 +356,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
   defaultFormData: T,
   defaultFormErrorData: U,
   formDataReset: T,
-  calendarType?: CalendarTypes,
+  type?: string,
 ) => {
   return (
     <Modal2
@@ -367,7 +367,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
       }}
       title={`${ACTION_TYPES.UPDATE} ${componentName}`}
       primaryButtonText={ACTION_TYPES.UPDATE}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE, calendarType)}
+      primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE, type)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={() =>
         secondaryButtonCallback(
@@ -399,7 +399,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
 export const deleteModalComponent = <T extends FormData, U extends FormErrorData>(
   componentName: string,
   contentText: string,
-  primaryButtonCallback: (action: ActionTypes, calendarType?: CalendarTypes) => void,
+  primaryButtonCallback: (action: ActionTypes, type?: string) => void,
   addModalState: ModalState,
   updateModalState: ModalState,
   deleteModalState: ModalState,
@@ -409,7 +409,7 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
   defaultFormErrorData: U,
   formData: T,
   formErrors: U,
-  calendarType?: CalendarTypes,
+  type?: string,
 ) => {
   return (
     <Modal2
@@ -421,7 +421,7 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
       title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${componentName}`}
       primaryButtonText={formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
       primaryButtonCallback={() =>
-        primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE, calendarType)
+        primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE, type)
       }
       secondaryButtonText={ACTION_TYPES.CANCEL}
       secondaryButtonCallback={() =>

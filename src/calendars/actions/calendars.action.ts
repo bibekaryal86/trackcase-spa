@@ -14,10 +14,10 @@ import {
   ACTION_TYPES,
   ActionTypes,
   CALENDAR_TYPES,
-  CalendarTypes,
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
+  TYPE_IS_INCORRECT,
   TYPE_IS_MISSING,
 } from '../../constants'
 import {
@@ -41,7 +41,7 @@ import {
   TaskCalendarResponse,
   TaskCalendarSchema,
 } from '../types/calendars.data.types'
-import { calendarDispatch } from '../utils/calendars.utils'
+import { calendarDispatch, checkCorrectCalendarTypes } from '../utils/calendars.utils'
 
 export const calendarsAction = ({
   type,
@@ -51,7 +51,7 @@ export const calendarsAction = ({
   isRestore,
   isHardDelete,
 }: {
-  type?: CalendarTypes
+  type?: string
   action: ActionTypes
   calendarsRequest?: HearingCalendarBase | TaskCalendarBase
   id?: number
@@ -61,7 +61,10 @@ export const calendarsAction = ({
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<HearingCalendarResponse | TaskCalendarResponse> => {
     if (!type) {
       return { data: [], detail: { error: TYPE_IS_MISSING } }
+    } else if (!checkCorrectCalendarTypes(type)) {
+      return { data: [], detail: { error: TYPE_IS_INCORRECT } }
     }
+
     if (action === ACTION_TYPES.RESTORE) {
       action = ACTION_TYPES.UPDATE
     }
