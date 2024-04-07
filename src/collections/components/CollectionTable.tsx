@@ -22,23 +22,31 @@ import {
   CashCollectionFormData,
   CashCollectionSchema,
 } from '../types/collections.data.types'
-import { getCollectionFormDataFromSchema } from '../utils/collections.utils'
+import { getCaseCollectionFormDataFromSchema, getCashCollectionFormDataFromSchema } from '../utils/collections.utils'
 
 interface CollectionTableProps {
   caseCollectionsList: CaseCollectionSchema[]
-  actionButtons?: (formDataForModal: CaseCollectionFormData | CashCollectionFormData) => React.JSX.Element
-  addModalState?: ModalState
+  actionButtonsCase?: (formDataForModal: CaseCollectionFormData) => React.JSX.Element
+  actionButtonsCash?: (formDataModal: CashCollectionFormData) => React.JSX.Element
+  addModalStateCase?: ModalState
+  addModalStateCash?: ModalState
   softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
   componentStatusList: ComponentStatusSchema[]
   collectionMethodsList: CollectionMethodSchema[]
   courtCasesList: CourtCaseSchema[]
   clientsList: ClientSchema[]
   selectedCourtCase?: CourtCaseSchema
-  isAddModelComponent: boolean
 }
 
 const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
-  const { caseCollectionsList, actionButtons, addModalState, softDeleteCallback } = props
+  const {
+    caseCollectionsList,
+    actionButtonsCase,
+    actionButtonsCash,
+    addModalStateCase,
+    addModalStateCash,
+    softDeleteCallback,
+  } = props
   const { componentStatusList, collectionMethodsList, courtCasesList, clientsList, selectedCourtCase } = props
 
   const collectionsTableHeaderData = (isCashCollection: boolean): TableHeaderData[] => {
@@ -168,7 +176,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     const cashCollectionsTableData = Array.from(cashCollectionsList, (y: CashCollectionSchema) => {
       return {
         ...collectionsTableDataCommon(y, true),
-        actions: actionButtons ? actionButtons(getCollectionFormDataFromSchema(x)) : undefined,
+        actions: actionButtonsCash ? actionButtonsCash(getCashCollectionFormDataFromSchema(y)) : undefined,
       }
     })
 
@@ -177,7 +185,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         componentName="CASH COLLECTIONS"
         headerData={cashCollectionsHeaderData}
         tableData={cashCollectionsTableData}
-        addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalState)}
+        addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalStateCash)}
         defaultDense={true}
         isDisablePagination={true}
       />
@@ -189,7 +197,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       return {
         ...collectionsTableDataCommon(x, false),
         cashCollections: getCashCollectionsTable(x),
-        actions: actionButtons ? actionButtons(getCollectionFormDataFromSchema(x)) : undefined,
+        actions: actionButtonsCase ? actionButtonsCase(getCaseCollectionFormDataFromSchema(x)) : undefined,
       }
     })
   }
@@ -199,7 +207,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       componentName="CASE COLLECTIONS"
       headerData={collectionsTableHeaderData(false)}
       tableData={collectionsTableData()}
-      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalState)}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalStateCase)}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )

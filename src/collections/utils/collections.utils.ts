@@ -179,3 +179,7 @@ export const getCashCollectionFormDataFromSchema = (x: CashCollectionSchema): Ca
     isShowSoftDeleted: false,
   }
 }
+
+export const checkCorrectCollectionTypes = (type: string): boolean => {
+  return type === COLLECTION_TYPES.CASE_COLLECTION || type === COLLECTION_TYPES.CASH_COLLECTION
+}

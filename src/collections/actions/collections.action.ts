@@ -14,10 +14,10 @@ import {
   ACTION_TYPES,
   ActionTypes,
   COLLECTION_TYPES,
-  CollectionTypes,
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
+  TYPE_IS_INCORRECT,
   TYPE_IS_MISSING,
 } from '../../constants'
 import {
@@ -37,7 +37,7 @@ import {
   CashCollectionResponse,
   CashCollectionSchema,
 } from '../types/collections.data.types'
-import { collectionDispatch } from '../utils/collections.utils'
+import { checkCorrectCollectionTypes, collectionDispatch } from '../utils/collections.utils'
 
 export const collectionsAction = ({
   type,
@@ -47,7 +47,7 @@ export const collectionsAction = ({
   isRestore,
   isHardDelete,
 }: {
-  type?: CollectionTypes
+  type?: string
   action: ActionTypes
   collectionsRequest?: CaseCollectionBase | CashCollectionBase
   id?: number
@@ -57,6 +57,8 @@ export const collectionsAction = ({
   return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<CaseCollectionResponse | CashCollectionResponse> => {
     if (!type) {
       return { data: [], detail: { error: TYPE_IS_MISSING } }
+    } else if (!checkCorrectCollectionTypes(type)) {
+      return { data: [], detail: { error: TYPE_IS_INCORRECT } }
     }
     if (action === ACTION_TYPES.RESTORE) {
       action = ACTION_TYPES.UPDATE
@@ -73,8 +75,8 @@ export const collectionsAction = ({
     if (action === ACTION_TYPES.CREATE) {
       endpoint =
         type === COLLECTION_TYPES.CASE_COLLECTION
-          ? getEndpoint(process.env.COLLECTION_HEARING_CREATE as string)
-          : getEndpoint(process.env.COLLECTION_TASK_CREATE as string)
+          ? getEndpoint(process.env.COLLECTION_CASE_CREATE as string)
+          : getEndpoint(process.env.COLLECTION_CASH_CREATE as string)
       options = {
         method: HTTP_METHODS.POST,
         requestBody: { ...collectionsRequest },
@@ -82,8 +84,8 @@ export const collectionsAction = ({
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint =
         type === COLLECTION_TYPES.CASE_COLLECTION
-          ? getEndpoint(process.env.COLLECTION_HEARING_UPDATE as string)
-          : getEndpoint(process.env.COLLECTION_TASK_UPDATE as string)
+          ? getEndpoint(process.env.COLLECTION_CASE_UPDATE as string)
+          : getEndpoint(process.env.COLLECTION_CASH_UPDATE as string)
       options = {
         method: HTTP_METHODS.PUT,
         requestBody: collectionsRequest,
@@ -93,8 +95,8 @@ export const collectionsAction = ({
     } else if (action === ACTION_TYPES.DELETE) {
       endpoint =
         type === COLLECTION_TYPES.CASE_COLLECTION
-          ? getEndpoint(process.env.COLLECTION_HEARING_DELETE as string)
-          : getEndpoint(process.env.COLLECTION_TASK_DELETE as string)
+          ? getEndpoint(process.env.COLLECTION_CASE_DELETE as string)
+          : getEndpoint(process.env.COLLECTION_CASH_DELETE as string)
       options = {
         method: HTTP_METHODS.DELETE,
         pathParams: { collection_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
@@ -130,7 +132,7 @@ export const collectionsAction = ({
   }
 }
 
-export const getCalendars = (requestMetadata?: Partial<FetchRequestMetadata>) => {
+export const getCollections = (requestMetadata?: Partial<FetchRequestMetadata>) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
     dispatch(collectionDispatch({ type: CASE_COLLECTIONS_READ_REQUEST }))
 
@@ -140,7 +142,7 @@ export const getCalendars = (requestMetadata?: Partial<FetchRequestMetadata>) =>
       // no need to fetch request, metadata is same
       collectionResponse.data = getStore().collections.caseCollections
     }
-    const endpoint = getEndpoint(process.env.COLLECTIONS_ALL as string)
+    const endpoint = getEndpoint(process.env.COLLECTION_CASE_READ as string)
     const options: Partial<FetchOptions> = {
       method: HTTP_METHODS.GET,
       metadataParams: requestMetadata,
@@ -197,7 +199,7 @@ export const getCaseCollection = (collectionId: number, isIncludeExtra?: boolean
       if (oneCaseCollection) {
         return oneCaseCollection
       } else {
-        const endpoint = getEndpoint(process.env.COLLECTION_HEARING_READ as string)
+        const endpoint = getEndpoint(process.env.COLLECTION_CASE_READ as string)
         const requestMetadata: Partial<FetchRequestMetadata> = {
           schemaModelId: collectionId,
           isIncludeExtra: isIncludeExtra === true,
@@ -248,7 +250,7 @@ export const getCashCollection = (collectionId: number, isIncludeExtra?: boolean
       if (oneCashCollection) {
         return oneCashCollection
       } else {
-        const endpoint = getEndpoint(process.env.COLLECTION_TASK_READ as string)
+        const endpoint = getEndpoint(process.env.COLLECTION_CASH_READ as string)
         const requestMetadata: Partial<FetchRequestMetadata> = {
           schemaModelId: collectionId,
           isIncludeExtra: isIncludeExtra === true,
