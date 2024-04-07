@@ -202,7 +202,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         calendarsRequest: calendarsRequest,
         id: calendarId,
         isRestore: action === ACTION_TYPES.RESTORE,
-        isHardDelete: isHc ? formDataHc.isHardDelete: formDataTc.isHardDelete,
+        isHardDelete: isHc ? formDataHc.isHardDelete : formDataTc.isHardDelete,
       })(dispatch)
     }
 
