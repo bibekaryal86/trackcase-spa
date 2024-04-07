@@ -13,7 +13,7 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
+import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '../../constants'
 import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
 import { checkUserHasPermission } from '../../users'
 import {
@@ -36,6 +36,7 @@ interface CollectionTableProps {
   courtCasesList: CourtCaseSchema[]
   clientsList: ClientSchema[]
   selectedCourtCase?: CourtCaseSchema
+  addCashCollectionButtonCallback: (caseCollectionId: number) => void
 }
 
 const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
@@ -46,6 +47,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     addModalStateCase,
     addModalStateCash,
     softDeleteCallback,
+    addCashCollectionButtonCallback,
   } = props
   const { componentStatusList, collectionMethodsList, courtCasesList, clientsList, selectedCourtCase } = props
 
@@ -180,14 +182,20 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       }
     })
 
+    const addButtonExtraCallback = () => addCashCollectionButtonCallback(x.id || ID_DEFAULT)
+
     return (
       <Table
-        componentName="CASH COLLECTIONS"
+        componentName={COLLECTION_TYPES.CASH_COLLECTION.replace('_', ' ')}
         headerData={cashCollectionsHeaderData}
         tableData={cashCollectionsTableData}
-        addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalStateCash)}
-        defaultDense={true}
-        isDisablePagination={true}
+        addModelComponent={tableAddButtonComponent(
+          COMPONENT_STATUS_NAME.COLLECTIONS,
+          addModalStateCash,
+          addButtonExtraCallback,
+        )}
+        defaultDense
+        isDisablePagination
       />
     )
   }
@@ -204,7 +212,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
   return (
     <Table
-      componentName="CASE COLLECTIONS"
+      componentName={COLLECTION_TYPES.CASE_COLLECTION.replace('_', ' ')}
       headerData={collectionsTableHeaderData(false)}
       tableData={collectionsTableData()}
       addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalStateCase)}

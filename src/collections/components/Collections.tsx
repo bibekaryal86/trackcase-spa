@@ -367,6 +367,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       setFormDataResetCash,
     )
 
+  const addCashCollectionButtonCallback = (caseCollectionId: number) =>
+    setFormDataCash({ ...DefaultCashCollectionFormData, caseCollectionId })
+
   const collectionTable = () => (
     <CollectionTable
       caseCollectionsList={caseCollectionsList}
@@ -379,6 +382,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       addModalStateCash={addModalStateCash}
       actionButtonsCase={actionButtonsCase}
       actionButtonsCash={actionButtonsCash}
+      addCashCollectionButtonCallback={addCashCollectionButtonCallback}
     />
   )
 
