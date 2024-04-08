@@ -15,9 +15,8 @@ import { judges, JudgesState } from '../../judges'
 import { refTypes, RefTypesState } from '../../types'
 import alert from '../reducers/alert.reducer'
 import spinner from '../reducers/spinner.reducer'
-import statuses from '../reducers/statuses.reducer'
 import { USER_LOGOUT } from '../types/app.action.types'
-import { AlertState, SpinnerState, StatusState } from '../types/app.data.types'
+import { AlertState, SpinnerState } from '../types/app.data.types'
 
 // ACTIONS (ESP: FETCH ACTIONS) SHOULD BE NAMED IN THE FOLLOWING PATTERN:
 // xxx_REQUEST, xxx_SUCCESS, xxx_FAILURE, xxx_COMPLETE
@@ -26,7 +25,6 @@ import { AlertState, SpinnerState, StatusState } from '../types/app.data.types'
 export interface GlobalState {
   alert: AlertState
   spinner: SpinnerState
-  statuses: StatusState
   refTypes: RefTypesState
   courts: CourtsState
   judges: JudgesState
@@ -44,7 +42,6 @@ export interface GlobalDispatch {
 const appReducers = combineReducers({
   alert,
   spinner,
-  statuses,
   refTypes,
   courts,
   judges,

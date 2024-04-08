@@ -1,5 +1,4 @@
 // actions
-import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
 import {
@@ -45,8 +44,6 @@ import {
   NameDescBaseSchema,
   ResponseBase,
   ResponseMetadata,
-  StatusBaseSchema,
-  StatusSchema,
   TableData,
   TableHeaderData,
   TableOrder,
@@ -85,7 +82,6 @@ import { resetSpinner, setSpinner } from './utils/spinner.utils'
 import { LocalStorage, SessionStorage } from './utils/storage.utils'
 
 // EXPORTS
-export { getStatusesList }
 export { testDatabase }
 export {
   FormCommentsField,
@@ -127,8 +123,6 @@ export type {
   NameDescBaseSchema,
   ResponseBase,
   ResponseMetadata,
-  StatusBaseSchema,
-  StatusSchema,
   TableData,
   TableHeaderData,
   TableOrder,

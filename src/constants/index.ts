@@ -156,7 +156,7 @@ export type CollectionTypes = keyof typeof COLLECTION_TYPES
 
 // CASE PAGE TABS
 export const CASE_TABS = Object.freeze({
-  FORMS: 'FORMS',
+  FILINGS: 'FILINGS',
   CALENDARS: 'CALENDARS',
   COLLECTIONS: 'COLLECTIONS',
 })

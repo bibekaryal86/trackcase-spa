@@ -95,11 +95,6 @@ export interface NameDescBaseSchema {
   description: string
 }
 
-export interface StatusBaseSchema {
-  status: string
-  comments?: string
-}
-
 export interface AddressBaseSchema {
   streetAddress?: string
   city?: string
@@ -117,20 +112,4 @@ export interface ResponseBase {
 export interface ErrorSuccessSchema {
   error: string
   success: string
-}
-
-export type StatusSchema<T extends string> = {
-  [key: string]: {
-    active: T[]
-    inactive: T[]
-    all: T[]
-  }
-}
-
-export interface StatusState {
-  statuses: StatusSchema<string>
-}
-
-export interface StatusAction extends StatusState {
-  type: string
 }

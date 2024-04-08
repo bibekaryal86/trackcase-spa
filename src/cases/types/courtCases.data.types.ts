@@ -3,7 +3,7 @@ import { HearingCalendarSchema } from '../../calendars'
 import { ClientSchema } from '../../clients'
 import { CaseCollectionSchema } from '../../collections'
 import { ID_DEFAULT } from '../../constants'
-import { FormSchema } from '../../filings'
+import { FilingSchema } from '../../filings'
 import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
 
 export interface CourtCaseBase {
@@ -17,7 +17,7 @@ export interface CourtCaseSchema extends CourtCaseBase, BaseModelSchema {
   caseType?: CaseTypeSchema
   client?: ClientSchema
   componentStatus?: ComponentStatusSchema
-  forms?: FormSchema[]
+  filings?: FilingSchema[]
   caseCollections?: CaseCollectionSchema[]
   hearingCalendars?: HearingCalendarSchema[]
   // history

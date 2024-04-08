@@ -3,7 +3,7 @@ import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CashCollectionSchema } from '../../collections'
 import { ID_DEFAULT, RefTypesRegistry } from '../../constants'
-import { FormSchema } from '../../filings'
+import { FilingSchema } from '../../filings'
 
 export interface ComponentStatusSchema extends BaseModelSchema {
   componentName: string
@@ -18,7 +18,7 @@ export interface ComponentStatusResponse extends ResponseBase {
 
 export interface FilingTypeSchema extends BaseModelSchema, NameDescBaseSchema {
   // orm_mode
-  filings?: FormSchema[]
+  filings?: FilingSchema[]
 }
 
 export interface FilingTypeResponse extends ResponseBase {

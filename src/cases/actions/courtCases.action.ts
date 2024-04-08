@@ -148,12 +148,12 @@ export const getCourtCase = (courtCaseId: number, isIncludeExtra?: boolean) => {
         if (
           isIncludeExtra &&
           oneCourtCase &&
-          (!oneCourtCase.forms ||
-            !oneCourtCase.forms.length ||
+          (!oneCourtCase.filings ||
+            !oneCourtCase.filings.length ||
             !oneCourtCase.caseCollections ||
             !oneCourtCase.caseCollections.length ||
-            !oneCourtCase.forms ||
-            !oneCourtCase.forms.length)
+            !oneCourtCase.hearingCalendars ||
+            !oneCourtCase.hearingCalendars.length)
         ) {
           oneCourtCase = undefined
         }

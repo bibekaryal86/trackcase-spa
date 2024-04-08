@@ -169,11 +169,6 @@ export const DefaultTaskCalendarFormData: TaskCalendarFormData = {
   isShowSoftDeleted: false,
 }
 
-export const DefaultCalendarFormData = {
-  ...DefaultHearingCalendarFormData,
-  ...DefaultTaskCalendarFormData,
-}
-
 export const DefaultHearingCalendarFormErrorData: HearingCalendarFormErrorData = {
   ...DefaultHearingCalendarFormData,
   hearingDateError: '',
@@ -190,9 +185,4 @@ export const DefaultTaskCalendarFormErrorData: TaskCalendarFormErrorData = {
   hearingCalendarError: '',
   filingError: '',
   componentStatusError: '',
-}
-
-export const DefaultCalendarFormErrorData = {
-  ...DefaultHearingCalendarFormErrorData,
-  ...DefaultTaskCalendarFormErrorData,
 }
