@@ -10,7 +10,6 @@ interface FetchUrlOptions {
   path: string
   queryParams: FetchParamObjects
   pathParams: FetchParamObjects
-  extraParams: Partial<FetchExtraOptions>
   metadataParams: Partial<FetchRequestMetadata>
 }
 
@@ -34,12 +33,6 @@ export interface FetchRequestMetadata {
   pageNumber: number
   perPage: number
   isIncludeDeleted: boolean
-  isIncludeExtra: boolean
-  isIncludeHistory: boolean
-}
-
-// TODO this should be removed
-interface FetchExtraOptions {
   isIncludeExtra: boolean
   isIncludeHistory: boolean
 }
