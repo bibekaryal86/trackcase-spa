@@ -1,18 +1,14 @@
 import React from 'react'
 
+import { tableAddButtonComponent } from '@app/components/CommonComponents'
+import Link from '@app/components/Link'
+import Table from '@app/components/Table'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
+import { getFullAddress } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
 
-import {
-  FetchRequestMetadata,
-  getFullAddress,
-  Link,
-  ModalState,
-  Table,
-  tableAddButtonComponent,
-  TableData,
-  TableHeaderData,
-} from '../../app'
-import { checkUserHasPermission, isSuperuser } from '../../users'
 import { CourtFormData, CourtSchema } from '../types/courts.data.types'
 import { getCourtFormDataFromSchema } from '../utils/courts.utils'
 
