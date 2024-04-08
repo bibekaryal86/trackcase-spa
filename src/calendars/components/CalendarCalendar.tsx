@@ -214,18 +214,18 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   }
 
   const addCalendarModal = () => {
-    console.log('add calendar modal')
     if (selectedDate?.isBefore(minCalendarDate, 'day') || selectedDate?.isAfter(maxCalendarDate, 'day')) {
       return (
         <Modal
-            open={calendarModal.showModal}
-            title="ADD CALENDAR EVENT"
-            primaryButtonText={ACTION_TYPES.CANCEL}
-            primaryButtonCallback={calendarModal.toggleModalView}
-            contentText={`SELECTED DATE IS NOT WITHIN THE ALLOWED RANGE OF BETWEEN ${minCalendarDate.format(
+          open={calendarModal.showModal}
+          title="ADD CALENDAR EVENT"
+          primaryButtonText={ACTION_TYPES.CANCEL}
+          primaryButtonCallback={calendarModal.toggleModalView}
+          contentText={`SELECTED DATE IS NOT WITHIN THE ALLOWED RANGE OF BETWEEN ${minCalendarDate.format(
             DATE_FORMAT,
           )} AND ${maxCalendarDate.format(DATE_FORMAT)} TO ADD A NEW EVENT!`}
-           onClose={() => calendarModal.toggleModalView()}/>
+          onClose={() => calendarModal.toggleModalView()}
+        />
       )
     }
     return (
@@ -271,6 +271,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   }
 
   const onClickDateHeader = (date: Date) => {
+    calendarModal.toggleModalView()
     setSelectedDate(dayjs(date))
   }
 

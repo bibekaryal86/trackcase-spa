@@ -138,7 +138,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
   }, [])
 
   const getCollectionsWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
-    getCollections({...requestMetadata, isIncludeExtra: true})
+    getCollections({ ...requestMetadata, isIncludeExtra: true })
   }
 
   const primaryButtonCallback = async (action: ActionTypes, type?: string) => {
