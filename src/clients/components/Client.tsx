@@ -6,21 +6,23 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-
-import ClientForm from './ClientForm'
 import {
-  getNumber,
-  GlobalState,
-  isValidId,
   pageActionButtonsComponent,
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '../../app'
-import { CourtCaseSchema, CourtCaseTable } from '../../cases'
-import { getJudges, JudgeSchema } from '../../judges'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { getNumber, isValidId } from '@app/utils/app.utils'
+import CourtCaseTable from '@cases/components/CourtCaseTable'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getJudges } from '@judges/actions/judges.action'
+import { JudgeSchema } from '@judges/types/judges.data.types'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import ClientForm from './ClientForm'
 import { clientsAction, getClient } from '../actions/clients.action'
 import {
   ClientBase,
