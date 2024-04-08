@@ -29,7 +29,7 @@ import {
   DefaultCourtCaseFormData,
   DefaultCourtCaseFormErrorData,
 } from '../types/courtCases.data.types'
-import { validateCourtCase } from '../utils/courtCases.utils'
+import { isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
 
 const mapStateToProps = ({ refTypes, courtCases, clients }: GlobalState) => {
   return {
@@ -168,6 +168,10 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       DefaultCourtCaseFormData,
       DefaultCourtCaseFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoCourtCasesSame(formData, formDataReset),
+      isAreTwoCourtCasesSame(formData, formDataReset),
+      isAreTwoCourtCasesSame(formData, formDataReset),
     )
 
   const updateModal = () =>
@@ -183,6 +187,10 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       DefaultCourtCaseFormData,
       DefaultCourtCaseFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoCourtCasesSame(formData, formDataReset),
+      isAreTwoCourtCasesSame(formData, formDataReset),
+      isAreTwoCourtCasesSame(formData, formDataReset),
     )
 
   const getClientCaseType = () => {

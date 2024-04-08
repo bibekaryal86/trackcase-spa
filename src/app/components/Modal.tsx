@@ -30,8 +30,8 @@ const Modal = (props: ModalProps) => {
   const maxWidth = props.maxWidth || 'sm'
 
   const cleanUpButtonText = (buttonText?: string) => {
-    if (buttonText && buttonText.includes("_")) {
-      return buttonText.replace("_", " ")
+    if (buttonText && buttonText.includes('_')) {
+      return buttonText.replace('_', ' ')
     }
     return buttonText
   }

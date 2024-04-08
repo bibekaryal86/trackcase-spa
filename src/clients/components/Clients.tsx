@@ -29,7 +29,7 @@ import {
   DefaultClientFormData,
   DefaultClientFormErrorData,
 } from '../types/clients.data.types'
-import { validateClient } from '../utils/clients.utils'
+import { isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
 
 const mapStateToProps = ({ refTypes, clients, judges }: GlobalState) => {
   return {
@@ -156,6 +156,10 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       DefaultClientFormData,
       DefaultClientFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoClientsSame(formData, formDataReset),
+      isAreTwoClientsSame(formData, formDataReset),
+      isAreTwoClientsSame(formData, formDataReset),
     )
 
   const updateModal = () =>
@@ -171,6 +175,10 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       DefaultClientFormData,
       DefaultClientFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoClientsSame(formData, formDataReset),
+      isAreTwoClientsSame(formData, formDataReset),
+      isAreTwoClientsSame(formData, formDataReset),
     )
 
   const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${

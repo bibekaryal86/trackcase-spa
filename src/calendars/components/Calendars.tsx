@@ -49,7 +49,12 @@ import {
   TaskCalendarResponse,
   TaskCalendarSchema,
 } from '../types/calendars.data.types'
-import { validateHearingCalendar, validateTaskCalendar } from '../utils/calendars.utils'
+import {
+  isAreTwoHearingCalendarsSame,
+  isAreTwoTaskCalendarsSame,
+  validateHearingCalendar,
+  validateTaskCalendar,
+} from '../utils/calendars.utils'
 
 const mapStateToProps = ({ calendars, refTypes, courtCases, filings, clients }: GlobalState) => {
   return {
@@ -281,6 +286,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultHearingCalendarFormErrorData,
       formDataResetHc,
       CALENDAR_TYPES.HEARING_CALENDAR,
+      isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
+      isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
+      isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
     )
 
   const addModalTc = () =>
@@ -297,6 +305,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultTaskCalendarFormErrorData,
       formDataResetTc,
       CALENDAR_TYPES.TASK_CALENDAR,
+      isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
+      isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
+      isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
     )
 
   const updateModalHc = () =>
@@ -313,6 +324,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultHearingCalendarFormErrorData,
       formDataResetHc,
       CALENDAR_TYPES.HEARING_CALENDAR,
+      isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
+      isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
+      isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
     )
 
   const updateModalTc = () =>
@@ -329,6 +343,9 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       DefaultTaskCalendarFormErrorData,
       formDataResetTc,
       CALENDAR_TYPES.TASK_CALENDAR,
+      isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
+      isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
+      isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
     )
 
   const deleteModalContextTextHc = `ARE YOU SURE YOU WANT TO ${

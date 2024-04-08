@@ -44,7 +44,12 @@ import {
   DefaultCashCollectionFormData,
   DefaultCashCollectionFormErrorData,
 } from '../types/collections.data.types'
-import { validateCaseCollection, validateCashCollection } from '../utils/collections.utils'
+import {
+  isAreTwoCaseCollectionsSame,
+  isAreTwoCashCollectionsSame,
+  validateCaseCollection,
+  validateCashCollection,
+} from '../utils/collections.utils'
 
 const mapStateToProps = ({ collections, refTypes, courtCases, clients }: GlobalState) => {
   return {
@@ -247,6 +252,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       DefaultCaseCollectionFormErrorData,
       formDataResetCase,
       COLLECTION_TYPES.CASE_COLLECTION,
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
     )
 
   const addModalCash = () =>
@@ -263,6 +271,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       DefaultCashCollectionFormErrorData,
       formDataResetCash,
       COLLECTION_TYPES.CASH_COLLECTION,
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
     )
 
   const updateModalCase = () =>
@@ -279,6 +290,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       DefaultCaseCollectionFormErrorData,
       formDataResetCase,
       COLLECTION_TYPES.CASE_COLLECTION,
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
     )
 
   const updateModalCash = () =>
@@ -295,6 +309,9 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       DefaultCashCollectionFormErrorData,
       formDataResetCash,
       COLLECTION_TYPES.CASH_COLLECTION,
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
     )
 
   const getDeleteContextText = (type: CollectionTypes) => {

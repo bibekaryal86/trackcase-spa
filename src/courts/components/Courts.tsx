@@ -28,7 +28,7 @@ import {
   DefaultCourtFormData,
   DefaultCourtFormErrorData,
 } from '../types/courts.data.types'
-import { validateCourt } from '../utils/courts.utils'
+import { isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
 
 const mapStateToProps = ({ refTypes, courts }: GlobalState) => {
   return {
@@ -148,6 +148,10 @@ const Courts = (props: CourtsProps): React.ReactElement => {
       DefaultCourtFormData,
       DefaultCourtFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoCourtsSame(formData, formDataReset),
+      isAreTwoCourtsSame(formData, formDataReset),
+      isAreTwoCourtsSame(formData, formDataReset),
     )
 
   const updateModal = () =>
@@ -163,6 +167,10 @@ const Courts = (props: CourtsProps): React.ReactElement => {
       DefaultCourtFormData,
       DefaultCourtFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoCourtsSame(formData, formDataReset),
+      isAreTwoCourtsSame(formData, formDataReset),
+      isAreTwoCourtsSame(formData, formDataReset),
     )
 
   const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${

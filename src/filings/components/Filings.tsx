@@ -30,7 +30,7 @@ import {
   FilingResponse,
   FilingSchema,
 } from '../types/filings.data.types'
-import { validateFiling } from '../utils/filings.utils'
+import { isAreTwoFilingsSame, validateFiling } from '../utils/filings.utils'
 
 const mapStateToProps = ({ refTypes, filings, courtCases, clients }: GlobalState) => {
   return {
@@ -177,6 +177,10 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       DefaultFilingFormData,
       DefaultFilingFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoFilingsSame(formData, formDataReset),
+      isAreTwoFilingsSame(formData, formDataReset),
+      isAreTwoFilingsSame(formData, formDataReset),
     )
 
   const updateModal = () =>
@@ -192,6 +196,10 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       DefaultFilingFormData,
       DefaultFilingFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoFilingsSame(formData, formDataReset),
+      isAreTwoFilingsSame(formData, formDataReset),
+      isAreTwoFilingsSame(formData, formDataReset),
     )
 
   const getClientFilingType = () => {

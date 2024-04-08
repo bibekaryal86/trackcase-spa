@@ -305,6 +305,9 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
   defaultFormErrorData: U,
   formDataReset: T,
   type?: string,
+  primaryButtonDisabled?: boolean,
+  secondaryButtonDisabled?: boolean,
+  resetButtonDisabled?: boolean,
 ) => {
   return (
     <Modal
@@ -340,6 +343,9 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
           defaultFormErrorData,
         )
       }
+      primaryButtonDisabled={primaryButtonDisabled}
+      secondaryButtonDisabled={secondaryButtonDisabled}
+      resetButtonDisabled={resetButtonDisabled}
     />
   )
 }
@@ -357,6 +363,9 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
   defaultFormErrorData: U,
   formDataReset: T,
   type?: string,
+  primaryButtonDisabled?: boolean,
+  secondaryButtonDisabled?: boolean,
+  resetButtonDisabled?: boolean,
 ) => {
   return (
     <Modal
@@ -392,6 +401,9 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
           defaultFormErrorData,
         )
       }
+      primaryButtonDisabled={primaryButtonDisabled}
+      secondaryButtonDisabled={secondaryButtonDisabled}
+      resetButtonDisabled={resetButtonDisabled}
     />
   )
 }
@@ -410,6 +422,9 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
   formData: T,
   formErrors: U,
   type?: string,
+  primaryButtonDisabled?: boolean,
+  secondaryButtonDisabled?: boolean,
+  resetButtonDisabled?: boolean,
 ) => {
   return (
     <Modal
@@ -437,6 +452,9 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
       }
       contentText={contentText}
       content={hardDeleteCheckboxComponent(formData, formErrors, setFormData, setFormErrors)}
+      primaryButtonDisabled={primaryButtonDisabled}
+      secondaryButtonDisabled={secondaryButtonDisabled}
+      resetButtonDisabled={resetButtonDisabled}
     />
   )
 }

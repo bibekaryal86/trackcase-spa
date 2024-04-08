@@ -29,7 +29,7 @@ import {
   JudgeResponse,
   JudgeSchema,
 } from '../types/judges.data.types'
-import { validateJudge } from '../utils/judges.utils'
+import { isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
 
 const mapStateToProps = ({ refTypes, judges, courts }: GlobalState) => {
   return {
@@ -156,6 +156,10 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       DefaultJudgeFormData,
       DefaultJudgeFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoJudgesSame(formData, formDataReset),
+      isAreTwoJudgesSame(formData, formDataReset),
+      isAreTwoJudgesSame(formData, formDataReset),
     )
 
   const updateModal = () =>
@@ -171,6 +175,10 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       DefaultJudgeFormData,
       DefaultJudgeFormErrorData,
       formDataReset,
+      undefined,
+      isAreTwoJudgesSame(formData, formDataReset),
+      isAreTwoJudgesSame(formData, formDataReset),
+      isAreTwoJudgesSame(formData, formDataReset),
     )
 
   const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
