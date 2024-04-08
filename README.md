@@ -1,5 +1,8 @@
 # trackcase-spa
 
+* A simple app to manage clients and cases for a lawyer's office
+* Track filings, manage hearing and task calendars and keep track of collections
+
 * Things to ADD/UPDATE
   * `trackcase-service`
     * MAJOR
