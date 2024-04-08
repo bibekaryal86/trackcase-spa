@@ -4,26 +4,26 @@ import MenuItem from '@mui/material/MenuItem'
 import React, { useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, USER_ADMIN_REGISTRY } from '@constants/index'
-
 import {
   addModalComponent,
   deleteModalComponent,
-  FetchRequestMetadata,
-  FormSelectField,
-  FormTextField,
-  getNumber,
-  GlobalState,
   handleFormChange,
   pageTitleComponent,
   secondaryButtonCallback,
-  Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { FormSelectField, FormTextField } from '@app/components/FormFields'
+import Table from '@app/components/Table'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, USER_ADMIN_REGISTRY } from '@constants/index'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
 import { appUsersAdmin, getAppUsers } from '../action/users.action'
 import {
   AppUserFormData,

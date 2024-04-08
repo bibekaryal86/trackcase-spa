@@ -8,6 +8,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
+import { resetAlert, setAlert } from '@app/utils/alerts.utils'
+import { getErrMsg, getString } from '@app/utils/app.utils'
+import { resetSpinner, setSpinner } from '@app/utils/spinner.utils'
+import { SessionStorage } from '@app/utils/storage.utils'
 import {
   ALERT_TYPES,
   INVALID_INPUT,
@@ -23,7 +27,6 @@ import {
   VALIDATE_SUCCESS,
 } from '@constants/index'
 
-import { getErrMsg, getString, resetAlert, resetSpinner, SessionStorage, setAlert, setSpinner } from '../../app'
 import { login, resetExit, resetInit, signup, validateInit } from '../action/users.action'
 import { AppUserLoginResponse } from '../types/users.data.types'
 import { isLoggedIn, validatePassword, validateSignInUpInput } from '../utils/users.utils'

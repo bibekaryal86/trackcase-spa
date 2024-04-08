@@ -1,5 +1,10 @@
 import React from 'react'
 
+import { GlobalDispatch } from '@app/store/redux'
+import { USER_LOGOUT } from '@app/types/app.action.types'
+import { getEndpoint, getErrMsg, isGetDarkMode } from '@app/utils/app.utils'
+import { Async, FetchOptions, FetchRequestMetadata, FetchResponse } from '@app/utils/fetch.utils'
+import { LocalStorage, SessionStorage } from '@app/utils/storage.utils'
 import {
   ACTION_TYPES,
   ActionTypes,
@@ -9,19 +14,6 @@ import {
   SOMETHING_WENT_WRONG,
 } from '@constants/index'
 
-import {
-  Async,
-  FetchOptions,
-  FetchRequestMetadata,
-  FetchResponse,
-  getEndpoint,
-  getErrMsg,
-  GlobalDispatch,
-  isGetDarkMode,
-  LocalStorage,
-  SessionStorage,
-} from '../../app'
-import { USER_LOGOUT } from '../../app/types/app.action.types'
 import {
   APP_PERMISSIONS_COMPLETE,
   APP_ROLES_COMPLETE,

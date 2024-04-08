@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import React, { useState } from 'react'
 
+import { convertToTitleCase } from '@app/utils/app.utils'
 import { USER_ADMIN_REGISTRY } from '@constants/index'
 
 import UserAdminAppPermissions from './UserAdminAppPermissions'
@@ -10,7 +11,6 @@ import UserAdminAppRoles from './UserAdminAppRoles'
 import UserAdminAppRolesPermissions from './UserAdminAppRolesPermissions'
 import UserAdminAppUsers from './UserAdminAppUsers'
 import UserAdminAppUsersRoles from './UserAdminAppUsersRoles'
-import { convertToTitleCase } from '../../app'
 
 const UserAdmin = (): React.ReactElement => {
   const [tabValue, setTabValue] = useState(USER_ADMIN_REGISTRY.APP_USERS.toString())

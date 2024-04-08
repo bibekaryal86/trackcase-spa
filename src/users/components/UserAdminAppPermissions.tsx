@@ -3,23 +3,23 @@ import Grid from '@mui/material/Grid'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index'
-
 import {
   addModalComponent,
   deleteModalComponent,
-  FetchRequestMetadata,
-  FormTextField,
-  getNumber,
   handleFormChange,
   pageTitleComponent,
   secondaryButtonCallback,
-  Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
+} from '@app/components/CommonComponents'
+import { FormTextField } from '@app/components/FormFields'
+import Table from '@app/components/Table'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index'
+
 import { appPermissionsAdmin, getAppPermissions } from '../action/users.action'
 import {
   AppPermissionFormData,
