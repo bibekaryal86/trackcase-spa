@@ -29,8 +29,12 @@ interface ModalProps {
 const Modal = (props: ModalProps) => {
   const maxWidth = props.maxWidth || 'sm'
 
-  const cleanUpButtonText = (buttonText?: string) =>
-    buttonText && buttonText.includes('_') && buttonText.replace('_', ' ')
+  const cleanUpButtonText = (buttonText?: string) => {
+    if (buttonText && buttonText.includes("_")) {
+      return buttonText.replace("_", " ")
+    }
+    return buttonText
+  }
 
   return (
     <div>
