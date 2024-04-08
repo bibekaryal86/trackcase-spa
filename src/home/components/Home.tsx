@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 
-import { getRefTypes } from '../../types'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
 
 const mapDispatchToProps = {
   getRefTypes: () => getRefTypes(),
