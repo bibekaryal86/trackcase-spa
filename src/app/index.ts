@@ -27,7 +27,7 @@ import {
   GridFormWrapper,
 } from './components/FormFields'
 import Link from './components/Link'
-import { Modal, Modal2 } from './components/Modal'
+import Modal from './components/Modal'
 import Switch from './components/Switch'
 import Table from './components/Table'
 // action types
@@ -109,7 +109,7 @@ export {
   tableAddButtonComponent,
 }
 export { Link }
-export { Modal, Modal2 }
+export { Modal }
 export { Switch }
 export { Table }
 export type { GlobalDispatch, GlobalState }

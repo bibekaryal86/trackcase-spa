@@ -24,7 +24,7 @@ import {
   Views,
 } from 'react-big-calendar'
 
-import { getDayjs, getNumber, getString, Modal, ModalState } from '../../app'
+import { getDayjs, getNumber, getString, Modal, ModalState, useModal } from '../../app'
 import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import {
   CalendarEvents,
@@ -189,6 +189,7 @@ const RbcDateHeader: React.FC<RbcDateHeaderProps> = ({ date, label, isOffRange, 
 
 const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+  const calendarModal = useModal()
 
   const { calendarEvents } = props
   const { setFormDataHc, setFormDataTc, setFormDataResetHc, setFormDataResetTc } = props
@@ -196,13 +197,11 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   const { hearingCalendarsList, taskCalendarsList } = props
   const { minCalendarDate, maxCalendarDate } = props
 
-  const [showAddModal, setShowAddModal] = useState<boolean>(false)
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
   //const [selectedDatePickerDate, setSelectedDatePickerDate] = useState(dayjs())
 
   const addCalendarModalCallback = (type: CalendarTypes) => {
-    setShowAddModal(false)
     if (type === CALENDAR_TYPES.HEARING_CALENDAR) {
       setFormDataHc({ ...DefaultHearingCalendarFormData, hearingDate: selectedDate || dayjs() })
       setFormDataResetHc({ ...DefaultHearingCalendarFormData, hearingDate: selectedDate || dayjs() })
@@ -215,32 +214,32 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   }
 
   const addCalendarModal = () => {
+    console.log('add calendar modal')
     if (selectedDate?.isBefore(minCalendarDate, 'day') || selectedDate?.isAfter(maxCalendarDate, 'day')) {
       return (
         <Modal
-          isOpen={true}
-          setIsOpen={setShowAddModal}
-          title="ADD CALENDAR EVENT"
-          primaryButtonText={ACTION_TYPES.CANCEL}
-          primaryButtonCallback={() => setShowAddModal(false)}
-          contentText={`SELECTED DATE IS NOT WITHIN THE ALLOWED RANGE OF BETWEEN ${minCalendarDate.format(
+            open={calendarModal.showModal}
+            title="ADD CALENDAR EVENT"
+            primaryButtonText={ACTION_TYPES.CANCEL}
+            primaryButtonCallback={calendarModal.toggleModalView}
+            contentText={`SELECTED DATE IS NOT WITHIN THE ALLOWED RANGE OF BETWEEN ${minCalendarDate.format(
             DATE_FORMAT,
           )} AND ${maxCalendarDate.format(DATE_FORMAT)} TO ADD A NEW EVENT!`}
-        />
+           onClose={() => calendarModal.toggleModalView()}/>
       )
     }
     return (
       <Modal
-        isOpen={true}
-        setIsOpen={setShowAddModal}
+        open={calendarModal.showModal}
         title="ADD CALENDAR EVENT"
-        primaryButtonText={CALENDAR_TYPES.HEARING_CALENDAR.split('_')[0]}
+        primaryButtonText={CALENDAR_TYPES.HEARING_CALENDAR}
         primaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.HEARING_CALENDAR)}
-        secondaryButtonText={CALENDAR_TYPES.TASK_CALENDAR.split('_')[0]}
+        secondaryButtonText={CALENDAR_TYPES.TASK_CALENDAR}
         secondaryButtonCallback={() => addCalendarModalCallback(CALENDAR_TYPES.TASK_CALENDAR)}
         resetButtonText={ACTION_TYPES.CANCEL}
-        resetButtonCallback={() => setShowAddModal(false)}
+        resetButtonCallback={() => calendarModal.toggleModalView()}
         contentText="SELECT CALENDAR TYPE TO ADD..."
+        onClose={() => calendarModal.toggleModalView()}
       />
     )
   }
@@ -273,7 +272,6 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
 
   const onClickDateHeader = (date: Date) => {
     setSelectedDate(dayjs(date))
-    setShowAddModal(true)
   }
 
   const components: Partial<{
@@ -370,7 +368,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         eventPropGetter={eventStyleGetter}
         onNavigate={(newDate) => setSelectedDate(dayjs(newDate))}
       />
-      {showAddModal && addCalendarModal()}
+      {addCalendarModal()}
       {showDatePicker && datePickerModal()}
     </>
   )

@@ -9,7 +9,7 @@ import { Dayjs } from 'dayjs'
 import React from 'react'
 
 import Link from './Link'
-import { Modal2 } from './Modal'
+import Modal from './Modal'
 import {
   HearingCalendarFormData,
   HearingCalendarFormErrorData,
@@ -307,7 +307,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
   type?: string,
 ) => {
   return (
-    <Modal2
+    <Modal
       open={addModalState.showModal}
       onClose={() => {
         addModalState.toggleModalView()
@@ -359,7 +359,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
   type?: string,
 ) => {
   return (
-    <Modal2
+    <Modal
       open={updateModalState.showModal}
       onClose={() => {
         updateModalState.toggleModalView()
@@ -412,7 +412,7 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
   type?: string,
 ) => {
   return (
-    <Modal2
+    <Modal
       open={deleteModalState.showModal}
       onClose={() => {
         deleteModalState.toggleModalView()
