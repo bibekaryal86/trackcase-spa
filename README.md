@@ -26,5 +26,3 @@
       * MINOR
         * add new case
           * when adding a new case, allow options to add client, calendar, collections etc
-
-how to make page numbers appear if not all data pulled in?
