@@ -1,10 +1,10 @@
+import { BaseModelSchema, NameDescBaseSchema, ResponseBase } from '@app/types/app.data.types'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { HearingCalendarSchema, TaskCalendarSchema } from '@calendars/types/calendars.data.types'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { CashCollectionSchema } from '@collections/types/collections.data.types'
 import { ID_DEFAULT, RefTypesRegistry } from '@constants/index'
-
-import { BaseModelSchema, FetchRequestMetadata, NameDescBaseSchema, ResponseBase } from '../../app'
-import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
-import { CourtCaseSchema } from '../../cases'
-import { CashCollectionSchema } from '../../collections'
-import { FilingSchema } from '../../filings'
+import { FilingSchema } from '@filings/types/filings.data.types'
 
 export interface ComponentStatusSchema extends BaseModelSchema {
   componentName: string

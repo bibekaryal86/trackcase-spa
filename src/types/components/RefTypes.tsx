@@ -7,6 +7,22 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import {
+  addModalComponent,
+  deleteModalComponent,
+  handleFormChange,
+  pageTitleComponent,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  tableAddButtonComponent,
+  updateModalComponent,
+} from '@app/components/CommonComponents'
+import { FormSelectField, FormTextField } from '@app/components/FormFields'
+import Table from '@app/components/Table'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { convertToCamelCase, convertToTitleCase, getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import {
   ACTION_TYPES,
   ActionTypes,
   COMPONENT_STATUS_NAME,
@@ -15,25 +31,6 @@ import {
   RefTypesRegistry,
 } from '@constants/index'
 
-import {
-  addModalComponent,
-  convertToCamelCase,
-  convertToTitleCase,
-  deleteModalComponent,
-  FetchRequestMetadata,
-  FormSelectField,
-  FormTextField,
-  getNumber,
-  GlobalState,
-  handleFormChange,
-  pageTitleComponent,
-  secondaryButtonCallback,
-  Table,
-  tableActionButtonsComponent,
-  tableAddButtonComponent,
-  updateModalComponent,
-  useModal,
-} from '../../app'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import {
   DefaultRefTypeFormData,

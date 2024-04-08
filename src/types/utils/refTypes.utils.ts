@@ -1,9 +1,10 @@
 import React from 'react'
 
+import { TableData, TableHeaderData } from '@app/types/app.data.types'
+import { getString } from '@app/utils/app.utils'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '@constants/index'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
 
-import { getString, TableData, TableHeaderData } from '../../app'
-import { checkUserHasPermission, isSuperuser } from '../../users'
 import {
   ComponentStatusSchema,
   DefaultRefTypeFormData,
