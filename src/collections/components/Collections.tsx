@@ -107,7 +107,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
 
   useEffect(() => {
     if (isForceFetch.current) {
-      caseCollectionsList.length === 0 && getCollections({})
+      caseCollectionsList.length === 0 && getCollections({ isIncludeExtra: true })
       courtCasesList.length === 0 && getCourtCasesList()
       clientsList.length === 0 && getClientsList()
       if (
@@ -138,7 +138,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
   }, [])
 
   const getCollectionsWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
-    getCollections(requestMetadata)
+    getCollections({...requestMetadata, isIncludeExtra: true})
   }
 
   const primaryButtonCallback = async (action: ActionTypes, type?: string) => {
