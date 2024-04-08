@@ -5,6 +5,22 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import {
+  addModalComponent,
+  deleteModalComponent,
+  pageTitleComponent,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  updateModalComponent,
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { getCurrency, getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { getCourtCases } from '@cases/actions/courtCases.action'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { getClients } from '@clients/actions/clients.action'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import {
   ACTION_TYPES,
   ActionTypes,
   COLLECTION_TYPES,
@@ -12,25 +28,11 @@ import {
   COMPONENT_STATUS_NAME,
   INVALID_INPUT,
 } from '@constants/index'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
 
 import { CollectionFormCase, CollectionFormCash } from './CollectionForm'
 import CollectionTable from './CollectionTable'
-import {
-  addModalComponent,
-  deleteModalComponent,
-  FetchRequestMetadata,
-  getCurrency,
-  getNumber,
-  GlobalState,
-  pageTitleComponent,
-  secondaryButtonCallback,
-  tableActionButtonsComponent,
-  updateModalComponent,
-  useModal,
-} from '../../app'
-import { CourtCaseSchema, getCourtCases } from '../../cases'
-import { ClientSchema, getClients } from '../../clients'
-import { getRefTypes, RefTypesState } from '../../types'
 import { collectionsAction, getCollections } from '../actions/collections.action'
 import {
   CaseCollectionBase,
