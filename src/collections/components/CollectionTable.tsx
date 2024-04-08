@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '@constants/index'
+
 import {
   FetchRequestMetadata,
   getCurrency,
@@ -13,7 +15,6 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '../../constants'
 import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
 import { checkUserHasPermission } from '../../users'
 import {

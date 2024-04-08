@@ -4,7 +4,8 @@ import Stack from '@mui/material/Stack'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
-import { INVALID_SESSION } from '../../constants'
+import { INVALID_SESSION } from '@constants/index'
+
 import { GlobalState } from '../store/redux'
 import { AlertState } from '../types/app.data.types'
 import { resetAlert } from '../utils/alerts.utils'

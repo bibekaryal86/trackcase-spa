@@ -3,6 +3,8 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
+import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '@constants/index'
+
 import {
   FormCommentsField,
   FormSelectField,
@@ -13,7 +15,6 @@ import {
   GridFormWrapper,
   handleFormChange,
 } from '../../app'
-import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { JudgeSchema } from '../../judges'
 import { ComponentStatusSchema } from '../../types'
 import { ClientFormData, ClientFormErrorData } from '../types/clients.data.types'

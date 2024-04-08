@@ -1,6 +1,15 @@
 import React from 'react'
 
 import {
+  ACTION_TYPES,
+  ActionTypes,
+  HTTP_METHODS,
+  ID_DEFAULT,
+  IS_DARK_MODE,
+  SOMETHING_WENT_WRONG,
+} from '@constants/index'
+
+import {
   Async,
   FetchOptions,
   FetchRequestMetadata,
@@ -13,14 +22,6 @@ import {
   SessionStorage,
 } from '../../app'
 import { USER_LOGOUT } from '../../app/types/app.action.types'
-import {
-  ACTION_TYPES,
-  ActionTypes,
-  HTTP_METHODS,
-  ID_DEFAULT,
-  IS_DARK_MODE,
-  SOMETHING_WENT_WRONG,
-} from '../../constants'
 import {
   APP_PERMISSIONS_COMPLETE,
   APP_ROLES_COMPLETE,

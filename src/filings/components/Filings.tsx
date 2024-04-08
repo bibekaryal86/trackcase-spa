@@ -3,6 +3,8 @@ import Grid from '@mui/material/Grid'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+
 import FilingForm from './FilingForm'
 import FilingTable from './FilingTable'
 import {
@@ -19,7 +21,6 @@ import {
 } from '../../app'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { getRefTypes, RefTypesState } from '../../types'
 import { filingsAction, getFilings } from '../actions/filings.action'
 import {

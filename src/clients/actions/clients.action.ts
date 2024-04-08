@@ -1,6 +1,15 @@
 import React from 'react'
 
 import {
+  ACTION_SUCCESS,
+  ACTION_TYPES,
+  ActionTypes,
+  HTTP_METHODS,
+  ID_DEFAULT,
+  SOMETHING_WENT_WRONG,
+} from '@constants/index'
+
+import {
   Async,
   FetchOptions,
   FetchRequestMetadata,
@@ -10,14 +19,6 @@ import {
   GlobalDispatch,
   GlobalState,
 } from '../../app'
-import {
-  ACTION_SUCCESS,
-  ACTION_TYPES,
-  ActionTypes,
-  HTTP_METHODS,
-  ID_DEFAULT,
-  SOMETHING_WENT_WRONG,
-} from '../../constants'
 import {
   CLIENTS_COMPLETE,
   CLIENTS_READ_FAILURE,

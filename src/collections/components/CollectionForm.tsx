@@ -4,6 +4,8 @@ import MenuItem from '@mui/material/MenuItem'
 import { Dayjs } from 'dayjs'
 import React from 'react'
 
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -16,7 +18,6 @@ import {
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
 import {
   CaseCollectionFormData,

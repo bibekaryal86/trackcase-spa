@@ -1,5 +1,6 @@
+import { ID_DEFAULT } from '@constants/index'
+
 import { AddressBaseSchema, BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
-import { ID_DEFAULT } from '../../constants'
 import { JudgeSchema } from '../../judges'
 import { ComponentStatusSchema } from '../../types'
 import { AppUserSchema } from '../../users'

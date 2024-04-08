@@ -24,8 +24,9 @@ import {
   Views,
 } from 'react-big-calendar'
 
+import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '@constants/index'
+
 import { getDayjs, getNumber, getString, Modal, ModalState, useModal } from '../../app'
-import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '../../constants'
 import {
   CalendarEvents,
   DefaultCalendarSchema,

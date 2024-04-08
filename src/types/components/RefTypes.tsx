@@ -7,6 +7,15 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import {
+  ACTION_TYPES,
+  ActionTypes,
+  COMPONENT_STATUS_NAME,
+  COMPONENT_STATUS_STATUS,
+  REF_TYPES_REGISTRY,
+  RefTypesRegistry,
+} from '@constants/index'
+
+import {
   addModalComponent,
   convertToCamelCase,
   convertToTitleCase,
@@ -25,14 +34,6 @@ import {
   updateModalComponent,
   useModal,
 } from '../../app'
-import {
-  ACTION_TYPES,
-  ActionTypes,
-  COMPONENT_STATUS_NAME,
-  COMPONENT_STATUS_STATUS,
-  REF_TYPES_REGISTRY,
-  RefTypesRegistry,
-} from '../../constants'
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import {
   DefaultRefTypeFormData,

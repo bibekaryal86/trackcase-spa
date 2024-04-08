@@ -1,5 +1,6 @@
+import { AMOUNT_DEFAULT, COLLECTION_TYPES, ID_DEFAULT } from '@constants/index'
+
 import { FetchRequestMetadata, getDayjs, getNumber } from '../../app'
-import { AMOUNT_DEFAULT, COLLECTION_TYPES, ID_DEFAULT } from '../../constants'
 import {
   CaseCollectionFormData,
   CaseCollectionFormErrorData,

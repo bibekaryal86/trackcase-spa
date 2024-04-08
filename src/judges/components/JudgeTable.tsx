@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
+
 import {
   FetchRequestMetadata,
   Link,
@@ -9,7 +11,6 @@ import {
   TableData,
   TableHeaderData,
 } from '../../app'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
 import { CourtFormData, CourtSchema } from '../../courts'
 import { ComponentStatusSchema } from '../../types'
 import { checkUserHasPermission, isSuperuser } from '../../users'

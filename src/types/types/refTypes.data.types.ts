@@ -1,8 +1,9 @@
+import { ID_DEFAULT, RefTypesRegistry } from '@constants/index'
+
 import { BaseModelSchema, FetchRequestMetadata, NameDescBaseSchema, ResponseBase } from '../../app'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CashCollectionSchema } from '../../collections'
-import { ID_DEFAULT, RefTypesRegistry } from '../../constants'
 import { FilingSchema } from '../../filings'
 
 export interface ComponentStatusSchema extends BaseModelSchema {

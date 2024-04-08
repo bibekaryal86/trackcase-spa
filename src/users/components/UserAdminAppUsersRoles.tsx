@@ -4,6 +4,8 @@ import MenuItem from '@mui/material/MenuItem'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index'
+
 import {
   addModalComponent,
   deleteModalComponent,
@@ -19,7 +21,6 @@ import {
   updateModalComponent,
   useModal,
 } from '../../app'
-import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '../../constants'
 import { appUsersRolesAdmin, getAppUsersRoles } from '../action/users.action'
 import {
   AppUserRoleFormData,

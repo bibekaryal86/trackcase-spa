@@ -1,8 +1,9 @@
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
+import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE } from '@constants/index'
+
 import { SessionStorage } from './storage.utils'
-import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
 import { ErrorDetail } from '../types/app.data.types'
 

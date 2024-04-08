@@ -3,6 +3,8 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+
 import {
   FormCommentsField,
   FormSelectField,
@@ -12,7 +14,6 @@ import {
   handleFormChange,
 } from '../../app'
 import { ClientSchema } from '../../clients'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
 import { CourtCaseFormData, CourtCaseFormErrorData } from '../types/courtCases.data.types'
 

@@ -1,5 +1,6 @@
+import { ID_DEFAULT } from '@constants/index'
+
 import { FetchRequestMetadata, getNumber, validateAddress, validateEmailAddress, validatePhoneNumber } from '../../app'
-import { ID_DEFAULT } from '../../constants'
 import {
   ClientFormData,
   ClientFormErrorData,

@@ -1,5 +1,6 @@
+import { ID_DEFAULT } from '@constants/index'
+
 import { FetchRequestMetadata, getNumber } from '../../app'
-import { ID_DEFAULT } from '../../constants'
 import { DefaultJudgeFormErrorData, JudgeFormData, JudgeFormErrorData, JudgeSchema } from '../types/judges.data.types'
 
 export const isAreTwoJudgesSame = (one: JudgeFormData | JudgeSchema, two: JudgeFormData | JudgeSchema) =>

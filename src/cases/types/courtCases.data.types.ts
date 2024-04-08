@@ -1,8 +1,9 @@
+import { ID_DEFAULT } from '@constants/index'
+
 import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
 import { HearingCalendarSchema } from '../../calendars'
 import { ClientSchema } from '../../clients'
 import { CaseCollectionSchema } from '../../collections'
-import { ID_DEFAULT } from '../../constants'
 import { FilingSchema } from '../../filings'
 import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
 

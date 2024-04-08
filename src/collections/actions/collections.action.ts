@@ -1,15 +1,6 @@
 import React from 'react'
 
 import {
-  Async,
-  FetchOptions,
-  FetchRequestMetadata,
-  getEndpoint,
-  getErrMsg,
-  GlobalDispatch,
-  GlobalState,
-} from '../../app'
-import {
   ACTION_SUCCESS,
   ACTION_TYPES,
   ActionTypes,
@@ -19,7 +10,17 @@ import {
   SOMETHING_WENT_WRONG,
   TYPE_IS_INCORRECT,
   TYPE_IS_MISSING,
-} from '../../constants'
+} from '@constants/index'
+
+import {
+  Async,
+  FetchOptions,
+  FetchRequestMetadata,
+  getEndpoint,
+  getErrMsg,
+  GlobalDispatch,
+  GlobalState,
+} from '../../app'
 import {
   CASE_COLLECTIONS_COMPLETE,
   CASE_COLLECTIONS_READ_FAILURE,

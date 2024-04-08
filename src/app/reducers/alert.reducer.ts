@@ -1,4 +1,5 @@
-import { ALERT_TYPES } from '../../constants'
+import { ALERT_TYPES } from '@constants/index'
+
 import { RESET_ALERT, SET_ALERT } from '../types/app.action.types'
 import { AlertAction, AlertState } from '../types/app.data.types'
 

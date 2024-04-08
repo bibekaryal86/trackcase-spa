@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
+
 import {
   FetchRequestMetadata,
   getDayjsString,
@@ -11,7 +13,6 @@ import {
   TableHeaderData,
 } from '../../app'
 import { ClientFormData, ClientSchema } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
 import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import { CourtCaseFormData, CourtCaseSchema } from '../types/courtCases.data.types'

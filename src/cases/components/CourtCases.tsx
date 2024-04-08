@@ -3,6 +3,8 @@ import Grid from '@mui/material/Grid'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+
 import CourtCaseForm from './CourtCaseForm'
 import CourtCaseTable from './CourtCaseTable'
 import {
@@ -18,7 +20,6 @@ import {
   useModal,
 } from '../../app'
 import { ClientSchema, getClients } from '../../clients'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { getRefTypes, RefTypesState } from '../../types'
 import { courtCasesAction, getCourtCases } from '../actions/courtCases.action'
 import {

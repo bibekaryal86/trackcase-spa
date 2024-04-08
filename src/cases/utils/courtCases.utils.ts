@@ -1,5 +1,6 @@
+import { ID_DEFAULT } from '@constants/index'
+
 import { FetchRequestMetadata, getNumber } from '../../app'
-import { ID_DEFAULT } from '../../constants'
 import {
   CourtCaseFormData,
   CourtCaseFormErrorData,

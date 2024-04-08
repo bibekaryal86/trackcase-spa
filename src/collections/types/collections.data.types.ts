@@ -1,8 +1,9 @@
 import { Dayjs } from 'dayjs'
 
+import { AMOUNT_DEFAULT, ID_DEFAULT } from '@constants/index'
+
 import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
 import { CourtCaseSchema } from '../../cases'
-import { AMOUNT_DEFAULT, ID_DEFAULT } from '../../constants'
 import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
 
 export interface CaseCollectionBase {

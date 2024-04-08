@@ -1,8 +1,9 @@
 import * as colors from '@mui/material/colors'
 import dayjs from 'dayjs'
 
+import { CALENDAR_TYPES, DUE_AT_HEARING_ID, ID_DEFAULT } from '@constants/index'
+
 import { FetchRequestMetadata, getDayjs, getNumber } from '../../app'
-import { CALENDAR_TYPES, DUE_AT_HEARING_ID, ID_DEFAULT } from '../../constants'
 import {
   CalendarEvents,
   DefaultHearingCalendarFormErrorData,

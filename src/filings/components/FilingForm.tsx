@@ -4,6 +4,8 @@ import MenuItem from '@mui/material/MenuItem'
 import dayjs from 'dayjs'
 import React from 'react'
 
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -16,7 +18,6 @@ import {
   handleFormDateChange,
 } from '../../app'
 import { CourtCaseSchema } from '../../cases'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
 import { FilingFormData, FilingFormErrorData } from '../types/filings.data.types'
 

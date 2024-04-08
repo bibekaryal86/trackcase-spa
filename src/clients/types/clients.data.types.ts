@@ -1,6 +1,7 @@
+import { ID_DEFAULT } from '@constants/index'
+
 import { AddressBaseSchema, BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
 import { CourtCaseSchema } from '../../cases'
-import { ID_DEFAULT } from '../../constants'
 import { JudgeSchema } from '../../judges'
 import { ComponentStatusSchema } from '../../types'
 

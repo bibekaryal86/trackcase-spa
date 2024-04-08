@@ -4,6 +4,15 @@ import dayjs from 'dayjs'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  COLLECTION_TYPES,
+  CollectionTypes,
+  COMPONENT_STATUS_NAME,
+  INVALID_INPUT,
+} from '@constants/index'
+
 import { CollectionFormCase, CollectionFormCash } from './CollectionForm'
 import CollectionTable from './CollectionTable'
 import {
@@ -21,14 +30,6 @@ import {
 } from '../../app'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
-import {
-  ACTION_TYPES,
-  ActionTypes,
-  COLLECTION_TYPES,
-  CollectionTypes,
-  COMPONENT_STATUS_NAME,
-  INVALID_INPUT,
-} from '../../constants'
 import { getRefTypes, RefTypesState } from '../../types'
 import { collectionsAction, getCollections } from '../actions/collections.action'
 import {

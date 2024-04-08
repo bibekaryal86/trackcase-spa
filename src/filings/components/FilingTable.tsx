@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '@constants/index'
+
 import {
   convertDateToLocaleString,
   FetchRequestMetadata,
@@ -12,7 +14,6 @@ import {
 } from '../../app'
 import { CourtCaseFormData, CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '../../constants'
 import { ComponentStatusSchema, FilingTypeSchema } from '../../types'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import { FilingFormData, FilingSchema } from '../types/filings.data.types'

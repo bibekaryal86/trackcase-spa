@@ -6,6 +6,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+
 import JudgeForm from './JudgeForm'
 import {
   getNumber,
@@ -17,7 +19,6 @@ import {
   pageTopLinksComponent,
 } from '../../app'
 import { ClientSchema, ClientTable } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { CourtSchema, getCourts } from '../../courts'
 import { getRefTypes, RefTypesState } from '../../types'
 import { getJudge, judgesAction } from '../actions/judges.action'

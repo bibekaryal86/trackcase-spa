@@ -2,6 +2,17 @@ import _ from 'lodash'
 import React from 'react'
 
 import {
+  ACTION_TYPES,
+  CREATE_SUCCESS,
+  DELETE_SUCCESS,
+  HTTP_METHODS,
+  REF_TYPES_REGISTRY,
+  RefTypesRegistry,
+  SOMETHING_WENT_WRONG,
+  UPDATE_SUCCESS,
+} from '@constants/index'
+
+import {
   Async,
   convertToCamelCase,
   FetchOptions,
@@ -11,16 +22,6 @@ import {
   GlobalDispatch,
   GlobalState,
 } from '../../app'
-import {
-  ACTION_TYPES,
-  CREATE_SUCCESS,
-  DELETE_SUCCESS,
-  HTTP_METHODS,
-  REF_TYPES_REGISTRY,
-  RefTypesRegistry,
-  SOMETHING_WENT_WRONG,
-  UPDATE_SUCCESS,
-} from '../../constants'
 import {
   CASE_TYPE_COMPLETE,
   CASE_TYPE_READ_REQUEST,

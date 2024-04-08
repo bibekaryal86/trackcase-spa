@@ -3,6 +3,8 @@ import Grid from '@mui/material/Grid'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index'
+
 import {
   addModalComponent,
   deleteModalComponent,
@@ -18,7 +20,6 @@ import {
   updateModalComponent,
   useModal,
 } from '../../app'
-import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '../../constants'
 import { appPermissionsAdmin, getAppPermissions } from '../action/users.action'
 import {
   AppPermissionFormData,

@@ -6,6 +6,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
+import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+
 import FilingForm from './FilingForm'
 import {
   getNumber,
@@ -19,7 +21,6 @@ import {
 import { CalendarTable, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
-import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { getRefTypes, RefTypesState } from '../../types'
 import { filingsAction, getFiling, getFilings } from '../actions/filings.action'
 import {

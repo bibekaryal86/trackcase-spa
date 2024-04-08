@@ -1,7 +1,8 @@
 import React from 'react'
 
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '@constants/index'
+
 import { getString, TableData, TableHeaderData } from '../../app'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
 import { checkUserHasPermission, isSuperuser } from '../../users'
 import {
   ComponentStatusSchema,

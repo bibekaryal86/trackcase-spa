@@ -5,6 +5,15 @@ import dayjs from 'dayjs'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  CALENDAR_TYPES,
+  COMPONENT_STATUS_NAME,
+  ID_DEFAULT,
+  INVALID_INPUT,
+} from '@constants/index'
+
 import CalendarCalendar from './CalendarCalendar'
 import CalendarChooseView from './CalendarChooseView'
 import { CalendarFormHc, CalendarFormTc } from './CalendarForm'
@@ -23,14 +32,6 @@ import {
 } from '../../app'
 import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
-import {
-  ACTION_TYPES,
-  ActionTypes,
-  CALENDAR_TYPES,
-  COMPONENT_STATUS_NAME,
-  ID_DEFAULT,
-  INVALID_INPUT,
-} from '../../constants'
 import { FilingSchema, getFilings } from '../../filings'
 import { getRefTypes, RefTypesState } from '../../types'
 import { calendarsAction, getCalendars } from '../actions/calendars.action'

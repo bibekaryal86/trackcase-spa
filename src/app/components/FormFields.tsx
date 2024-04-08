@@ -11,8 +11,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
-import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '../../constants'
-import { ComponentStatusSchema } from '../../types'
+import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '@constants/index'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+
 import { getDayjs } from '../utils/app.utils'
 
 interface FormWrapperProps {
