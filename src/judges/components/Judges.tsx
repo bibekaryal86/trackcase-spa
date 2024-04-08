@@ -3,24 +3,26 @@ import Grid from '@mui/material/Grid'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-
-import JudgeForm from './JudgeForm'
-import JudgeTable from './JudgeTable'
 import {
   addModalComponent,
   deleteModalComponent,
-  FetchRequestMetadata,
-  getNumber,
-  GlobalState,
   pageTitleComponent,
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
-import { CourtSchema, getCourts } from '../../courts'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getCourts } from '@courts/actions/courts.action'
+import { CourtSchema } from '@courts/types/courts.data.types'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import JudgeForm from './JudgeForm'
+import JudgeTable from './JudgeTable'
 import { getJudges, judgesAction } from '../actions/judges.action'
 import {
   DefaultJudgeFormData,

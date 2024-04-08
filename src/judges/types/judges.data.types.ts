@@ -1,9 +1,9 @@
+import { BaseModelSchema, ResponseBase } from '@app/types/app.data.types'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ClientSchema } from '@clients/types/clients.data.types'
 import { ID_DEFAULT } from '@constants/index'
-
-import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
-import { ClientSchema } from '../../clients'
-import { CourtSchema } from '../../courts'
-import { ComponentStatusSchema } from '../../types'
+import { CourtSchema } from '@courts/types/courts.data.types'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
 
 export interface JudgeBase {
   name: string

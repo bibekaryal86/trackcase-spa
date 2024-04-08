@@ -1,5 +1,8 @@
 import React from 'react'
 
+import { GlobalDispatch, GlobalState } from '@app/store/redux'
+import { getEndpoint, getErrMsg } from '@app/utils/app.utils'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
 import {
   ACTION_SUCCESS,
   ACTION_TYPES,
@@ -9,15 +12,6 @@ import {
   SOMETHING_WENT_WRONG,
 } from '@constants/index'
 
-import {
-  Async,
-  FetchOptions,
-  FetchRequestMetadata,
-  getEndpoint,
-  getErrMsg,
-  GlobalDispatch,
-  GlobalState,
-} from '../../app'
 import {
   JUDGES_COMPLETE,
   JUDGES_READ_FAILURE,
