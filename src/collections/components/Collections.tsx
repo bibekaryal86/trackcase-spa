@@ -1,366 +1,430 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
 import dayjs from 'dayjs'
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { connect, useDispatch } from 'react-redux'
 
-import CollectionForm from './CollectionForm'
+import { CollectionFormCase, CollectionFormCash } from './CollectionForm'
 import CollectionTable from './CollectionTable'
-import { getCurrency, getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
-import { CourtCaseSchema, getCourtCase, getCourtCases } from '../../cases'
+import {
+  addModalComponent,
+  deleteModalComponent,
+  FetchRequestMetadata,
+  getCurrency,
+  getNumber,
+  GlobalState,
+  pageTitleComponent,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  updateModalComponent,
+  useModal,
+} from '../../app'
+import { CourtCaseSchema, getCourtCases } from '../../cases'
 import { ClientSchema, getClients } from '../../clients'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_ADD,
-  BUTTON_CANCEL,
-  BUTTON_DELETE,
-  BUTTON_RESET,
-  BUTTON_UPDATE,
-  COLLECTION_OBJECT_TYPES,
-  ID_DEFAULT,
+  ACTION_TYPES,
+  ActionTypes,
+  COLLECTION_TYPES,
+  CollectionTypes,
+  COMPONENT_STATUS_NAME,
+  INVALID_INPUT,
 } from '../../constants'
-import { CaseTypeSchema, CollectionMethodSchema, getCaseTypes, getCollectionMethods } from '../../types'
-import { addCollection, deleteCollection, editCollection, getCollections } from '../actions/collections.action'
-import { COLLECTIONS_UNMOUNT } from '../types/collections.action.types'
-import { CaseCollectionSchema, CashCollectionSchema, DefaultCollectionSchema } from '../types/collections.data.types'
-import { isAreTwoCollectionsSame, isCaseCollection } from '../utils/collections.utils'
+import { getRefTypes, RefTypesState } from '../../types'
+import { collectionsAction, getCollections } from '../actions/collections.action'
+import {
+  CaseCollectionBase,
+  CaseCollectionFormData,
+  CaseCollectionResponse,
+  CaseCollectionSchema,
+  CashCollectionBase,
+  CashCollectionFormData,
+  CashCollectionResponse,
+  DefaultCaseCollectionFormData,
+  DefaultCaseCollectionFormErrorData,
+  DefaultCashCollectionFormData,
+  DefaultCashCollectionFormErrorData,
+} from '../types/collections.data.types'
+import {
+  isAreTwoCaseCollectionsSame,
+  isAreTwoCashCollectionsSame,
+  validateCaseCollection,
+  validateCashCollection,
+} from '../utils/collections.utils'
 
-const mapStateToProps = ({ collections, statuses, collectionMethods, caseTypes, courtCases, clients }: GlobalState) => {
+const mapStateToProps = ({ collections, refTypes, courtCases, clients }: GlobalState) => {
   return {
-    isCloseModal: collections.isCloseModal,
     caseCollectionsList: collections.caseCollections,
-    statusList: statuses.statuses,
-    collectionMethodsList: collectionMethods.collectionMethods,
-    caseTypesList: caseTypes.caseTypes,
+    refTypes: refTypes,
     courtCasesList: courtCases.courtCases,
     clientsList: clients.clients,
-    selectedCourtCase: courtCases.selectedCourtCase,
   }
 }
 
 const mapDispatchToProps = {
-  getCaseCollections: () => getCollections(COLLECTION_OBJECT_TYPES.CASE),
-  addCaseCollection: (collection: CaseCollectionSchema) => addCollection(collection, COLLECTION_OBJECT_TYPES.CASE),
-  addCashCollection: (collection: CashCollectionSchema) => addCollection(collection, COLLECTION_OBJECT_TYPES.CASH),
-  editCaseCollection: (id: number, collection: CaseCollectionSchema) =>
-    editCollection(id, COLLECTION_OBJECT_TYPES.CASE, collection),
-  editCashCollection: (id: number, collection: CashCollectionSchema) =>
-    editCollection(id, COLLECTION_OBJECT_TYPES.CASH, collection),
-  deleteCaseCollection: (id: number) => deleteCollection(id, COLLECTION_OBJECT_TYPES.CASE),
-  deleteCashCollection: (id: number) => deleteCollection(id, COLLECTION_OBJECT_TYPES.CASH),
-  unmountPage: () => unmountPage(COLLECTIONS_UNMOUNT),
-  getStatusesList: () => getStatusesList(),
-  getCollectionMethodsList: () => getCollectionMethods(),
-  getCaseTypesList: () => getCaseTypes(),
+  getRefTypes: () => getRefTypes(),
+  getCollections: (requestMetadata: Partial<FetchRequestMetadata>) => getCollections(requestMetadata),
   getCourtCasesList: () => getCourtCases(),
   getClientsList: () => getClients(),
-  getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId),
 }
 
 interface CollectionsProps {
-  isCloseModal: boolean
   caseCollectionsList: CaseCollectionSchema[]
-  getCaseCollections: () => void
-  addCaseCollection: (collection: CaseCollectionSchema) => void
-  addCashCollection: (collection: CashCollectionSchema) => void
-  editCaseCollection: (id: number, collection: CaseCollectionSchema) => void
-  editCashCollection: (id: number, collection: CashCollectionSchema) => void
-  deleteCaseCollection: (id: number) => void
-  deleteCashCollection: (id: number) => void
-  unmountPage: () => void
-  statusList: StatusSchema<string>
-  getStatusesList: () => void
-  collectionMethodsList: CollectionMethodSchema[]
-  getCollectionMethodsList: () => void
-  caseTypesList: CaseTypeSchema[]
-  getCaseTypesList: () => void
+  getCollections: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   courtCasesList: CourtCaseSchema[]
   getCourtCasesList: () => void
   clientsList: ClientSchema[]
   getClientsList: () => void
-  courtCaseId?: string
-  selectedCourtCase?: CourtCaseSchema
-  getCourtCase: (courtCaseId: number) => void
 }
 
 const Collections = (props: CollectionsProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
+  const dispatch = useDispatch()
+  const [
+    addModalStateCase,
+    addModalStateCash,
+    updateModalStateCase,
+    updateModalStateCash,
+    deleteModalStateCase,
+    deleteModalStateCash,
+  ] = [useModal(), useModal(), useModal(), useModal(), useModal(), useModal()]
 
-  const {
-    caseCollectionsList,
-    getCaseCollections,
-    addCaseCollection,
-    addCashCollection,
-    editCaseCollection,
-    editCashCollection,
-    deleteCaseCollection,
-    deleteCashCollection,
-  } = props
-  const { unmountPage } = props
-  const { isCloseModal } = props
-  const { statusList, getStatusesList } = props
-  const { collectionMethodsList, getCollectionMethodsList } = props
-  const { caseTypesList, getCaseTypesList } = props
-  const { courtCasesList, getCourtCasesList, clientsList, getClientsList } = props
-  const { courtCaseId, selectedCourtCase, getCourtCase } = props
-
-  const [modal, setModal] = useState<string>('')
-  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
-  const [selectedType, setSelectedType] = useState<string>('')
-  const [selectedCollection, setSelectedCollection] = useState<CaseCollectionSchema | CashCollectionSchema>(
-    DefaultCollectionSchema,
-  )
-  const [selectedCollectionForReset, setSelectedCollectionForReset] = useState<
-    CaseCollectionSchema | CashCollectionSchema
-  >(DefaultCollectionSchema)
-  const [collectionStatusList, setCollectionStatusList] = useState<string[]>([])
+  const { caseCollectionsList, getCollections } = props
+  const { refTypes, getRefTypes } = props
+  const { courtCasesList, getCourtCasesList } = props
+  const { clientsList, getClientsList } = props
 
   const minCollectionDate = dayjs().subtract(1, 'month')
   const maxCollectionDate = dayjs().add(1, 'week')
 
+  const [formDataCase, setFormDataCase] = useState(DefaultCaseCollectionFormData)
+  const [formDataCash, setFormDataCash] = useState(DefaultCashCollectionFormData)
+  const [formDataResetCase, setFormDataResetCase] = useState(DefaultCaseCollectionFormData)
+  const [formDataResetCash, setFormDataResetCash] = useState(DefaultCashCollectionFormData)
+  const [formErrorsCase, setFormErrorsCase] = useState(DefaultCaseCollectionFormErrorData)
+  const [formErrorsCash, setFormErrorsCash] = useState(DefaultCashCollectionFormErrorData)
+
+  const collectionStatusList = useCallback(() => {
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COLLECTIONS)
+  }, [refTypes.componentStatus])
+
   useEffect(() => {
     if (isForceFetch.current) {
-      caseCollectionsList.length === 0 && getCaseCollections()
-      statusList.collections.all.length === 0 && getStatusesList()
-      collectionMethodsList.length === 0 && getCollectionMethodsList()
-      caseTypesList.length === 0 && getCaseTypesList()
+      caseCollectionsList.length === 0 && getCollections({ isIncludeExtra: true })
       courtCasesList.length === 0 && getCourtCasesList()
       clientsList.length === 0 && getClientsList()
-
-      if (courtCaseId) {
-        setSelectedCollection({ ...DefaultCollectionSchema, courtCaseId: getNumber(courtCaseId) })
-        if (!selectedCourtCase) {
-          getCourtCase(getNumber(courtCaseId))
-        }
+      if (
+        refTypes.componentStatus.length === 0 ||
+        refTypes.collectionMethod.length === 0 ||
+        refTypes.caseType.length === 0
+      ) {
+        getRefTypes()
       }
     }
-    isForceFetch.current = false
   }, [
     caseCollectionsList.length,
     clientsList.length,
-    collectionMethodsList.length,
-    caseTypesList.length,
     courtCasesList.length,
-    getCaseCollections,
     getClientsList,
-    getCollectionMethodsList,
-    getCaseTypesList,
+    getCollections,
     getCourtCasesList,
-    getStatusesList,
-    statusList.collections.all.length,
-    courtCaseId,
-    selectedCourtCase,
-    getCourtCase,
+    getRefTypes,
+    refTypes.caseType.length,
+    refTypes.collectionMethod.length,
+    refTypes.componentStatus.length,
   ])
-
-  useEffect(() => {
-    if (statusList.collections.all.length > 0) {
-      setCollectionStatusList(statusList.collections.all)
-    }
-  }, [statusList.collections.all])
-
-  useEffect(() => {
-    if (isCloseModal) {
-      secondaryButtonCallback()
-    }
-  }, [isCloseModal])
 
   useEffect(() => {
     return () => {
       isForceFetch.current = true
-      unmountPage()
     }
-  }, [unmountPage])
+  }, [])
 
-  const primaryButtonCallback = (action: string, type: string, id?: number) => {
-    isForceFetch.current = true
-    if (id && action === ACTION_DELETE) {
-      type === COLLECTION_OBJECT_TYPES.CASE && deleteCaseCollection(id)
-      type === COLLECTION_OBJECT_TYPES.CASH && deleteCashCollection(id)
-    } else if (id && action === ACTION_UPDATE) {
-      type === COLLECTION_OBJECT_TYPES.CASE && editCaseCollection(id, selectedCollection as CaseCollectionSchema)
-      type === COLLECTION_OBJECT_TYPES.CASH && editCashCollection(id, selectedCollection as CashCollectionSchema)
-    } else {
-      type === COLLECTION_OBJECT_TYPES.CASE && addCaseCollection(selectedCollection as CaseCollectionSchema)
-      type === COLLECTION_OBJECT_TYPES.CASH && addCashCollection(selectedCollection as CashCollectionSchema)
+  const getCollectionsWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
+    getCollections({ ...requestMetadata, isIncludeExtra: true })
+  }
+
+  const primaryButtonCallback = async (action: ActionTypes, type?: string) => {
+    const isCase = type === COLLECTION_TYPES.CASE_COLLECTION
+    const collectionId = isCase ? getNumber(formDataCase.id) : getNumber(formDataCash.id)
+
+    const collectionsRequest: CaseCollectionBase | CashCollectionBase = isCase
+      ? { ...formDataCase }
+      : { ...formDataCash }
+
+    const hasFormErrors = isCase
+      ? validateCaseCollection(formDataCase, setFormErrorsCase)
+      : validateCashCollection(formDataCash, setFormErrorsCash)
+    if (hasFormErrors) {
+      return
+    }
+
+    let collectionResponse: CaseCollectionResponse | CashCollectionResponse = {
+      data: [],
+      detail: { error: INVALID_INPUT },
+    }
+    if (action === ACTION_TYPES.CREATE) {
+      collectionResponse = await collectionsAction({ type, action, collectionsRequest })(dispatch)
+    } else if (
+      (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
+      collectionId > 0
+    ) {
+      collectionResponse = await collectionsAction({
+        type,
+        action,
+        collectionsRequest: collectionsRequest,
+        id: collectionId,
+        isRestore: action === ACTION_TYPES.RESTORE,
+        isHardDelete: isCase ? formDataCase.isHardDelete : formDataCash.isHardDelete,
+      })(dispatch)
+    }
+
+    if (collectionResponse && !collectionResponse.detail) {
+      isCase
+        ? secondaryButtonCallback(
+            addModalStateCase,
+            updateModalStateCase,
+            deleteModalStateCase,
+            setFormDataCase,
+            setFormErrorsCase,
+            DefaultCaseCollectionFormData,
+            DefaultCaseCollectionFormErrorData,
+          )
+        : secondaryButtonCallback(
+            addModalStateCash,
+            updateModalStateCash,
+            deleteModalStateCash,
+            setFormDataCash,
+            setFormErrorsCash,
+            DefaultCashCollectionFormData,
+            DefaultCashCollectionFormErrorData,
+          )
+      isForceFetch.current = true
+      caseCollectionsList.length === 0 && getCollections({})
     }
   }
 
-  const secondaryButtonCallback = () => {
-    setModal('')
-    setSelectedId(ID_DEFAULT)
-    setSelectedCollection(DefaultCollectionSchema)
-    setSelectedCollectionForReset(DefaultCollectionSchema)
-  }
-
-  const resetButtonCallback = (action: string) => {
-    action === ACTION_ADD && setSelectedCollection(DefaultCollectionSchema)
-    action === ACTION_UPDATE && setSelectedCollection(selectedCollectionForReset)
-  }
-
-  const collectionForm = (collectionType: string) => (
-    <CollectionForm
-      collectionType={collectionType}
-      selectedCollection={selectedCollection}
-      setSelectedCollection={setSelectedCollection}
-      collectionMethodsList={collectionMethodsList}
-      courtCasesList={courtCasesList}
-      clientsList={clientsList}
-      caseCollectionList={caseCollectionsList}
-      collectionStatusList={collectionStatusList}
-      isShowOneCollection={false}
-      minCollectionDate={minCollectionDate}
-      maxCollectionDate={maxCollectionDate}
-      courtCaseId={courtCaseId}
-      statusList={statusList}
-    />
-  )
-
-  const addModal = () => (
-    <Modal
-      isOpen={true}
-      setIsOpenExtra={setModal}
-      cleanupOnClose={secondaryButtonCallback}
-      title={isCaseCollection(selectedType) ? 'Add Case Collection' : 'Add Cash Collection'}
-      primaryButtonText={BUTTON_ADD}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_ADD, selectedType)}
-      primaryButtonDisabled={isAreTwoCollectionsSame(selectedType, selectedCollection, selectedCollectionForReset)}
-      secondaryButtonText={BUTTON_CANCEL}
-      secondaryButtonCallback={secondaryButtonCallback}
-      contentText="Provide the following details..."
-      content={collectionForm(selectedType)}
-      resetButtonText={BUTTON_RESET}
-      resetButtonCallback={() => resetButtonCallback(ACTION_ADD)}
-      resetButtonDisabled={isAreTwoCollectionsSame(selectedType, selectedCollection, selectedCollectionForReset)}
-    />
-  )
-
-  const updateModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title={isCaseCollection(selectedType) ? 'Update Case Collection' : 'Update Cash Collection'}
-        primaryButtonText={BUTTON_UPDATE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_UPDATE, selectedType, selectedId)}
-        primaryButtonDisabled={isAreTwoCollectionsSame(selectedType, selectedCollection, selectedCollectionForReset)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText="Provide the following details..."
-        content={collectionForm(selectedType)}
-        resetButtonText={BUTTON_RESET}
-        resetButtonCallback={() => resetButtonCallback(ACTION_UPDATE)}
-        resetButtonDisabled={isAreTwoCollectionsSame(selectedType, selectedCollection, selectedCollectionForReset)}
+  const addUpdateModalContentCase = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+      <CollectionFormCase
+        formData={formDataCase}
+        setFormData={setFormDataCase}
+        formErrors={formErrorsCase}
+        setFormErrors={setFormErrorsCase}
+        courtCasesList={courtCasesList}
+        collectionStatusList={collectionStatusList()}
+        isShowOneCollection={false}
       />
-    )
-  }
+    </Box>
+  )
 
-  const getDeleteContextText = () => {
-    if (isCaseCollection(selectedType)) {
-      const caseCollection = selectedCollection as CaseCollectionSchema
-      const client = clientsList.find((x) => x.id === caseCollection.courtCase?.clientId)
-      const caseType = caseTypesList.find((x) => x.id === caseCollection.courtCase?.caseTypeId)
+  const addUpdateModalContentCash = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+      <CollectionFormCash
+        formData={formDataCash}
+        setFormData={setFormDataCash}
+        formErrors={formErrorsCash}
+        setFormErrors={setFormErrorsCash}
+        collectionMethodsList={refTypes.collectionMethod}
+        courtCasesList={courtCasesList}
+        clientsList={clientsList}
+        caseCollectionList={caseCollectionsList}
+        minCollectionDate={minCollectionDate}
+        maxCollectionDate={maxCollectionDate}
+        isShowOneCollection={false}
+      />
+    </Box>
+  )
+
+  const addModalCase = () =>
+    addModalComponent(
+      COMPONENT_STATUS_NAME.COLLECTIONS,
+      addUpdateModalContentCase(),
+      primaryButtonCallback,
+      addModalStateCase,
+      updateModalStateCase,
+      deleteModalStateCase,
+      setFormDataCase,
+      setFormErrorsCase,
+      DefaultCaseCollectionFormData,
+      DefaultCaseCollectionFormErrorData,
+      formDataResetCase,
+      COLLECTION_TYPES.CASE_COLLECTION,
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+    )
+
+  const addModalCash = () =>
+    addModalComponent(
+      COMPONENT_STATUS_NAME.COLLECTIONS,
+      addUpdateModalContentCash(),
+      primaryButtonCallback,
+      addModalStateCash,
+      updateModalStateCash,
+      deleteModalStateCash,
+      setFormDataCash,
+      setFormErrorsCash,
+      DefaultCashCollectionFormData,
+      DefaultCashCollectionFormErrorData,
+      formDataResetCash,
+      COLLECTION_TYPES.CASH_COLLECTION,
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+    )
+
+  const updateModalCase = () =>
+    updateModalComponent(
+      COMPONENT_STATUS_NAME.COLLECTIONS,
+      addUpdateModalContentCase(),
+      primaryButtonCallback,
+      addModalStateCase,
+      updateModalStateCase,
+      deleteModalStateCase,
+      setFormDataCase,
+      setFormErrorsCase,
+      DefaultCaseCollectionFormData,
+      DefaultCaseCollectionFormErrorData,
+      formDataResetCase,
+      COLLECTION_TYPES.CASE_COLLECTION,
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+    )
+
+  const updateModalCash = () =>
+    updateModalComponent(
+      COMPONENT_STATUS_NAME.COLLECTIONS,
+      addUpdateModalContentCash(),
+      primaryButtonCallback,
+      addModalStateCash,
+      updateModalStateCash,
+      deleteModalStateCash,
+      setFormDataCash,
+      setFormErrorsCash,
+      DefaultCashCollectionFormData,
+      DefaultCashCollectionFormErrorData,
+      formDataResetCash,
+      COLLECTION_TYPES.CASH_COLLECTION,
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+    )
+
+  const getDeleteContextText = (type: CollectionTypes) => {
+    if (type === COLLECTION_TYPES.CASE_COLLECTION) {
+      const client = clientsList.find((x) => x.id === formDataCase.courtCase?.clientId)
+      const caseType = refTypes.caseType.find((x) => x.id === formDataCase.courtCase?.caseTypeId)
       const clientCase = `${client?.name}, ${caseType?.name}`
-      return `Are you sure you want to delete Collections for case ${clientCase}?!?`
+      return `ARE YOU SURE YOU WANT TO DELETE COLLECTIONS FOR CASE ${clientCase}?!?`
     } else {
-      const cashCollection = selectedCollection as CashCollectionSchema
-      const caseCollection = caseCollectionsList.find((x) => x.id === cashCollection.caseCollectionId)
+      const caseCollection = caseCollectionsList.find((x) => x.id === formDataCash.caseCollectionId)
       const client = clientsList.find((x) => x.id === caseCollection?.courtCase?.clientId)
-      const caseType = caseTypesList.find((x) => x.id === caseCollection?.courtCase?.caseTypeId)
+      const caseType = refTypes.caseType.find((x) => x.id === caseCollection?.courtCase?.caseTypeId)
       const clientCase = `${client?.name}, ${caseType?.name}`
-      const collectedAmount = getCurrency(cashCollection.collectedAmount)
-      return `Are you sure you want to delete ${collectedAmount} collected from case ${clientCase}?!?`
+      const collectedAmount = getCurrency(formDataCash.collectedAmount)
+      return `ARE YOU SURE YOU WANT TO DELETE ${collectedAmount} COLLECTED FROM CASE ${clientCase}?!?`
     }
   }
 
-  const deleteModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title={isCaseCollection(selectedType) ? 'Delete Case Collection' : 'Delete Cash Collection'}
-        primaryButtonText={BUTTON_DELETE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_DELETE, selectedType, selectedId)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText={getDeleteContextText()}
-      />
+  const deleteModalCase = () =>
+    deleteModalComponent(
+      COMPONENT_STATUS_NAME.COLLECTIONS,
+      getDeleteContextText(COLLECTION_TYPES.CASE_COLLECTION),
+      primaryButtonCallback,
+      addModalStateCase,
+      updateModalStateCase,
+      deleteModalStateCase,
+      setFormDataCase,
+      setFormErrorsCase,
+      DefaultCaseCollectionFormData,
+      DefaultCaseCollectionFormErrorData,
+      formDataCase,
+      formErrorsCase,
+      COLLECTION_TYPES.CASE_COLLECTION,
     )
-  }
 
-  const showModal = () =>
-    modal === ACTION_ADD
-      ? addModal()
-      : modal === ACTION_UPDATE
-      ? updateModal()
-      : modal === ACTION_DELETE
-      ? deleteModal()
-      : null
+  const deleteModalCash = () =>
+    deleteModalComponent(
+      COMPONENT_STATUS_NAME.COLLECTIONS,
+      getDeleteContextText(COLLECTION_TYPES.CASH_COLLECTION),
+      primaryButtonCallback,
+      addModalStateCash,
+      updateModalStateCash,
+      deleteModalStateCash,
+      setFormDataCash,
+      setFormErrorsCash,
+      DefaultCashCollectionFormData,
+      DefaultCashCollectionFormErrorData,
+      formDataCash,
+      formErrorsCash,
+      COLLECTION_TYPES.CASH_COLLECTION,
+    )
 
-  const collectionsPageTitle = () => (
-    <Grid container alignItems="center" columnGap={2}>
-      <Typography component="h1" variant="h6" color="primary" gutterBottom>
-        Collections
-      </Typography>
-    </Grid>
-  )
+  const actionButtonsCase = (formDataModal: CaseCollectionFormData | CashCollectionFormData) =>
+    tableActionButtonsComponent(
+      COMPONENT_STATUS_NAME.COLLECTIONS,
+      formDataModal as CaseCollectionFormData,
+      updateModalStateCase,
+      deleteModalStateCase,
+      setFormDataCase,
+      setFormDataResetCase,
+    )
 
-  const getCourtCaseCollections = (courtCaseCollectionsList?: CaseCollectionSchema[]) => {
-    if (courtCaseCollectionsList && courtCaseCollectionsList.length > 0) {
-      const courtCaseCollection = courtCaseCollectionsList[0]
-      const caseCollection = caseCollectionsList.find((x) => x.id === courtCaseCollection.id)
-      if (caseCollection) {
-        return [caseCollection]
-      }
-    }
-    return caseCollectionsList
-  }
+  const actionButtonsCash = (formDataModal: CashCollectionFormData | CaseCollectionFormData) =>
+    tableActionButtonsComponent(
+      COMPONENT_STATUS_NAME.COLLECTIONS,
+      formDataModal as CashCollectionFormData,
+      updateModalStateCash,
+      deleteModalStateCash,
+      setFormDataCash,
+      setFormDataResetCash,
+    )
 
-  const collectionTable = (collectionType: string) => (
+  const addCashCollectionButtonCallback = (caseCollectionId: number) =>
+    setFormDataCash({ ...DefaultCashCollectionFormData, caseCollectionId })
+
+  const collectionTable = () => (
     <CollectionTable
-      collectionType={collectionType}
-      caseCollectionsList={
-        !(courtCaseId && selectedCourtCase)
-          ? caseCollectionsList
-          : getCourtCaseCollections(selectedCourtCase.caseCollections) || []
-      }
-      collectionMethodsList={collectionMethodsList}
+      caseCollectionsList={caseCollectionsList}
+      componentStatusList={collectionStatusList()}
+      collectionMethodsList={refTypes.collectionMethod}
       courtCasesList={courtCasesList}
       clientsList={clientsList}
-      setModal={setModal}
-      setSelectedId={setSelectedId}
-      setSelectedType={setSelectedType}
-      setSelectedCollection={setSelectedCollection}
-      setSelectedCollectionForReset={setSelectedCollectionForReset}
-      isAddModelComponent={!(courtCaseId && selectedCourtCase)}
+      softDeleteCallback={getCollectionsWithMetadata}
+      addModalStateCase={addModalStateCase}
+      addModalStateCash={addModalStateCash}
+      actionButtonsCase={actionButtonsCase}
+      actionButtonsCash={actionButtonsCash}
+      addCashCollectionButtonCallback={addCashCollectionButtonCallback}
     />
   )
 
-  return courtCaseId ? (
+  const showModals = () => (
     <>
-      {collectionTable(COLLECTION_OBJECT_TYPES.CASE)}
-      {modal && showModal()}
+      {addModalCase()}
+      {addModalCash()}
+      {updateModalCase()}
+      {updateModalCash()}
+      {deleteModalCase()}
+      {deleteModalCash()}
     </>
-  ) : (
+  )
+
+  return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {collectionsPageTitle()}
+          {pageTitleComponent(COMPONENT_STATUS_NAME.COLLECTIONS)}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {collectionTable(COLLECTION_OBJECT_TYPES.CASE)}
+          {collectionTable()}
         </Grid>
-        {/*<Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>*/}
-        {/*  {collectionTable(COLLECTION_OBJECT_TYPES.CASH)}*/}
-        {/*</Grid>*/}
       </Grid>
-      {modal && showModal()}
+      {showModals()}
     </Box>
   )
 }

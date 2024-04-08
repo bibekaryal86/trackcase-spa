@@ -1,53 +1,53 @@
-import Button from '@mui/material/Button'
 import React from 'react'
 
-import { getDayjsString, getNumber, Link, Table, TableData, TableHeaderData } from '../../app'
-import { CourtCaseSchema } from '../../cases'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_DELETE,
-  BUTTON_UPDATE,
-  ID_ACTION_BUTTON,
-} from '../../constants'
-import { FormSchema } from '../../forms'
-import { HearingTypeSchema, TaskTypeSchema } from '../../types'
-import { HearingCalendarSchema, TaskCalendarSchema } from '../types/calendars.data.types'
-import { isHearingCalendar } from '../utils/calendars.utils'
+  FetchRequestMetadata,
+  getDayjsString,
+  getNumber,
+  Link,
+  ModalState,
+  Table,
+  tableAddButtonComponent,
+  TableData,
+  TableHeaderData,
+} from '../../app'
+import { CourtCaseSchema } from '../../cases'
+import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, COMPONENT_STATUS_NAME } from '../../constants'
+import { FilingSchema } from '../../filings'
+import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '../../types'
+import { checkUserHasPermission, isSuperuser } from '../../users'
+import {
+  HearingCalendarFormData,
+  HearingCalendarSchema,
+  TaskCalendarFormData,
+  TaskCalendarSchema,
+} from '../types/calendars.data.types'
+import { getCalendarFormDataFromSchema, isHearingCalendar } from '../utils/calendars.utils'
 
 interface CalendarTableProps {
-  calendarType: string
+  type: CalendarTypes
   calendarsList: HearingCalendarSchema[] | TaskCalendarSchema[]
-  setModal?: (action: string) => void
-  setSelectedId?: (id: number) => void
-  setSelectedType?: (type: string) => void
-  setSelectedCalendar?: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
-  setSelectedCalendarForReset?: (calendar: HearingCalendarSchema | TaskCalendarSchema) => void
+  actionButtons?: (formDataForModal: HearingCalendarFormData | TaskCalendarFormData) => React.JSX.Element
+  addModalState?: ModalState
+  softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
   courtCasesList: CourtCaseSchema[]
-  formsList: FormSchema[]
-  selectedCourtCase?: CourtCaseSchema
+  filingsList: FilingSchema[]
+  componentStatusList: ComponentStatusSchema[]
   hearingTypesList?: HearingTypeSchema[]
-  selectedForm?: FormSchema
   taskTypesList?: TaskTypeSchema[]
   hearingCalendarsList?: HearingCalendarSchema[]
+  selectedCourtCase?: CourtCaseSchema
+  selectedFiling?: FilingSchema
 }
 
 const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
-  const {
-    calendarType,
-    calendarsList,
-    selectedCourtCase,
-    hearingTypesList,
-    selectedForm,
-    taskTypesList,
-    hearingCalendarsList,
-  } = props
-  const { setModal, setSelectedId, setSelectedType, setSelectedCalendar, setSelectedCalendarForReset } = props
-  const { courtCasesList, formsList } = props
+  const { type, calendarsList, actionButtons, addModalState, softDeleteCallback } = props
+  const { courtCasesList, filingsList, componentStatusList, hearingTypesList, taskTypesList, hearingCalendarsList } =
+    props
+  const { selectedCourtCase, selectedFiling } = props
 
-  const isHearingCalendarTable = isHearingCalendar(calendarType)
-  const calendarTypeForDisplay = isHearingCalendarTable ? 'Hearing Calendar' : 'Task Calendar'
+  const isHearingCalendarTable = type === CALENDAR_TYPES.HEARING_CALENDAR
+  const calendarTypeForDisplay = type.toString().replace('_', ' ')
 
   const calendarsTableHeaderData = (): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = [
@@ -75,7 +75,7 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
           label: 'Hearing Calendar',
         },
         {
-          id: 'form',
+          id: 'filing',
           label: 'Filing',
         },
         {
@@ -88,40 +88,27 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
       id: 'status',
       label: 'Status',
     })
-    tableHeaderData.push({
-      id: 'actions',
-      label: 'Actions',
-      align: 'center' as const,
-      isDisableSorting: true,
-    })
+    if (isSuperuser()) {
+      tableHeaderData.push({
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      })
+    }
+    if (
+      (checkUserHasPermission(COMPONENT_STATUS_NAME.CALENDARS, ACTION_TYPES.UPDATE) ||
+        checkUserHasPermission(COMPONENT_STATUS_NAME.CALENDARS, ACTION_TYPES.DELETE)) &&
+      !selectedCourtCase &&
+      !selectedFiling
+    ) {
+      tableHeaderData.push({
+        id: 'actions',
+        label: 'ACTIONS',
+        isDisableSorting: true,
+        align: 'center' as const,
+      })
+    }
     return tableHeaderData
   }
-
-  const actionButtons = (id: number, calendar: HearingCalendarSchema | TaskCalendarSchema) => (
-    <>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_UPDATE)
-          setSelectedId && setSelectedId(id)
-          setSelectedType && setSelectedType(calendarType)
-          setSelectedCalendar && setSelectedCalendar(calendar)
-          setSelectedCalendarForReset && setSelectedCalendarForReset(calendar)
-        }}
-      >
-        {BUTTON_UPDATE}
-      </Button>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_DELETE)
-          setSelectedId && setSelectedId(id)
-          setSelectedType && setSelectedType(calendarType)
-          setSelectedCalendar && setSelectedCalendar(calendar)
-        }}
-      >
-        {BUTTON_DELETE}
-      </Button>
-    </>
-  )
 
   const linkToClientHc = (x: HearingCalendarSchema) => {
     let courtCaseId = x.courtCaseId
@@ -150,27 +137,30 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     )
   }
 
-  const linkToForm = (x: TaskCalendarSchema) => {
-    if (selectedForm) {
-      return selectedForm.formType?.name
+  const linkToFiling = (x: TaskCalendarSchema) => {
+    if (selectedFiling) {
+      return selectedFiling.filingType?.name
     }
-    const form = formsList.find((y) => y.id === x.formId)
-    return form ? (
-      <Link text={form?.formType?.name} navigateToPage={`/form/${form?.id}?backTo=${window.location.pathname}`} />
+    const filing = filingsList.find((y) => y.id === x.filingId)
+    return filing ? (
+      <Link
+        text={filing?.filingType?.name}
+        navigateToPage={`/filing/${filing?.id}?backTo=${window.location.pathname}`}
+      />
     ) : (
       ''
     )
   }
 
   const linkToClientTc = (x: TaskCalendarSchema) => {
-    let formId = x.formId
-    if (selectedForm) {
-      formId = selectedForm.id
+    let filingId = x.filingId
+    if (selectedFiling) {
+      filingId = selectedFiling.id
     }
-    if (getNumber(formId) > 0) {
-      const form = formsList.find((y) => y.id === x.formId)
-      if (form) {
-        const courtCase = courtCasesList.find((z) => z.id === form.courtCaseId)
+    if (getNumber(filingId) > 0) {
+      const filing = filingsList.find((y) => y.id === x.filingId)
+      if (filing) {
+        const courtCase = courtCasesList.find((z) => z.id === filing.courtCaseId)
         return (
           <Link
             text={courtCase?.client?.name}
@@ -194,14 +184,14 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   }
 
   const linkToCourtCaseTc = (x: TaskCalendarSchema) => {
-    let formId = x.formId
-    if (selectedForm) {
-      formId = selectedForm.id
+    let filingId = x.filingId
+    if (selectedFiling) {
+      filingId = selectedFiling.id
     }
-    if (getNumber(formId) > 0) {
-      const form = formsList.find((y) => y.id === x.formId)
-      if (form) {
-        const courtCase = courtCasesList.find((z) => z.id === form.courtCaseId)
+    if (getNumber(filingId) > 0) {
+      const filing = filingsList.find((y) => y.id === x.filingId)
+      if (filing) {
+        const courtCase = courtCasesList.find((z) => z.id === filing.courtCaseId)
         return (
           <Link
             text={courtCase?.caseType?.name}
@@ -240,15 +230,24 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     return taskType?.name
   }
 
+  const getComponentStatus = (x: HearingCalendarSchema | TaskCalendarSchema) => {
+    if (x.componentStatus) {
+      return x.componentStatus.statusName
+    } else {
+      const componentStatus = componentStatusList?.find((y) => y.id === x.componentStatusId)
+      return componentStatus?.statusName
+    }
+  }
+
   const calendarsTableDataCommon = (x: HearingCalendarSchema | TaskCalendarSchema) => {
-    if (isHearingCalendarTable) {
+    if (isHearingCalendar(x)) {
       const hearingCalendar = x as HearingCalendarSchema
       return {
         calendarDate: getDayjsString(hearingCalendar.hearingDate),
         calendarType: getHearingType(x as HearingCalendarSchema),
         client: linkToClientHc(hearingCalendar),
         case: linkToCourtCaseHc(hearingCalendar),
-        status: hearingCalendar.status,
+        status: getComponentStatus(x),
       }
     } else {
       const taskCalendar = x as TaskCalendarSchema
@@ -258,9 +257,9 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
         client: linkToClientTc(taskCalendar),
         case: linkToCourtCaseTc(taskCalendar),
         hearingCalendar: getDayjsString(taskCalendar.hearingCalendar?.hearingDate),
-        form: linkToForm(taskCalendar),
+        filing: linkToFiling(taskCalendar),
         dueDate: getDayjsString(taskCalendar.dueDate),
-        status: taskCalendar.status,
+        status: getComponentStatus(x),
       }
     }
   }
@@ -269,28 +268,19 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     return Array.from(calendarsList, (x: HearingCalendarSchema | TaskCalendarSchema) => {
       return {
         ...calendarsTableDataCommon(x),
-        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+        isDeleted: x.isDeleted,
+        actions: actionButtons ? actionButtons(getCalendarFormDataFromSchema(x)) : undefined,
       }
     })
   }
-
-  const addButton = () => (
-    <Button
-      onClick={() => {
-        setModal && setModal(ACTION_ADD)
-        setSelectedType && setSelectedType(calendarType)
-      }}
-    >
-      {`Add New ${calendarTypeForDisplay}`}
-    </Button>
-  )
 
   return (
     <Table
       componentName={calendarTypeForDisplay}
       headerData={calendarsTableHeaderData()}
       tableData={calendarsTableData()}
-      addModelComponent={addButton()}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.CALENDARS, addModalState)}
+      getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )
 }

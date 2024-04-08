@@ -1,281 +1,306 @@
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import MenuItem from '@mui/material/MenuItem'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { connect, useDispatch } from 'react-redux'
 
-import { GlobalState, Modal, Table, TableData, TableHeaderData } from '../../app'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_ADD,
-  BUTTON_CANCEL,
-  BUTTON_DELETE,
-  BUTTON_RESET,
-  BUTTON_UPDATE,
-  ID_ACTION_BUTTON,
-  ID_DEFAULT,
+  addModalComponent,
+  convertToCamelCase,
+  convertToTitleCase,
+  deleteModalComponent,
+  FetchRequestMetadata,
+  FormSelectField,
+  FormTextField,
+  getNumber,
+  GlobalState,
+  handleFormChange,
+  pageTitleComponent,
+  secondaryButtonCallback,
+  Table,
+  tableActionButtonsComponent,
+  tableAddButtonComponent,
+  updateModalComponent,
+  useModal,
+} from '../../app'
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  COMPONENT_STATUS_NAME,
+  COMPONENT_STATUS_STATUS,
+  REF_TYPES_REGISTRY,
+  RefTypesRegistry,
 } from '../../constants'
+import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import {
-  CaseTypeSchema,
-  CollectionMethodSchema,
-  FormTypeSchema,
-  HearingTypeSchema,
-  TaskTypeSchema,
+  DefaultRefTypeFormData,
+  RefTypeFormData,
+  RefTypeResponse,
+  RefTypeSchema,
+  RefTypesReduxStoreKeys,
+  RefTypesState,
 } from '../types/refTypes.data.types'
+import { refTypeTableData, refTypeTableHeader, validateFormData } from '../utils/refTypes.utils'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    isCloseModal: refTypes.isCloseModal,
+    refTypes: refTypes,
   }
 }
 
-interface RefTypesProps {
-  refTypeId: 'case_type' | 'collection_method' | 'form_type' | 'hearing_type' | 'task_type'
-  refTypeName: 'Case Type' | 'Collection Method' | 'Form Status' | 'Filing Type' | 'Hearing Type' | 'Task Type'
-  refTypesList: CaseTypeSchema[] | CollectionMethodSchema[] | FormTypeSchema[] | HearingTypeSchema[] | TaskTypeSchema[]
-  getRefTypes: () => void
-  addRefType: (name: string, description: string) => void
-  editRefType: (id: number, name: string, description: string) => void
-  deleteRefType: (id: number) => void
-  isCloseModal: boolean
+const mapDispatchToProps = {
+  getRefType: (refType: RefTypesRegistry, requestMetadata?: Partial<FetchRequestMetadata>) =>
+    getRefType(refType, requestMetadata),
 }
 
-const RefTypes = (props: RefTypesProps): React.ReactElement => {
-  // prevent infinite fetch if api returns empty
-  const isFetchRunDone = useRef(false)
-  const { refTypeId, refTypeName } = props
-  const { refTypesList, getRefTypes } = props
-  const { isCloseModal } = props
+interface RefTypeProps {
+  refType: RefTypesRegistry
+  refTypes: RefTypesState
+  getRefType: (refType: RefTypesRegistry, requestMetadata?: Partial<FetchRequestMetadata>) => void
+}
 
-  const [modal, setModal] = useState<string>('')
-  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
-  const [selectedName, setSelectedName] = useState<string>('')
-  const [selectedDesc, setSelectedDesc] = useState<string>('')
-  const [selectedNameForReset, setSelectedNameForReset] = useState<string>('')
-  const [selectedDescForReset, setSelectedDescForReset] = useState<string>('')
+const RefTypes = (props: RefTypeProps): React.ReactElement => {
+  // to avoid multiple api calls, avoid infinite loop if empty list returned
+  const isForceFetch = useRef(true)
+  const dispatch = useDispatch()
+  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
+
+  const { refType, refTypes, getRefType } = props
+
+  const [refTypeList, setRefTypeList] = useState([] as RefTypeSchema[])
+  const [formData, setFormData] = useState(DefaultRefTypeFormData)
+  const [formDataReset, setFormDataReset] = useState(DefaultRefTypeFormData)
+  const [formErrors, setFormErrors] = useState(DefaultRefTypeFormData)
+
+  const componentNameNoUnderscore = refType.replace('_', ' ')
+
+  const refTypeTitle = useCallback(() => {
+    return convertToTitleCase(refType, '_').toUpperCase()
+  }, [refType])
 
   useEffect(() => {
-    if (refTypesList.length === 0 && !isFetchRunDone.current) {
-      getRefTypes()
-      isFetchRunDone.current = true
+    const refTypeInStoreName = convertToCamelCase(refType, '_') as keyof RefTypesReduxStoreKeys
+    const refTypeInStore = refTypes[refTypeInStoreName]
+    setRefTypeList(refTypeInStore)
+
+    if (refTypeInStore.length === 0 && isForceFetch.current) {
+      getRefType(refType as RefTypesRegistry)
+      isForceFetch.current = false
     }
-  }, [refTypesList, getRefTypes])
+  }, [refTypeList, refType, refTypes, getRefType])
 
   useEffect(() => {
-    if (isCloseModal) {
-      secondaryButtonCallback()
+    return () => {
+      isForceFetch.current = true
     }
-  }, [isCloseModal])
+  }, [])
 
-  const modalForm = () => {
-    return (
-      <div>
-        <TextField
-          required
-          autoFocus
-          variant="standard"
-          id={`${refTypeId}-name`}
-          label="Name"
-          name={`${refTypeId}-name`}
-          margin="normal"
-          sx={{ minWidth: 250 }}
-          inputProps={{ maxLength: 99 }}
-          value={selectedName}
-          onChange={(e) => setSelectedName(e.target.value)}
-          error={selectedName.trim() === ''}
-          helperText={selectedName.trim() === '' ? 'Please enter name' : ''}
-        />
-        <TextField
-          required
-          fullWidth
-          multiline
-          rows={2}
-          variant="standard"
-          name={`${refTypeId}-desc`}
-          label="Description"
-          id={`${refTypeId}-desc`}
-          margin="normal"
-          inputProps={{ maxLength: 999 }}
-          value={selectedDesc}
-          onChange={(e) => setSelectedDesc(e.target.value)}
-          error={selectedDesc.trim() === ''}
-          helperText={selectedDesc.trim() === '' ? 'Please enter description' : ''}
-        />
-      </div>
-    )
+  const getRefTypeWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
+    getRefType(refType as RefTypesRegistry, requestMetadata)
   }
 
-  const validateNameDesc = (name: string, desc: string) => name.trim() && desc.trim()
+  const primaryButtonCallback = async (action: ActionTypes) => {
+    const hasFormErrors = validateFormData(formData, setFormErrors)
+    if (hasFormErrors) {
+      return
+    }
 
-  const primaryButtonCallback = (action: string, id?: number) => {
-    if (id && action === ACTION_DELETE) {
-      props.deleteRefType(id)
-    } else if (id && action === ACTION_UPDATE) {
-      if (validateNameDesc(selectedName, selectedDesc)) {
-        props.editRefType(id, selectedName, selectedDesc)
+    let refTypeResponse: RefTypeResponse = { data: [] }
+    if (action === ACTION_TYPES.DELETE && getNumber(formData.id) > 0) {
+      refTypeResponse = await deleteRefType(refType, formData.id, formData.isHardDelete)(dispatch)
+    } else if ((action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.RESTORE) && getNumber(formData.id) > 0) {
+      if (action === ACTION_TYPES.RESTORE && formData.isHardDelete) {
+        refTypeResponse = await deleteRefType(refType, formData.id, formData.isHardDelete)(dispatch)
+      } else {
+        refTypeResponse = await editRefType(
+          refType,
+          formData.id,
+          formData.nameOrComponentName,
+          formData.descOrStatusName,
+          formData.isActive,
+          action === ACTION_TYPES.RESTORE,
+        )(dispatch)
       }
-    } else {
-      if (validateNameDesc(selectedName, selectedDesc)) {
-        props.addRefType(selectedName, selectedDesc)
-      }
+    } else if (action === ACTION_TYPES.CREATE) {
+      refTypeResponse = await addRefType(
+        refType,
+        formData.nameOrComponentName,
+        formData.descOrStatusName,
+        formData.isActive,
+      )(dispatch)
     }
-    isFetchRunDone.current = false
-  }
 
-  const secondaryButtonCallback = () => {
-    setModal('')
-    setSelectedId(ID_DEFAULT)
-    setSelectedName('')
-    setSelectedDesc('')
-    setSelectedNameForReset('')
-    setSelectedDescForReset('')
-  }
-
-  const resetButtonCallback = (action: string) => {
-    if (action === ACTION_ADD) {
-      setSelectedName('')
-      setSelectedDesc('')
-    }
-    if (action === ACTION_UPDATE) {
-      setSelectedName(selectedNameForReset)
-      setSelectedDesc(selectedDescForReset)
+    if (refTypeResponse && !refTypeResponse.detail) {
+      secondaryButtonCallback(
+        addModalState,
+        updateModalState,
+        deleteModalState,
+        setFormData,
+        setFormErrors,
+        DefaultRefTypeFormData,
+        DefaultRefTypeFormData,
+      )
+      isForceFetch.current = true
     }
   }
 
-  const addModal = () => (
-    <Modal
-      isOpen={true}
-      setIsOpenExtra={setModal}
-      cleanupOnClose={secondaryButtonCallback}
-      title={`Add New ${refTypeName}`}
-      primaryButtonText={BUTTON_ADD}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_ADD, undefined)}
-      secondaryButtonText={BUTTON_CANCEL}
-      secondaryButtonCallback={secondaryButtonCallback}
-      contentText="Provide the following details..."
-      content={modalForm()}
-      resetButtonText={BUTTON_RESET}
-      resetButtonCallback={() => resetButtonCallback(ACTION_ADD)}
-    />
-  )
+  const componentNameMenuItems = () =>
+    Object.keys(COMPONENT_STATUS_NAME).map((x) => (
+      <MenuItem key={x} value={x}>
+        {x}
+      </MenuItem>
+    ))
 
-  const updateModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title={`Update ${refTypeName}`}
-        primaryButtonText={BUTTON_UPDATE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_UPDATE, selectedId)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText="Provide the following details..."
-        content={modalForm()}
-        resetButtonText={BUTTON_RESET}
-        resetButtonCallback={() => resetButtonCallback(ACTION_UPDATE)}
-      />
-    )
-  }
+  const componentStatusMenuItems = () =>
+    Object.keys(COMPONENT_STATUS_STATUS).map((x) => (
+      <MenuItem key={x} value={x}>
+        {x}
+      </MenuItem>
+    ))
 
-  const deleteModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title={`Delete ${refTypeName}`}
-        primaryButtonText={BUTTON_DELETE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_DELETE, selectedId)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to delete ${refTypeName}: ${selectedName}?!?`}
-      />
-    )
-  }
-
-  const showModal = () =>
-    modal === ACTION_ADD
-      ? addModal()
-      : modal === ACTION_UPDATE
-      ? updateModal()
-      : modal === ACTION_DELETE
-      ? deleteModal()
-      : null
-
-  const addButton = () => <Button onClick={() => setModal(ACTION_ADD)}>Add New {refTypeName}</Button>
-
-  const isDisabled = (name: string) => ['Due at Hearing', 'MASTER', 'MERIT'].includes(name)
-  const actionButtons = (id: number, name: string, description: string) => (
+  const refTypeFormComponentStatus = (nameOrComponentName: string, descOrStatusName: string) => (
     <>
-      <Button
-        onClick={() => {
-          setModal(ACTION_UPDATE)
-          setSelectedId(id)
-          setSelectedName(name)
-          setSelectedDesc(description)
-        }}
-        disabled={isDisabled(name)}
-      >
-        Update
-      </Button>
-      <Button
-        onClick={() => {
-          setModal(ACTION_DELETE)
-          setSelectedId(id)
-          setSelectedName(name)
-          setSelectedDesc(description)
-        }}
-        disabled={isDisabled(name)}
-      >
-        Delete
-      </Button>
+      <FormSelectField
+        componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
+        name="nameOrComponentName"
+        required
+        value={formData.nameOrComponentName}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
+        helperText={formErrors.nameOrComponentName}
+        menuItems={componentNameMenuItems()}
+      />
+      <FormSelectField
+        componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
+        name="descOrStatusName"
+        required
+        value={formData.descOrStatusName}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
+        helperText={formErrors.descOrStatusName}
+        menuItems={componentStatusMenuItems()}
+      />
+      <FormControlLabel
+        label="IS ACTIVE STATUS"
+        control={
+          <Checkbox
+            name="isActive"
+            checked={formData.isActive}
+            onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+          />
+        }
+      />
     </>
   )
 
-  const refTypesTableHeaderData: TableHeaderData[] = [
-    {
-      id: 'name',
-      label: 'Name',
-    },
-    {
-      id: 'description',
-      label: 'Description',
-    },
-    {
-      id: 'actions',
-      label: 'Actions',
-      align: 'center' as const,
-      isDisableSorting: true,
-    },
-  ]
-
-  const refTypesTableData: TableData[] = Array.from(refTypesList, (x) => {
-    return {
-      name: x.name,
-      description: x.description,
-      actions: actionButtons(x.id || ID_ACTION_BUTTON, x.name, x.description),
-    }
-  })
-
-  const refTypesPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary" gutterBottom>
-      {refTypeName}
-    </Typography>
+  const refTypeFormOthers = (nameOrComponentName: string, descOrStatusName: string) => (
+    <>
+      <FormTextField
+        componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
+        name="nameOrComponentName"
+        value={formData.nameOrComponentName}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
+        helperText={formErrors.nameOrComponentName}
+        required
+      />
+      <FormTextField
+        componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
+        name="descOrStatusName"
+        value={formData.descOrStatusName}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
+        helperText={formErrors.descOrStatusName}
+        required
+      />
+    </>
   )
 
-  const refTypesTable = () => (
+  const addUpdateModalContent = () => {
+    const nameOrComponentName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'COMPONENT NAME' : 'NAME'
+    const descOrStatusName = refType === REF_TYPES_REGISTRY.COMPONENT_STATUS ? 'STATUS NAME' : 'DESCRIPTION'
+    return (
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+        {refType === REF_TYPES_REGISTRY.COMPONENT_STATUS
+          ? refTypeFormComponentStatus(nameOrComponentName, descOrStatusName)
+          : refTypeFormOthers(nameOrComponentName, descOrStatusName)}
+      </Box>
+    )
+  }
+
+  const addModal = () =>
+    addModalComponent(
+      componentNameNoUnderscore,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultRefTypeFormData,
+      DefaultRefTypeFormData,
+      formDataReset,
+    )
+
+  const updateModal = () =>
+    updateModalComponent(
+      componentNameNoUnderscore,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultRefTypeFormData,
+      DefaultRefTypeFormData,
+      formDataReset,
+    )
+
+  const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
+    formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+  } ${refTypeTitle()}: ${formData.nameOrComponentName}, ${formData.descOrStatusName}?!?`
+
+  const deleteModal = () =>
+    deleteModalComponent(
+      componentNameNoUnderscore,
+      deleteModalContextText,
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultRefTypeFormData,
+      DefaultRefTypeFormData,
+      formData,
+      formErrors,
+    )
+
+  const isUpdateDeleteDisabled = (name: string) => ['DUE AT HEARING', 'MASTER', 'MERIT'].includes(name)
+
+  const actionButtons = (formDataModal: RefTypeFormData) =>
+    tableActionButtonsComponent(
+      refType,
+      formDataModal,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormDataReset,
+      isUpdateDeleteDisabled(formDataModal.nameOrComponentName),
+      isUpdateDeleteDisabled(formDataModal.nameOrComponentName),
+    )
+
+  const refTypeTable = () => (
     <Table
-      componentName={refTypeName}
-      headerData={refTypesTableHeaderData}
-      tableData={refTypesTableData}
-      isExportToCsv={true}
-      exportToCsvFileName={`trackcase_service_${refTypeId}.csv`}
-      addModelComponent={addButton()}
+      componentName={refTypeTitle()}
+      headerData={refTypeTableHeader(refType)}
+      tableData={refTypeTableData(refType, refTypeList, actionButtons)}
+      addModelComponent={tableAddButtonComponent(refType, addModalState)}
+      getSoftDeletedCallback={() => getRefTypeWithMetadata({ isIncludeDeleted: true })}
     />
   )
 
@@ -283,15 +308,17 @@ const RefTypes = (props: RefTypesProps): React.ReactElement => {
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {refTypesPageTitle()}
+          {pageTitleComponent(componentNameNoUnderscore)}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {refTypesTable()}
+          {refTypeTable()}
         </Grid>
       </Grid>
-      {modal && showModal()}
+      {addModal()}
+      {updateModal()}
+      {deleteModal()}
     </Box>
   )
 }
 
-export default connect(mapStateToProps, null)(RefTypes)
+export default connect(mapStateToProps, mapDispatchToProps)(RefTypes)

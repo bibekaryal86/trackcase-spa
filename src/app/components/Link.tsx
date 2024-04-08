@@ -36,7 +36,7 @@ const Link = (props: LinkProps) => {
       color={props.color ? props.color : 'primary'}
       underline={props.underline ? props.underline : 'hover'}
     >
-      {props.text || 'NO_LINK_TEXT'}
+      {props.text || ''}
     </MuiLink>
   )
 }

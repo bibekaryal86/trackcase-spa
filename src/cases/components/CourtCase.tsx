@@ -1,53 +1,48 @@
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import CourtCaseForm from './CourtCaseForm'
-import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
-import { Calendars } from '../../calendars'
+import {
+  getNumber,
+  GlobalState,
+  isValidId,
+  pageActionButtonsComponent,
+  pageNotSelectedComponent,
+  pageTitleComponent,
+  pageTopLinksComponent,
+} from '../../app'
 import { ClientSchema, getClients } from '../../clients'
-import { Collections } from '../../collections'
-import { CASE_TABS } from '../../constants'
-import { Forms } from '../../forms'
-import { CaseTypeSchema, getCaseTypes } from '../../types'
-import { editCourtCase, getCourtCase } from '../actions/courtCases.action'
-import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
-import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
-import { isAreTwoCourtCasesSame } from '../utils/courtCases.utils'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
+import { getRefTypes, RefTypesState } from '../../types'
+import { courtCasesAction, getCourtCase } from '../actions/courtCases.action'
+import {
+  CourtCaseBase,
+  CourtCaseResponse,
+  DefaultCourtCaseFormData,
+  DefaultCourtCaseFormErrorData,
+} from '../types/courtCases.data.types'
+import { getCourtCaseFormDataFromSchema, isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
 
-const mapStateToProps = ({ courtCases, statuses, caseTypes, clients }: GlobalState) => {
+const mapStateToProps = ({ refTypes, clients }: GlobalState) => {
   return {
-    selectedCourtCase: courtCases.selectedCourtCase,
-    statusList: statuses.statuses,
-    caseTypesList: caseTypes.caseTypes,
+    refTypes: refTypes,
     clientsList: clients.clients,
   }
 }
 
 const mapDispatchToProps = {
-  getCourtCase: (courtCaseId: number) => getCourtCase(courtCaseId),
-  editCourtCase: (courtCaseId: number, courtCase: CourtCaseSchema) => editCourtCase(courtCaseId, courtCase),
-  unmountPage: () => unmountPage(COURT_CASES_UNMOUNT),
-  getStatusesList: () => getStatusesList(),
-  getCaseTypes: () => getCaseTypes(),
+  getRefTypes: () => getRefTypes(),
   getClients: () => getClients(),
 }
 
 interface CourtCaseProps {
-  selectedCourtCase: CourtCaseSchema
-  getCourtCase: (courtCaseId: number) => void
-  editCourtCase: (id: number, courtCase: CourtCaseSchema) => void
-  unmountPage: () => void
-  statusList: StatusSchema<string>
-  getStatusesList: () => void
-  caseTypesList: CaseTypeSchema[]
-  getCaseTypes: () => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   clientsList: ClientSchema[]
   getClients: () => void
 }
@@ -55,135 +50,126 @@ interface CourtCaseProps {
 const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
-
+  const dispatch = useDispatch()
+  const store = useStore<GlobalState>().getState()
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
-  const { getCourtCase, editCourtCase } = props
-  const { statusList, getStatusesList } = props
-  const { unmountPage } = props
-  const { caseTypesList, getCaseTypes, clientsList, getClients } = props
 
-  const [selectedCourtCase, setSelectedCourtCase] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
-  const [selectedCourtCaseForReset, setSelectedCourtCaseForReset] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
-  const [courtCaseStatusList, setCourtCaseStatusList] = useState<string[]>([])
-  const [tabValue, setTabValue] = useState(CASE_TABS.FORMS.toString())
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => setTabValue(newValue)
+  const { refTypes, getRefTypes } = props
+  const { clientsList, getClients } = props
+
+  const [formData, setFormData] = useState(DefaultCourtCaseFormData)
+  const [formDataReset, setFormDataReset] = useState(DefaultCourtCaseFormData)
+  const [formErrors, setFormErrors] = useState(DefaultCourtCaseFormErrorData)
+
+  const courtCaseStatusList = useCallback(() => {
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURT_CASES)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
-      id && getCourtCase(getNumber(id))
-      statusList.court_case.all.length === 0 && getStatusesList()
-      caseTypesList.length === 0 && getCaseTypes()
+      const fetchCourtCase = async (id: number) => {
+        return await getCourtCase(id, true)(dispatch, store)
+      }
+      if (isValidId(id)) {
+        fetchCourtCase(getNumber(id)).then((oneCourtCase) => {
+          if (oneCourtCase) {
+            const oneCourtCaseFormData = getCourtCaseFormDataFromSchema(oneCourtCase)
+            setFormData(oneCourtCaseFormData)
+            setFormDataReset(oneCourtCaseFormData)
+          }
+        })
+      }
+
+      if (refTypes.componentStatus.length === 0 || refTypes.caseType.length === 0) {
+        getRefTypes()
+      }
       clientsList.length === 0 && getClients()
     }
     isForceFetch.current = false
   }, [
-    id,
-    getCourtCase,
-    statusList.court_case.all.length,
-    getStatusesList,
-    caseTypesList.length,
-    getCaseTypes,
     clientsList.length,
+    dispatch,
     getClients,
+    getRefTypes,
+    id,
+    refTypes.caseType.length,
+    refTypes.componentStatus.length,
+    store,
   ])
-
-  useEffect(() => {
-    if (statusList.court_case.all.length > 0) {
-      setCourtCaseStatusList(statusList.court_case.all)
-    }
-  }, [statusList.court_case.all])
-
-  useEffect(() => {
-    setSelectedCourtCase(props.selectedCourtCase)
-    setSelectedCourtCaseForReset(props.selectedCourtCase)
-  }, [props.selectedCourtCase])
 
   useEffect(() => {
     return () => {
       isForceFetch.current = true
-      unmountPage()
     }
-  }, [unmountPage])
-
-  const inPageTopLinks = () => {
-    const backToPage = searchQueryParams.get('backTo') || ''
-    return (
-      <Box sx={{ display: 'flex' }}>
-        {backToPage && (
-          <Box sx={{ mr: 2 }}>
-            <Link text="Back to Prev Page" navigateToPage={backToPage} color="primary" />
-          </Box>
-        )}
-        <Link text="View All Cases" navigateToPage="/court_cases/" color="primary" />
-      </Box>
-    )
-  }
-
-  const courtCasePageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary">
-      {id ? `Case: ${selectedCourtCase.client?.name}, ${selectedCourtCase.caseType?.name}` : 'Case'}
-    </Typography>
-  )
-
-  const noCourtCase = () => (
-    <Typography component="h1" variant="h6" color="error" gutterBottom>
-      Case not selected! Nothing to display! Go to All Cases and select one!!!
-    </Typography>
-  )
-
-  const updateAction = () => {
-    editCourtCase(getNumber(id), selectedCourtCase)
-  }
-
-  const courtCaseButtons = () => {
-    return (
-      <>
-        <Button disabled={isAreTwoCourtCasesSame(selectedCourtCase, selectedCourtCaseForReset)} onClick={updateAction}>
-          Update
-        </Button>
-        <Button
-          disabled={isAreTwoCourtCasesSame(selectedCourtCase, selectedCourtCaseForReset)}
-          onClick={() => setSelectedCourtCase(selectedCourtCaseForReset)}
-        >
-          Cancel
-        </Button>
-      </>
-    )
-  }
+  }, [])
 
   const courtCaseForm = () => (
     <CourtCaseForm
-      selectedCourtCase={selectedCourtCase}
-      setSelectedCourtCase={setSelectedCourtCase}
-      courtCaseStatusList={courtCaseStatusList}
+      formData={formData}
+      setFormData={setFormData}
+      formErrors={formErrors}
+      setFormErrors={setFormErrors}
+      courtCaseStatusList={courtCaseStatusList()}
       isShowOneCourtCase={true}
-      caseTypesList={caseTypesList}
       clientsList={clientsList}
-      statusList={statusList}
+      caseTypesList={refTypes.caseType}
     />
   )
 
-  const showTabs = () => {
-    return (
-      <Tabs value={tabValue} onChange={handleTabChange} textColor="primary" indicatorColor="primary">
-        <Tab value={CASE_TABS.FORMS.toString()} label={CASE_TABS.FORMS.toString()} />
-        <Tab value={CASE_TABS.CALENDARS.toString()} label={CASE_TABS.CALENDARS.toString()} />
-        <Tab value={CASE_TABS.COLLECTIONS.toString()} label={CASE_TABS.COLLECTIONS.toString()} />
-      </Tabs>
+  const primaryButtonCallback = async () => {
+    const hasFormErrors = validateCourtCase(formData, setFormErrors)
+    if (hasFormErrors) {
+      return
+    }
+
+    let courtCaseResponse: CourtCaseResponse = { data: [], detail: { error: INVALID_INPUT } }
+    if (isValidId(id)) {
+      const courtCasesRequest: CourtCaseBase = { ...formData }
+      courtCaseResponse = await courtCasesAction({
+        action: ACTION_TYPES.UPDATE,
+        courtCasesRequest: courtCasesRequest,
+        id: formData.id,
+      })(dispatch)
+    }
+
+    if (courtCaseResponse && !courtCaseResponse.detail) {
+      isForceFetch.current = true
+    }
+  }
+
+  const courtCaseButtons = () =>
+    pageActionButtonsComponent(
+      COMPONENT_STATUS_NAME.COURT_CASES,
+      formData,
+      primaryButtonCallback,
+      () => setFormData(formDataReset),
+      !isValidId(id) || isAreTwoCourtCasesSame(formData, formDataReset),
     )
+
+  const getClientCaseType = () => {
+    const selectedCaseType = refTypes.caseType.find((x) => x.id === formData.caseTypeId)
+    const selectedClient = clientsList.find((x) => x.id === formData.clientId)
+    if (selectedCaseType && selectedClient) {
+      return selectedClient.name + ', ' + selectedCaseType.name
+    }
+    return ''
   }
 
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {inPageTopLinks()}
-          {courtCasePageTitle()}
+          {pageTopLinksComponent(
+            COMPONENT_STATUS_NAME.COURT_CASES.replace('_', ' '),
+            '/court_cases/',
+            searchQueryParams,
+          )}
+          {pageTitleComponent(COMPONENT_STATUS_NAME.COURT_CASES.replace('_', ' '), getClientCaseType())}
         </Grid>
         {!id ? (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-            {noCourtCase()}
+            {pageNotSelectedComponent(COMPONENT_STATUS_NAME.COURT_CASES.replace('_', ' '))}
           </Grid>
         ) : (
           <>
@@ -192,32 +178,11 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
               {courtCaseButtons()}
             </Grid>
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-              {showTabs()}
+              <Divider />
+              <Typography component="h1" variant="h6" color="primary">
+                MANY THINGS OF THE CASE IN TABBED VIEW:
+              </Typography>
             </Grid>
-            {tabValue === CASE_TABS.FORMS.toString() && (
-              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-                <Typography component="h1" variant="h6" color="primary">
-                  Filings in Case:
-                </Typography>
-                <Forms courtCaseId={id} />
-              </Grid>
-            )}
-            {tabValue === CASE_TABS.CALENDARS.toString() && (
-              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-                <Typography component="h1" variant="h6" color="primary">
-                  Calendars in Case:
-                </Typography>
-                <Calendars courtCaseId={id} />
-              </Grid>
-            )}
-            {tabValue === CASE_TABS.COLLECTIONS.toString() && (
-              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-                <Typography component="h1" variant="h6" color="primary">
-                  Collections in Case:
-                </Typography>
-                <Collections courtCaseId={id} />
-              </Grid>
-            )}
           </>
         )}
       </Grid>

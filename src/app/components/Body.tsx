@@ -7,14 +7,14 @@ import AppRoutes from './AppRoutes'
 import Footer from './Footer'
 import Header from './Header'
 import SideNav from './SideNav'
-import { isLoggedIn } from '../utils/app.utils'
+import { isLoggedIn } from '../../users'
 
 interface BodyProps {
   isDarkMode: boolean
   darkModeCallback: () => void
   anchorEl: HTMLElement | null
   setAnchorEl: (anchorEl: HTMLElement | null) => void
-  userLogoutCallback: () => void
+  logoutCallback: () => void
 }
 
 const Body = (props: BodyProps) => {

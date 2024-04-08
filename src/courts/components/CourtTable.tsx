@@ -1,116 +1,100 @@
-import Button from '@mui/material/Button'
 import React from 'react'
 
-import { getFullAddress, Link, Table, TableData, TableHeaderData } from '../../app'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_DELETE,
-  BUTTON_UPDATE,
-  ID_ACTION_BUTTON,
-} from '../../constants'
-import { CourtSchema } from '../types/courts.data.types'
+  FetchRequestMetadata,
+  getFullAddress,
+  Link,
+  ModalState,
+  Table,
+  tableAddButtonComponent,
+  TableData,
+  TableHeaderData,
+} from '../../app'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
+import { checkUserHasPermission, isSuperuser } from '../../users'
+import { CourtFormData, CourtSchema } from '../types/courts.data.types'
+import { getCourtFormDataFromSchema } from '../utils/courts.utils'
 
 interface CourtTableProps {
   courtsList: CourtSchema[]
-  setModal?: (action: string) => void
-  setSelectedId?: (id: number) => void
-  setSelectedCourt?: (court: CourtSchema) => void
-  setSelectedCourtForReset?: (court: CourtSchema) => void
+  actionButtons: (formDataForModal: CourtFormData) => React.JSX.Element
+  addModalState: ModalState
+  softDeleteCallback: (requestMetadata: Partial<FetchRequestMetadata>) => void
 }
 
 const CourtTable = (props: CourtTableProps): React.ReactElement => {
-  const { courtsList } = props
-  const { setModal, setSelectedId, setSelectedCourt, setSelectedCourtForReset } = props
+  const { courtsList, actionButtons, addModalState, softDeleteCallback } = props
 
   const courtsTableHeaderData = (): TableHeaderData[] => {
-    return [
+    const tableHeaderData: TableHeaderData[] = [
       {
         id: 'name',
-        label: 'Name',
+        label: 'NAME',
       },
       {
         id: 'address',
-        label: 'Address',
+        label: 'ADDRESS',
         isDisableSorting: true,
       },
       {
         id: 'phone',
-        label: 'Phone Number',
+        label: 'PHONE',
         isDisableSorting: true,
       },
       {
         id: 'dhsAddress',
-        label: 'DHS Address',
+        label: 'DHS ADDRESS',
         isDisableSorting: true,
       },
       {
         id: 'status',
-        label: 'Status',
-      },
-      {
-        id: 'actions',
-        label: 'Actions',
-        align: 'center' as const,
-        isDisableSorting: true,
+        label: 'STATUS',
       },
     ]
-  }
+    if (isSuperuser()) {
+      tableHeaderData.push({
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      })
+    }
+    if (
+      checkUserHasPermission(COMPONENT_STATUS_NAME.COURTS, ACTION_TYPES.UPDATE) ||
+      checkUserHasPermission(COMPONENT_STATUS_NAME.COURTS, ACTION_TYPES.DELETE)
+    ) {
+      tableHeaderData.push({
+        id: 'actions',
+        label: 'ACTIONS',
+        isDisableSorting: true,
+        align: 'center' as const,
+      })
+    }
 
-  const actionButtons = (id: number, court: CourtSchema) => (
-    <>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_UPDATE)
-          setSelectedId && setSelectedId(id)
-          setSelectedCourt && setSelectedCourt(court)
-          setSelectedCourtForReset && setSelectedCourtForReset(court)
-        }}
-      >
-        {BUTTON_UPDATE}
-      </Button>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_DELETE)
-          setSelectedId && setSelectedId(id)
-          setSelectedCourt && setSelectedCourt(court)
-        }}
-      >
-        {BUTTON_DELETE}
-      </Button>
-    </>
-  )
+    return tableHeaderData
+  }
 
   const linkToCourt = (x: CourtSchema) => <Link text={`${x.name}, ${x.state}`} navigateToPage={`/court/${x.id}`} />
-
-  const courtsTableDataCommon = (x: CourtSchema) => {
-    return {
-      name: linkToCourt(x),
-      address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
-      phone: x.phoneNumber,
-      dhsAddress: x.dhsAddress,
-      status: x.status,
-    }
-  }
 
   const courtsTableData = (): TableData[] => {
     return Array.from(courtsList, (x) => {
       return {
-        ...courtsTableDataCommon(x),
-        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+        name: linkToCourt(x),
+        address: getFullAddress(x.streetAddress, x.city, x.state, x.zipCode),
+        phone: x.phoneNumber,
+        dhsAddress: x.dhsAddress,
+        status: x.componentStatus?.statusName,
+        isDeleted: x.isDeleted,
+        actions: actionButtons(getCourtFormDataFromSchema(x)),
       }
     })
   }
 
-  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Court</Button>
-
   return (
     <Table
-      componentName="Court"
+      componentName={COMPONENT_STATUS_NAME.COURTS}
       headerData={courtsTableHeaderData()}
       tableData={courtsTableData()}
-      addModelComponent={addButton()}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COURTS, addModalState)}
+      getSoftDeletedCallback={() => softDeleteCallback({ isIncludeDeleted: true })}
     />
   )
 }

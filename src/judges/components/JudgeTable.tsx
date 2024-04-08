@@ -1,36 +1,39 @@
-import Button from '@mui/material/Button'
 import React from 'react'
 
-import { Link, Table, TableData, TableHeaderData } from '../../app'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_DELETE,
-  BUTTON_UPDATE,
-  ID_ACTION_BUTTON,
-} from '../../constants'
-import { CourtSchema } from '../../courts'
-import { JudgeSchema } from '../types/judges.data.types'
+  FetchRequestMetadata,
+  Link,
+  ModalState,
+  Table,
+  tableAddButtonComponent,
+  TableData,
+  TableHeaderData,
+} from '../../app'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
+import { CourtFormData, CourtSchema } from '../../courts'
+import { ComponentStatusSchema } from '../../types'
+import { checkUserHasPermission, isSuperuser } from '../../users'
+import { JudgeFormData, JudgeSchema } from '../types/judges.data.types'
+import { getJudgeFormDataFromSchema } from '../utils/judges.utils'
 
 interface JudgeTableProps {
   judgesList: JudgeSchema[]
-  setModal?: (action: string) => void
-  setSelectedId?: (id: number) => void
-  setSelectedJudge?: (judge: JudgeSchema) => void
-  setSelectedJudgeForReset?: (judge: JudgeSchema) => void
-  selectedCourt?: CourtSchema
+  actionButtons?: (formDataForModal: JudgeFormData) => React.JSX.Element
+  addModalState?: ModalState
+  softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  selectedCourt?: CourtSchema | CourtFormData
+  componentStatusList: ComponentStatusSchema[]
 }
 
 const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
-  const { judgesList, selectedCourt } = props
-  const { setModal, setSelectedId, setSelectedJudge, setSelectedJudgeForReset } = props
+  const { judgesList, actionButtons, addModalState, softDeleteCallback } = props
+  const { selectedCourt, componentStatusList } = props
 
   const judgesTableHeaderData = (): TableHeaderData[] => {
-    return [
+    const tableHeaderData: TableHeaderData[] = [
       {
         id: 'name',
-        label: 'Name',
+        label: 'NAME',
       },
       {
         id: 'court',
@@ -38,45 +41,35 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
       },
       {
         id: 'webex',
-        label: 'Webex Address',
+        label: 'WEBEX',
         isDisableSorting: true,
       },
       {
         id: 'status',
-        label: 'Status',
-      },
-      {
-        id: 'actions',
-        label: 'Actions',
-        align: 'center' as const,
-        isDisableSorting: true,
+        label: 'STATUS',
       },
     ]
-  }
+    if (isSuperuser()) {
+      tableHeaderData.push({
+        id: 'isDeleted',
+        label: 'IS DELETED?',
+      })
+    }
+    if (
+      (checkUserHasPermission(COMPONENT_STATUS_NAME.JUDGES, ACTION_TYPES.UPDATE) ||
+        checkUserHasPermission(COMPONENT_STATUS_NAME.JUDGES, ACTION_TYPES.DELETE)) &&
+      !selectedCourt
+    ) {
+      tableHeaderData.push({
+        id: 'actions',
+        label: 'ACTIONS',
+        isDisableSorting: true,
+        align: 'center' as const,
+      })
+    }
 
-  const actionButtons = (id: number, judge: JudgeSchema) => (
-    <>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_UPDATE)
-          setSelectedId && setSelectedId(id)
-          setSelectedJudge && setSelectedJudge(judge)
-          setSelectedJudgeForReset && setSelectedJudgeForReset(judge)
-        }}
-      >
-        {BUTTON_UPDATE}
-      </Button>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_DELETE)
-          setSelectedId && setSelectedId(id)
-          setSelectedJudge && setSelectedJudge(judge)
-        }}
-      >
-        {BUTTON_DELETE}
-      </Button>
-    </>
-  )
+    return tableHeaderData
+  }
 
   const linkToWebex = (webex?: string) =>
     webex ? <Link text={webex} href={webex.toLowerCase()} target="_blank" /> : ''
@@ -90,32 +83,35 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
 
   const linkToJudge = (x: JudgeSchema) => <Link text={x.name} navigateToPage={`/judge/${x.id}`} />
 
-  const judgesTableDataCommon = (x: JudgeSchema) => {
-    return {
-      name: linkToJudge(x),
-      court: linkToCourt(x.court),
-      webex: linkToWebex(x.webex),
-      status: x.status,
+  const getComponentStatus = (x: JudgeSchema) => {
+    if (x.componentStatus) {
+      return x.componentStatus.statusName
+    } else {
+      const componentStatus = componentStatusList.find((y) => y.id === x.componentStatusId)
+      return componentStatus?.statusName
     }
   }
 
   const judgesTableData = (): TableData[] => {
     return Array.from(judgesList, (x) => {
       return {
-        ...judgesTableDataCommon(x),
-        actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
+        name: linkToJudge(x),
+        court: linkToCourt(x.court),
+        webex: linkToWebex(x.webex),
+        status: getComponentStatus(x),
+        isDeleted: x.isDeleted,
+        actions: actionButtons ? actionButtons(getJudgeFormDataFromSchema(x)) : undefined,
       }
     })
   }
 
-  const addButton = () => <Button onClick={() => setModal && setModal(ACTION_ADD)}>Add New Judge</Button>
-
   return (
     <Table
-      componentName="Judge"
+      componentName={COMPONENT_STATUS_NAME.JUDGES}
       headerData={judgesTableHeaderData()}
       tableData={judgesTableData()}
-      addModelComponent={addButton()}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.JUDGES, addModalState)}
+      getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )
 }

@@ -1,71 +1,60 @@
-import Button from '@mui/material/Button'
 import React from 'react'
 
-import { getCurrency, getDayjsString, Link, Table, TableData, TableHeaderData } from '../../app'
+import {
+  FetchRequestMetadata,
+  getCurrency,
+  getDayjsString,
+  Link,
+  ModalState,
+  Table,
+  tableAddButtonComponent,
+  TableData,
+  TableHeaderData,
+} from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ClientSchema } from '../../clients'
+import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '../../constants'
+import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
+import { checkUserHasPermission } from '../../users'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_DELETE,
-  BUTTON_UPDATE,
-  COLLECTION_OBJECT_TYPES,
-  ID_ACTION_BUTTON,
-  ID_DEFAULT,
-} from '../../constants'
-import { CollectionMethodSchema } from '../../types'
-import {
+  CaseCollectionFormData,
   CaseCollectionSchema,
+  CashCollectionFormData,
   CashCollectionSchema,
-  DefaultCashCollectionSchema,
 } from '../types/collections.data.types'
-import { isCaseCollection } from '../utils/collections.utils'
+import { getCaseCollectionFormDataFromSchema, getCashCollectionFormDataFromSchema } from '../utils/collections.utils'
 
 interface CollectionTableProps {
-  collectionType: string
   caseCollectionsList: CaseCollectionSchema[]
-  setModal?: (action: string) => void
-  setSelectedId?: (id: number) => void
-  setSelectedType?: (type: string) => void
-  setSelectedCollection?: (collection: CaseCollectionSchema | CashCollectionSchema) => void
-  setSelectedCollectionForReset?: (collection: CaseCollectionSchema | CashCollectionSchema) => void
+  actionButtonsCase?: (formDataForModal: CaseCollectionFormData) => React.JSX.Element
+  actionButtonsCash?: (formDataModal: CashCollectionFormData) => React.JSX.Element
+  addModalStateCase?: ModalState
+  addModalStateCash?: ModalState
+  softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  componentStatusList: ComponentStatusSchema[]
   collectionMethodsList: CollectionMethodSchema[]
   courtCasesList: CourtCaseSchema[]
   clientsList: ClientSchema[]
-  isAddModelComponent: boolean
+  selectedCourtCase?: CourtCaseSchema
+  addCashCollectionButtonCallback: (caseCollectionId: number) => void
 }
 
 const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
-  const { collectionType, caseCollectionsList } = props
-  const { setModal, setSelectedId, setSelectedType, setSelectedCollection, setSelectedCollectionForReset } = props
-  const { collectionMethodsList, clientsList, courtCasesList } = props
+  const {
+    caseCollectionsList,
+    actionButtonsCase,
+    actionButtonsCash,
+    addModalStateCase,
+    addModalStateCash,
+    softDeleteCallback,
+    addCashCollectionButtonCallback,
+  } = props
+  const { componentStatusList, collectionMethodsList, courtCasesList, clientsList, selectedCourtCase } = props
 
-  const isCaseCollectionTable = isCaseCollection(collectionType)
-
-  const collectionsTableHeaderData = (collectionTypeOverride?: string): TableHeaderData[] => {
+  const collectionsTableHeaderData = (isCashCollection: boolean): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = []
 
-    if (isCaseCollectionTable && !(collectionTypeOverride === COLLECTION_OBJECT_TYPES.CASH)) {
-      tableHeaderData.push(
-        {
-          id: 'client',
-          label: 'Client',
-        },
-        {
-          id: 'case',
-          label: 'Case',
-        },
-        {
-          id: 'quoteAmount',
-          label: 'Amount',
-        },
-        {
-          id: 'status',
-          label: 'Status',
-        },
-      )
-    } else {
+    if (isCashCollection) {
       tableHeaderData.push(
         {
           id: 'collectionDate',
@@ -88,53 +77,57 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
           label: 'Collection Memo',
         },
       )
+    } else {
+      tableHeaderData.push(
+        {
+          id: 'client',
+          label: 'Client',
+        },
+        {
+          id: 'case',
+          label: 'Case',
+        },
+        {
+          id: 'quoteAmount',
+          label: 'Amount',
+        },
+        {
+          id: 'status',
+          label: 'Status',
+        },
+      )
     }
-    tableHeaderData.push({
-      id: 'actions',
-      label: 'Actions',
-      align: 'center' as const,
-      isDisableSorting: true,
-    })
+
+    if (
+      (checkUserHasPermission(COMPONENT_STATUS_NAME.COLLECTIONS, ACTION_TYPES.UPDATE) ||
+        checkUserHasPermission(COMPONENT_STATUS_NAME.COLLECTIONS, ACTION_TYPES.DELETE)) &&
+      !selectedCourtCase
+    ) {
+      tableHeaderData.push({
+        id: 'actions',
+        label: 'ACTIONS',
+        isDisableSorting: true,
+        align: 'center' as const,
+      })
+    }
 
     return tableHeaderData
   }
 
-  const actionButtons = (
-    id: number,
-    collection: CaseCollectionSchema | CashCollectionSchema,
-    collectionTypeOverride?: string,
-  ) => (
-    <>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_UPDATE)
-          setSelectedId && setSelectedId(id)
-          setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
-          setSelectedCollection && setSelectedCollection(collection)
-          setSelectedCollectionForReset && setSelectedCollectionForReset(collection)
-        }}
-      >
-        {BUTTON_UPDATE}
-      </Button>
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_DELETE)
-          setSelectedId && setSelectedId(id)
-          setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
-          setSelectedCollection && setSelectedCollection(collection)
-        }}
-      >
-        {BUTTON_DELETE}
-      </Button>
-    </>
-  )
-
   const linkToClient = (x: CaseCollectionSchema) => {
-    const client = clientsList.find((y) => y.id === x.courtCase?.clientId)
+    let client
+    if (selectedCourtCase) {
+      client = clientsList.find((y) => y.id === selectedCourtCase.clientId)
+    } else {
+      client = clientsList.find((y) => y.id === x.courtCase?.clientId)
+    }
     return <Link text={client?.name} navigateToPage={`/client/${client?.id}?backTo=${window.location.pathname}`} />
   }
 
   const linkToCase = (x: CaseCollectionSchema) => {
+    if (selectedCourtCase) {
+      return `${selectedCourtCase.client?.name}, ${selectedCourtCase.caseType?.name}`
+    }
     const courtCase = courtCasesList.find((y) => y.id === x.courtCaseId)
     return (
       <Link
@@ -149,19 +142,17 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     return collectionMethod?.name
   }
 
-  const collectionsTableDataCommon = (
-    x: CaseCollectionSchema | CashCollectionSchema,
-    collectionTypeOverride?: string,
-  ) => {
-    if (isCaseCollectionTable && !(collectionTypeOverride === COLLECTION_OBJECT_TYPES.CASH)) {
-      const y = x as CaseCollectionSchema
-      return {
-        client: linkToClient(y),
-        case: linkToCase(y),
-        quoteAmount: getCurrency(y.quoteAmount),
-        status: y.status,
-      }
+  const getComponentStatus = (x: CaseCollectionSchema) => {
+    if (x.componentStatus) {
+      return x.componentStatus.statusName
     } else {
+      const componentStatus = componentStatusList?.find((y) => y.id === x.componentStatusId)
+      return componentStatus?.statusName
+    }
+  }
+
+  const collectionsTableDataCommon = (x: CaseCollectionSchema | CashCollectionSchema, isCashCollection: boolean) => {
+    if (isCashCollection) {
       const y = x as CashCollectionSchema
       return {
         collectionDate: getDayjsString(y.collectionDate),
@@ -170,75 +161,62 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         collectionMethod: collectionMethodName(y),
         collectionMemo: y.memo,
       }
+    } else {
+      const y = x as CaseCollectionSchema
+      return {
+        client: linkToClient(y),
+        case: linkToCase(y),
+        quoteAmount: getCurrency(y.quoteAmount),
+        status: getComponentStatus(y),
+      }
     }
   }
 
   const getCashCollectionsTable = (x: CaseCollectionSchema) => {
     const cashCollectionsList = x.cashCollections || []
-    const cashCollectionsHeaderData = collectionsTableHeaderData(COLLECTION_OBJECT_TYPES.CASH)
+    const cashCollectionsHeaderData = collectionsTableHeaderData(true)
     const cashCollectionsTableData = Array.from(cashCollectionsList, (y: CashCollectionSchema) => {
       return {
-        ...collectionsTableDataCommon(y, COLLECTION_OBJECT_TYPES.CASH),
-        actions: actionButtons(y.id || ID_ACTION_BUTTON, y, COLLECTION_OBJECT_TYPES.CASH),
+        ...collectionsTableDataCommon(y, true),
+        actions: actionButtonsCash ? actionButtonsCash(getCashCollectionFormDataFromSchema(y)) : undefined,
       }
     })
 
+    const addButtonExtraCallback = () => addCashCollectionButtonCallback(x.id || ID_DEFAULT)
+
     return (
       <Table
-        componentName="Cash Collections"
+        componentName={COLLECTION_TYPES.CASH_COLLECTION.replace('_', ' ')}
         headerData={cashCollectionsHeaderData}
         tableData={cashCollectionsTableData}
-        addModelComponent={addButton(COLLECTION_OBJECT_TYPES.CASH, x.id)}
-        defaultDense={true}
-        isDisablePagination={true}
+        addModelComponent={tableAddButtonComponent(
+          COMPONENT_STATUS_NAME.COLLECTIONS,
+          addModalStateCash,
+          addButtonExtraCallback,
+        )}
+        defaultDense
+        isDisablePagination
       />
     )
   }
 
   const collectionsTableData = (): TableData[] => {
-    if (isCaseCollectionTable) {
-      return Array.from(caseCollectionsList, (x: CaseCollectionSchema) => {
-        return {
-          ...collectionsTableDataCommon(x),
-          cashCollections: getCashCollectionsTable(x),
-          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
-        }
-      })
-    } else {
-      const cashCollectionsList = caseCollectionsList.flatMap((objA) => objA.cashCollections || [])
-      return Array.from(cashCollectionsList, (x: CashCollectionSchema) => {
-        return {
-          ...collectionsTableDataCommon(x),
-          actions: actionButtons(x.id || ID_ACTION_BUTTON, x),
-        }
-      })
-    }
+    return Array.from(caseCollectionsList, (x: CaseCollectionSchema) => {
+      return {
+        ...collectionsTableDataCommon(x, false),
+        cashCollections: getCashCollectionsTable(x),
+        actions: actionButtonsCase ? actionButtonsCase(getCaseCollectionFormDataFromSchema(x)) : undefined,
+      }
+    })
   }
-
-  const addButton = (collectionTypeOverride?: string, caseCollectionId?: number) =>
-    props.isAddModelComponent || collectionTypeOverride === COLLECTION_OBJECT_TYPES.CASH ? (
-      <Button
-        onClick={() => {
-          setModal && setModal(ACTION_ADD)
-          setSelectedType && setSelectedType(collectionTypeOverride || collectionType)
-          setSelectedId && setSelectedId(caseCollectionId || ID_DEFAULT)
-          setSelectedCollection &&
-            setSelectedCollection({
-              ...DefaultCashCollectionSchema,
-              caseCollectionId: caseCollectionId || ID_ACTION_BUTTON,
-            })
-        }}
-      >
-        Add New Collection
-      </Button>
-    ) : undefined
 
   return (
     <Table
-      componentName="Case Collections"
-      headerData={collectionsTableHeaderData()}
+      componentName={COLLECTION_TYPES.CASE_COLLECTION.replace('_', ' ')}
+      headerData={collectionsTableHeaderData(false)}
       tableData={collectionsTableData()}
-      addModelComponent={addButton()}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalStateCase)}
+      getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )
 }

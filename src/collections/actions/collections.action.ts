@@ -1,345 +1,283 @@
 import React from 'react'
 
-import { Async, FetchOptions, getCurrency, getEndpoint, getErrMsg, GlobalDispatch, GlobalState } from '../../app'
 import {
-  COLLECTION_OBJECT_TYPES,
-  CREATE_SUCCESS,
-  DELETE_SUCCESS,
+  Async,
+  FetchOptions,
+  FetchRequestMetadata,
+  getEndpoint,
+  getErrMsg,
+  GlobalDispatch,
+  GlobalState,
+} from '../../app'
+import {
+  ACTION_SUCCESS,
+  ACTION_TYPES,
+  ActionTypes,
+  COLLECTION_TYPES,
+  HTTP_METHODS,
+  ID_DEFAULT,
   SOMETHING_WENT_WRONG,
-  UPDATE_SUCCESS,
+  TYPE_IS_INCORRECT,
+  TYPE_IS_MISSING,
 } from '../../constants'
-import { SET_SELECTED_CASE_COLLECTION, SET_SELECTED_CASH_COLLECTION } from '../types/collections.action.types'
 import {
+  CASE_COLLECTIONS_COMPLETE,
+  CASE_COLLECTIONS_READ_FAILURE,
+  CASE_COLLECTIONS_READ_REQUEST,
+  CASE_COLLECTIONS_READ_SUCCESS,
+  CASH_COLLECTIONS_COMPLETE,
+  CASH_COLLECTIONS_READ_FAILURE,
+  CASH_COLLECTIONS_READ_REQUEST,
+} from '../types/collections.action.types'
+import {
+  CaseCollectionBase,
   CaseCollectionResponse,
   CaseCollectionSchema,
+  CashCollectionBase,
   CashCollectionResponse,
   CashCollectionSchema,
 } from '../types/collections.data.types'
-import { isCaseCollection, validateCollection } from '../utils/collections.utils'
+import { checkCorrectCollectionTypes, collectionDispatch } from '../utils/collections.utils'
 
-export const addCollection = (collection: CaseCollectionSchema | CashCollectionSchema, collectionType: string) => {
-  const isCaseCollectionRequest = collectionType === COLLECTION_OBJECT_TYPES.CASE
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    const validationErrors = validateCollection(collectionType, collection)
-    if (validationErrors) {
-      dispatch(collectionsFailure(`${collectionType}_CREATE_FAILURE`, validationErrors))
-      return
+export const collectionsAction = ({
+  type,
+  action,
+  collectionsRequest,
+  id,
+  isRestore,
+  isHardDelete,
+}: {
+  type?: string
+  action: ActionTypes
+  collectionsRequest?: CaseCollectionBase | CashCollectionBase
+  id?: number
+  isRestore?: boolean
+  isHardDelete?: boolean
+}) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<CaseCollectionResponse | CashCollectionResponse> => {
+    if (!type) {
+      return { data: [], detail: { error: TYPE_IS_MISSING } }
+    } else if (!checkCorrectCollectionTypes(type)) {
+      return { data: [], detail: { error: TYPE_IS_INCORRECT } }
+    }
+    if (action === ACTION_TYPES.RESTORE) {
+      action = ACTION_TYPES.UPDATE
+    }
+    const typeRequest = `${type}S_${action}_REQUEST`
+    const typeSuccess = `${type}S_${action}_SUCCESS`
+    const typeFailure = `${type}S_${action}_FAILURE`
+    const typeComplete = `${type}S_COMPLETE`
+    dispatch(collectionDispatch({ type: typeRequest }))
+
+    let endpoint = ''
+    let options: Partial<FetchOptions> = {}
+
+    if (action === ACTION_TYPES.CREATE) {
+      endpoint =
+        type === COLLECTION_TYPES.CASE_COLLECTION
+          ? getEndpoint(process.env.COLLECTION_CASE_CREATE as string)
+          : getEndpoint(process.env.COLLECTION_CASH_CREATE as string)
+      options = {
+        method: HTTP_METHODS.POST,
+        requestBody: { ...collectionsRequest },
+      }
+    } else if (action === ACTION_TYPES.UPDATE) {
+      endpoint =
+        type === COLLECTION_TYPES.CASE_COLLECTION
+          ? getEndpoint(process.env.COLLECTION_CASE_UPDATE as string)
+          : getEndpoint(process.env.COLLECTION_CASH_UPDATE as string)
+      options = {
+        method: HTTP_METHODS.PUT,
+        requestBody: collectionsRequest,
+        queryParams: { is_restore: isRestore || false },
+        pathParams: { collection_id: id || ID_DEFAULT },
+      }
+    } else if (action === ACTION_TYPES.DELETE) {
+      endpoint =
+        type === COLLECTION_TYPES.CASE_COLLECTION
+          ? getEndpoint(process.env.COLLECTION_CASE_DELETE as string)
+          : getEndpoint(process.env.COLLECTION_CASH_DELETE as string)
+      options = {
+        method: HTTP_METHODS.DELETE,
+        pathParams: { collection_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
+      }
     }
 
-    dispatch(collectionsRequest(`${collectionType}_CREATE_REQUEST`))
-
     try {
-      let collectionResponse: CaseCollectionResponse | CashCollectionResponse
-      const options: Partial<FetchOptions> = {
-        method: 'POST',
-        requestBody: getRequestBody(collection, isCaseCollectionRequest),
-      }
-      if (isCaseCollectionRequest) {
-        const urlPath = getEndpoint(process.env.CASE_COLLECTION_CREATE_ENDPOINT as string)
-        collectionResponse = (await Async.fetch(urlPath, options)) as CaseCollectionResponse
-      } else {
-        const urlPath = getEndpoint(process.env.CASH_COLLECTION_CREATE_ENDPOINT as string)
-        collectionResponse = (await Async.fetch(urlPath, options)) as CashCollectionResponse
-      }
-
+      const collectionResponse = (await Async.fetch(endpoint, options)) as
+        | CaseCollectionResponse
+        | CashCollectionResponse
       if (collectionResponse.detail) {
-        dispatch(collectionsFailure(`${collectionType}_CREATE_FAILURE`, getErrMsg(collectionResponse.detail)))
+        dispatch(collectionDispatch({ type: typeFailure, error: getErrMsg(collectionResponse.detail) }))
       } else {
-        dispatch(
-          collectionsSuccess(`${collectionType}_CREATE_SUCCESS`, CREATE_SUCCESS(collectionType), collectionType, []),
-        )
+        if (action === ACTION_TYPES.READ) {
+          dispatch(
+            collectionDispatch({
+              type: typeSuccess,
+              caseCollections: collectionResponse.data as CaseCollectionSchema[],
+            }),
+          )
+        } else {
+          dispatch(collectionDispatch({ type: typeSuccess, success: ACTION_SUCCESS(action, 'COLLECTION') }))
+        }
       }
+      return collectionResponse
     } catch (error) {
-      console.log(`Add ${collectionType} Error: `, error)
-      dispatch(collectionsFailure(`${collectionType}_CREATE_FAILURE`, SOMETHING_WENT_WRONG))
+      console.log(`${type} ${action} Error: `, error)
+      dispatch(collectionDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
     } finally {
-      dispatch(collectionsComplete(`${collectionType}S_COMPLETE`))
+      dispatch(collectionDispatch({ type: typeComplete }))
     }
   }
 }
 
-export const getCollections = (collectionType: string, isForceFetch: boolean = false) => {
-  const isCaseCollectionRequest = isCaseCollection(collectionType)
+export const getCollections = (requestMetadata?: Partial<FetchRequestMetadata>) => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(collectionsRequest(`${collectionType}S_RETRIEVE_REQUEST`))
+    dispatch(collectionDispatch({ type: CASE_COLLECTIONS_READ_REQUEST }))
 
-    try {
-      let collectionResponse: CaseCollectionResponse | CashCollectionResponse
-      const options: Partial<FetchOptions> = {
-        method: 'GET',
-      }
+    let collectionResponse: CaseCollectionResponse = { data: [] }
 
-      if (isCaseCollectionRequest) {
-        options['extraParams'] = {
-          isIncludeExtra: true,
-        }
-      }
-
-      const collectionsInStore: CaseCollectionSchema[] | CashCollectionSchema[] = isCaseCollectionRequest
-        ? getStore().collections.caseCollections
-        : getStore().collections.cashCollections
-
-      if (isForceFetch || collectionsInStore.length === 0) {
-        if (isCaseCollectionRequest) {
-          const urlPath = getEndpoint(process.env.CASE_COLLECTIONS_RETRIEVE_ENDPOINT as string)
-          collectionResponse = (await Async.fetch(urlPath, options)) as CaseCollectionResponse
-        } else {
-          const urlPath = getEndpoint(process.env.CASH_COLLECTIONS_RETRIEVE_ENDPOINT as string)
-          collectionResponse = (await Async.fetch(urlPath, options)) as CashCollectionResponse
-        }
-
-        if (collectionResponse.detail) {
-          dispatch(collectionsFailure(`${collectionType}S_RETRIEVE_FAILURE`, getErrMsg(collectionResponse.detail)))
-        } else {
-          const collections =
-            'caseCollections' in collectionResponse
-              ? collectionResponse.caseCollections
-              : collectionResponse.cashCollections
-          dispatch(collectionsSuccess(`${collectionType}S_RETRIEVE_SUCCESS`, '', collectionType, collections))
-        }
-      } else {
-        dispatch(collectionsSuccess(`${collectionType}S_RETRIEVE_SUCCESS`, '', collectionType, collectionsInStore))
-      }
-    } catch (error) {
-      console.log(`Get ${collectionType}S Error: `, error)
-      dispatch(collectionsFailure(`${collectionType}S_RETRIEVE_FAILURE`, SOMETHING_WENT_WRONG))
-    } finally {
-      dispatch(collectionsComplete(`${collectionType}S_COMPLETE`))
+    if (requestMetadata === getStore().collections.requestMetadata) {
+      // no need to fetch request, metadata is same
+      collectionResponse.data = getStore().collections.caseCollections
     }
-  }
-}
-
-export const getOneCollection = async (collectionId: number, collectionType: string) => {
-  const isCaseCollectionRequest = isCaseCollection(collectionType)
-  try {
-    let urlPath: string
+    const endpoint = getEndpoint(process.env.COLLECTION_CASE_READ as string)
     const options: Partial<FetchOptions> = {
-      method: 'GET',
-      extraParams: {
-        isIncludeExtra: true,
-        isIncludeHistory: true,
-      },
+      method: HTTP_METHODS.GET,
+      metadataParams: requestMetadata,
     }
-
-    if (isCaseCollectionRequest) {
-      urlPath = getEndpoint(process.env.CASE_COLLECTION_RETRIEVE_ENDPOINT as string)
-      options['pathParams'] = { case_collection_id: collectionId }
-    } else {
-      urlPath = getEndpoint(process.env.CASH_COLLECTION_RETRIEVE_ENDPOINT as string)
-      options['pathParams'] = { cash_collection_id: collectionId }
-    }
-
-    return Async.fetch(urlPath, options)
-  } catch (error) {
-    console.log(`Get One ${collectionType} Error: `, error)
-    const errorResponse: CaseCollectionResponse | CashCollectionResponse = {
-      caseCollections: [],
-      cashCollections: [],
-      detail: { error: error as string },
-    }
-    return Promise.resolve(errorResponse)
-  }
-}
-
-export const getCollection = (collectionId: number, collectionType: string) => {
-  const isCaseCollectionRequest = isCaseCollection(collectionType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
-    dispatch(collectionsRequest(`${collectionType}_RETRIEVE_REQUEST`))
-
-    // call api, if it fails fallback to store
-    try {
-      let collectionResponse: CaseCollectionResponse | CashCollectionResponse
-      if (isCaseCollectionRequest) {
-        collectionResponse = (await getOneCollection(collectionId, collectionType)) as CaseCollectionResponse
-      } else {
-        collectionResponse = (await getOneCollection(collectionId, collectionType)) as CashCollectionResponse
-      }
-
-      if (collectionResponse.detail) {
-        dispatch(collectionsFailure(`${collectionType}_RETRIEVE_FAILURE`, getErrMsg(collectionResponse.detail)))
-        setSelectedCollectionFromStore(getStore(), dispatch, collectionId, collectionType)
-      } else {
-        const collection: CaseCollectionSchema | CashCollectionSchema =
-          'caseCollections' in collectionResponse
-            ? collectionResponse.caseCollections[0]
-            : collectionResponse.cashCollections[0]
-        dispatch(collectionSelect(collection, collectionType))
-      }
-    } finally {
-      dispatch(collectionsComplete(`${collectionType}S_COMPLETE`))
-    }
-  }
-}
-
-export const editCollection = (
-  id: number,
-  collectionType: string,
-  collection: CaseCollectionSchema | CashCollectionSchema,
-) => {
-  const isCaseCollectionRequest = isCaseCollection(collectionType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    const validationErrors = validateCollection(collectionType, collection)
-    if (validationErrors) {
-      dispatch(collectionsFailure(`${collectionType}_UPDATE_FAILURE`, validationErrors))
-      return
-    }
-
-    dispatch(collectionsRequest(`${collectionType}_UPDATE_REQUEST`))
 
     try {
-      let collectionResponse: CaseCollectionResponse | CashCollectionResponse
-      const options: Partial<FetchOptions> = {
-        method: 'PUT',
-        requestBody: getRequestBody(collection, isCaseCollectionRequest),
+      if (collectionResponse.data.length <= 0) {
+        collectionResponse = (await Async.fetch(endpoint, options)) as CaseCollectionResponse
       }
-      if (isCaseCollectionRequest) {
-        const urlPath = getEndpoint(process.env.CASE_COLLECTION_UPDATE_ENDPOINT as string)
-        options['pathParams'] = { case_collection_id: id }
-        collectionResponse = (await Async.fetch(urlPath, options)) as CaseCollectionResponse
-      } else {
-        const urlPath = getEndpoint(process.env.CASH_COLLECTION_UPDATE_ENDPOINT as string)
-        options['pathParams'] = { cash_collection_id: id }
-        collectionResponse = (await Async.fetch(urlPath, options)) as CashCollectionResponse
-      }
-
       if (collectionResponse.detail) {
-        dispatch(collectionsFailure(`${collectionType}_UPDATE_FAILURE`, getErrMsg(collectionResponse.detail)))
+        dispatch(
+          collectionDispatch({ type: CASE_COLLECTIONS_READ_FAILURE, error: getErrMsg(collectionResponse.detail) }),
+        )
       } else {
         dispatch(
-          collectionsSuccess(`${collectionType}_UPDATE_SUCCESS`, UPDATE_SUCCESS(collectionType), collectionType, []),
+          collectionDispatch({
+            type: CASE_COLLECTIONS_READ_SUCCESS,
+            caseCollections: collectionResponse.data,
+            requestMetadata: requestMetadata,
+          }),
         )
       }
     } catch (error) {
-      console.log(`Edit ${collectionType} Error: `, error)
-      dispatch(collectionsFailure(`${collectionType}_UPDATE_FAILURE`, SOMETHING_WENT_WRONG))
+      console.log(`Get Collections Error: `, error)
+      dispatch(collectionDispatch({ type: CASE_COLLECTIONS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
     } finally {
-      dispatch(collectionsComplete(`${collectionType}S_COMPLETE`))
+      dispatch(collectionDispatch({ type: CASE_COLLECTIONS_COMPLETE }))
     }
   }
 }
 
-export const deleteCollection = (id: number, collectionType: string) => {
-  const isCaseCollectionRequest = isCaseCollection(collectionType)
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    dispatch(collectionsRequest(`${collectionType}_DELETE_REQUEST`))
+export const getCaseCollection = (collectionId: number, isIncludeExtra?: boolean) => {
+  return async (
+    dispatch: React.Dispatch<GlobalDispatch>,
+    state: GlobalState,
+  ): Promise<CaseCollectionSchema | undefined> => {
+    dispatch(collectionDispatch({ type: CASE_COLLECTIONS_READ_REQUEST }))
+    let oneCaseCollection = undefined
 
     try {
-      let collectionResponse: CaseCollectionResponse | CashCollectionResponse
-      const options: Partial<FetchOptions> = {
-        method: 'DELETE',
+      const caseCollectionsInStore = state.collections.caseCollections
+      if (caseCollectionsInStore) {
+        oneCaseCollection = caseCollectionsInStore.find((x) => x.id === collectionId)
+
+        if (
+          isIncludeExtra &&
+          oneCaseCollection &&
+          (!oneCaseCollection.cashCollections || !oneCaseCollection.cashCollections.length)
+        ) {
+          oneCaseCollection = undefined
+        }
       }
 
-      if (isCaseCollectionRequest) {
-        const urlPath = getEndpoint(process.env.CASE_COLLECTION_DELETE_ENDPOINT as string)
-        options['pathParams'] = { case_collection_id: id }
-        collectionResponse = (await Async.fetch(urlPath, options)) as CaseCollectionResponse
+      if (oneCaseCollection) {
+        return oneCaseCollection
       } else {
-        const urlPath = getEndpoint(process.env.CASH_COLLECTION_DELETE_ENDPOINT as string)
-        options['pathParams'] = { cash_collection_id: id }
-        collectionResponse = (await Async.fetch(urlPath, options)) as CashCollectionResponse
+        const endpoint = getEndpoint(process.env.COLLECTION_CASE_READ as string)
+        const requestMetadata: Partial<FetchRequestMetadata> = {
+          schemaModelId: collectionId,
+          isIncludeExtra: isIncludeExtra === true,
+        }
+        const options: Partial<FetchOptions> = {
+          method: HTTP_METHODS.GET,
+          metadataParams: requestMetadata,
+        }
+        const caseCollectionResponse = (await Async.fetch(endpoint, options)) as CaseCollectionResponse
+        if (caseCollectionResponse.detail) {
+          dispatch(
+            collectionDispatch({
+              type: CASE_COLLECTIONS_READ_FAILURE,
+              error: getErrMsg(caseCollectionResponse.detail),
+            }),
+          )
+        } else {
+          oneCaseCollection = caseCollectionResponse.data.find((x) => x.id === collectionId)
+        }
       }
-
-      if (collectionResponse.detail) {
-        dispatch(collectionsFailure(`${collectionType}_DELETE_FAILURE`, getErrMsg(collectionResponse.detail)))
-      } else {
-        dispatch(
-          collectionsSuccess(`${collectionType}_DELETE_SUCCESS`, DELETE_SUCCESS(collectionType), collectionType, []),
-        )
-      }
+      return oneCaseCollection
     } catch (error) {
-      console.log(`Delete ${collectionType} Error: `, error)
-      dispatch(collectionsFailure(`${collectionType}_DELETE_FAILURE`, SOMETHING_WENT_WRONG))
+      console.log(`Get Case Collection Error: `, error)
+      dispatch(collectionDispatch({ type: CASE_COLLECTIONS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
+      return oneCaseCollection
     } finally {
-      dispatch(collectionsComplete(`${collectionType}S_COMPLETE`))
+      dispatch(collectionDispatch({ type: CASE_COLLECTIONS_COMPLETE }))
     }
   }
 }
 
-const collectionsRequest = (type: string) => ({
-  type: type,
-})
+export const getCashCollection = (collectionId: number, isIncludeExtra?: boolean) => {
+  return async (
+    dispatch: React.Dispatch<GlobalDispatch>,
+    state: GlobalState,
+  ): Promise<CashCollectionSchema | undefined> => {
+    dispatch(collectionDispatch({ type: CASH_COLLECTIONS_READ_REQUEST }))
+    let oneCashCollection = undefined
 
-const collectionsSuccess = (
-  type: string,
-  success: string,
-  collectionType: string,
-  collections: CaseCollectionSchema[] | CashCollectionSchema[],
-) => {
-  if (success) {
-    return {
-      type: type,
-      success: success,
+    try {
+      const caseCollectionsInStore = state.collections.caseCollections
+
+      const cashCollectionsInStore = caseCollectionsInStore.flatMap((collection) => collection.cashCollections || [])
+      if (cashCollectionsInStore) {
+        oneCashCollection = cashCollectionsInStore.find((x) => x.id === collectionId)
+      }
+
+      if (oneCashCollection) {
+        return oneCashCollection
+      } else {
+        const endpoint = getEndpoint(process.env.COLLECTION_CASH_READ as string)
+        const requestMetadata: Partial<FetchRequestMetadata> = {
+          schemaModelId: collectionId,
+          isIncludeExtra: isIncludeExtra === true,
+        }
+        const options: Partial<FetchOptions> = {
+          method: HTTP_METHODS.GET,
+          metadataParams: requestMetadata,
+        }
+        const cashCollectionResponse = (await Async.fetch(endpoint, options)) as CashCollectionResponse
+        if (cashCollectionResponse.detail) {
+          dispatch(
+            collectionDispatch({
+              type: CASH_COLLECTIONS_READ_FAILURE,
+              error: getErrMsg(cashCollectionResponse.detail),
+            }),
+          )
+        } else {
+          oneCashCollection = cashCollectionResponse.data.find((x) => x.id === collectionId)
+        }
+      }
+      return oneCashCollection
+    } catch (error) {
+      console.log(`Get Cash Collection Error: `, error)
+      dispatch(collectionDispatch({ type: CASH_COLLECTIONS_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
+      return oneCashCollection
+    } finally {
+      dispatch(collectionDispatch({ type: CASH_COLLECTIONS_COMPLETE }))
     }
-  } else if (collectionType === COLLECTION_OBJECT_TYPES.CASE) {
-    return {
-      type: type,
-      caseCollections: collections,
-    }
-  } else if (collectionType === COLLECTION_OBJECT_TYPES.CASH) {
-    return {
-      type: type,
-      cashCollections: collections,
-    }
-  } else {
-    return collectionsFailure(type, 'Something went wrong! Went from Success to failure!!')
-  }
-}
-
-const collectionsFailure = (type: string, errMsg: string) => ({
-  type: type,
-  error: errMsg,
-})
-
-const collectionsComplete = (type: string) => ({
-  type: type,
-})
-
-const collectionSelect = (selectedCollection: CaseCollectionSchema | CashCollectionSchema, collectionType: string) => ({
-  type: isCaseCollection(collectionType) ? SET_SELECTED_CASE_COLLECTION : SET_SELECTED_CASH_COLLECTION,
-  selectedCollection,
-})
-
-const setSelectedCollectionFromStore = (
-  store: GlobalState,
-  dispatch: React.Dispatch<GlobalDispatch>,
-  collectionId: number,
-  collectionType: string,
-) => {
-  const collectionsInStore: CaseCollectionSchema[] | CashCollectionSchema[] = isCaseCollection(collectionType)
-    ? store.collections.caseCollections
-    : store.collections.cashCollections
-  const collectionInStore: CaseCollectionSchema | CashCollectionSchema | undefined = collectionsInStore.find(
-    (collection) => collection.id === collectionId,
-  )
-  if (collectionInStore) {
-    dispatch(collectionSelect(collectionInStore, collectionType))
-  }
-}
-
-const getRequestBody = (collection: CaseCollectionSchema | CashCollectionSchema, isCaseCollectionRequest: boolean) => {
-  return {
-    // case collection
-    status: isCaseCollectionRequest && 'status' in collection ? collection.status : undefined,
-    comments: isCaseCollectionRequest && 'comments' in collection ? collection.comments : undefined,
-    court_case_id: isCaseCollectionRequest && 'courtCaseId' in collection ? collection.courtCaseId : undefined,
-    quote_amount:
-      isCaseCollectionRequest && 'quoteAmount' in collection
-        ? getCurrency(collection.quoteAmount, false, true)
-        : undefined,
-    // cash collection
-    collection_date: !isCaseCollectionRequest && 'collectionDate' in collection ? collection.collectionDate : undefined,
-    collectedAmount:
-      !isCaseCollectionRequest && 'collectedAmount' in collection
-        ? getCurrency(collection.collectedAmount, false, true)
-        : undefined,
-    waivedAmount:
-      !isCaseCollectionRequest && 'waivedAmount' in collection
-        ? getCurrency(collection.waivedAmount, false, true)
-        : undefined,
-    memo: !isCaseCollectionRequest && 'memo' in collection ? collection.memo : undefined,
-    case_collection_id:
-      !isCaseCollectionRequest && 'caseCollectionId' in collection ? collection.caseCollectionId : undefined,
-    collection_method_id:
-      !isCaseCollectionRequest && 'collectionMethodId' in collection ? collection.collectionMethodId : undefined,
   }
 }

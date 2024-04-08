@@ -1,14 +1,21 @@
 // actions
-import { getCourt, getCourts, getOneCourt } from './actions/courts.action'
+import { courtsAction, getCourt, getCourts } from './actions/courts.action'
 // components
 import Court from './components/Court'
 import Courts from './components/Courts'
 // reducers
 import courts from './reducers/courts.reducer'
 // data types
-import { CourtResponse, CourtsAction, CourtSchema, CourtsState, HistoryCourtSchema } from './types/courts.data.types'
+import {
+  CourtFormData,
+  CourtFormErrorData,
+  CourtResponse,
+  CourtsAction,
+  CourtSchema,
+  CourtsState,
+} from './types/courts.data.types'
 
-export { getCourt, getCourts, getOneCourt }
+export { getCourt, getCourts, courtsAction }
 export { Court, Courts }
 export { courts }
-export type { CourtResponse, CourtsAction, CourtSchema, CourtsState, HistoryCourtSchema }
+export type { CourtFormData, CourtFormErrorData, CourtResponse, CourtsAction, CourtSchema, CourtsState }

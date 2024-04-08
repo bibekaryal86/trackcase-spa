@@ -8,54 +8,59 @@ import {
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
-  getComments,
   getNumber,
-  getString,
   GridFormWrapper,
-  StatusSchema,
+  handleFormChange,
 } from '../../app'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
 import { CourtSchema } from '../../courts'
-import { JudgeSchema } from '../types/judges.data.types'
-import { handleJudgeFormOnChange } from '../utils/judges.utils'
+import { ComponentStatusSchema } from '../../types'
+import { JudgeFormData, JudgeFormErrorData } from '../types/judges.data.types'
 
 interface JudgeFormProps {
-  selectedJudge: JudgeSchema
-  courtsList: CourtSchema[]
-  setSelectedJudge: (selectedJudge: JudgeSchema) => void
-  judgeStatusList: string[]
+  formData: JudgeFormData
+  setFormData: (formData: JudgeFormData) => void
+  formErrors: JudgeFormErrorData
+  setFormErrors: (formErrors: JudgeFormErrorData) => void
+  judgeStatusList: ComponentStatusSchema[]
   isShowOneJudge: boolean
-  courtId?: string
-  statusList: StatusSchema<string>
+  courtId?: number
+  courtsList: CourtSchema[]
 }
 
 const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
-  const { selectedJudge, courtsList, setSelectedJudge, judgeStatusList, isShowOneJudge } = props
-  const { courtId, statusList } = props
+  const { formData, formErrors, setFormData, setFormErrors, judgeStatusList, isShowOneJudge } = props
+  const { courtId, courtsList } = props
 
   const judgeName = () => (
     <FormTextField
-      componentLabel="Judge--Name"
+      componentLabel="JUDGE--NAME"
       autoFocus={!isShowOneJudge}
-      value={selectedJudge.name}
-      onChange={(e) => handleJudgeFormOnChange('name', e.target.value, selectedJudge, setSelectedJudge, getString)}
-      error={selectedJudge.name.trim() === ''}
+      name="name"
+      value={formData.name}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.name}
+      helperText={formErrors.name}
+      required
+      fullWidth
     />
   )
 
   const judgeWebex = () => (
     <FormTextField
-      componentLabel="Judge--Webex"
-      required={false}
-      value={selectedJudge.webex}
-      onChange={(e) => handleJudgeFormOnChange('webex', e.target.value, selectedJudge, setSelectedJudge, getString)}
+      componentLabel="JUDGE--WEBEX"
+      name="webex"
+      value={formData.webex}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      helperText={formErrors.webex}
+      fullWidth
     />
   )
 
   const courtsListForSelect = () => {
     if (getNumber(courtId) > 0) {
-      const selectedCourt = courtsList.find((x) => x.id === Number(courtId))
+      const selectedCourt = courtsList.find((x) => x.id === courtId)
       if (selectedCourt) {
         return [
           <MenuItem key={selectedCourt.id} value={selectedCourt.id}>
@@ -65,7 +70,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       }
     } else {
       return courtsList
-        .filter((x) => selectedJudge.courtId === x.id || statusList.court.active.includes(x.status))
+        .filter((x) => formData.courtId === x.id || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
             {x.name}
@@ -77,31 +82,33 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
 
   const judgeCourtsList = () => (
     <FormSelectField
-      componentLabel="Judge--Court"
-      value={selectedJudge.courtId}
-      onChange={(e) => handleJudgeFormOnChange('courtId', e.target.value, selectedJudge, setSelectedJudge, getNumber)}
+      componentLabel="JUDGE--COURT"
+      name="courtId"
+      value={formData.courtId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       menuItems={courtsListForSelect()}
-      error={selectedJudge.courtId <= 0}
+      error={!!formErrors.courtError}
+      helperText={formErrors.courtError}
+      required
     />
   )
 
   const judgeStatus = () => (
     <FormSelectStatusField
-      componentLabel="Judge--Status"
-      value={selectedJudge.status}
-      onChange={(e) => handleJudgeFormOnChange('status', e.target.value, selectedJudge, setSelectedJudge, getString)}
+      componentLabel="JUDGE--STATUS"
+      value={formData.componentStatusId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.componentStatusError}
+      helperText={formErrors.componentStatusError}
       statusList={judgeStatusList}
-      error={!selectedJudge.status}
     />
   )
 
   const judgeComments = () => (
     <FormCommentsField
-      componentLabel="Judge--Comments"
-      value={selectedJudge.comments}
-      onChange={(e) =>
-        handleJudgeFormOnChange('comments', e.target.value, selectedJudge, setSelectedJudge, getComments)
-      }
+      componentLabel="JUDGE--COMMENTS"
+      value={formData.comments}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />
   )
 
@@ -115,10 +122,10 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
         {judgeName()}
       </Grid>
       <Grid item xs={12}>
-        {judgeCourtsList()}
-      </Grid>
-      <Grid item xs={12}>
         {judgeWebex()}
+      </Grid>
+      <Grid item xs={8}>
+        {judgeCourtsList()}
       </Grid>
       <Grid item xs={4}>
         {judgeStatus()}

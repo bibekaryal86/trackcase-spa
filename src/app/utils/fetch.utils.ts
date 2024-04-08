@@ -1,6 +1,8 @@
-import { LocalStorage } from './storage.utils'
-import { FORCE_LOGOUT } from '../../constants'
-import { UserDetails } from '../types/app.data.types'
+import { Dayjs } from 'dayjs'
+
+import { LocalStorage, SessionStorage } from './storage.utils'
+import { FORCE_LOGOUT, HttpMethods } from '../../constants'
+import { ErrorDetail } from '../types/app.data.types'
 
 type FetchParamObjects = { [key: string]: string | number | boolean }
 
@@ -8,27 +10,45 @@ interface FetchUrlOptions {
   path: string
   queryParams: FetchParamObjects
   pathParams: FetchParamObjects
-  extraParams: Partial<FetchExtraOptions>
+  metadataParams: Partial<FetchRequestMetadata>
 }
 
-interface FetchExtraOptions {
+interface SortConfig {
+  table?: string
+  column: string
+  direction: 'asc' | 'desc'
+}
+
+interface FilterConfig {
+  table?: string
+  column: string
+  value: string | number | Dayjs
+  operation: 'eq' | 'gt' | 'lt' | 'gte' | 'lte'
+}
+
+export interface FetchRequestMetadata {
+  schemaModelId: number
+  sortConfig: SortConfig
+  filterConfig: FilterConfig[]
+  pageNumber: number
+  perPage: number
+  isIncludeDeleted: boolean
   isIncludeExtra: boolean
   isIncludeHistory: boolean
 }
 
 interface FetchRequestOptions {
-  method: string
+  method: HttpMethods
   requestBody: unknown
   requestHeaders: FetchParamObjects
   noAuth: boolean
-  withBasicAuth: boolean
-  isIncludeUsernameHeader: boolean
 }
 
 export interface FetchOptions extends FetchUrlOptions, FetchRequestOptions {}
 
 export interface FetchResponse {
   data?: unknown
+  detail?: ErrorDetail
 }
 
 const addPathParams = (path: string, pathParams: FetchParamObjects) => {
@@ -40,11 +60,11 @@ const addPathParams = (path: string, pathParams: FetchParamObjects) => {
       )
 }
 
-const addQueryParams = (queryParams: FetchParamObjects, extraParams: Partial<FetchExtraOptions>) => {
+const addQueryParams = (queryParams: FetchParamObjects, metadataParams: Partial<FetchRequestMetadata>) => {
   const hasNoQueryParams = Object.keys(queryParams).length === 0
   const queryString = hasNoQueryParams ? '' : getQueryString(queryParams)
-  const extraQueryString = getExtraQueryString(hasNoQueryParams, extraParams)
-  return queryString + extraQueryString
+  const metadataQueryString = getMetadataQueryString(hasNoQueryParams, metadataParams)
+  return queryString + metadataQueryString
 }
 
 const getQueryString = (queryParams: FetchParamObjects) => {
@@ -55,52 +75,39 @@ const getQueryString = (queryParams: FetchParamObjects) => {
   return queryString.slice(0, -1)
 }
 
-const getExtraQueryString = (hasNoQueryParams: boolean, extraParams: Partial<FetchExtraOptions>) => {
-  if (extraParams && (extraParams.isIncludeExtra || extraParams.isIncludeHistory)) {
-    let extraQueryString = hasNoQueryParams ? '?' : '&'
-    if (extraParams.isIncludeExtra) {
-      extraQueryString += 'is_include_extra=true&'
-    }
-    if (extraParams.isIncludeHistory) {
-      extraQueryString += 'is_include_history=true&'
-    }
-    return extraQueryString.slice(0, -1)
+const getMetadataQueryString = (hasNoQueryParams: boolean, metadata: Partial<FetchRequestMetadata>) => {
+  if (metadata && Object.keys(metadata).length) {
+    const jsonString = JSON.stringify(metadata, (_, value) => {
+      if (value === null || value === undefined) {
+        return undefined
+      }
+      return value
+    })
+    return hasNoQueryParams ? `?metadata=${jsonString}` : `&metadata=${jsonString}`
   }
   return ''
 }
 
-const getUrl = ({ path = '', queryParams = {}, pathParams = {}, extraParams = {} }: Partial<FetchUrlOptions>) => {
+const getUrl = (urlPath: string, options: Partial<FetchUrlOptions>) => {
+  const { path = urlPath, queryParams = {}, pathParams = {}, metadataParams = {} } = options
   const pathWithParams = addPathParams(path, pathParams)
-  const queryString = addQueryParams(queryParams, extraParams)
+  const queryString = addQueryParams(queryParams, metadataParams)
   return pathWithParams + queryString
 }
 
-const getHeaders = (
-  withBasicAuth: boolean,
-  withAuth: boolean,
-  requestHeaders: FetchParamObjects,
-  token: string,
-  username: string,
-) => {
+const getRequestInit = (options: Partial<FetchRequestOptions>) => {
+  const { noAuth, requestHeaders = {}, method = 'GET', requestBody = {} } = options
+  const token = SessionStorage.getItem('token') as string
+  // this is a bug, and it should not come to this
+  // it comes to this after logging out from SessionTimeout
+  if (!noAuth && !token) {
+    throw new Error('Auth Request But No Auth!')
+  }
   const headers: HeadersInit = {}
   headers['Accept'] = 'application/json'
   headers['Content-Type'] = 'application/json'
-  if (username) {
-    headers['X-User-Name'] = username
-  }
 
-  if (withBasicAuth) {
-    const username = process.env.BASIC_AUTH_USR as string
-    const password = process.env.BASIC_AUTH_PWD as string
-    if (username && password) {
-      headers['Authorization'] = 'Basic ' + btoa(`${username}:${password}`)
-    }
-  } else if (withAuth) {
-    const appData = ''
-    if (appData) {
-      headers['App_data'] = appData
-    }
-
+  if (!noAuth) {
     headers['Authorization'] = `Bearer ${token}`
   }
 
@@ -110,58 +117,26 @@ const getHeaders = (
     })
   }
 
-  return headers
-}
+  const body = method !== 'GET' && typeof requestBody !== 'undefined' ? JSON.stringify(requestBody) : ''
 
-const getBody = (method: string, body: unknown) =>
-  method !== 'GET' && typeof body !== 'undefined' ? JSON.stringify(body) : ''
+  const requestInit: RequestInit = {
+    method,
+    //credentials: 'include',
+    headers,
+    mode: 'cors',
+  }
+
+  if (body) {
+    requestInit.body = body
+  }
+
+  return requestInit
+}
 
 export const Async = {
   fetch: async (urlPath: string, options: Partial<FetchOptions>, retryCount: number = 1): Promise<FetchResponse> => {
-    const {
-      queryParams,
-      pathParams,
-      extraParams,
-      method = 'GET',
-      requestBody = {},
-      requestHeaders = {},
-      noAuth = false,
-      withBasicAuth = false,
-      isIncludeUsernameHeader = true,
-    } = options
-
-    let username = ''
-    if (isIncludeUsernameHeader) {
-      const userDetails = LocalStorage.getItem('userDetails') as UserDetails
-      if (!userDetails || !userDetails.username) {
-        throw new Error('User not found! Please refresh the page and try again!')
-      }
-      username = userDetails.username
-    }
-
-    const token = LocalStorage.getItem('token') as string
-
-    // this is a bug, and it should not come to this
-    // it comes to this after logging out from SessionTimeout
-    if (!noAuth && !token) {
-      throw new Error('Auth Request But No Auth!')
-    }
-
-    const url = getUrl({ path: urlPath, queryParams, pathParams, extraParams })
-    const headers = getHeaders(withBasicAuth, !noAuth, requestHeaders, token, username)
-    const body = getBody(method, requestBody)
-
-    const requestInit: RequestInit = {
-      method,
-      //credentials: 'include',
-      headers,
-      mode: 'cors',
-    }
-
-    if (body) {
-      requestInit.body = body
-    }
-
+    const url = getUrl(urlPath, options)
+    const requestInit = getRequestInit(options)
     const response = await window.fetch(url, requestInit)
 
     if (response.ok) {
@@ -180,7 +155,7 @@ export const Async = {
         ) {
           console.log('Retrying in 1 seconds due to CONNECTIONS... Attempt: ', retryCount)
           await new Promise((resolve) => setTimeout(resolve, 1111))
-          return Async.fetch(url, requestInit, retryCount + 1)
+          return Async.fetch(urlPath, options, retryCount + 1)
         } else {
           console.log('Error Response non 401: ', response)
         }

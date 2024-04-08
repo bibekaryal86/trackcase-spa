@@ -12,13 +12,14 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableSortLabel from '@mui/material/TableSortLabel'
-import Typography from '@mui/material/Typography'
 import { visuallyHidden } from '@mui/utils'
+import { isBoolean } from 'lodash'
 import React, { isValidElement, useMemo, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
 import Switch from './Switch'
 import { USE_MEDIA_QUERY_INPUT } from '../../constants'
+import { isSuperuser } from '../../users'
 import { TableData, TableHeaderData, TableOrder } from '../types/app.data.types'
 
 const TABLE_EXPORT_KEYS_TO_AVOID = ['actions', 'Actions', 'collapsed']
@@ -47,6 +48,7 @@ interface TableProps {
   addModelComponent?: React.JSX.Element
   tableLayout?: string
   isDisablePagination?: boolean
+  getSoftDeletedCallback?: (isIncludeDeleted: boolean) => void
 }
 interface TableRowProps {
   row: TableData
@@ -171,20 +173,24 @@ function getCollapseRowKey(tableData: TableData): string | undefined {
   return undefined
 }
 
-const emptyTableMessage = (componentName: string): React.JSX.Element => {
+const emptyTableMessage = (
+  componentName: string,
+  showSoftDeleteComponent: React.JSX.Element | null,
+): React.JSX.Element => {
   const messageText =
-    'Table is empty! If an error message was not displayed, then there are likely no ' +
-    'COMPONENT in the system!!'.replace('COMPONENT', componentName)
+    'TABLE IS EMPTY! IF AN ERROR MESSAGE WAS NOT DISPLAYED, THEN THERE ARE LIKELY NO ' +
+    'COMPONENT IN THE SYSTEM...'.replace('COMPONENT', componentName)
   const messageStyle: React.CSSProperties = {
     paddingTop: '25px',
     paddingBottom: '25px',
     borderBottom: '1px solid rgba(224, 224, 224, 1)',
+    display: 'flex',
+    fontSize: '0.75rem',
   }
   return (
     <div style={messageStyle}>
-      <Typography component="p" variant="subtitle2">
-        {messageText}
-      </Typography>
+      {messageText}
+      {showSoftDeleteComponent}
     </div>
   )
 }
@@ -199,6 +205,7 @@ const tablePagination = (
   denseComponent: React.JSX.Element | null,
   exportComponent: React.JSX.Element | null,
   isSmallScreen: boolean,
+  showSoftDeleteComponent: React.JSX.Element | null,
 ) => (
   <div
     style={{
@@ -208,6 +215,7 @@ const tablePagination = (
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
     }}
   >
+    {showSoftDeleteComponent}
     {exportComponent}
     {denseComponent}
     <TablePagination
@@ -273,18 +281,23 @@ const TableRow = (props: TableRowProps) => {
           </TableCell>
         )}
         {(Object.keys(props.tableData[0]) as Array<keyof TableData>).map((key) => {
-          if (isTable(props.row[key])) {
+          let columnValue = props.row[key]
+          if (isTable(columnValue)) {
             return null
+          } else if (isBoolean(columnValue)) {
+            columnValue = String(columnValue).toUpperCase()
           }
           const column = props.headerData.find((item) => item.id === key)
           return (
-            <TableCell
-              sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
-              key={key.toString()}
-              align={(column && column.align) || 'left'}
-            >
-              {props.row[key]}
-            </TableCell>
+            column && (
+              <TableCell
+                sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
+                key={key.toString()}
+                align={column.align || 'left'}
+              >
+                {columnValue}
+              </TableCell>
+            )
           )
         })}
       </MuiTableRow>
@@ -315,6 +328,7 @@ const Table = (props: TableProps) => {
   const [page, setPage] = useState(0)
   const [dense, setDense] = useState(props.defaultDense)
   const [rowsPerPage, setRowsPerPage] = useState(props.defaultRowsPerPage || 20)
+  const [showSoftDeleted, setShowSoftDeleted] = useState(false)
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0
@@ -351,6 +365,21 @@ const Table = (props: TableProps) => {
         label="Dense"
       />
     )
+
+  const handleChangeShowSoftDeleted = (event?: React.ChangeEvent<HTMLInputElement>) => {
+    const isShowSoftDeleted = event ? event.target.checked : false
+    setShowSoftDeleted(isShowSoftDeleted)
+    props.getSoftDeletedCallback && props.getSoftDeletedCallback(isShowSoftDeleted)
+  }
+
+  const showSoftDeletedComponent = () =>
+    isSuperuser() ? (
+      <FormControlLabel
+        sx={{ marginRight: 3 }}
+        control={<Switch isChecked={showSoftDeleted} onChangeCallback={handleChangeShowSoftDeleted} />}
+        label="Soft Deleted"
+      />
+    ) : null
 
   const exportComponent = () =>
     props.isExportToCsv && props.tableData && props.tableData.length > 0 ? (
@@ -404,7 +433,7 @@ const Table = (props: TableProps) => {
         </MuiTable>
       </TableContainer>
       {tableData.length === 0
-        ? emptyTableMessage(props.componentName)
+        ? emptyTableMessage(props.componentName, showSoftDeletedComponent())
         : props.isDisablePagination
         ? null
         : tablePagination(
@@ -417,6 +446,7 @@ const Table = (props: TableProps) => {
             denseComponent(isSmallScreen),
             exportComponent(),
             isSmallScreen,
+            showSoftDeletedComponent(),
           )}
     </div>
   )

@@ -1,10 +1,10 @@
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
-import { LocalStorage, SessionStorage } from './storage.utils'
-import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE, REGEX_LOGIN_INPUT_PATTERN } from '../../constants'
+import { SessionStorage } from './storage.utils'
+import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE } from '../../constants'
 import { GlobalDispatch } from '../store/redux'
-import { AuthState, ErrorDetail, UserDetails } from '../types/app.data.types'
+import { ErrorDetail } from '../types/app.data.types'
 
 export const isGetDarkMode = () => (SessionStorage.getItem(IS_DARK_MODE) as string) === 'true'
 
@@ -24,38 +24,9 @@ export const clearMessages = (type: string) => {
   }
 }
 
-export const validateLoginInput = (username: string, password: string): boolean =>
-  !!(
-    username &&
-    password &&
-    username.length > 6 &&
-    password.length > 6 &&
-    username.length < 21 &&
-    password.length < 21 &&
-    REGEX_LOGIN_INPUT_PATTERN.test(username) &&
-    REGEX_LOGIN_INPUT_PATTERN.test(password)
-  )
-
-export const isLoggedIn = (): AuthState | undefined => {
-  const token = LocalStorage.getItem('token') as string
-  const userDetails = LocalStorage.getItem('userDetails') as UserDetails
-  const isLoggedIn = !!token
-  if (isLoggedIn) {
-    return {
-      isLoggedIn,
-      token,
-      userDetails,
-    }
-  }
-  return undefined
-}
-
-export const getEndpoint = (endpoint: string, isIncludeTrailingSlash: boolean = true): string => {
+export const getEndpoint = (endpoint: string): string => {
   const baseUrl = process.env.BASE_URL as string
   const baseUrlClean = baseUrl.replaceAll('"', '').trim()
-  if (isIncludeTrailingSlash && !endpoint.endsWith('/')) {
-    return baseUrlClean.concat(endpoint).concat('/')
-  }
   return baseUrlClean.concat(endpoint)
 }
 
@@ -183,4 +154,22 @@ export const convertDateToLocaleString = (date?: Dayjs, isIncludeTime: boolean =
     return `${yyyy}-${MM}-${dd}`
   }
   return ''
+}
+
+export const convertToCamelCase = (input: string, delimiter: string) =>
+  input.toLowerCase().replace(new RegExp(delimiter + '(.?)', 'g'), (_, char) => char.toUpperCase())
+
+export const convertToTitleCase = (input: string, delimiter: string) => {
+  return input
+    .replaceAll(delimiter, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
+
+export const isValidId = (id: string | undefined): boolean => {
+  if (id) {
+    return getNumber(id) > 0
+  }
+  return false
 }

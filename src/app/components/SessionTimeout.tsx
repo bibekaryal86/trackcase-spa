@@ -3,16 +3,20 @@ import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { INVALID_SESSION } from '../../constants'
-import { userLogout } from '../actions/logout.action'
-import { LocalStorage } from '../utils/storage.utils'
+import { logout } from '../../users'
+import { LocalStorage, SessionStorage } from '../utils/storage.utils'
 
 interface SessionTimeoutProps {
-  userLogout: () => void
+  logout: () => void
+}
+
+const mapDispatchToProps = {
+  logout: () => logout(),
 }
 
 const SessionTimeout = (props: SessionTimeoutProps) => {
   // log out when inactive
-  const { userLogout } = props
+  const { logout } = props
   // redirect to home page when log out
   const navigate = useNavigate()
 
@@ -25,20 +29,20 @@ const SessionTimeout = (props: SessionTimeoutProps) => {
       console.log('SessionTimeout: ', msg)
       clearInterval(warningInactiveInterval.current)
       clearTimeout(startTimerInterval.current)
-      userLogout()
+      logout()
 
       navigate('/', {
         replace: true,
         state: { message: INVALID_SESSION },
       })
     },
-    [navigate, userLogout],
+    [navigate, logout],
   )
 
   const warningInactive = useCallback(() => {
     clearTimeout(startTimerInterval.current)
     warningInactiveInterval.current = window.setInterval(() => {
-      const tokenExpiration = LocalStorage.getItem('tokenExpiration') as number
+      const tokenExpiration = SessionStorage.getItem('tokenExpiration') as number
       const tokenExpDate = tokenExpiration ? new Date(tokenExpiration) : new Date()
       const currentDateTime = new Date()
 
@@ -60,13 +64,13 @@ const SessionTimeout = (props: SessionTimeoutProps) => {
     clearTimeout(startTimerInterval.current)
     clearInterval(warningInactiveInterval.current)
 
-    const isAuthenticated = LocalStorage.getItem('tokenExpiration') as number
+    const isAuthenticated = SessionStorage.getItem('tokenExpiration') as number
     const isForceCheckout = LocalStorage.getItem('forceLogout') as boolean
 
     if (isForceCheckout && isAuthenticated) {
       navigateToHome('Token Invalid Redirecting to Home')
     } else if (isAuthenticated) {
-      LocalStorage.setItem('tokenExpiration', new Date().setMinutes(new Date().getMinutes() + 15))
+      SessionStorage.setItem('tokenExpiration', new Date().setMinutes(new Date().getMinutes() + 15))
     } else {
       clearInterval(warningInactiveInterval.current)
     }
@@ -89,10 +93,6 @@ const SessionTimeout = (props: SessionTimeoutProps) => {
 
   // change fragment to modal and handleClose func to close
   return <Fragment />
-}
-
-const mapDispatchToProps = {
-  userLogout: () => userLogout(),
 }
 
 export default connect(null, mapDispatchToProps)(SessionTimeout)

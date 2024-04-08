@@ -1,263 +1,239 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { connect, useDispatch } from 'react-redux'
 
 import JudgeForm from './JudgeForm'
 import JudgeTable from './JudgeTable'
-import { getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_ADD,
-  BUTTON_CANCEL,
-  BUTTON_DELETE,
-  BUTTON_RESET,
-  BUTTON_UPDATE,
-  ID_DEFAULT,
-} from '../../constants'
-import { CourtSchema, getCourt, getCourts } from '../../courts'
-import { addJudge, deleteJudge, editJudge, getJudges } from '../actions/judges.action'
-import { JUDGES_UNMOUNT } from '../types/judges.action.types'
-import { DefaultJudgeSchema, JudgeSchema } from '../types/judges.data.types'
-import { isAreTwoJudgesSame } from '../utils/judges.utils'
+  addModalComponent,
+  deleteModalComponent,
+  FetchRequestMetadata,
+  getNumber,
+  GlobalState,
+  pageTitleComponent,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  updateModalComponent,
+  useModal,
+} from '../../app'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
+import { CourtSchema, getCourts } from '../../courts'
+import { getRefTypes, RefTypesState } from '../../types'
+import { getJudges, judgesAction } from '../actions/judges.action'
+import {
+  DefaultJudgeFormData,
+  DefaultJudgeFormErrorData,
+  JudgeBase,
+  JudgeFormData,
+  JudgeResponse,
+  JudgeSchema,
+} from '../types/judges.data.types'
+import { isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
 
-const mapStateToProps = ({ judges, statuses, courts }: GlobalState) => {
+const mapStateToProps = ({ refTypes, judges, courts }: GlobalState) => {
   return {
-    isCloseModal: judges.isCloseModal,
+    refTypes: refTypes,
     judgesList: judges.judges,
-    statusList: statuses.statuses,
     courtsList: courts.courts,
-    selectedCourt: courts.selectedCourt,
   }
 }
 
 const mapDispatchToProps = {
-  getJudges: () => getJudges(),
-  addJudge: (judge: JudgeSchema) => addJudge(judge),
-  editJudge: (id: number, judge: JudgeSchema) => editJudge(id, judge),
-  deleteJudge: (id: number) => deleteJudge(id),
-  unmountPage: () => unmountPage(JUDGES_UNMOUNT),
-  getStatusesList: () => getStatusesList(),
+  getRefTypes: () => getRefTypes(),
+  getJudges: (requestMetadata: Partial<FetchRequestMetadata>) => getJudges(requestMetadata),
   getCourts: () => getCourts(),
-  getCourt: (courtId: number) => getCourt(courtId),
 }
 
 interface JudgesProps {
-  isCloseModal: boolean
   judgesList: JudgeSchema[]
-  getJudges: () => void
-  addJudge: (judge: JudgeSchema) => void
-  editJudge: (id: number, judge: JudgeSchema) => void
-  deleteJudge: (id: number) => void
-  unmountPage: () => void
-  statusList: StatusSchema<string>
-  getStatusesList: () => void
+  getJudges: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   courtsList: CourtSchema[]
   getCourts: () => void
-  courtId?: string
-  selectedCourt?: CourtSchema
-  getCourt: (courtId: number) => void
 }
 
 const Judges = (props: JudgesProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
+  const dispatch = useDispatch()
+  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
-  const { judgesList, courtsList, getJudges, addJudge, editJudge, deleteJudge, getCourts } = props
-  const { unmountPage } = props
-  const { isCloseModal } = props
-  const { statusList, getStatusesList } = props
-  const { courtId, selectedCourt, getCourt } = props
+  const { judgesList, getJudges } = props
+  const { refTypes, getRefTypes } = props
+  const { courtsList, getCourts } = props
 
-  const [modal, setModal] = useState<string>('')
-  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
-  const [selectedJudge, setSelectedJudge] = useState<JudgeSchema>(DefaultJudgeSchema)
-  const [selectedJudgeForReset, setSelectedJudgeForReset] = useState<JudgeSchema>(DefaultJudgeSchema)
-  const [judgeStatusList, setJudgeStatusList] = useState<string[]>([])
+  const [formData, setFormData] = useState(DefaultJudgeFormData)
+  const [formDataReset, setFormDataReset] = useState(DefaultJudgeFormData)
+  const [formErrors, setFormErrors] = useState(DefaultJudgeFormErrorData)
+
+  const judgeStatusList = useCallback(() => {
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.JUDGES)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
-      judgesList.length === 0 && getJudges()
+      judgesList.length === 0 && getJudges({})
+      refTypes.componentStatus.length === 0 && getRefTypes()
       courtsList.length === 0 && getCourts()
-      statusList.judge.all.length === 0 && getStatusesList()
-
-      if (courtId) {
-        if (!selectedCourt) {
-          getCourt(getNumber(courtId))
-        }
-      }
     }
-    isForceFetch.current = false
-  }, [
-    judgesList.length,
-    getJudges,
-    statusList.judge.all,
-    getStatusesList,
-    courtsList.length,
-    getCourts,
-    courtId,
-    selectedCourt,
-    getCourt,
-  ])
-
-  useEffect(() => {
-    if (statusList.judge.all.length > 0) {
-      setJudgeStatusList(statusList.judge.all)
-    }
-  }, [statusList.judge.all])
-
-  useEffect(() => {
-    if (isCloseModal) {
-      setModal('')
-      setSelectedId(ID_DEFAULT)
-      setSelectedJudge(DefaultJudgeSchema)
-      setSelectedJudgeForReset(DefaultJudgeSchema)
-    }
-  }, [isCloseModal, courtId])
+  }, [courtsList.length, getCourts, getJudges, getRefTypes, judgesList.length, refTypes.componentStatus.length])
 
   useEffect(() => {
     return () => {
       isForceFetch.current = true
-      unmountPage()
     }
-  }, [unmountPage])
+  }, [])
 
-  const primaryButtonCallback = (action: string, id?: number) => {
-    isForceFetch.current = true
-    if (id && action === ACTION_DELETE) {
-      deleteJudge(id)
-    } else if (id && action === ACTION_UPDATE) {
-      editJudge(id, selectedJudge)
-    } else {
-      addJudge(selectedJudge)
+  const getJudgesWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
+    getJudges(requestMetadata)
+  }
+
+  const primaryButtonCallback = async (action: ActionTypes) => {
+    const hasFormErrors = validateJudge(formData, setFormErrors)
+    if (hasFormErrors) {
+      return
+    }
+
+    let judgeResponse: JudgeResponse = { data: [], detail: { error: INVALID_INPUT } }
+    if (action === ACTION_TYPES.CREATE) {
+      const judgesRequest: JudgeBase = { ...formData }
+      judgeResponse = await judgesAction({ action, judgesRequest })(dispatch)
+    } else if (
+      (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
+      getNumber(formData.id) > 0
+    ) {
+      const judgesRequest: JudgeBase = { ...formData }
+      judgeResponse = await judgesAction({
+        action: action,
+        judgesRequest: judgesRequest,
+        id: formData.id,
+        isRestore: action === ACTION_TYPES.RESTORE,
+        isHardDelete: formData.isHardDelete,
+      })(dispatch)
+    }
+
+    if (judgeResponse && !judgeResponse.detail) {
+      secondaryButtonCallback(
+        addModalState,
+        updateModalState,
+        deleteModalState,
+        setFormData,
+        setFormErrors,
+        DefaultJudgeFormData,
+        DefaultJudgeFormErrorData,
+      )
+      isForceFetch.current = true
+      judgesList.length === 0 && getJudges({})
     }
   }
 
-  const secondaryButtonCallback = () => {
-    setModal('')
-    setSelectedId(ID_DEFAULT)
-    setSelectedJudge(DefaultJudgeSchema)
-    setSelectedJudgeForReset(DefaultJudgeSchema)
-  }
-
-  const resetButtonCallback = (action: string) => {
-    action === ACTION_ADD && setSelectedJudge(DefaultJudgeSchema)
-    action === ACTION_UPDATE && setSelectedJudge(selectedJudgeForReset)
-  }
-
-  const judgeForm = () => (
-    <JudgeForm
-      selectedJudge={selectedJudge}
-      setSelectedJudge={setSelectedJudge}
-      judgeStatusList={judgeStatusList}
-      isShowOneJudge={false}
-      courtsList={courtsList}
-      courtId={courtId}
-      statusList={statusList}
-    />
-  )
-
-  const addModal = () => (
-    <Modal
-      isOpen={true}
-      setIsOpenExtra={setModal}
-      cleanupOnClose={secondaryButtonCallback}
-      title="Add New Judge"
-      primaryButtonText={BUTTON_ADD}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_ADD, undefined)}
-      primaryButtonDisabled={isAreTwoJudgesSame(selectedJudge, selectedJudgeForReset)}
-      secondaryButtonText={BUTTON_CANCEL}
-      secondaryButtonCallback={secondaryButtonCallback}
-      contentText="Provide the following details..."
-      content={judgeForm()}
-      resetButtonText={BUTTON_RESET}
-      resetButtonCallback={() => resetButtonCallback(ACTION_ADD)}
-      resetButtonDisabled={isAreTwoJudgesSame(selectedJudge, selectedJudgeForReset)}
-    />
-  )
-
-  const updateModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title="Update Judge"
-        primaryButtonText={BUTTON_UPDATE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_UPDATE, selectedId)}
-        primaryButtonDisabled={isAreTwoJudgesSame(selectedJudge, selectedJudgeForReset)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText="Provide the following details..."
-        content={judgeForm()}
-        resetButtonText={BUTTON_RESET}
-        resetButtonCallback={() => resetButtonCallback(ACTION_UPDATE)}
-        resetButtonDisabled={isAreTwoJudgesSame(selectedJudge, selectedJudgeForReset)}
+  const addUpdateModalContent = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+      <JudgeForm
+        formData={formData}
+        setFormData={setFormData}
+        formErrors={formErrors}
+        setFormErrors={setFormErrors}
+        judgeStatusList={judgeStatusList()}
+        isShowOneJudge={false}
+        courtsList={courtsList}
       />
-    )
-  }
-
-  const deleteModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title="Delete Judge"
-        primaryButtonText={BUTTON_DELETE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_DELETE, selectedId)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to delete Judge: '${selectedJudge.name}' at court '${selectedJudge.court?.name}'?!?`}
-      />
-    )
-  }
-
-  const showModal = () =>
-    modal === ACTION_ADD
-      ? addModal()
-      : modal === ACTION_UPDATE
-      ? updateModal()
-      : modal === ACTION_DELETE
-      ? deleteModal()
-      : null
-
-  const judgesPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary" gutterBottom>
-      Judges
-    </Typography>
+    </Box>
   )
+
+  const addModal = () =>
+    addModalComponent(
+      COMPONENT_STATUS_NAME.JUDGES,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultJudgeFormData,
+      DefaultJudgeFormErrorData,
+      formDataReset,
+      undefined,
+      isAreTwoJudgesSame(formData, formDataReset),
+      isAreTwoJudgesSame(formData, formDataReset),
+      isAreTwoJudgesSame(formData, formDataReset),
+    )
+
+  const updateModal = () =>
+    updateModalComponent(
+      COMPONENT_STATUS_NAME.JUDGES,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultJudgeFormData,
+      DefaultJudgeFormErrorData,
+      formDataReset,
+      undefined,
+      isAreTwoJudgesSame(formData, formDataReset),
+      isAreTwoJudgesSame(formData, formDataReset),
+      isAreTwoJudgesSame(formData, formDataReset),
+    )
+
+  const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
+    formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+  } JUDGE: ${formData.name}?!?`
+
+  const deleteModal = () =>
+    deleteModalComponent(
+      COMPONENT_STATUS_NAME.JUDGES,
+      deleteModalContextText,
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultJudgeFormData,
+      DefaultJudgeFormErrorData,
+      formData,
+      formErrors,
+    )
+
+  const actionButtons = (formDataModal: JudgeFormData) =>
+    tableActionButtonsComponent(
+      COMPONENT_STATUS_NAME.JUDGES,
+      formDataModal,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormDataReset,
+    )
 
   const judgesTable = () => (
     <JudgeTable
-      judgesList={!(courtId && selectedCourt) ? judgesList : selectedCourt.judges || []}
-      setModal={setModal}
-      setSelectedId={setSelectedId}
-      setSelectedJudge={setSelectedJudge}
-      setSelectedJudgeForReset={setSelectedJudgeForReset}
-      selectedCourt={!(courtId && selectedCourt) ? undefined : selectedCourt}
+      judgesList={judgesList}
+      actionButtons={actionButtons}
+      addModalState={addModalState}
+      softDeleteCallback={getJudgesWithMetadata}
+      componentStatusList={refTypes.componentStatus}
     />
   )
 
-  return courtId ? (
-    <>
-      {judgesTable()}
-      {modal && showModal()}
-    </>
-  ) : (
+  return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {judgesPageTitle()}
+          {pageTitleComponent(COMPONENT_STATUS_NAME.JUDGES)}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {judgesTable()}
         </Grid>
       </Grid>
-      {modal && showModal()}
+      {addModal()}
+      {updateModal()}
+      {deleteModal()}
     </Box>
   )
 }

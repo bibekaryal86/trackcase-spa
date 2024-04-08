@@ -12,14 +12,14 @@ import { useNavigate } from 'react-router-dom'
 
 import Link from './Link'
 import Switch from './Switch'
-import { isLoggedIn } from '../utils/app.utils'
+import { isLoggedIn } from '../../users'
 
 interface HeaderProps {
   isDarkMode: boolean
   darkModeCallback: () => void
   anchorEl: HTMLElement | null
   setAnchorEl: (anchorEl: HTMLElement | null) => void
-  userLogoutCallback: () => void
+  logoutCallback: () => void
 }
 
 const Header = (props: HeaderProps) => {
@@ -60,7 +60,7 @@ const Header = (props: HeaderProps) => {
                 </IconButton>
               </Tooltip>
               <Tooltip title="Sign Out">
-                <IconButton color="inherit" onClick={props.userLogoutCallback}>
+                <IconButton color="inherit" onClick={props.logoutCallback}>
                   <LogoutRounded />
                 </IconButton>
               </Tooltip>

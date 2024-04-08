@@ -1,43 +1,50 @@
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import ClientForm from './ClientForm'
-import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
-import { CourtCases } from '../../cases'
+import {
+  getNumber,
+  GlobalState,
+  isValidId,
+  pageActionButtonsComponent,
+  pageNotSelectedComponent,
+  pageTitleComponent,
+  pageTopLinksComponent,
+} from '../../app'
+import { CourtCaseSchema, CourtCaseTable } from '../../cases'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
 import { getJudges, JudgeSchema } from '../../judges'
-import { editClient, getClient } from '../actions/clients.action'
-import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
-import { ClientSchema, DefaultClientSchema } from '../types/clients.data.types'
-import { isAreTwoClientsSame } from '../utils/clients.utils'
+import { getRefTypes, RefTypesState } from '../../types'
+import { clientsAction, getClient } from '../actions/clients.action'
+import {
+  ClientBase,
+  ClientResponse,
+  DefaultClientFormData,
+  DefaultClientFormErrorData,
+} from '../types/clients.data.types'
+import { getClientFormDataFromSchema, isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
 
-const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
+const mapStateToProps = ({ refTypes, judges }: GlobalState) => {
   return {
-    selectedClient: clients.selectedClient,
-    statusList: statuses.statuses,
+    refTypes: refTypes,
+    caseTypesList: refTypes.caseType,
     judgesList: judges.judges,
   }
 }
 
 const mapDispatchToProps = {
-  getClient: (clientId: number) => getClient(clientId),
-  editClient: (clientId: number, client: ClientSchema) => editClient(clientId, client),
-  unmountPage: () => unmountPage(CLIENTS_UNMOUNT),
-  getStatusesList: () => getStatusesList(),
+  getRefTypes: () => getRefTypes(),
   getJudges: () => getJudges(),
 }
 
 interface ClientProps {
-  selectedClient: ClientSchema
-  getClient: (clientId: number) => void
-  editClient: (id: number, client: ClientSchema) => void
-  unmountPage: () => void
-  statusList: StatusSchema<string>
-  getStatusesList: () => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   judgesList: JudgeSchema[]
   getJudges: () => void
 }
@@ -45,105 +52,110 @@ interface ClientProps {
 const Client = (props: ClientProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
-
+  const dispatch = useDispatch()
+  const store = useStore<GlobalState>().getState()
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
-  const { getClient, editClient } = props
-  const { statusList, getStatusesList } = props
-  const { unmountPage } = props
+
+  const { refTypes, getRefTypes } = props
   const { judgesList, getJudges } = props
 
-  const [selectedClient, setSelectedClient] = useState<ClientSchema>(DefaultClientSchema)
-  const [selectedClientForReset, setSelectedClientForReset] = useState<ClientSchema>(DefaultClientSchema)
-  const [clientStatusList, setClientStatusList] = useState<string[]>([])
+  const [formData, setFormData] = useState(DefaultClientFormData)
+  const [formDataReset, setFormDataReset] = useState(DefaultClientFormData)
+  const [formErrors, setFormErrors] = useState(DefaultClientFormErrorData)
+  const [courtCasesList, setCourtCasesList] = useState([] as CourtCaseSchema[])
 
-  useEffect(() => {
-    if (id) {
-      getClient(getNumber(id))
-    }
-    // add selectedClient.id to dependency array for note/history
-  }, [id, getClient, selectedClient.id])
+  const clientStatusList = useCallback(() => {
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CLIENTS)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
-      statusList.court_case.all.length === 0 && getStatusesList()
+      const fetchClient = async (id: number) => {
+        return await getClient(id, true)(dispatch, store)
+      }
+      if (isValidId(id)) {
+        fetchClient(getNumber(id)).then((oneClient) => {
+          if (oneClient) {
+            const oneClientFormData = getClientFormDataFromSchema(oneClient)
+            setFormData(oneClientFormData)
+            setFormDataReset(oneClientFormData)
+            setCourtCasesList(oneClient.courtCases || [])
+          }
+        })
+      }
+
+      if (refTypes.componentStatus.length === 0 || refTypes.caseType.length === 0) {
+        getRefTypes()
+      }
       judgesList.length === 0 && getJudges()
     }
     isForceFetch.current = false
-  }, [statusList.court_case.all, getStatusesList, judgesList.length, getJudges])
-
-  useEffect(() => {
-    if (statusList.court.all.length > 0) {
-      setClientStatusList(statusList.court.all)
-    }
-  }, [statusList.court.all])
-
-  useEffect(() => {
-    setSelectedClient(props.selectedClient)
-    setSelectedClientForReset(props.selectedClient)
-  }, [props.selectedClient])
+  }, [
+    dispatch,
+    getJudges,
+    getRefTypes,
+    id,
+    judgesList.length,
+    refTypes.caseType.length,
+    refTypes.componentStatus.length,
+    store,
+  ])
 
   useEffect(() => {
     return () => {
       isForceFetch.current = true
-      unmountPage()
     }
-  }, [unmountPage])
-
-  const inPageTopLinks = () => {
-    const backToPage = searchQueryParams.get('backTo') || ''
-    return (
-      <Box sx={{ display: 'flex' }}>
-        {backToPage && (
-          <Box sx={{ mr: 2 }}>
-            <Link text="Back to Prev Page" navigateToPage={backToPage} color="primary" />
-          </Box>
-        )}
-        <Link text="View All Clients" navigateToPage="/clients/" color="primary" />
-      </Box>
-    )
-  }
-
-  const clientPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary">
-      {id ? `Client: ${selectedClient.name}` : 'Client'}
-    </Typography>
-  )
-
-  const noClient = () => (
-    <Typography component="h1" variant="h6" color="error" gutterBottom>
-      Client not selected! Nothing to display! Go to All Clients and select one!!!
-    </Typography>
-  )
-
-  const updateAction = () => {
-    editClient(getNumber(id), selectedClient)
-  }
-
-  const clientButtons = () => {
-    return (
-      <>
-        <Button disabled={isAreTwoClientsSame(selectedClient, selectedClientForReset)} onClick={updateAction}>
-          Update
-        </Button>
-        <Button
-          disabled={isAreTwoClientsSame(selectedClient, selectedClientForReset)}
-          onClick={() => setSelectedClient(selectedClientForReset)}
-        >
-          Cancel
-        </Button>
-      </>
-    )
-  }
+  }, [])
 
   const clientForm = () => (
     <ClientForm
-      selectedClient={selectedClient}
-      setSelectedClient={setSelectedClient}
-      clientStatusList={clientStatusList}
+      formData={formData}
+      setFormData={setFormData}
+      formErrors={formErrors}
+      setFormErrors={setFormErrors}
+      clientStatusList={clientStatusList()}
       isShowOneClient={true}
       judgesList={judgesList}
-      statusList={statusList}
+    />
+  )
+
+  const primaryButtonCallback = async () => {
+    const hasFormErrors = validateClient(formData, setFormErrors)
+    if (hasFormErrors) {
+      return
+    }
+
+    let clientResponse: ClientResponse = { data: [], detail: { error: INVALID_INPUT } }
+    if (isValidId(id)) {
+      const clientsRequest: ClientBase = { ...formData }
+      clientResponse = await clientsAction({
+        action: ACTION_TYPES.UPDATE,
+        clientsRequest: clientsRequest,
+        id: formData.id,
+      })(dispatch)
+    }
+
+    if (clientResponse && !clientResponse.detail) {
+      isForceFetch.current = true
+    }
+  }
+
+  const clientButtons = () =>
+    pageActionButtonsComponent(
+      COMPONENT_STATUS_NAME.CLIENTS,
+      formData,
+      primaryButtonCallback,
+      () => setFormData(formDataReset),
+      !isValidId(id) || isAreTwoClientsSame(formData, formDataReset),
+    )
+
+  const courtCasesTable = () => (
+    <CourtCaseTable
+      courtCasesList={courtCasesList}
+      selectedClient={formData}
+      componentStatusList={refTypes.componentStatus}
+      caseTypesList={refTypes.caseType}
     />
   )
 
@@ -151,12 +163,12 @@ const Client = (props: ClientProps): React.ReactElement => {
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {inPageTopLinks()}
-          {clientPageTitle()}
+          {pageTopLinksComponent(COMPONENT_STATUS_NAME.CLIENTS, '/clients/', searchQueryParams)}
+          {pageTitleComponent(COMPONENT_STATUS_NAME.CLIENTS, formData.name)}
         </Grid>
         {!id ? (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-            {noClient()}
+            {pageNotSelectedComponent(COMPONENT_STATUS_NAME.CLIENTS)}
           </Grid>
         ) : (
           <>
@@ -165,10 +177,11 @@ const Client = (props: ClientProps): React.ReactElement => {
               {clientButtons()}
             </Grid>
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Divider />
               <Typography component="h1" variant="h6" color="primary">
-                Court Cases Assigned to Client:
+                COURT CASES OF CLIENT:
               </Typography>
-              <CourtCases clientId={id} />
+              {courtCasesTable()}
             </Grid>
           </>
         )}

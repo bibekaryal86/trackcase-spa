@@ -6,21 +6,21 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import React from 'react'
 
+import { ActionTypes, CalendarTypes } from '../../constants'
+
 interface ModalProps {
-  isOpen: boolean
-  setIsOpen?: (value: boolean) => void
-  setIsOpenExtra?: (value: string) => void
-  cleanupOnClose?: () => void
+  open: boolean
+  onClose: () => void
   title: string
   contentText?: string
   content?: React.JSX.Element
-  primaryButtonText: string
+  primaryButtonText: ActionTypes | CalendarTypes
   primaryButtonCallback: () => void
   primaryButtonDisabled?: boolean
-  secondaryButtonText?: string
+  secondaryButtonText?: ActionTypes | CalendarTypes
   secondaryButtonCallback?: () => void
   secondaryButtonDisabled?: boolean
-  resetButtonText?: string
+  resetButtonText?: ActionTypes
   resetButtonCallback?: () => void
   resetButtonDisabled?: boolean
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -29,21 +29,16 @@ interface ModalProps {
 const Modal = (props: ModalProps) => {
   const maxWidth = props.maxWidth || 'sm'
 
-  const handleClose = () => {
-    props.setIsOpen && props.setIsOpen(false)
-    props.setIsOpenExtra && props.setIsOpenExtra('')
-    props.cleanupOnClose && props.cleanupOnClose()
+  const cleanUpButtonText = (buttonText?: string) => {
+    if (buttonText && buttonText.includes('_')) {
+      return buttonText.replace('_', ' ')
+    }
+    return buttonText
   }
-
-  const handlePrimaryButtonCallback = () => props.primaryButtonCallback()
-
-  const handleSecondaryButtonCallback = () => props.secondaryButtonCallback && props.secondaryButtonCallback()
-
-  const handleResetButtonCallback = () => props.resetButtonCallback && props.resetButtonCallback()
 
   return (
     <div>
-      <Dialog open={props.isOpen} onClose={handleClose} maxWidth={maxWidth} fullWidth={true}>
+      <Dialog open={props.open} onClose={props.onClose} maxWidth={maxWidth} fullWidth={true}>
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent dividers>
           {props.contentText && <DialogContentText>{props.contentText}</DialogContentText>}
@@ -51,17 +46,23 @@ const Modal = (props: ModalProps) => {
         </DialogContent>
         <DialogActions>
           {props.resetButtonText && (
-            <Button disabled={props.resetButtonDisabled} onClick={handleResetButtonCallback}>
+            <Button
+              disabled={props.resetButtonDisabled}
+              onClick={() => props.resetButtonCallback && props.resetButtonCallback()}
+            >
               {props.resetButtonText}
             </Button>
           )}
           {props.secondaryButtonText && (
-            <Button disabled={props.secondaryButtonDisabled} onClick={handleSecondaryButtonCallback}>
-              {props.secondaryButtonText}
+            <Button
+              disabled={props.secondaryButtonDisabled}
+              onClick={() => props.secondaryButtonCallback && props.secondaryButtonCallback()}
+            >
+              {cleanUpButtonText(props.secondaryButtonText)}
             </Button>
           )}
-          <Button disabled={props.primaryButtonDisabled} onClick={handlePrimaryButtonCallback}>
-            {props.primaryButtonText}
+          <Button disabled={props.primaryButtonDisabled} onClick={() => props.primaryButtonCallback()}>
+            {cleanUpButtonText(props.primaryButtonText)}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,81 +1,92 @@
-import { getNumericOnly, isNumericOnly, validateAddress, validateEmailAddress, validatePhoneNumber } from '../../app'
-import { ClientSchema } from '../types/clients.data.types'
+import { FetchRequestMetadata, getNumber, validateAddress, validateEmailAddress, validatePhoneNumber } from '../../app'
+import { ID_DEFAULT } from '../../constants'
+import {
+  ClientFormData,
+  ClientFormErrorData,
+  ClientSchema,
+  DefaultClientFormErrorData,
+} from '../types/clients.data.types'
 
-export const validateClient = (client: ClientSchema) => {
-  const errors: string[] = []
-
-  if (!client.name.trim()) {
-    errors.push('Name is required!')
-  }
-  if (!validateAddress(client.streetAddress, client.city, client.state, client.zipCode, false)) {
-    errors.push('Full address is incomplete/invalid!')
-  }
-  if (!validatePhoneNumber(client.phoneNumber)) {
-    errors.push('Phone Number is incomplete/invalid!')
-  }
-  if (!client.email.trim()) {
-    errors.push('Email is required!')
-  }
-  if (!client.status.trim()) {
-    errors.push('Status is required!')
-  }
-
-  return errors.length ? errors.join(', ') : ''
-}
-
-export const isAreTwoClientsSame = (one: ClientSchema, two: ClientSchema) =>
+export const isAreTwoClientsSame = (one: ClientFormData | ClientSchema, two: ClientFormData | ClientSchema) =>
   one &&
   two &&
   one.name === two.name &&
   one.aNumber === two.aNumber &&
   one.email === two.email &&
-  one.judgeId === two.judgeId &&
-  one.status === two.status &&
-  one.comments === two.comments &&
   one.streetAddress === two.streetAddress &&
   one.city === two.city &&
   one.state === two.state &&
   one.zipCode === two.zipCode &&
-  one.phoneNumber === two.phoneNumber
+  one.phoneNumber === two.phoneNumber &&
+  one.componentStatusId === two.componentStatusId &&
+  one.comments === two.comments &&
+  one.judgeId === two.judgeId
 
-export const isClientFormFieldError = (name: string, value: string | undefined, selectedClient: ClientSchema) => {
-  switch (name) {
-    case 'name':
-    case 'aNumber':
-    case 'status':
-      return !value || value.trim() === ''
-    case 'phoneNumber':
-      return !value || value.trim().length !== 10
-    case 'email':
-      return !value || !validateEmailAddress(value.trim())
-    case 'streetAddress':
-    case 'city':
-    case 'state':
-    case 'zipCode':
-      if (value) {
-        return !(selectedClient.streetAddress && selectedClient.city && selectedClient.state && selectedClient.zipCode)
-      }
+export const validateClient = (formData: ClientFormData, setFormErrors: (formErrors: ClientFormErrorData) => void) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: ClientFormErrorData = { ...DefaultClientFormErrorData }
+
+  if (!formData.name.trim()) {
+    hasValidationErrors = true
+    formErrorsLocal.name = 'REQUIRED'
   }
-  return false
+  if (!validateAddress(formData.streetAddress, formData.city, formData.state, formData.zipCode, false)) {
+    hasValidationErrors = true
+    formErrorsLocal.streetAddress = 'INCOMPLETE ADDRESS'
+  }
+  if (!validatePhoneNumber(formData.phoneNumber)) {
+    hasValidationErrors = true
+    formErrorsLocal.phoneNumber = 'INCOMPLETE/INVALID'
+  }
+  if (!validateEmailAddress(formData.email)) {
+    hasValidationErrors = true
+    formErrorsLocal.phoneNumber = 'INCOMPLETE/INVALID'
+  }
+  if (getNumber(formData.componentStatusId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.componentStatusError = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
 }
 
-export const handleClientFormOnChange = (
-  name: string,
-  value: string | number,
-  selectedClient: ClientSchema,
-  setSelectedClient: (updatedClient: ClientSchema) => void,
-  getValue: (value: string | number) => string | number,
-) => {
-  if (name === 'aNumber') {
-    value = getNumericOnly(value.toString(), 9)
-  } else if (name === 'zipCode') {
-    value = isNumericOnly(value.toString()) ? value : selectedClient.zipCode ? selectedClient.zipCode : ''
-  } else if (name === 'phoneNumber') {
-    value = getNumericOnly(value.toString(), 10)
+export const clientDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  clients = [] as ClientSchema[],
+  requestMetadata = {} as Partial<FetchRequestMetadata>,
+} = {}) => {
+  if (error) {
+    return {
+      type,
+      error,
+    }
+  } else if (success) {
+    return {
+      type,
+      success,
+    }
+  } else if (clients) {
+    return {
+      type,
+      clients,
+      requestMetadata,
+    }
+  } else {
+    return {
+      type,
+    }
   }
-  const updatedClient = {
-    ...selectedClient,
-    [name]: getValue(value),
+}
+
+export const getClientFormDataFromSchema = (x: ClientSchema): ClientFormData => {
+  return {
+    ...x,
+    id: x.id || ID_DEFAULT,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
   }
-  setSelectedClient(updatedClient)
 }

@@ -1,107 +1,99 @@
 // actions
-import { getCaseTypes } from './actions/caseTypes.action'
-import { getCollectionMethods } from './actions/collectionMethods.action'
-import { getFormTypes } from './actions/formTypes.action'
-import { getHearingTypes } from './actions/hearingTypes.action'
-import { getTaskTypes } from './actions/taskTypes.action'
+import { getRefType, getRefTypes } from './actions/refTypes.action'
 // components
-import CaseTypes from './components/CaseTypes'
-import CollectionMethods from './components/CollectionMethods'
-import FormTypes from './components/FormTypes'
-import HearingTypes from './components/HearingTypes'
-import TaskTypes from './components/TaskTypes'
+import RefTypes from './components/RefTypes'
 // reducers
-import caseTypes from './reducers/caseTypes.reducer'
-import collectionMethods from './reducers/collectionMethods.reducer'
-import formTypes from './reducers/formTypes.reducer'
-import hearingTypes from './reducers/hearingTypes.reducer'
 import refTypes from './reducers/refTypes.reducer'
-import taskTypes from './reducers/taskTypes.reducer'
 // action types
 import {
-  CASE_TYPES_COMPLETE,
-  CASE_TYPES_RETRIEVE_FAILURE,
-  CASE_TYPES_RETRIEVE_REQUEST,
-  CASE_TYPES_RETRIEVE_SUCCESS,
-  COLLECTION_METHODS_COMPLETE,
-  COLLECTION_METHODS_RETRIEVE_FAILURE,
-  COLLECTION_METHODS_RETRIEVE_REQUEST,
-  COLLECTION_METHODS_RETRIEVE_SUCCESS,
-  FORM_TYPES_COMPLETE,
-  FORM_TYPES_RETRIEVE_FAILURE,
-  FORM_TYPES_RETRIEVE_REQUEST,
-  FORM_TYPES_RETRIEVE_SUCCESS,
-  HEARING_TYPES_COMPLETE,
-  HEARING_TYPES_RETRIEVE_FAILURE,
-  HEARING_TYPES_RETRIEVE_REQUEST,
-  HEARING_TYPES_RETRIEVE_SUCCESS,
-  TASK_TYPES_COMPLETE,
-  TASK_TYPES_RETRIEVE_FAILURE,
-  TASK_TYPES_RETRIEVE_REQUEST,
-  TASK_TYPES_RETRIEVE_SUCCESS,
+  CASE_TYPE_COMPLETE,
+  CASE_TYPE_READ_FAILURE,
+  CASE_TYPE_READ_REQUEST,
+  CASE_TYPE_READ_SUCCESS,
+  COLLECTION_METHOD_COMPLETE,
+  COLLECTION_METHOD_READ_FAILURE,
+  COLLECTION_METHOD_READ_REQUEST,
+  COLLECTION_METHOD_READ_SUCCESS,
+  COMPONENT_STATUS_COMPLETE,
+  COMPONENT_STATUS_READ_FAILURE,
+  COMPONENT_STATUS_READ_REQUEST,
+  COMPONENT_STATUS_READ_SUCCESS,
+  FILING_TYPE_COMPLETE,
+  FILING_TYPE_READ_FAILURE,
+  FILING_TYPE_READ_REQUEST,
+  FILING_TYPE_READ_SUCCESS,
+  HEARING_TYPE_COMPLETE,
+  HEARING_TYPE_READ_FAILURE,
+  HEARING_TYPE_READ_REQUEST,
+  HEARING_TYPE_READ_SUCCESS,
+  TASK_TYPE_COMPLETE,
+  TASK_TYPE_READ_FAILURE,
+  TASK_TYPE_READ_REQUEST,
+  TASK_TYPE_READ_SUCCESS,
 } from './types/refTypes.action.types'
 // data types
 import {
   CaseTypeResponse,
   CaseTypeSchema,
-  CaseTypeState,
-  CollectionMethodAction,
   CollectionMethodResponse,
   CollectionMethodSchema,
-  CollectionMethodState,
-  FormTypeResponse,
-  FormTypeSchema,
-  FormTypeState,
+  ComponentStatusResponse,
+  ComponentStatusSchema,
+  FilingTypeResponse,
+  FilingTypeSchema,
   HearingTypeResponse,
   HearingTypeSchema,
-  HearingTypeState,
+  RefTypeFormData,
   RefTypesState,
   TaskTypeResponse,
   TaskTypeSchema,
-  TaskTypeState,
 } from './types/refTypes.data.types'
+// utils
+import { isRefTypesStateEmpty } from './utils/refTypes.utils'
 
-export { getCaseTypes, getCollectionMethods, getFormTypes, getHearingTypes, getTaskTypes }
-export { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes }
-export { caseTypes, collectionMethods, formTypes, hearingTypes, refTypes, taskTypes }
+export { getRefType, getRefTypes }
+export { RefTypes }
+export { refTypes }
 export {
-  CASE_TYPES_RETRIEVE_REQUEST,
-  COLLECTION_METHODS_RETRIEVE_REQUEST,
-  FORM_TYPES_RETRIEVE_REQUEST,
-  HEARING_TYPES_RETRIEVE_REQUEST,
-  TASK_TYPES_RETRIEVE_REQUEST,
-  CASE_TYPES_RETRIEVE_SUCCESS,
-  COLLECTION_METHODS_RETRIEVE_SUCCESS,
-  FORM_TYPES_RETRIEVE_SUCCESS,
-  HEARING_TYPES_RETRIEVE_SUCCESS,
-  TASK_TYPES_RETRIEVE_SUCCESS,
-  CASE_TYPES_RETRIEVE_FAILURE,
-  COLLECTION_METHODS_RETRIEVE_FAILURE,
-  FORM_TYPES_RETRIEVE_FAILURE,
-  HEARING_TYPES_RETRIEVE_FAILURE,
-  TASK_TYPES_RETRIEVE_FAILURE,
-  CASE_TYPES_COMPLETE,
-  COLLECTION_METHODS_COMPLETE,
-  FORM_TYPES_COMPLETE,
-  HEARING_TYPES_COMPLETE,
-  TASK_TYPES_COMPLETE,
+  CASE_TYPE_READ_REQUEST,
+  COLLECTION_METHOD_READ_REQUEST,
+  COMPONENT_STATUS_READ_REQUEST,
+  FILING_TYPE_READ_REQUEST,
+  HEARING_TYPE_READ_REQUEST,
+  TASK_TYPE_READ_REQUEST,
+  CASE_TYPE_READ_SUCCESS,
+  COLLECTION_METHOD_READ_SUCCESS,
+  COMPONENT_STATUS_READ_SUCCESS,
+  FILING_TYPE_READ_SUCCESS,
+  HEARING_TYPE_READ_SUCCESS,
+  TASK_TYPE_READ_SUCCESS,
+  CASE_TYPE_READ_FAILURE,
+  COLLECTION_METHOD_READ_FAILURE,
+  COMPONENT_STATUS_READ_FAILURE,
+  FILING_TYPE_READ_FAILURE,
+  HEARING_TYPE_READ_FAILURE,
+  TASK_TYPE_READ_FAILURE,
+  CASE_TYPE_COMPLETE,
+  COLLECTION_METHOD_COMPLETE,
+  COMPONENT_STATUS_COMPLETE,
+  FILING_TYPE_COMPLETE,
+  HEARING_TYPE_COMPLETE,
+  TASK_TYPE_COMPLETE,
 }
 export type {
   CaseTypeSchema,
   CaseTypeResponse,
-  CaseTypeState,
   CollectionMethodSchema,
   CollectionMethodResponse,
-  CollectionMethodState,
-  CollectionMethodAction,
-  FormTypeSchema,
-  FormTypeResponse,
-  FormTypeState,
+  ComponentStatusResponse,
+  ComponentStatusSchema,
+  FilingTypeSchema,
+  FilingTypeResponse,
   HearingTypeSchema,
   HearingTypeResponse,
-  HearingTypeState,
+  RefTypeFormData,
   RefTypesState,
   TaskTypeSchema,
   TaskTypeResponse,
-  TaskTypeState,
 }
+export { isRefTypesStateEmpty }

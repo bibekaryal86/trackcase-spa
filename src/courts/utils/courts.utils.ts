@@ -1,31 +1,13 @@
-import { getNumericOnly, isNumericOnly, validateAddress, validatePhoneNumber } from '../../app'
-import { CourtSchema } from '../types/courts.data.types'
+import { FetchRequestMetadata, getNumber, validateAddress, validatePhoneNumber } from '../../app'
+import { ID_DEFAULT } from '../../constants'
+import { CourtFormData, CourtFormErrorData, CourtSchema, DefaultCourtFormErrorData } from '../types/courts.data.types'
 
-export const validateCourt = (court: CourtSchema) => {
-  const errors: string[] = []
-
-  if (!court.name.trim()) {
-    errors.push('Name is required!')
-  }
-  if (!validateAddress(court.streetAddress, court.city, court.state, court.zipCode, true)) {
-    errors.push('Full address is incomplete/invalid!')
-  }
-  if (!validatePhoneNumber(court.phoneNumber)) {
-    errors.push('Phone Number is incomplete/invalid!')
-  }
-  if (!court.status.trim()) {
-    errors.push('Status is required!')
-  }
-
-  return errors.length ? errors.join(', ') : ''
-}
-
-export const isAreTwoCourtsSame = (one: CourtSchema, two: CourtSchema) =>
+export const isAreTwoCourtsSame = (one: CourtFormData | CourtSchema, two: CourtFormData | CourtSchema) =>
   one &&
   two &&
   one.name === two.name &&
   one.dhsAddress === two.dhsAddress &&
-  one.status === two.status &&
+  one.componentStatusId === two.componentStatusId &&
   one.comments === two.comments &&
   one.streetAddress === two.streetAddress &&
   one.city === two.city &&
@@ -33,28 +15,67 @@ export const isAreTwoCourtsSame = (one: CourtSchema, two: CourtSchema) =>
   one.zipCode === two.zipCode &&
   one.phoneNumber === two.phoneNumber
 
-export const isCourtFormFieldError = (
-  value: string | null | undefined,
-  is_zip: boolean = false,
-  is_phone: boolean = false,
-): boolean =>
-  !value || (is_zip ? value.trim().length !== 5 : is_phone ? value.trim().length != 10 : value.trim() === '')
+export const validateCourt = (formData: CourtFormData, setFormErrors: (formErrors: CourtFormErrorData) => void) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: CourtFormErrorData = { ...DefaultCourtFormErrorData }
 
-export const handleCourtFormOnChange = (
-  name: string,
-  value: string | number,
-  selectedCourt: CourtSchema,
-  setSelectedCourt: (updatedCourt: CourtSchema) => void,
-  getValue: (value: string | number) => string | number,
-) => {
-  if (name === 'zipCode') {
-    value = isNumericOnly(value.toString()) ? value : selectedCourt.zipCode ? selectedCourt.zipCode : ''
-  } else if (name === 'phoneNumber') {
-    value = getNumericOnly(value.toString(), 10)
+  if (!formData.name.trim()) {
+    hasValidationErrors = true
+    formErrorsLocal.name = 'REQUIRED'
   }
-  const updatedCourt = {
-    ...selectedCourt,
-    [name]: getValue(value),
+  if (!validateAddress(formData.streetAddress, formData.city, formData.state, formData.zipCode, true)) {
+    hasValidationErrors = true
+    formErrorsLocal.streetAddress = 'INCOMPLETE ADDRESS'
   }
-  setSelectedCourt(updatedCourt)
+  if (!validatePhoneNumber(formData.phoneNumber)) {
+    hasValidationErrors = true
+    formErrorsLocal.phoneNumber = 'INCOMPLETE/INVALID'
+  }
+  if (getNumber(formData.componentStatusId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.componentStatusError = 'REQUIRED'
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
+}
+
+export const courtDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  courts = [] as CourtSchema[],
+  requestMetadata = {} as Partial<FetchRequestMetadata>,
+} = {}) => {
+  if (error) {
+    return {
+      type,
+      error,
+    }
+  } else if (success) {
+    return {
+      type,
+      success,
+    }
+  } else if (courts) {
+    return {
+      type,
+      courts,
+      requestMetadata,
+    }
+  } else {
+    return {
+      type,
+    }
+  }
+}
+
+export const getCourtFormDataFromSchema = (x: CourtSchema): CourtFormData => {
+  return {
+    ...x,
+    id: x.id || ID_DEFAULT,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+  }
 }

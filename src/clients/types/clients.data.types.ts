@@ -1,47 +1,56 @@
-import { AddressBaseSchema, BaseModelSchema, ResponseBase, StatusBaseSchema } from '../../app'
+import { AddressBaseSchema, BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
 import { CourtCaseSchema } from '../../cases'
 import { ID_DEFAULT } from '../../constants'
 import { JudgeSchema } from '../../judges'
+import { ComponentStatusSchema } from '../../types'
 
-export interface ClientSchema extends AddressBaseSchema, StatusBaseSchema, BaseModelSchema {
+export interface ClientBase {
   name: string
   aNumber?: string
   email: string
   judgeId?: number
+  componentStatusId: number
+  comments?: string
+}
+export interface ClientSchema extends ClientBase, AddressBaseSchema, BaseModelSchema {
   // orm_mode
   judge?: JudgeSchema
+  componentStatus?: ComponentStatusSchema
   courtCases?: CourtCaseSchema[]
   // history
   historyClients?: HistoryClientSchema[]
 }
 
 export interface ClientResponse extends ResponseBase {
-  clients: ClientSchema[]
+  data: ClientSchema[]
 }
 
-export interface HistoryClientSchema extends AddressBaseSchema, BaseModelSchema {
-  userName: string
+export interface HistoryClientSchema extends Partial<ClientBase>, AddressBaseSchema, BaseModelSchema {
+  userId: string
   caseCollectionId: number
-  // from client schema, need everything optional here so can't extend
-  status?: string
-  comments?: string
-  name?: string
-  aNumber?: string
-  email?: string
-  judgeId?: number
   // orm_mode
   client?: ClientSchema
   judge?: JudgeSchema
+  componentStatus?: ComponentStatusSchema
 }
 
 export interface ClientsState {
-  isCloseModal: boolean
   clients: ClientSchema[]
-  selectedClient: ClientSchema
+  requestMetadata: Partial<FetchRequestMetadata>
 }
 
 export interface ClientsAction extends ClientsState {
   type: string
+}
+
+export interface ClientFormData extends ClientSchema {
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+}
+
+export interface ClientFormErrorData extends ClientSchema {
+  judgeError: string
+  componentStatusError: string
 }
 
 export const DefaultClientSchema: ClientSchema = {
@@ -54,12 +63,24 @@ export const DefaultClientSchema: ClientSchema = {
   phoneNumber: '',
   email: '',
   judgeId: ID_DEFAULT,
-  status: '',
+  componentStatusId: ID_DEFAULT,
   comments: '',
 }
 
 export const DefaultClientState: ClientsState = {
-  isCloseModal: true,
   clients: [],
-  selectedClient: DefaultClientSchema,
+  requestMetadata: {},
+}
+
+export const DefaultClientFormData: ClientFormData = {
+  ...DefaultClientSchema,
+  id: ID_DEFAULT,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+}
+
+export const DefaultClientFormErrorData: ClientFormErrorData = {
+  ...DefaultClientFormData,
+  judgeError: '',
+  componentStatusError: '',
 }

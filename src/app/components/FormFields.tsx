@@ -1,5 +1,6 @@
 import { SelectChangeEvent } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
+import FormHelperText from '@mui/material/FormHelperText'
 import Grid, { GridDirection } from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -11,6 +12,7 @@ import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
 import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '../../constants'
+import { ComponentStatusSchema } from '../../types'
 import { getDayjs } from '../utils/app.utils'
 
 interface FormWrapperProps {
@@ -25,6 +27,7 @@ interface FormWrapperProps {
 
 interface FormTextFieldProps {
   componentLabel: string
+  name: string
   required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
@@ -34,6 +37,7 @@ interface FormTextFieldProps {
   value: string | undefined
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   error?: boolean
+  helperText?: string
   sx?: object
   multiline?: boolean
   maxRows?: number
@@ -44,6 +48,7 @@ interface FormTextFieldProps {
 
 interface FormCommentFieldProps {
   componentLabel: string
+  name?: string
   required?: boolean
   autoFocus?: boolean
   fullWidth?: boolean
@@ -60,9 +65,11 @@ interface FormCommentFieldProps {
 
 interface FormSelectFieldProps {
   componentLabel: string
+  name: string
   required?: boolean
   formControlSx?: object
   error?: boolean
+  helperText?: string
   inputLabelSx?: object
   variant?: TextFieldVariants
   value: number | string
@@ -73,21 +80,24 @@ interface FormSelectFieldProps {
 
 interface StateSelectProps {
   componentLabel: string
+  name?: string
   required?: boolean
   formControlSx?: object
   error?: boolean
+  helperText?: string
   inputLabelSx?: object
   variant?: TextFieldVariants
-  value: string | undefined
+  value: string | number | undefined
   onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
 }
 
 interface StatusSelectProps extends StateSelectProps {
-  statusList: string[]
+  statusList: ComponentStatusSchema[]
 }
 
 interface DatePickerProps {
   componentLabel: string
+  name: string
   value: Dayjs | null | undefined
   onChange: (value: Dayjs | null) => void
   defaultValue?: Dayjs
@@ -136,8 +146,9 @@ const getComponentLabelAndId = (componentLabel: string) => {
 
 export const FormTextField: React.FC<FormTextFieldProps> = ({
   componentLabel,
-  required = true,
-  fullWidth = true,
+  name = '',
+  required = false,
+  fullWidth = false,
   autoFocus = false,
   variant = 'standard',
   margin = 'normal',
@@ -145,6 +156,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   value,
   onChange,
   error = false,
+  helperText = '',
   sx = {},
   multiline = false,
   maxRows = 4,
@@ -166,6 +178,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       value={value || ''}
       onChange={onChange}
       error={error}
+      helperText={helperText}
       sx={sx}
       type={type}
       InputLabelProps={InputLabelProps}
@@ -177,14 +190,16 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
             }
           : undefined
       }
-      // Conditionally include maxRows only if multiline is true
+      // Conditionally include
       {...(multiline && { maxRows })}
+      {...(name && { name })}
     />
   )
 }
 
 export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
   componentLabel,
+  name = 'comments',
   required = false,
   fullWidth = true,
   autoFocus = false,
@@ -200,6 +215,7 @@ export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
   return (
     <FormTextField
       componentLabel={componentLabel}
+      name={name}
       required={required}
       fullWidth={fullWidth}
       autoFocus={autoFocus}
@@ -218,9 +234,11 @@ export const FormCommentsField: React.FC<FormCommentFieldProps> = ({
 
 export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   componentLabel,
+  name = '',
   required = false,
   formControlSx = { width: '100%', mt: '16px', mb: '8px' },
   error = false,
+  helperText = '',
   inputLabelSx = { left: '-0.9em' },
   variant = 'standard',
   value,
@@ -229,16 +247,24 @@ export const FormSelectField: React.FC<FormSelectFieldProps> = ({
   disabled = false,
 }) => {
   const { label, id } = getComponentLabelAndId(componentLabel)
-  const isTypeString = typeof value === 'string'
-
-  const defaultMenuItem = <MenuItem key={ID_DEFAULT} value={ID_DEFAULT} />
-  const selectMenuItems = isTypeString ? menuItems : [defaultMenuItem, ...menuItems]
+  if (value === ID_DEFAULT) {
+    value = ''
+  }
   return (
     <FormControl sx={formControlSx} required={required} error={error}>
       <InputLabel sx={inputLabelSx}>{label}</InputLabel>
-      <Select labelId={id} id={id} variant={variant} value={value.toString()} onChange={onChange} disabled={disabled}>
-        {selectMenuItems}
+      <Select
+        labelId={id}
+        id={id}
+        variant={variant}
+        name={name}
+        value={value.toString()}
+        onChange={onChange}
+        disabled={disabled}
+      >
+        {menuItems}
       </Select>
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   )
 }
@@ -252,67 +278,76 @@ const getStateItems = () =>
 
 export const FormSelectStateField: React.FC<StateSelectProps> = ({
   componentLabel,
+  name = 'state',
   required = false,
   error = false,
   value,
   onChange,
+  helperText = '',
 }) => (
   <FormSelectField
     componentLabel={componentLabel}
+    name={name}
     value={value || ''}
     onChange={onChange}
     menuItems={getStateItems()}
     required={required}
     error={error}
+    helperText={helperText}
   />
 )
 
-const getStatusItems = (statusList: string[]) =>
+const getStatusItems = (statusList: ComponentStatusSchema[]) =>
   statusList.map((status) => (
-    <MenuItem key={status} value={status}>
-      {status}
+    <MenuItem key={status.id} value={status.id}>
+      {status.statusName}
     </MenuItem>
   ))
 
 export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
   componentLabel,
+  name = 'componentStatusId',
   required = true,
   error = false,
+  helperText = '',
   value,
   onChange,
   statusList,
 }) => (
   <FormSelectField
     componentLabel={componentLabel}
+    name={name}
     value={value || ''}
     onChange={onChange}
     menuItems={getStatusItems(statusList)}
     required={required}
     error={error}
+    helperText={helperText}
   />
 )
 
 export const FormDatePickerField: React.FC<DatePickerProps> = ({
   componentLabel,
+  name,
   value,
   onChange,
   disableFuture = false,
   disablePast = false,
   disableOpenPicker = false,
   format = DATE_FORMAT,
-  helperText,
+  helperText = '',
   minDate,
   maxDate,
   required = false,
   views,
 }) => {
-  const { label, id } = getComponentLabelAndId(componentLabel)
+  const { label } = getComponentLabelAndId(componentLabel)
   const dayjsValue = getDayjs(value)
-  const isError = dayjsValue ? !dayjsValue.isValid() : required
+  const error = dayjsValue ? !dayjsValue.isValid() : false
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        name={id}
+        name={name}
         label={label}
         value={dayjsValue}
         onChange={onChange}
@@ -325,9 +360,10 @@ export const FormDatePickerField: React.FC<DatePickerProps> = ({
         views={views}
         slotProps={{
           textField: {
-            helperText: helperText,
+            error,
+            required,
+            helperText,
             fullWidth: true,
-            error: isError,
           },
           field: { clearable: true },
         }}

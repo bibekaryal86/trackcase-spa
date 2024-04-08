@@ -1,263 +1,239 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { connect, useDispatch } from 'react-redux'
 
 import ClientForm from './ClientForm'
 import ClientTable from './ClientTable'
-import { getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_ADD,
-  BUTTON_CANCEL,
-  BUTTON_DELETE,
-  BUTTON_RESET,
-  BUTTON_UPDATE,
-  ID_DEFAULT,
-} from '../../constants'
-import { getJudge, getJudges, JudgeSchema } from '../../judges'
-import { addClient, deleteClient, editClient, getClients } from '../actions/clients.action'
-import { CLIENTS_UNMOUNT } from '../types/clients.action.types'
-import { ClientSchema, DefaultClientSchema } from '../types/clients.data.types'
-import { isAreTwoClientsSame } from '../utils/clients.utils'
+  addModalComponent,
+  deleteModalComponent,
+  FetchRequestMetadata,
+  getNumber,
+  GlobalState,
+  pageTitleComponent,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  updateModalComponent,
+  useModal,
+} from '../../app'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
+import { getJudges, JudgeSchema } from '../../judges'
+import { getRefTypes, RefTypesState } from '../../types'
+import { clientsAction, getClients } from '../actions/clients.action'
+import {
+  ClientBase,
+  ClientFormData,
+  ClientResponse,
+  ClientSchema,
+  DefaultClientFormData,
+  DefaultClientFormErrorData,
+} from '../types/clients.data.types'
+import { isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
 
-const mapStateToProps = ({ clients, statuses, judges }: GlobalState) => {
+const mapStateToProps = ({ refTypes, clients, judges }: GlobalState) => {
   return {
-    isCloseModal: clients.isCloseModal,
+    refTypes: refTypes,
     clientsList: clients.clients,
-    statusList: statuses.statuses,
     judgesList: judges.judges,
-    selectedJudge: judges.selectedJudge,
   }
 }
 
 const mapDispatchToProps = {
-  getClients: () => getClients(),
-  addClient: (client: ClientSchema) => addClient(client),
-  editClient: (id: number, client: ClientSchema) => editClient(id, client),
-  deleteClient: (id: number) => deleteClient(id),
-  unmountPage: () => unmountPage(CLIENTS_UNMOUNT),
-  getStatusesList: () => getStatusesList(),
+  getRefTypes: () => getRefTypes(),
+  getClients: (requestMetadata: Partial<FetchRequestMetadata>) => getClients(requestMetadata),
   getJudges: () => getJudges(),
-  getJudge: (judgeId: number) => getJudge(judgeId),
 }
 
 interface ClientsProps {
-  isCloseModal: boolean
   clientsList: ClientSchema[]
-  getClients: () => void
-  addClient: (client: ClientSchema) => void
-  editClient: (id: number, client: ClientSchema) => void
-  deleteClient: (id: number) => void
-  unmountPage: () => void
-  statusList: StatusSchema<string>
-  getStatusesList: () => void
+  getClients: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   judgesList: JudgeSchema[]
   getJudges: () => void
-  judgeId?: string
-  selectedJudge?: JudgeSchema
-  getJudge: (judgeId: number) => void
 }
 
 const Clients = (props: ClientsProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
+  const dispatch = useDispatch()
+  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
-  const { clientsList, getClients, addClient, editClient, deleteClient, judgesList, getJudges } = props
-  const { unmountPage } = props
-  const { isCloseModal } = props
-  const { statusList, getStatusesList } = props
-  const { judgeId, selectedJudge, getJudge } = props
+  const { clientsList, getClients } = props
+  const { refTypes, getRefTypes } = props
+  const { judgesList, getJudges } = props
 
-  const [modal, setModal] = useState<string>('')
-  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
-  const [selectedClient, setSelectedClient] = useState<ClientSchema>(DefaultClientSchema)
-  const [selectedClientForReset, setSelectedClientForReset] = useState<ClientSchema>(DefaultClientSchema)
-  const [clientStatusList, setClientStatusList] = useState<string[]>([])
+  const [formData, setFormData] = useState(DefaultClientFormData)
+  const [formDataReset, setFormDataReset] = useState(DefaultClientFormData)
+  const [formErrors, setFormErrors] = useState(DefaultClientFormErrorData)
+
+  const clientStatusList = useCallback(() => {
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CLIENTS)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
-      clientsList.length === 0 && getClients()
+      clientsList.length === 0 && getClients({})
+      refTypes.componentStatus.length === 0 && getRefTypes()
       judgesList.length === 0 && getJudges()
-      statusList.court_case.all.length === 0 && getStatusesList()
-
-      if (judgeId) {
-        if (!selectedJudge) {
-          getJudge(getNumber(judgeId))
-        }
-      }
     }
-    isForceFetch.current = false
-  }, [
-    clientsList.length,
-    getClients,
-    statusList.court_case.all,
-    getStatusesList,
-    judgesList.length,
-    getJudges,
-    judgeId,
-    selectedJudge,
-    getJudge,
-  ])
-
-  useEffect(() => {
-    if (statusList.client.all.length > 0) {
-      setClientStatusList(statusList.client.all)
-    }
-  }, [statusList.client.all])
-
-  useEffect(() => {
-    if (isCloseModal) {
-      setModal('')
-      setSelectedId(ID_DEFAULT)
-      setSelectedClient(DefaultClientSchema)
-      setSelectedClientForReset(DefaultClientSchema)
-    }
-  }, [isCloseModal, judgeId])
+  }, [clientsList.length, getClients, getJudges, getRefTypes, judgesList.length, refTypes.componentStatus.length])
 
   useEffect(() => {
     return () => {
       isForceFetch.current = true
-      unmountPage()
     }
-  }, [unmountPage])
+  }, [])
 
-  const primaryButtonCallback = (action: string, id?: number) => {
-    isForceFetch.current = true
-    if (id && action === ACTION_DELETE) {
-      deleteClient(id)
-    } else if (id && action === ACTION_UPDATE) {
-      editClient(id, selectedClient)
-    } else {
-      addClient(selectedClient)
+  const getClientsWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
+    getClients(requestMetadata)
+  }
+
+  const primaryButtonCallback = async (action: ActionTypes) => {
+    const hasFormErrors = validateClient(formData, setFormErrors)
+    if (hasFormErrors) {
+      return
+    }
+
+    let clientResponse: ClientResponse = { data: [], detail: { error: INVALID_INPUT } }
+    if (action === ACTION_TYPES.CREATE) {
+      const clientsRequest: ClientBase = { ...formData }
+      clientResponse = await clientsAction({ action, clientsRequest })(dispatch)
+    } else if (
+      (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
+      getNumber(formData.id) > 0
+    ) {
+      const clientsRequest: ClientBase = { ...formData }
+      clientResponse = await clientsAction({
+        action: action,
+        clientsRequest: clientsRequest,
+        id: formData.id,
+        isRestore: action === ACTION_TYPES.RESTORE,
+        isHardDelete: formData.isHardDelete,
+      })(dispatch)
+    }
+
+    if (clientResponse && !clientResponse.detail) {
+      secondaryButtonCallback(
+        addModalState,
+        updateModalState,
+        deleteModalState,
+        setFormData,
+        setFormErrors,
+        DefaultClientFormData,
+        DefaultClientFormErrorData,
+      )
+      isForceFetch.current = true
+      clientsList.length === 0 && getClients({})
     }
   }
 
-  const secondaryButtonCallback = () => {
-    setModal('')
-    setSelectedId(ID_DEFAULT)
-    setSelectedClient(DefaultClientSchema)
-    setSelectedClientForReset(DefaultClientSchema)
-  }
-
-  const resetButtonCallback = (action: string) => {
-    action === ACTION_ADD && setSelectedClient(DefaultClientSchema)
-    action === ACTION_UPDATE && setSelectedClient(selectedClientForReset)
-  }
-
-  const clientForm = () => (
-    <ClientForm
-      selectedClient={selectedClient}
-      setSelectedClient={setSelectedClient}
-      clientStatusList={clientStatusList}
-      isShowOneClient={false}
-      judgesList={judgesList}
-      judgeId={judgeId}
-      statusList={statusList}
-    />
-  )
-
-  const addModal = () => (
-    <Modal
-      isOpen={true}
-      setIsOpenExtra={setModal}
-      cleanupOnClose={secondaryButtonCallback}
-      title="Add New Client"
-      primaryButtonText={BUTTON_ADD}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_ADD, undefined)}
-      primaryButtonDisabled={isAreTwoClientsSame(selectedClient, selectedClientForReset)}
-      secondaryButtonText={BUTTON_CANCEL}
-      secondaryButtonCallback={secondaryButtonCallback}
-      contentText="Provide the following details..."
-      content={clientForm()}
-      resetButtonText={BUTTON_RESET}
-      resetButtonCallback={() => resetButtonCallback(ACTION_ADD)}
-      resetButtonDisabled={isAreTwoClientsSame(selectedClient, selectedClientForReset)}
-    />
-  )
-
-  const updateModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title="Update Client"
-        primaryButtonText={BUTTON_UPDATE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_UPDATE, selectedId)}
-        primaryButtonDisabled={isAreTwoClientsSame(selectedClient, selectedClientForReset)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText="Provide the following details..."
-        content={clientForm()}
-        resetButtonText={BUTTON_RESET}
-        resetButtonCallback={() => resetButtonCallback(ACTION_UPDATE)}
-        resetButtonDisabled={isAreTwoClientsSame(selectedClient, selectedClientForReset)}
+  const addUpdateModalContent = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+      <ClientForm
+        formData={formData}
+        setFormData={setFormData}
+        formErrors={formErrors}
+        setFormErrors={setFormErrors}
+        clientStatusList={clientStatusList()}
+        isShowOneClient={false}
+        judgesList={judgesList}
       />
-    )
-  }
-
-  const deleteModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title="Delete Client"
-        primaryButtonText={BUTTON_DELETE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_DELETE, selectedId)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to delete Client: '${selectedClient.name}'?!?`}
-      />
-    )
-  }
-
-  const showModal = () =>
-    modal === ACTION_ADD
-      ? addModal()
-      : modal === ACTION_UPDATE
-      ? updateModal()
-      : modal === ACTION_DELETE
-      ? deleteModal()
-      : null
-
-  const clientsPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary" gutterBottom>
-      Clients
-    </Typography>
+    </Box>
   )
+
+  const addModal = () =>
+    addModalComponent(
+      COMPONENT_STATUS_NAME.CLIENTS,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultClientFormData,
+      DefaultClientFormErrorData,
+      formDataReset,
+      undefined,
+      isAreTwoClientsSame(formData, formDataReset),
+      isAreTwoClientsSame(formData, formDataReset),
+      isAreTwoClientsSame(formData, formDataReset),
+    )
+
+  const updateModal = () =>
+    updateModalComponent(
+      COMPONENT_STATUS_NAME.CLIENTS,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultClientFormData,
+      DefaultClientFormErrorData,
+      formDataReset,
+      undefined,
+      isAreTwoClientsSame(formData, formDataReset),
+      isAreTwoClientsSame(formData, formDataReset),
+      isAreTwoClientsSame(formData, formDataReset),
+    )
+
+  const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
+    formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+  } CLIENT: ${formData.name}?!?`
+
+  const deleteModal = () =>
+    deleteModalComponent(
+      COMPONENT_STATUS_NAME.CLIENTS,
+      deleteModalContextText,
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultClientFormData,
+      DefaultClientFormErrorData,
+      formData,
+      formErrors,
+    )
+
+  const actionButtons = (formDataModal: ClientFormData) =>
+    tableActionButtonsComponent(
+      COMPONENT_STATUS_NAME.CLIENTS,
+      formDataModal,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormDataReset,
+    )
 
   const clientsTable = () => (
     <ClientTable
-      clientsList={!(judgeId && selectedJudge) ? clientsList : selectedJudge?.clients || []}
-      setModal={setModal}
-      setSelectedId={setSelectedId}
-      setSelectedClient={setSelectedClient}
-      setSelectedClientForReset={setSelectedClientForReset}
-      selectedJudge={!(judgeId && selectedJudge) ? undefined : selectedJudge}
+      clientsList={clientsList}
+      actionButtons={actionButtons}
+      addModalState={addModalState}
+      softDeleteCallback={getClientsWithMetadata}
+      componentStatusList={refTypes.componentStatus}
     />
   )
 
-  return judgeId ? (
-    <>
-      {clientsTable()}
-      {modal && showModal()}
-    </>
-  ) : (
+  return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {clientsPageTitle()}
+          {pageTitleComponent(COMPONENT_STATUS_NAME.CLIENTS)}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {clientsTable()}
         </Grid>
       </Grid>
-      {modal && showModal()}
+      {addModal()}
+      {updateModal()}
+      {deleteModal()}
     </Box>
   )
 }

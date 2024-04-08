@@ -8,12 +8,12 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import Tooltip from '@mui/material/Tooltip'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { protectedRoutes, refTypesRoutes } from './AppRoutes'
-
-const refTypesRoutesPaths = refTypesRoutes.map((route) => route.path)
+import { protectedRoutes, refTypesRoutes, userManagementRoutes } from './AppRoutes'
+import { ACTION_TYPES } from '../../constants'
+import { checkUserHasPermission, isSuperuser } from '../../users'
 
 interface SideNavProps {
   anchorEl: HTMLElement | null
@@ -45,20 +45,24 @@ const SideNav = (props: SideNavProps) => {
     [pathname],
   )
 
-  useEffect(() => {
-    if (refTypesRoutesPaths.includes(pathname)) {
-      setIsRefTypesOpen(true)
-    } else {
-      setIsRefTypesOpen(false)
-    }
-  }, [pathname])
+  // useEffect(() => {
+  //   if (refTypesRoutesPaths.includes(pathname)) {
+  //     setIsRefTypesOpen(true)
+  //   } else {
+  //     setIsRefTypesOpen(false)
+  //   }
+  // }, [pathname])
+
+  const hasPermissionForRoute = (routePath: string) =>
+    checkUserHasPermission(routePath.toUpperCase(), ACTION_TYPES.READ)
 
   return (
     <Menu anchorEl={props.anchorEl} open={Boolean(props.anchorEl)} onClose={handleClose}>
       <List sx={{ backgroundColor: 'inherit' }}>
         {protectedRoutes.map(
           (protectedRoute) =>
-            protectedRoute.display && (
+            protectedRoute.display &&
+            hasPermissionForRoute(protectedRoute.path) && (
               <ListItem
                 key={protectedRoute.path}
                 disablePadding
@@ -84,42 +88,80 @@ const SideNav = (props: SideNavProps) => {
               </ListItem>
             ),
         )}
-        <Divider />
-        <ListItemButton onClick={handleRefTypesOpen}>
-          <Tooltip title="Ref Types" placement="right">
-            <ListItemIcon>{isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
-          </Tooltip>
-        </ListItemButton>
-        <Collapse in={isRefTypesOpen} timeout="auto" unmountOnExit>
-          {refTypesRoutes.map(
-            (refTypesRoute) =>
-              refTypesRoute.display && (
-                <ListItem
-                  key={refTypesRoute.path}
-                  disablePadding
-                  sx={{ display: 'block' }}
-                  onClick={() => navigateToPage(refTypesRoute.path)}
-                >
-                  <ListItemButton
-                    selected={isSelected(refTypesRoute.path)}
-                    sx={{
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Tooltip title={refTypesRoute.display} placement="right">
-                      <ListItemIcon
+        {
+          <>
+            {hasPermissionForRoute('ref_types') && (
+              <>
+                <Divider />
+                <ListItemButton onClick={handleRefTypesOpen}>
+                  <Tooltip title="Ref Types" placement="right">
+                    <ListItemIcon>{isRefTypesOpen ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
+                  </Tooltip>
+                </ListItemButton>
+              </>
+            )}
+            <Collapse in={isRefTypesOpen} timeout="auto" unmountOnExit>
+              {refTypesRoutes.map(
+                (refTypesRoute) =>
+                  refTypesRoute.display &&
+                  hasPermissionForRoute(refTypesRoute.path) && (
+                    <ListItem
+                      key={refTypesRoute.path}
+                      disablePadding
+                      sx={{ display: 'block' }}
+                      onClick={() => navigateToPage(refTypesRoute.path)}
+                    >
+                      <ListItemButton
+                        selected={isSelected(refTypesRoute.path)}
                         sx={{
                           justifyContent: 'center',
                         }}
                       >
-                        {refTypesRoute.icon}
-                      </ListItemIcon>
-                    </Tooltip>
-                  </ListItemButton>
-                </ListItem>
-              ),
-          )}
-        </Collapse>
+                        <Tooltip title={refTypesRoute.display} placement="right">
+                          <ListItemIcon
+                            sx={{
+                              justifyContent: 'center',
+                            }}
+                          >
+                            {refTypesRoute.icon}
+                          </ListItemIcon>
+                        </Tooltip>
+                      </ListItemButton>
+                    </ListItem>
+                  ),
+              )}
+              {isSuperuser() &&
+                userManagementRoutes.map(
+                  (userManagementRoute) =>
+                    userManagementRoute.display && (
+                      <ListItem
+                        key={userManagementRoute.path}
+                        disablePadding
+                        sx={{ display: 'block' }}
+                        onClick={() => navigateToPage(userManagementRoute.path)}
+                      >
+                        <ListItemButton
+                          selected={isSelected(userManagementRoute.path)}
+                          sx={{
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Tooltip title={userManagementRoute.display} placement="right">
+                            <ListItemIcon
+                              sx={{
+                                justifyContent: 'center',
+                              }}
+                            >
+                              {userManagementRoute.icon}
+                            </ListItemIcon>
+                          </Tooltip>
+                        </ListItemButton>
+                      </ListItem>
+                    ),
+                )}
+            </Collapse>
+          </>
+        }
       </List>
     </Menu>
   )

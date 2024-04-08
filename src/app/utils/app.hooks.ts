@@ -1,7 +1,10 @@
-import { useSelector } from 'react-redux'
+import { useState } from 'react'
 
-import { GlobalState } from '../store/redux'
-
-export const useStateData = <K extends keyof GlobalState>(key: K): GlobalState[K] => {
-  return useSelector((state: GlobalState) => state[key])
+export const useModal = () => {
+  const [showModal, setIsShowModal] = useState(false)
+  const toggleModalView = () => setIsShowModal(!showModal)
+  return {
+    showModal,
+    toggleModalView,
+  }
 }

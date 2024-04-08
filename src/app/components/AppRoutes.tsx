@@ -1,32 +1,33 @@
-import { CurrencyBitcoinRounded } from '@mui/icons-material'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import CasesRoundedIcon from '@mui/icons-material/CasesRounded'
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded'
 import ChecklistRtlRoundedIcon from '@mui/icons-material/ChecklistRtlRounded'
+import Contacts from '@mui/icons-material/Contacts'
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import FilePresentRoundedIcon from '@mui/icons-material/FilePresentRounded'
-import GroupsIcon from '@mui/icons-material/Groups'
+import FlareIcon from '@mui/icons-material/Flare'
+import Groups from '@mui/icons-material/Groups'
+import LocalAtm from '@mui/icons-material/LocalAtm'
 import RecentActorsIcon from '@mui/icons-material/RecentActors'
 import TodayIcon from '@mui/icons-material/Today'
 import WorkIcon from '@mui/icons-material/Work'
 import React from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
-import Login from './Login'
-import Logout from './Logout'
 import NotFound from './NotFound'
 import { Calendars } from '../../calendars'
 import { CourtCase, CourtCases } from '../../cases'
 import { Client, Clients } from '../../clients'
 import { Collections } from '../../collections'
+import { ALERT_TYPES, INCOMPLETE_PERMISSION, REF_TYPES_REGISTRY } from '../../constants'
 import { Court, Courts } from '../../courts'
-import { Form, Forms } from '../../forms'
+import { Filing, Filings } from '../../filings'
 import { Home } from '../../home'
 import { Judge, Judges } from '../../judges'
-import { CaseTypes, CollectionMethods, FormTypes, HearingTypes, TaskTypes } from '../../types'
+import { RefTypes } from '../../types'
+import { checkUserHasPermission, isLoggedIn, UserAdmin, UserSignInUp } from '../../users'
 import { RoutesType } from '../types/app.data.types'
-import { isLoggedIn } from '../utils/app.utils'
 
 const publicRoutes: RoutesType[] = [
   {
@@ -35,11 +36,7 @@ const publicRoutes: RoutesType[] = [
   },
   {
     path: '/',
-    element: <Login />,
-  },
-  {
-    path: '/logout',
-    element: <Logout />,
+    element: <UserSignInUp />,
   },
 ]
 
@@ -82,18 +79,18 @@ export const protectedRoutes: RoutesType[] = [
   //   ],
   // },
   {
-    path: '/forms',
+    path: '/filings',
     display: 'Filings',
-    element: <Forms />,
+    element: <Filings />,
     icon: <FileOpenIcon />,
   },
   {
-    path: '/form',
-    element: <Form />,
+    path: '/filing',
+    element: <Filing />,
     subroutes: [
       {
         path: ':id',
-        element: <Form />,
+        element: <Filing />,
       },
     ],
   },
@@ -117,7 +114,7 @@ export const protectedRoutes: RoutesType[] = [
     path: '/clients',
     display: 'Clients',
     element: <Clients />,
-    icon: <GroupsIcon />,
+    icon: <Contacts />,
   },
   {
     path: '/client',
@@ -165,44 +162,69 @@ export const protectedRoutes: RoutesType[] = [
 
 export const refTypesRoutes: RoutesType[] = [
   {
-    path: '/case_types',
+    path: '/component_status',
+    display: 'Component Status',
+    element: <RefTypes refType={REF_TYPES_REGISTRY.COMPONENT_STATUS} />,
+    icon: <FlareIcon />,
+  },
+  {
+    path: '/case_type',
     display: 'Case Types',
-    element: <CaseTypes />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.CASE_TYPE} />,
     icon: <CasesRoundedIcon />,
   },
   {
-    path: '/collection_methods',
+    path: '/collection_method',
     display: 'Collection Methods',
-    element: <CollectionMethods />,
-    icon: <CurrencyBitcoinRounded />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.COLLECTION_METHOD} />,
+    icon: <LocalAtm />,
   },
   {
-    path: '/form_types',
+    path: '/filing_type',
     display: 'Filing Types',
-    element: <FormTypes />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.FILING_TYPE} />,
     icon: <FilePresentRoundedIcon />,
   },
   {
-    path: '/hearing_types',
+    path: '/hearing_type',
     display: 'Hearing Types',
-    element: <HearingTypes />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.HEARING_TYPE} />,
     icon: <ChecklistRtlRoundedIcon />,
   },
   {
-    path: '/task_types',
+    path: '/task_type',
     display: 'Task Types',
-    element: <TaskTypes />,
+    element: <RefTypes refType={REF_TYPES_REGISTRY.TASK_TYPE} />,
     icon: <ChecklistRoundedIcon />,
   },
 ]
+export const userManagementRoutes: RoutesType[] = [
+  {
+    path: '/user_management',
+    display: 'User Management',
+    element: <UserAdmin />,
+    icon: <Groups />,
+  },
+]
 
-function RequireAuth({ children }: { children: React.ReactElement }) {
+function RequireAuth({ children, path }: { children: React.ReactElement; path: string }) {
   const location = useLocation()
-  const authState = isLoggedIn()
-  return authState ? children : <Navigate to="/" replace state={{ redirect: location.pathname }} />
+  const appUserDetails = isLoggedIn()
+  if (appUserDetails) {
+    if (path === '/home') {
+      return children
+    } else if (checkUserHasPermission(path.toUpperCase(), 'READ', appUserDetails)) {
+      return children
+    } else {
+      return <Navigate to="/home" replace state={{ message: INCOMPLETE_PERMISSION, alertType: ALERT_TYPES.WARNING }} />
+    }
+  } else {
+    return <Navigate to="/" replace state={{ redirect: location.pathname }} />
+  }
 }
 
-const getElement = (children: React.ReactElement | undefined) => children && <RequireAuth>{children}</RequireAuth>
+const getElement = (children: React.ReactElement, path: string) =>
+  children && <RequireAuth path={path}>{children}</RequireAuth>
 
 const AppRoutes = (): React.ReactElement => {
   return (
@@ -211,10 +233,14 @@ const AppRoutes = (): React.ReactElement => {
         <Route key={publicRoute.path} path={publicRoute.path} element={publicRoute.element} />
       ))}
       {protectedRoutes.map((protectedRoute) => (
-        <Route key={protectedRoute.path} path={protectedRoute.path} element={getElement(protectedRoute.element)}>
+        <Route
+          key={protectedRoute.path}
+          path={protectedRoute.path}
+          element={getElement(protectedRoute.element, protectedRoute.path)}
+        >
           {protectedRoute.subroutes &&
             protectedRoute.subroutes.map((subroute) => (
-              <Route key={subroute.path} path={subroute.path} element={getElement(subroute.element)} />
+              <Route key={subroute.path} path={subroute.path} element={getElement(subroute.element, subroute.path)} />
             ))}
         </Route>
       ))}
@@ -222,16 +248,31 @@ const AppRoutes = (): React.ReactElement => {
         (protectedRoute) =>
           protectedRoute.submenus &&
           protectedRoute.submenus.map((submenu) => (
-            <Route key={submenu.path} path={submenu.path} element={getElement(submenu.element)}>
+            <Route key={submenu.path} path={submenu.path} element={getElement(submenu.element, submenu.path)}>
               {submenu.subroutes &&
                 submenu.subroutes.map((subroute) => (
-                  <Route key={subroute.path} path={subroute.path} element={getElement(subroute.element)} />
+                  <Route
+                    key={subroute.path}
+                    path={subroute.path}
+                    element={getElement(subroute.element, subroute.path)}
+                  />
                 ))}
             </Route>
           )),
       )}
       {refTypesRoutes.map((refTypesRoute) => (
-        <Route key={refTypesRoute.path} path={refTypesRoute.path} element={getElement(refTypesRoute.element)} />
+        <Route
+          key={refTypesRoute.path}
+          path={refTypesRoute.path}
+          element={getElement(refTypesRoute.element, refTypesRoute.path)}
+        />
+      ))}
+      {userManagementRoutes.map((userManagementRoute) => (
+        <Route
+          key={userManagementRoute.path}
+          path={userManagementRoute.path}
+          element={getElement(userManagementRoute.element, userManagementRoute.path)}
+        />
       ))}
     </Routes>
   )

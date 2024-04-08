@@ -1,29 +1,29 @@
 import React, { useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 
-import { getAllRefTypes } from '../../app'
+import { getRefTypes } from '../../types'
 
 const mapDispatchToProps = {
-  getAllRefTypes: () => getAllRefTypes(),
+  getRefTypes: () => getRefTypes(),
 }
 
 interface HomeProps {
-  getAllRefTypes: () => void
+  getRefTypes: () => void
 }
 
 const Home = (props: HomeProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
 
-  const { getAllRefTypes } = props
+  const { getRefTypes } = props
   useEffect(() => {
     // This code will run when the component mounts (page loads)
     if (isForceFetch.current) {
-      getAllRefTypes()
+      getRefTypes()
     }
     isForceFetch.current = false
     // Provide an empty dependency array to run the effect only on mount
-  }, [getAllRefTypes])
+  }, [getRefTypes])
 
   useEffect(() => {
     return () => {

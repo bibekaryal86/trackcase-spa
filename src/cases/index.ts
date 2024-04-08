@@ -1,27 +1,29 @@
 // actions
-import { getCourtCase, getCourtCases, getOneCourtCase } from './actions/courtCases.action'
+import { courtCasesAction, getCourtCase, getCourtCases } from './actions/courtCases.action'
 // components
 import CourtCase from './components/CourtCase'
 import CourtCases from './components/CourtCases'
+import CourtCaseTable from './components/CourtCaseTable'
 // reducers
 import courtCases from './reducers/courtCases.reducer'
-// action types
-import {
-  COURT_CASE_CREATE_SUCCESS,
-  COURT_CASE_DELETE_SUCCESS,
-  COURT_CASE_UPDATE_SUCCESS,
-} from './types/courtCases.action.types'
 // data types
 import {
+  CourtCaseFormData,
+  CourtCaseFormErrorData,
   CourtCaseResponse,
   CourtCasesAction,
   CourtCaseSchema,
   CourtCasesState,
-  HistoryCourtCaseSchema,
 } from './types/courtCases.data.types'
 
-export { getCourtCase, getCourtCases, getOneCourtCase }
-export { CourtCase, CourtCases }
+export { getCourtCase, getCourtCases, courtCasesAction }
+export { CourtCase, CourtCases, CourtCaseTable }
 export { courtCases }
-export { COURT_CASE_CREATE_SUCCESS, COURT_CASE_UPDATE_SUCCESS, COURT_CASE_DELETE_SUCCESS }
-export type { CourtCaseResponse, CourtCasesAction, CourtCaseSchema, CourtCasesState, HistoryCourtCaseSchema }
+export type {
+  CourtCaseResponse,
+  CourtCasesAction,
+  CourtCaseSchema,
+  CourtCasesState,
+  CourtCaseFormData,
+  CourtCaseFormErrorData,
+}

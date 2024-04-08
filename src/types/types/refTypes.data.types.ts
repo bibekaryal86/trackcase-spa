@@ -1,16 +1,28 @@
-import { BaseModelSchema, NameDescBaseSchema, ResponseBase } from '../../app'
+import { BaseModelSchema, FetchRequestMetadata, NameDescBaseSchema, ResponseBase } from '../../app'
 import { HearingCalendarSchema, TaskCalendarSchema } from '../../calendars'
 import { CourtCaseSchema } from '../../cases'
 import { CashCollectionSchema } from '../../collections'
-import { FormSchema } from '../../forms'
+import { ID_DEFAULT, RefTypesRegistry } from '../../constants'
+import { FilingSchema } from '../../filings'
 
-export interface CaseTypeSchema extends BaseModelSchema, NameDescBaseSchema {
-  // orm_mode
-  courtCases?: CourtCaseSchema[]
+export interface ComponentStatusSchema extends BaseModelSchema {
+  componentName: string
+  statusName: string
+  isActive: boolean
+  // no orm_mode for this
 }
 
-export interface CaseTypeResponse extends ResponseBase {
-  caseTypes: CaseTypeSchema[]
+export interface ComponentStatusResponse extends ResponseBase {
+  data: ComponentStatusSchema[]
+}
+
+export interface FilingTypeSchema extends BaseModelSchema, NameDescBaseSchema {
+  // orm_mode
+  filings?: FilingSchema[]
+}
+
+export interface FilingTypeResponse extends ResponseBase {
+  data: FilingTypeSchema[]
 }
 
 export interface CollectionMethodSchema extends BaseModelSchema, NameDescBaseSchema {
@@ -19,16 +31,7 @@ export interface CollectionMethodSchema extends BaseModelSchema, NameDescBaseSch
 }
 
 export interface CollectionMethodResponse extends ResponseBase {
-  collectionMethods: CollectionMethodSchema[]
-}
-
-export interface FormTypeSchema extends BaseModelSchema, NameDescBaseSchema {
-  // orm_mode
-  forms?: FormSchema[]
-}
-
-export interface FormTypeResponse extends ResponseBase {
-  formTypes: FormTypeSchema[]
+  data: CollectionMethodSchema[]
 }
 
 export interface HearingTypeSchema extends BaseModelSchema, NameDescBaseSchema {
@@ -37,7 +40,7 @@ export interface HearingTypeSchema extends BaseModelSchema, NameDescBaseSchema {
 }
 
 export interface HearingTypeResponse extends ResponseBase {
-  hearingTypes: HearingTypeSchema[]
+  data: HearingTypeSchema[]
 }
 
 export interface TaskTypeSchema extends BaseModelSchema, NameDescBaseSchema {
@@ -46,54 +49,97 @@ export interface TaskTypeSchema extends BaseModelSchema, NameDescBaseSchema {
 }
 
 export interface TaskTypeResponse extends ResponseBase {
-  taskTypes: TaskTypeSchema[]
+  data: TaskTypeSchema[]
 }
+
+export interface CaseTypeSchema extends BaseModelSchema, NameDescBaseSchema {
+  // orm_mode
+  courtCases?: CourtCaseSchema[]
+}
+
+export interface CaseTypeResponse extends ResponseBase {
+  data: CaseTypeSchema[]
+}
+
+export interface RefTypesResponseData {
+  componentStatuses: ComponentStatusResponse
+  collectionMethods: CollectionMethodResponse
+  caseTypes: CaseTypeResponse
+  filingTypes: FilingTypeResponse
+  hearingTypes: HearingTypeResponse
+  taskTypes: TaskTypeResponse
+}
+
+export interface RefTypesResponse {
+  data: RefTypesResponseData
+}
+
+export interface RefTypeResponse extends ResponseBase {
+  data: RefTypeSchema[]
+}
+
+export type RefTypeSchema =
+  | CaseTypeSchema
+  | CollectionMethodSchema
+  | ComponentStatusSchema
+  | FilingTypeSchema
+  | HearingTypeSchema
+  | TaskTypeSchema
+
+export type RefTypeLessStatusSchema =
+  | CaseTypeSchema
+  | CollectionMethodSchema
+  | FilingTypeSchema
+  | HearingTypeSchema
+  | TaskTypeSchema
 
 // states and actions
+export interface RefTypesRequestMetadataState {
+  refType: RefTypesRegistry
+  requestMetadata: Partial<FetchRequestMetadata>
+}
+
 export interface RefTypesState {
-  isCloseModal: boolean
+  componentStatus: ComponentStatusSchema[]
+  filingType: FilingTypeSchema[]
+  collectionMethod: CollectionMethodSchema[]
+  caseType: CaseTypeSchema[]
+  hearingType: HearingTypeSchema[]
+  taskType: TaskTypeSchema[]
+  requestMetadataState: RefTypesRequestMetadataState[]
 }
 
-export interface RefTypesAction extends RefTypesState {
+export interface RefTypesAction {
   type: string
+  data: RefTypeSchema[]
+  metadata: RefTypesRequestMetadataState[]
 }
 
-export interface CaseTypeState {
-  caseTypes: CaseTypeSchema[]
+export interface RefTypeFormData {
+  id: number
+  nameOrComponentName: string
+  descOrStatusName: string
+  isActive: boolean
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+  isDeleted?: boolean
 }
 
-export interface CaseTypeAction extends CaseTypeState {
-  type: string
+export const DefaultRefTypeFormData: RefTypeFormData = {
+  id: ID_DEFAULT,
+  nameOrComponentName: '',
+  descOrStatusName: '',
+  isActive: false,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+  isDeleted: false,
 }
 
-export interface CollectionMethodState {
-  collectionMethods: CollectionMethodSchema[]
-}
-
-export interface CollectionMethodAction extends CollectionMethodState {
-  type: string
-}
-
-export interface FormTypeState {
-  formTypes: FormTypeSchema[]
-}
-
-export interface FormTypeAction extends FormTypeState {
-  type: string
-}
-
-export interface HearingTypeState {
-  hearingTypes: HearingTypeSchema[]
-}
-
-export interface HearingTypeAction extends HearingTypeState {
-  type: string
-}
-
-export interface TaskTypeState {
-  taskTypes: TaskTypeSchema[]
-}
-
-export interface TaskTypeAction extends TaskTypeState {
-  type: string
+export interface RefTypesReduxStoreKeys {
+  componentStatus: string
+  caseType: string
+  collectionMethod: string
+  filingType: string
+  hearingType: string
+  taskType: string
 }

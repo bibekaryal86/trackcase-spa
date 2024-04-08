@@ -1,291 +1,261 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { connect, useDispatch } from 'react-redux'
 
 import CourtCaseForm from './CourtCaseForm'
 import CourtCaseTable from './CourtCaseTable'
-import { getNumber, getStatusesList, GlobalState, Modal, StatusSchema, unmountPage } from '../../app'
-import { ClientSchema, getClient, getClients } from '../../clients'
 import {
-  ACTION_ADD,
-  ACTION_DELETE,
-  ACTION_UPDATE,
-  BUTTON_ADD,
-  BUTTON_CANCEL,
-  BUTTON_DELETE,
-  BUTTON_RESET,
-  BUTTON_UPDATE,
-  ID_DEFAULT,
-} from '../../constants'
-import { CaseTypeSchema, getCaseTypes } from '../../types'
-import { addCourtCase, deleteCourtCase, editCourtCase, getCourtCases } from '../actions/courtCases.action'
-import { COURT_CASES_UNMOUNT } from '../types/courtCases.action.types'
-import { CourtCaseSchema, DefaultCourtCaseSchema } from '../types/courtCases.data.types'
-import { isAreTwoCourtCasesSame } from '../utils/courtCases.utils'
+  addModalComponent,
+  deleteModalComponent,
+  FetchRequestMetadata,
+  getNumber,
+  GlobalState,
+  pageTitleComponent,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  updateModalComponent,
+  useModal,
+} from '../../app'
+import { ClientSchema, getClients } from '../../clients'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
+import { getRefTypes, RefTypesState } from '../../types'
+import { courtCasesAction, getCourtCases } from '../actions/courtCases.action'
+import {
+  CourtCaseBase,
+  CourtCaseFormData,
+  CourtCaseResponse,
+  CourtCaseSchema,
+  DefaultCourtCaseFormData,
+  DefaultCourtCaseFormErrorData,
+} from '../types/courtCases.data.types'
+import { isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
 
-const mapStateToProps = ({ courtCases, statuses, clients, caseTypes }: GlobalState) => {
+const mapStateToProps = ({ refTypes, courtCases, clients }: GlobalState) => {
   return {
-    isCloseModal: courtCases.isCloseModal,
+    refTypes: refTypes,
     courtCasesList: courtCases.courtCases,
-    statusList: statuses.statuses,
     clientsList: clients.clients,
-    selectedClient: clients.selectedClient,
-    caseTypesList: caseTypes.caseTypes,
   }
 }
 
 const mapDispatchToProps = {
-  getCourtCases: () => getCourtCases(),
-  addCourtCase: (courtCase: CourtCaseSchema) => addCourtCase(courtCase),
-  editCourtCase: (id: number, courtCase: CourtCaseSchema) => editCourtCase(id, courtCase),
-  deleteCourtCase: (id: number) => deleteCourtCase(id),
-  unmountPage: () => unmountPage(COURT_CASES_UNMOUNT),
-  getStatusesList: () => getStatusesList(),
+  getRefTypes: () => getRefTypes(),
+  getCourtCases: (requestMetadata: Partial<FetchRequestMetadata>) => getCourtCases(requestMetadata),
   getClients: () => getClients(),
-  getClient: (clientId: number) => getClient(clientId),
-  getCaseTypes: () => getCaseTypes(),
 }
 
 interface CourtCasesProps {
-  isCloseModal: boolean
   courtCasesList: CourtCaseSchema[]
-  getCourtCases: () => void
-  addCourtCase: (courtCase: CourtCaseSchema) => void
-  editCourtCase: (id: number, courtCase: CourtCaseSchema) => void
-  deleteCourtCase: (id: number) => void
-  unmountPage: () => void
-  statusList: StatusSchema<string>
-  getStatusesList: () => void
+  getCourtCases: (requestMetadata: Partial<FetchRequestMetadata>) => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
   clientsList: ClientSchema[]
   getClients: () => void
-  clientId?: string
-  selectedClient?: ClientSchema
-  getClient: (clientId: number) => void
-  caseTypesList: CaseTypeSchema[]
-  getCaseTypes: () => void
 }
 
 const CourtCases = (props: CourtCasesProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
+  const dispatch = useDispatch()
+  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
-  const { courtCasesList, getCourtCases, addCourtCase, editCourtCase, deleteCourtCase, clientsList, getClients } = props
-  const { unmountPage } = props
-  const { isCloseModal } = props
-  const { statusList, getStatusesList } = props
-  const { clientId, selectedClient, getClient } = props
-  const { caseTypesList, getCaseTypes } = props
+  const { courtCasesList, getCourtCases } = props
+  const { refTypes, getRefTypes } = props
+  const { clientsList, getClients } = props
 
-  const [modal, setModal] = useState<string>('')
-  const [selectedId, setSelectedId] = useState<number>(ID_DEFAULT)
-  const [selectedCourtCase, setSelectedCourtCase] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
-  const [selectedCourtCaseForReset, setSelectedCourtCaseForReset] = useState<CourtCaseSchema>(DefaultCourtCaseSchema)
-  const [courtCaseStatusList, setCourtCaseStatusList] = useState<string[]>([])
+  const [formData, setFormData] = useState(DefaultCourtCaseFormData)
+  const [formDataReset, setFormDataReset] = useState(DefaultCourtCaseFormData)
+  const [formErrors, setFormErrors] = useState(DefaultCourtCaseFormErrorData)
+
+  const courtCaseStatusList = useCallback(() => {
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURT_CASES)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
-      courtCasesList.length === 0 && getCourtCases()
+      courtCasesList.length === 0 && getCourtCases({})
       clientsList.length === 0 && getClients()
-      caseTypesList.length === 0 && getCaseTypes()
-      statusList.court_case.all.length === 0 && getStatusesList()
 
-      if (clientId) {
-        if (!selectedClient) {
-          getClient(getNumber(clientId))
-        }
+      if (refTypes.componentStatus.length === 0 || refTypes.caseType.length === 0) {
+        getRefTypes()
       }
     }
-    isForceFetch.current = false
   }, [
-    courtCasesList.length,
-    getCourtCases,
-    statusList.court_case.all,
-    getStatusesList,
-    caseTypesList.length,
-    getCaseTypes,
     clientsList.length,
+    courtCasesList.length,
     getClients,
-    clientId,
-    selectedClient,
-    getClient,
+    getCourtCases,
+    getRefTypes,
+    refTypes.caseType.length,
+    refTypes.componentStatus.length,
   ])
-
-  useEffect(() => {
-    if (statusList.court_case.all.length > 0) {
-      setCourtCaseStatusList(statusList.court_case.all)
-    }
-  }, [statusList.court_case.all])
-
-  useEffect(() => {
-    if (isCloseModal) {
-      setModal('')
-      setSelectedId(ID_DEFAULT)
-      setSelectedCourtCase(DefaultCourtCaseSchema)
-      setSelectedCourtCaseForReset(DefaultCourtCaseSchema)
-    }
-  }, [clientId, isCloseModal])
 
   useEffect(() => {
     return () => {
       isForceFetch.current = true
-      unmountPage()
     }
-  }, [unmountPage])
+  }, [])
 
-  const primaryButtonCallback = (action: string, id?: number) => {
-    isForceFetch.current = true
-    if (id && action === ACTION_DELETE) {
-      deleteCourtCase(id)
-    } else if (id && action === ACTION_UPDATE) {
-      editCourtCase(id, selectedCourtCase)
-    } else {
-      addCourtCase(selectedCourtCase)
+  const getCourtCasesWithMetadata = (requestMetadata: Partial<FetchRequestMetadata>) => {
+    getCourtCases(requestMetadata)
+  }
+
+  const primaryButtonCallback = async (action: ActionTypes) => {
+    const hasFormErrors = validateCourtCase(formData, setFormErrors)
+    if (hasFormErrors) {
+      return
+    }
+
+    let courtCaseResponse: CourtCaseResponse = { data: [], detail: { error: INVALID_INPUT } }
+    if (action === ACTION_TYPES.CREATE) {
+      const courtCasesRequest: CourtCaseBase = { ...formData }
+      courtCaseResponse = await courtCasesAction({ action, courtCasesRequest })(dispatch)
+    } else if (
+      (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
+      getNumber(formData.id) > 0
+    ) {
+      const courtCasesRequest: CourtCaseBase = { ...formData }
+      courtCaseResponse = await courtCasesAction({
+        action: action,
+        courtCasesRequest: courtCasesRequest,
+        id: formData.id,
+        isRestore: action === ACTION_TYPES.RESTORE,
+        isHardDelete: formData.isHardDelete,
+      })(dispatch)
+    }
+
+    if (courtCaseResponse && !courtCaseResponse.detail) {
+      secondaryButtonCallback(
+        addModalState,
+        updateModalState,
+        deleteModalState,
+        setFormData,
+        setFormErrors,
+        DefaultCourtCaseFormData,
+        DefaultCourtCaseFormErrorData,
+      )
+      isForceFetch.current = true
+      courtCasesList.length === 0 && getCourtCases({})
     }
   }
 
-  const secondaryButtonCallback = () => {
-    setModal('')
-    setSelectedId(ID_DEFAULT)
-    setSelectedCourtCase(DefaultCourtCaseSchema)
-    setSelectedCourtCaseForReset(DefaultCourtCaseSchema)
-  }
-
-  const resetButtonCallback = (action: string) => {
-    action === ACTION_ADD && setSelectedCourtCase(DefaultCourtCaseSchema)
-    action === ACTION_UPDATE && setSelectedCourtCase(selectedCourtCaseForReset)
-  }
-
-  const courtCaseForm = () => (
-    <CourtCaseForm
-      selectedCourtCase={selectedCourtCase}
-      setSelectedCourtCase={setSelectedCourtCase}
-      courtCaseStatusList={courtCaseStatusList}
-      isShowOneCourtCase={false}
-      caseTypesList={caseTypesList}
-      clientsList={clientsList}
-      clientId={clientId}
-      statusList={statusList}
-    />
-  )
-
-  const addModal = () => (
-    <Modal
-      isOpen={true}
-      setIsOpenExtra={setModal}
-      cleanupOnClose={secondaryButtonCallback}
-      title="Add New CourtCase"
-      primaryButtonText={BUTTON_ADD}
-      primaryButtonCallback={() => primaryButtonCallback(ACTION_ADD, undefined)}
-      primaryButtonDisabled={isAreTwoCourtCasesSame(selectedCourtCase, selectedCourtCaseForReset)}
-      secondaryButtonText={BUTTON_CANCEL}
-      secondaryButtonCallback={secondaryButtonCallback}
-      contentText="Provide the following details..."
-      content={courtCaseForm()}
-      resetButtonText={BUTTON_RESET}
-      resetButtonCallback={() => resetButtonCallback(ACTION_ADD)}
-      resetButtonDisabled={isAreTwoCourtCasesSame(selectedCourtCase, selectedCourtCaseForReset)}
-    />
-  )
-
-  const updateModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title="Update CourtCase"
-        primaryButtonText={BUTTON_UPDATE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_UPDATE, selectedId)}
-        primaryButtonDisabled={isAreTwoCourtCasesSame(selectedCourtCase, selectedCourtCaseForReset)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText="Provide the following details..."
-        content={courtCaseForm()}
-        resetButtonText={BUTTON_RESET}
-        resetButtonCallback={() => resetButtonCallback(ACTION_UPDATE)}
-        resetButtonDisabled={isAreTwoCourtCasesSame(selectedCourtCase, selectedCourtCaseForReset)}
+  const addUpdateModalContent = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+      <CourtCaseForm
+        formData={formData}
+        setFormData={setFormData}
+        formErrors={formErrors}
+        setFormErrors={setFormErrors}
+        courtCaseStatusList={courtCaseStatusList()}
+        isShowOneCourtCase={false}
+        clientsList={clientsList}
+        caseTypesList={refTypes.caseType}
       />
-    )
-  }
-
-  const deleteModal = () => {
-    return (
-      <Modal
-        isOpen={true}
-        setIsOpenExtra={setModal}
-        cleanupOnClose={secondaryButtonCallback}
-        title="Delete CourtCase"
-        primaryButtonText={BUTTON_DELETE}
-        primaryButtonCallback={() => primaryButtonCallback(ACTION_DELETE, selectedId)}
-        secondaryButtonText={BUTTON_CANCEL}
-        secondaryButtonCallback={secondaryButtonCallback}
-        contentText={`Are you sure you want to delete CourtCase: '${selectedCourtCase.client?.name}, ${selectedCourtCase.caseType?.name}'?!?`}
-      />
-    )
-  }
-
-  const showModal = () =>
-    modal === ACTION_ADD
-      ? addModal()
-      : modal === ACTION_UPDATE
-      ? updateModal()
-      : modal === ACTION_DELETE
-      ? deleteModal()
-      : null
-
-  const courtCasesPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary" gutterBottom>
-      Cases
-    </Typography>
+    </Box>
   )
 
-  const getCourtCasesList = () => {
-    const clientsMap = new Map(clientsList.map((client) => [client.id, client]))
-    const caseTypesMap = new Map(caseTypesList.map((caseType) => [caseType.id, caseType]))
-    const courtCasesToList = clientId && selectedClient ? selectedClient.courtCases || [] : courtCasesList
-    const theCourtCases = JSON.parse(JSON.stringify(courtCasesToList))
-    theCourtCases.forEach((x: CourtCaseSchema) => {
-      const matchingCaseType = caseTypesMap.get(x.caseTypeId)
-      if (matchingCaseType) {
-        x.caseType = matchingCaseType
-      }
-      const matchingClient = clientsMap.get(x.clientId)
-      if (matchingClient) {
-        x.client = matchingClient
-      }
-    })
-    return theCourtCases
+  const addModal = () =>
+    addModalComponent(
+      COMPONENT_STATUS_NAME.COURT_CASES,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultCourtCaseFormData,
+      DefaultCourtCaseFormErrorData,
+      formDataReset,
+      undefined,
+      isAreTwoCourtCasesSame(formData, formDataReset),
+      isAreTwoCourtCasesSame(formData, formDataReset),
+      isAreTwoCourtCasesSame(formData, formDataReset),
+    )
+
+  const updateModal = () =>
+    updateModalComponent(
+      COMPONENT_STATUS_NAME.COURT_CASES,
+      addUpdateModalContent(),
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultCourtCaseFormData,
+      DefaultCourtCaseFormErrorData,
+      formDataReset,
+      undefined,
+      isAreTwoCourtCasesSame(formData, formDataReset),
+      isAreTwoCourtCasesSame(formData, formDataReset),
+      isAreTwoCourtCasesSame(formData, formDataReset),
+    )
+
+  const getClientCaseType = () => {
+    const selectedCaseType = refTypes.caseType.find((x) => x.id === formData.caseTypeId)
+    const selectedClient = clientsList.find((x) => x.id === formData.clientId)
+    if (selectedCaseType && selectedClient) {
+      return ': ' + selectedClient.name + ', ' + selectedCaseType.name
+    }
+    return ''
   }
+
+  const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
+    formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+  } COURT CASE ${getClientCaseType()}?!?`
+
+  const deleteModal = () =>
+    deleteModalComponent(
+      COMPONENT_STATUS_NAME.COURT_CASES,
+      deleteModalContextText,
+      primaryButtonCallback,
+      addModalState,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormErrors,
+      DefaultCourtCaseFormData,
+      DefaultCourtCaseFormErrorData,
+      formData,
+      formErrors,
+    )
+
+  const actionButtons = (formDataModal: CourtCaseFormData) =>
+    tableActionButtonsComponent(
+      COMPONENT_STATUS_NAME.COURT_CASES,
+      formDataModal,
+      updateModalState,
+      deleteModalState,
+      setFormData,
+      setFormDataReset,
+    )
 
   const courtCasesTable = () => (
     <CourtCaseTable
-      courtCasesList={getCourtCasesList()}
-      setModal={setModal}
-      setSelectedId={setSelectedId}
-      setSelectedCourtCase={setSelectedCourtCase}
-      setSelectedCourtCaseForReset={setSelectedCourtCaseForReset}
-      selectedClient={clientId && selectedClient ? selectedClient : undefined}
+      courtCasesList={courtCasesList}
+      actionButtons={actionButtons}
+      addModalState={addModalState}
+      softDeleteCallback={getCourtCasesWithMetadata}
+      componentStatusList={refTypes.componentStatus}
+      caseTypesList={refTypes.caseType}
     />
   )
 
-  return clientId ? (
-    <>
-      {courtCasesTable()}
-      {modal && showModal()}
-    </>
-  ) : (
+  return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {courtCasesPageTitle()}
+          {pageTitleComponent(COMPONENT_STATUS_NAME.COURT_CASES.replace('_', ' '))}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {courtCasesTable()}
         </Grid>
       </Grid>
-      {modal && showModal()}
+      {addModal()}
+      {updateModal()}
+      {deleteModal()}
     </Box>
   )
 }

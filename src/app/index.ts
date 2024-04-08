@@ -1,9 +1,22 @@
 // actions
-import { getAllRefTypes } from './actions/all_ref_types.action'
-import { userLogout } from './actions/logout.action'
-import { getStatusesList } from './actions/statuses.action'
 import { testDatabase } from './actions/testDatabase.action'
 // components
+import {
+  addModalComponent,
+  deleteModalComponent,
+  handleFormChange,
+  handleFormDateChange,
+  hardDeleteCheckboxComponent,
+  pageActionButtonsComponent,
+  pageNotSelectedComponent,
+  pageTitleComponent,
+  pageTopLinksComponent,
+  resetButtonCallback,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  tableAddButtonComponent,
+  updateModalComponent,
+} from './components/CommonComponents'
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -24,23 +37,26 @@ import { RESET_ALERT, RESET_SPINNER, SET_ALERT, SET_SPINNER } from './types/app.
 import {
   AddressBaseSchema,
   BaseModelSchema,
+  DefaultErrorDetail,
+  ErrorDetail,
   ErrorSuccessSchema,
+  ModalState,
   NameDescBaseSchema,
   ResponseBase,
-  StatusBaseSchema,
-  StatusSchema,
+  ResponseMetadata,
   TableData,
   TableHeaderData,
   TableOrder,
   TableRowsPerPage,
-  UserDetails,
 } from './types/app.data.types'
 // utils
 import { resetAlert, setAlert } from './utils/alerts.utils'
-import { useStateData } from './utils/app.hooks'
+import { useModal } from './utils/app.hooks'
 import {
   clearMessages,
   convertDateToLocaleString,
+  convertToCamelCase,
+  convertToTitleCase,
   getComments,
   getCurrency,
   getDayjs,
@@ -54,21 +70,18 @@ import {
   getStartOfTheYear,
   getString,
   isGetDarkMode,
-  isLoggedIn,
   isNumericOnly,
+  isValidId,
   unmountPage,
   validateAddress,
   validateEmailAddress,
   validatePhoneNumber,
 } from './utils/app.utils'
-import { Async, FetchOptions, FetchResponse } from './utils/fetch.utils'
+import { Async, FetchOptions, FetchRequestMetadata, FetchResponse } from './utils/fetch.utils'
 import { resetSpinner, setSpinner } from './utils/spinner.utils'
 import { LocalStorage, SessionStorage } from './utils/storage.utils'
 
 // EXPORTS
-export { userLogout }
-export { getAllRefTypes }
-export { getStatusesList }
 export { testDatabase }
 export {
   FormCommentsField,
@@ -79,6 +92,22 @@ export {
   FormTextField,
   GridFormWrapper,
 }
+export {
+  addModalComponent,
+  updateModalComponent,
+  deleteModalComponent,
+  handleFormChange,
+  handleFormDateChange,
+  hardDeleteCheckboxComponent,
+  pageActionButtonsComponent,
+  pageNotSelectedComponent,
+  pageTitleComponent,
+  pageTopLinksComponent,
+  resetButtonCallback,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  tableAddButtonComponent,
+}
 export { Link }
 export { Modal }
 export { Switch }
@@ -88,22 +117,25 @@ export { RESET_ALERT, RESET_SPINNER, SET_ALERT, SET_SPINNER }
 export type {
   AddressBaseSchema,
   BaseModelSchema,
+  ErrorDetail,
   ErrorSuccessSchema,
+  ModalState,
   NameDescBaseSchema,
   ResponseBase,
-  StatusBaseSchema,
-  StatusSchema,
+  ResponseMetadata,
   TableData,
   TableHeaderData,
   TableOrder,
   TableRowsPerPage,
-  UserDetails,
 }
+export { DefaultErrorDetail }
 export { resetAlert, setAlert }
-export { useStateData }
+export { useModal }
 export {
   clearMessages,
   convertDateToLocaleString,
+  convertToCamelCase,
+  convertToTitleCase,
   getComments,
   getCurrency,
   getDayjs,
@@ -117,14 +149,14 @@ export {
   getStartOfTheYear,
   getString,
   isGetDarkMode,
-  isLoggedIn,
   isNumericOnly,
+  isValidId,
   unmountPage,
   validateAddress,
   validateEmailAddress,
   validatePhoneNumber,
 }
 export { Async }
-export type { FetchOptions, FetchResponse }
+export type { FetchOptions, FetchRequestMetadata, FetchResponse }
 export { resetSpinner, setSpinner }
 export { LocalStorage, SessionStorage }

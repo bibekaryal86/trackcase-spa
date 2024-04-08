@@ -1,147 +1,143 @@
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import CourtForm from './CourtForm'
-import { getNumber, getStatusesList, GlobalState, Link, StatusSchema, unmountPage } from '../../app'
-import { Judges } from '../../judges'
-import { editCourt, getCourt } from '../actions/courts.action'
-import { COURTS_UNMOUNT } from '../types/courts.action.types'
-import { CourtSchema, DefaultCourtSchema } from '../types/courts.data.types'
-import { isAreTwoCourtsSame } from '../utils/courts.utils'
+import {
+  getNumber,
+  GlobalState,
+  isValidId,
+  pageActionButtonsComponent,
+  pageNotSelectedComponent,
+  pageTitleComponent,
+  pageTopLinksComponent,
+} from '../../app'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
+import { JudgeSchema, JudgeTable } from '../../judges'
+import { getRefTypes, RefTypesState } from '../../types'
+import { courtsAction, getCourt } from '../actions/courts.action'
+import { CourtBase, CourtResponse, DefaultCourtFormData, DefaultCourtFormErrorData } from '../types/courts.data.types'
+import { getCourtFormDataFromSchema, isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
 
-const mapStateToProps = ({ courts, statuses }: GlobalState) => {
+const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
-    selectedCourt: courts.selectedCourt,
-    statusList: statuses.statuses,
+    refTypes: refTypes,
   }
 }
 
 const mapDispatchToProps = {
-  getCourt: (courtId: number) => getCourt(courtId),
-  editCourt: (courtId: number, court: CourtSchema) => editCourt(courtId, court),
-  unmountPage: () => unmountPage(COURTS_UNMOUNT),
-  getStatusesList: () => getStatusesList(),
+  getRefTypes: () => getRefTypes(),
 }
 
 interface CourtProps {
-  selectedCourt: CourtSchema
-  getCourt: (courtId: number) => void
-  editCourt: (id: number, court: CourtSchema) => void
-  unmountPage: () => void
-  statusList: StatusSchema<string>
-  getStatusesList: () => void
+  refTypes: RefTypesState
+  getRefTypes: () => void
 }
 
 const Court = (props: CourtProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
-
+  const dispatch = useDispatch()
+  const store = useStore<GlobalState>().getState()
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()
-  const { getCourt, editCourt } = props
-  const { statusList, getStatusesList } = props
-  const { unmountPage } = props
 
-  const [selectedCourt, setSelectedCourt] = useState<CourtSchema>(DefaultCourtSchema)
-  const [selectedCourtForReset, setSelectedCourtForReset] = useState<CourtSchema>(DefaultCourtSchema)
-  const [courtStatusList, setCourtStatusList] = useState<string[]>([])
+  const { refTypes, getRefTypes } = props
+
+  const [formData, setFormData] = useState(DefaultCourtFormData)
+  const [formDataReset, setFormDataReset] = useState(DefaultCourtFormData)
+  const [formErrors, setFormErrors] = useState(DefaultCourtFormErrorData)
+  const [judgesList, setJudgesList] = useState([] as JudgeSchema[])
+
+  const courtStatusList = useCallback(() => {
+    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURTS)
+  }, [refTypes.componentStatus])
 
   useEffect(() => {
     if (isForceFetch.current) {
-      id && getCourt(getNumber(id))
-      statusList.court.all.length === 0 && getStatusesList()
+      const fetchCourt = async (id: number) => {
+        return await getCourt(id, true)(dispatch, store)
+      }
+      if (isValidId(id)) {
+        fetchCourt(getNumber(id)).then((oneCourt) => {
+          if (oneCourt) {
+            const oneCourtFormData = getCourtFormDataFromSchema(oneCourt)
+            setFormData(oneCourtFormData)
+            setFormDataReset(oneCourtFormData)
+            setJudgesList(oneCourt.judges || [])
+          }
+        })
+      }
+      refTypes.componentStatus.length === 0 && getRefTypes()
     }
     isForceFetch.current = false
-  }, [id, getCourt, statusList.court.all.length, getStatusesList])
-
-  useEffect(() => {
-    if (statusList.court.all.length > 0) {
-      setCourtStatusList(statusList.court.all)
-    }
-  }, [statusList.court.all])
-
-  useEffect(() => {
-    setSelectedCourt(props.selectedCourt)
-    setSelectedCourtForReset(props.selectedCourt)
-  }, [props.selectedCourt])
+  }, [dispatch, getRefTypes, id, refTypes.componentStatus.length, store])
 
   useEffect(() => {
     return () => {
       isForceFetch.current = true
-      unmountPage()
     }
-  }, [unmountPage])
-
-  const inPageTopLinks = () => {
-    const backToPage = searchQueryParams.get('backTo') || ''
-    return (
-      <Box sx={{ display: 'flex' }}>
-        {backToPage && (
-          <Box sx={{ mr: 2 }}>
-            <Link text="Back to Prev Page" navigateToPage={backToPage} color="primary" />
-          </Box>
-        )}
-        <Link text="View All Courts" navigateToPage="/courts/" color="primary" />
-      </Box>
-    )
-  }
-
-  const courtPageTitle = () => (
-    <Typography component="h1" variant="h6" color="primary">
-      {id ? `Court: ${selectedCourt?.name}, ${selectedCourt?.state}` : 'Court'}
-    </Typography>
-  )
-
-  const noCourt = () => (
-    <Typography component="h1" variant="h6" color="error" gutterBottom>
-      Court not selected! Nothing to display! Go to All Courts and select one!!!
-    </Typography>
-  )
-
-  const updateAction = () => {
-    editCourt(getNumber(id), selectedCourt)
-  }
-
-  const courtButtons = () => {
-    return (
-      <>
-        <Button disabled={isAreTwoCourtsSame(selectedCourt, selectedCourtForReset)} onClick={updateAction}>
-          Update
-        </Button>
-        <Button
-          disabled={isAreTwoCourtsSame(selectedCourt, selectedCourtForReset)}
-          onClick={() => setSelectedCourt(selectedCourtForReset)}
-        >
-          Cancel
-        </Button>
-      </>
-    )
-  }
+  }, [])
 
   const courtForm = () => (
     <CourtForm
-      selectedCourt={selectedCourt}
-      setSelectedCourt={setSelectedCourt}
-      courtStatusList={courtStatusList}
+      formData={formData}
+      setFormData={setFormData}
+      formErrors={formErrors}
+      setFormErrors={setFormErrors}
+      courtStatusList={courtStatusList()}
       isShowOneCourt={true}
     />
+  )
+
+  const primaryButtonCallback = async () => {
+    const hasFormErrors = validateCourt(formData, setFormErrors)
+    if (hasFormErrors) {
+      return
+    }
+
+    let courtResponse: CourtResponse = { data: [], detail: { error: INVALID_INPUT } }
+    if (isValidId(id)) {
+      const courtsRequest: CourtBase = { ...formData }
+      courtResponse = await courtsAction({
+        action: ACTION_TYPES.UPDATE,
+        courtsRequest: courtsRequest,
+        id: formData.id,
+      })(dispatch)
+    }
+
+    if (courtResponse && !courtResponse.detail) {
+      isForceFetch.current = true
+    }
+  }
+
+  const courtButtons = () =>
+    pageActionButtonsComponent(
+      COMPONENT_STATUS_NAME.COURTS,
+      formData,
+      primaryButtonCallback,
+      () => setFormData(formDataReset),
+      !isValidId(id) || isAreTwoCourtsSame(formData, formDataReset),
+    )
+
+  const judgesTable = () => (
+    <JudgeTable judgesList={judgesList} selectedCourt={formData} componentStatusList={refTypes.componentStatus} />
   )
 
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {inPageTopLinks()}
-          {courtPageTitle()}
+          {pageTopLinksComponent(COMPONENT_STATUS_NAME.COURTS, '/courts/', searchQueryParams)}
+          {pageTitleComponent(COMPONENT_STATUS_NAME.COURTS, `${formData.name}, ${formData.state}`)}
         </Grid>
         {!id ? (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-            {noCourt()}
+            {pageNotSelectedComponent(COMPONENT_STATUS_NAME.COURTS)}
           </Grid>
         ) : (
           <>
@@ -150,10 +146,11 @@ const Court = (props: CourtProps): React.ReactElement => {
               {courtButtons()}
             </Grid>
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Divider />
               <Typography component="h1" variant="h6" color="primary">
-                Judges in Court:
+                JUDGES IN COURT:
               </Typography>
-              <Judges courtId={id} />
+              {judgesTable()}
             </Grid>
           </>
         )}
