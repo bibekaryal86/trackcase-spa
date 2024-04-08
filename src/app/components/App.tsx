@@ -14,7 +14,6 @@ import Spinner from './Spinner'
 import { setAlert } from '../utils/alerts.utils'
 import { SessionStorage } from '../utils/storage.utils'
 
-
 const lightTheme = createTheme({
   palette: {
     mode: 'light',

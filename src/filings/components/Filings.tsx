@@ -3,25 +3,28 @@ import Grid from '@mui/material/Grid'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-
-import FilingForm from './FilingForm'
-import FilingTable from './FilingTable'
 import {
   addModalComponent,
   deleteModalComponent,
-  FetchRequestMetadata,
-  getNumber,
-  GlobalState,
   pageTitleComponent,
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
-import { CourtCaseSchema, getCourtCases } from '../../cases'
-import { ClientSchema, getClients } from '../../clients'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { getCourtCases } from '@cases/actions/courtCases.action'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { getClients } from '@clients/actions/clients.action'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import FilingForm from './FilingForm'
+import FilingTable from './FilingTable'
 import { filingsAction, getFilings } from '../actions/filings.action'
 import {
   DefaultFilingFormData,

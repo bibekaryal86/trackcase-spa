@@ -1,21 +1,17 @@
 import React from 'react'
 
+import { tableAddButtonComponent } from '@app/components/CommonComponents'
+import Link from '@app/components/Link'
+import Table from '@app/components/Table'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
+import { convertDateToLocaleString } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ClientSchema } from '@clients/types/clients.data.types'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '@constants/index'
+import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
 
-import {
-  convertDateToLocaleString,
-  FetchRequestMetadata,
-  Link,
-  ModalState,
-  Table,
-  tableAddButtonComponent,
-  TableData,
-  TableHeaderData,
-} from '../../app'
-import { CourtCaseFormData, CourtCaseSchema } from '../../cases'
-import { ClientSchema } from '../../clients'
-import { ComponentStatusSchema, FilingTypeSchema } from '../../types'
-import { checkUserHasPermission, isSuperuser } from '../../users'
 import { FilingFormData, FilingSchema } from '../types/filings.data.types'
 import { getFilingFormDataFromSchema } from '../utils/filings.utils'
 

@@ -18,7 +18,6 @@ import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
 
 import { JudgeFormData, JudgeFormErrorData } from '../types/judges.data.types'
 
-
 interface JudgeFormProps {
   formData: JudgeFormData
   setFormData: (formData: JudgeFormData) => void

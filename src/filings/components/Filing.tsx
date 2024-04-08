@@ -6,22 +6,25 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-
-import FilingForm from './FilingForm'
 import {
-  getNumber,
-  GlobalState,
-  isValidId,
   pageActionButtonsComponent,
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '../../app'
-import { CalendarTable, TaskCalendarSchema } from '../../calendars'
-import { CourtCaseSchema, getCourtCases } from '../../cases'
-import { ClientSchema, getClients } from '../../clients'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { getNumber, isValidId } from '@app/utils/app.utils'
+import CalendarTable from '@calendars/components/CalendarTable'
+import { TaskCalendarSchema } from '@calendars/types/calendars.data.types'
+import { getCourtCases } from '@cases/actions/courtCases.action'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { getClients } from '@clients/actions/clients.action'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import FilingForm from './FilingForm'
 import { filingsAction, getFiling, getFilings } from '../actions/filings.action'
 import {
   DefaultFilingFormData,
