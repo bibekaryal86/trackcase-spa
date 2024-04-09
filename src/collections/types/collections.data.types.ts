@@ -13,6 +13,7 @@ export interface CaseCollectionBase {
   comments?: string
 }
 export interface CaseCollectionSchema extends CaseCollectionBase, BaseModelSchema {
+  balanceAmount: number
   // orm_mode
   courtCase?: CourtCaseSchema
   componentStatus?: ComponentStatusSchema
@@ -102,6 +103,7 @@ export const DefaultCaseCollectionSchema: CaseCollectionSchema = {
   courtCaseId: ID_DEFAULT,
   componentStatusId: ID_DEFAULT,
   comments: '',
+  balanceAmount: AMOUNT_DEFAULT,
 }
 
 export const DefaultCashCollectionSchema: CashCollectionSchema = {
