@@ -61,7 +61,7 @@ interface FilingsProps {
   getCourtCases: () => void
   clientsList: ClientSchema[]
   getClients: () => void
-  selectedCourtCase?: CourtCaseSchema | CourtCaseFormData
+  selectedCourtCase?: CourtCaseFormData
 }
 
 const Filings = (props: FilingsProps): React.ReactElement => {

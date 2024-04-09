@@ -20,7 +20,7 @@ interface FilingTableProps {
   actionButtons?: (formDataForModal: FilingFormData) => React.JSX.Element
   addModalState?: ModalState
   softDeleteCallback?: (requestMetadata: Partial<FetchRequestMetadata>) => void
-  selectedCourtCase?: CourtCaseSchema | CourtCaseFormData
+  selectedCourtCase?: CourtCaseFormData
   componentStatusList: ComponentStatusSchema[]
   filingTypesList: FilingTypeSchema[]
   courtCasesList: CourtCaseSchema[]
@@ -85,8 +85,8 @@ const FilingTable = (props: FilingTableProps): React.ReactElement => {
       })
     }
     if (
-      (checkUserHasPermission(COMPONENT_STATUS_NAME.FILINGS, ACTION_TYPES.UPDATE) ||
-        checkUserHasPermission(COMPONENT_STATUS_NAME.FILINGS, ACTION_TYPES.DELETE))
+      checkUserHasPermission(COMPONENT_STATUS_NAME.FILINGS, ACTION_TYPES.UPDATE) ||
+      checkUserHasPermission(COMPONENT_STATUS_NAME.FILINGS, ACTION_TYPES.DELETE)
     ) {
       tableHeaderData.push({
         id: 'actions',

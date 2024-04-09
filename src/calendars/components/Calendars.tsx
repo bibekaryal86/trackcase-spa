@@ -18,7 +18,7 @@ import { useModal } from '@app/utils/app.hooks'
 import { getNumber } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
 import { getCourtCases } from '@cases/actions/courtCases.action'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { getClients } from '@clients/actions/clients.action'
 import { ClientSchema } from '@clients/types/clients.data.types'
 import {
@@ -94,6 +94,7 @@ interface CalendarsProps {
   getFilingsList: () => void
   clientsList: ClientSchema[]
   getClientsList: () => void
+  selectedCourtCase?: CourtCaseFormData
 }
 
 const Calendars = (props: CalendarsProps): React.ReactElement => {
@@ -114,6 +115,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const { courtCasesList, getCourtCasesList } = props
   const { filingsList, getFilingsList } = props
   const { clientsList, getClientsList } = props
+  const { selectedCourtCase } = props
 
   const minCalendarDate = dayjs().subtract(1, 'month')
   const maxCalendarDate = dayjs().add(1, 'year')
@@ -158,6 +160,12 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     refTypes.hearingType.length,
     refTypes.taskType.length,
   ])
+
+  useEffect(() => {
+    if (selectedCourtCase) {
+      formDataHc.courtCaseId = selectedCourtCase.id || ID_DEFAULT
+    }
+  }, [formDataHc, selectedCourtCase])
 
   useEffect(() => {
     return () => {
@@ -253,6 +261,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         isShowOneCalendar={false}
         minCalendarDate={minCalendarDate}
         maxCalendarDate={maxCalendarDate}
+        selectedCourtCase={selectedCourtCase}
       />
     </Box>
   )
@@ -418,7 +427,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
   const hearingCalendarsTable = () => (
     <CalendarTable
       type={CALENDAR_TYPES.HEARING_CALENDAR}
-      calendarsList={hearingCalendarsList}
+      calendarsList={selectedCourtCase ? selectedCourtCase.hearingCalendars || [] : hearingCalendarsList}
       actionButtons={actionButtonsHc}
       addModalState={addModalStateHc}
       softDeleteCallback={getCalendarsWithMetadata}
@@ -426,13 +435,26 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       filingsList={filingsList}
       componentStatusList={calendarStatusList()}
       hearingTypesList={refTypes.hearingType}
+      selectedCourtCase={selectedCourtCase}
     />
   )
+
+  const getTaskCalendarsForTable = (taskCalendarsList: TaskCalendarSchema[]) => {
+    if (selectedCourtCase) {
+      return taskCalendarsList.filter((taskCalendar) => {
+        return (
+          taskCalendar.hearingCalendar?.courtCaseId === selectedCourtCase.id ||
+          taskCalendar.filing?.courtCaseId === selectedCourtCase.id
+        )
+      })
+    }
+    return taskCalendarsList
+  }
 
   const taskCalendarsTable = () => (
     <CalendarTable
       type={CALENDAR_TYPES.TASK_CALENDAR}
-      calendarsList={taskCalendarsList}
+      calendarsList={getTaskCalendarsForTable(taskCalendarsList)}
       actionButtons={actionButtonsTc}
       addModalState={addModalStateTc}
       softDeleteCallback={getCalendarsWithMetadata}
@@ -444,10 +466,17 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
     />
   )
 
+  const getCalendarEventsForCalendarView = (calendarEvents: CalendarEvents[]) => {
+    if (selectedCourtCase) {
+      return calendarEvents.filter((calendarEvent) => calendarEvent.courtCaseId === selectedCourtCase.id)
+    }
+    return calendarEvents
+  }
+
   const calendarsShowCalendarView = () => (
     <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
       <CalendarCalendar
-        calendarEvents={calendarEventsList}
+        calendarEvents={getCalendarEventsForCalendarView(calendarEventsList)}
         setFormDataHc={setFormDataHc}
         setFormDataTc={setFormDataTc}
         setFormDataResetHc={setFormDataResetHc}

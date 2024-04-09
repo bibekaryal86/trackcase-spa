@@ -13,7 +13,7 @@ import {
   GridFormWrapper,
 } from '@app/components/FormFields'
 import { getDayjsString, getNumber } from '@app/utils/app.utils'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { ClientSchema } from '@clients/types/clients.data.types'
 import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
 import { FilingSchema } from '@filings/types/filings.data.types'
@@ -34,7 +34,7 @@ interface CalendarFormProps {
   isShowOneCalendar: boolean
   minCalendarDate: Dayjs
   maxCalendarDate: Dayjs
-  courtCaseId?: number
+  selectedCourtCase?: CourtCaseFormData
 }
 
 interface CalendarFormPropsHc extends CalendarFormProps {
@@ -52,7 +52,6 @@ interface CalendarFormPropsTc extends CalendarFormProps {
   filingsList: FilingSchema[]
   clientsList: ClientSchema[]
   hearingCalendarList: HearingCalendarSchema[]
-  filingId?: number
 }
 
 export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement => {
@@ -60,7 +59,7 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
   const { formData, setFormData, formErrors, setFormErrors } = props
   const { calendarStatusList, calendarTypesList, courtCasesList } = props
   const { isShowOneCalendar, minCalendarDate, maxCalendarDate } = props
-  const { courtCaseId } = props
+  const { selectedCourtCase } = props
 
   const calendarHearingDate = () => {
     return (
@@ -102,15 +101,12 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
   }
 
   const calendarCourtCasesListForSelect = () => {
-    if (getNumber(courtCaseId) > 0) {
-      const selectedCourtCase = courtCasesList.find((x) => x.id === Number(courtCaseId))
-      if (selectedCourtCase) {
-        return [
-          <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
-            {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
-          </MenuItem>,
-        ]
-      }
+    if (selectedCourtCase) {
+      return [
+        <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
+          {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
+        </MenuItem>,
+      ]
     } else {
       return courtCasesList
         .filter((x) => formData.courtCaseId === x.id || x.componentStatus?.isActive)
@@ -120,7 +116,6 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
           </MenuItem>
         ))
     }
-    return []
   }
 
   const calendarCourtCasesList = () => {
@@ -134,6 +129,7 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
         error={!!formErrors.courtCaseError}
         helperText={formErrors.courtCaseError}
         required
+        disabled={!!selectedCourtCase}
       />
     )
   }
@@ -187,7 +183,7 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
   const { formData, setFormData, formErrors, setFormErrors } = props
   const { calendarStatusList, calendarTypesList, courtCasesList, filingsList, clientsList, hearingCalendarList } = props
   const { isShowOneCalendar, minCalendarDate, maxCalendarDate } = props
-  const { filingId, courtCaseId } = props
+  const { selectedCourtCase } = props
 
   const calendarTaskDate = () => {
     return (
@@ -248,15 +244,14 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
   }
 
   const calendarHearingCalendarListForSelect = () => {
-    if (getNumber(courtCaseId) > 0) {
-      const selectedHearingCalendar = hearingCalendarList.find((x) => x.courtCaseId === Number(courtCaseId))
-      if (selectedHearingCalendar) {
-        return [
-          <MenuItem key={selectedHearingCalendar.id} value={selectedHearingCalendar.id}>
-            {calendarHearingCalendarForSelect(selectedHearingCalendar)}
-          </MenuItem>,
-        ]
-      }
+    if (selectedCourtCase && selectedCourtCase.hearingCalendars) {
+      return selectedCourtCase.hearingCalendars
+        .filter((x) => formData.hearingCalendarId === x.id || x.componentStatus?.isActive)
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {calendarHearingCalendarForSelect(x)}
+          </MenuItem>
+        ))
     } else {
       return hearingCalendarList
         .filter((x) => formData.hearingCalendarId === x.id || x.componentStatus?.isActive)
@@ -266,7 +261,6 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
           </MenuItem>
         ))
     }
-    return []
   }
 
   const calendarHearingCalendarList = () => {
@@ -292,18 +286,8 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
   }
 
   const calendarFilingListForSelect = () => {
-    if (getNumber(filingId) > 0) {
-      const selectedFiling = filingsList.find((x) => x.id === getNumber(filingId))
-      if (selectedFiling) {
-        return [
-          <MenuItem key={selectedFiling.id} value={selectedFiling.id}>
-            {calendarFilingForSelect(selectedFiling)}
-          </MenuItem>,
-        ]
-      }
-    } else if (getNumber(courtCaseId) > 0) {
-      const selectedFilings = filingsList.filter((x) => x.courtCaseId === getNumber(courtCaseId))
-      return selectedFilings
+    if (selectedCourtCase && selectedCourtCase.filings) {
+      return selectedCourtCase.filings
         .filter((x) => formData.filingId === x.id || x.componentStatus?.isActive)
         .map((x) => (
           <MenuItem key={x.id} value={x.id}>
@@ -319,7 +303,6 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
           </MenuItem>
         ))
     }
-    return []
   }
 
   const calendarFilingList = () => {

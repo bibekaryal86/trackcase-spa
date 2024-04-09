@@ -28,7 +28,7 @@ interface FilingFormProps {
   isShowOneFiling: boolean
   filingTypesList: CaseTypeSchema[]
   courtCasesList: CourtCaseSchema[]
-  selectedCourtCase?: CourtCaseSchema | CourtCaseFormData
+  selectedCourtCase?: CourtCaseFormData
 }
 
 const FilingForm = (props: FilingFormProps): React.ReactElement => {
