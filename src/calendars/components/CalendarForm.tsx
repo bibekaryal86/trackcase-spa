@@ -4,23 +4,21 @@ import MenuItem from '@mui/material/MenuItem'
 import { Dayjs } from 'dayjs'
 import React from 'react'
 
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-
+import { handleFormChange, handleFormDateChange } from '@app/components/CommonComponents'
 import {
   FormCommentsField,
   FormDatePickerField,
   FormSelectField,
   FormSelectStatusField,
-  getDayjsString,
-  getNumber,
   GridFormWrapper,
-  handleFormChange,
-  handleFormDateChange,
-} from '../../app'
-import { CourtCaseSchema } from '../../cases'
-import { ClientSchema } from '../../clients'
-import { FilingSchema } from '../../filings'
-import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '../../types'
+} from '@app/components/FormFields'
+import { getDayjsString, getNumber } from '@app/utils/app.utils'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+import { FilingSchema } from '@filings/types/filings.data.types'
+import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '@ref_types/types/refTypes.data.types'
+
 import {
   HearingCalendarFormData,
   HearingCalendarFormErrorData,

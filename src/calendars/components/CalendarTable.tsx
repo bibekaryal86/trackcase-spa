@@ -1,22 +1,17 @@
 import React from 'react'
 
+import { tableAddButtonComponent } from '@app/components/CommonComponents'
+import Link from '@app/components/Link'
+import Table from '@app/components/Table'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
+import { getDayjsString, getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, COMPONENT_STATUS_NAME } from '@constants/index'
+import { FilingSchema } from '@filings/types/filings.data.types'
+import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '@ref_types/types/refTypes.data.types'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
 
-import {
-  FetchRequestMetadata,
-  getDayjsString,
-  getNumber,
-  Link,
-  ModalState,
-  Table,
-  tableAddButtonComponent,
-  TableData,
-  TableHeaderData,
-} from '../../app'
-import { CourtCaseSchema } from '../../cases'
-import { FilingSchema } from '../../filings'
-import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '../../types'
-import { checkUserHasPermission, isSuperuser } from '../../users'
 import {
   HearingCalendarFormData,
   HearingCalendarSchema,

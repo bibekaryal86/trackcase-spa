@@ -6,6 +6,22 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import {
+  addModalComponent,
+  deleteModalComponent,
+  pageTitleComponent,
+  secondaryButtonCallback,
+  tableActionButtonsComponent,
+  updateModalComponent,
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { getCourtCases } from '@cases/actions/courtCases.action'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { getClients } from '@clients/actions/clients.action'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import {
   ACTION_TYPES,
   ActionTypes,
   CALENDAR_TYPES,
@@ -13,27 +29,15 @@ import {
   ID_DEFAULT,
   INVALID_INPUT,
 } from '@constants/index'
+import { getFilings } from '@filings/actions/filings.action'
+import { FilingSchema } from '@filings/types/filings.data.types'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
 
 import CalendarCalendar from './CalendarCalendar'
 import CalendarChooseView from './CalendarChooseView'
 import { CalendarFormHc, CalendarFormTc } from './CalendarForm'
 import CalendarTable from './CalendarTable'
-import {
-  addModalComponent,
-  deleteModalComponent,
-  FetchRequestMetadata,
-  getNumber,
-  GlobalState,
-  pageTitleComponent,
-  secondaryButtonCallback,
-  tableActionButtonsComponent,
-  updateModalComponent,
-  useModal,
-} from '../../app'
-import { CourtCaseSchema, getCourtCases } from '../../cases'
-import { ClientSchema, getClients } from '../../clients'
-import { FilingSchema, getFilings } from '../../filings'
-import { getRefTypes, RefTypesState } from '../../types'
 import { calendarsAction, getCalendars } from '../actions/calendars.action'
 import {
   CalendarEvents,
