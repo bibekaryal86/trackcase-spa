@@ -1,5 +1,5 @@
+import { Tab, Tabs } from '@mui/material'
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -16,29 +16,32 @@ import { GlobalState } from '@app/store/redux'
 import { getNumber, isValidId } from '@app/utils/app.utils'
 import { getClients } from '@clients/actions/clients.action'
 import { ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { ACTION_TYPES, CASE_TABS, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
 import { getRefTypes } from '@ref_types/actions/refTypes.action'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types'
 
 import CourtCaseForm from './CourtCaseForm'
-import { courtCasesAction, getCourtCase } from '../actions/courtCases.action'
+import { courtCasesAction, getCourtCase, getCourtCases } from '../actions/courtCases.action'
 import {
   CourtCaseBase,
   CourtCaseResponse,
+  CourtCaseSchema,
   DefaultCourtCaseFormData,
   DefaultCourtCaseFormErrorData,
 } from '../types/courtCases.data.types'
 import { getCourtCaseFormDataFromSchema, isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
 
-const mapStateToProps = ({ refTypes, clients }: GlobalState) => {
+const mapStateToProps = ({ refTypes, courtCases, clients }: GlobalState) => {
   return {
     refTypes: refTypes,
+    courtCasesList: courtCases.courtCases,
     clientsList: clients.clients,
   }
 }
 
 const mapDispatchToProps = {
   getRefTypes: () => getRefTypes(),
+  getCourtCases: () => getCourtCases(),
   getClients: () => getClients(),
 }
 
@@ -47,6 +50,8 @@ interface CourtCaseProps {
   getRefTypes: () => void
   clientsList: ClientSchema[]
   getClients: () => void
+  courtCasesList: CourtCaseSchema[]
+  getCourtCases: () => void
 }
 
 const CourtCase = (props: CourtCaseProps): React.ReactElement => {
@@ -59,10 +64,14 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
 
   const { refTypes, getRefTypes } = props
   const { clientsList, getClients } = props
+  const { courtCasesList, getCourtCases } = props
 
   const [formData, setFormData] = useState(DefaultCourtCaseFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultCourtCaseFormData)
   const [formErrors, setFormErrors] = useState(DefaultCourtCaseFormErrorData)
+
+  const [tabValue, setTabValue] = useState(CASE_TABS.FILINGS.toString())
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => setTabValue(newValue)
 
   const courtCaseStatusList = useCallback(() => {
     return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.COURT_CASES)
@@ -86,19 +95,11 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
       if (refTypes.componentStatus.length === 0 || refTypes.caseType.length === 0) {
         getRefTypes()
       }
+      courtCasesList.length === 0 && getCourtCases()
       clientsList.length === 0 && getClients()
     }
     isForceFetch.current = false
-  }, [
-    clientsList.length,
-    dispatch,
-    getClients,
-    getRefTypes,
-    id,
-    refTypes.caseType.length,
-    refTypes.componentStatus.length,
-    store,
-  ])
+  }, [clientsList.length, courtCasesList.length, dispatch, getClients, getCourtCases, getRefTypes, id, refTypes.caseType.length, refTypes.componentStatus.length, store])
 
   useEffect(() => {
     return () => {
@@ -158,6 +159,20 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
     return ''
   }
 
+  const showTabs = () => {
+    return (
+      <Tabs value={tabValue} onChange={handleTabChange} textColor="primary" indicatorColor="primary">
+        <Tab value={CASE_TABS.FILINGS.toString()} label={CASE_TABS.FILINGS.toString()} />
+        <Tab value={CASE_TABS.CALENDARS.toString()} label={CASE_TABS.CALENDARS.toString()} />
+        <Tab value={CASE_TABS.COLLECTIONS.toString()} label={CASE_TABS.COLLECTIONS.toString()} />
+      </Tabs>
+    )
+  }
+
+  const caseFilings = () => console.log('add selectedCourtCase prop to Filings.tsx')
+  const caseCalendars = () => console.log('add selectedCourtCase prop to Calendars.tsx')
+  const caseCollections = () => console.log('add selectedCourtCase prop to Collections.tsx')
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
@@ -180,11 +195,32 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
               {courtCaseButtons()}
             </Grid>
             <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-              <Divider />
-              <Typography component="h1" variant="h6" color="primary">
-                MANY THINGS OF THE CASE IN TABBED VIEW:
-              </Typography>
+              {showTabs()}
             </Grid>
+            {tabValue === CASE_TABS.FILINGS.toString() && (
+              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+                <Typography component="h1" variant="h6" color="primary">
+                  CASE FILINGS:
+                </Typography>
+                {caseFilings()}
+              </Grid>
+            )}
+            {tabValue === CASE_TABS.CALENDARS.toString() && (
+              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+                <Typography component="h1" variant="h6" color="primary">
+                  CASE CALENDARS:
+                </Typography>
+                {caseCalendars()}
+              </Grid>
+            )}
+            {tabValue === CASE_TABS.COLLECTIONS.toString() && (
+              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+                <Typography component="h1" variant="h6" color="primary">
+                  CASE COLLECTIONS:
+                </Typography>
+                {caseCollections()}
+              </Grid>
+            )}
           </>
         )}
       </Grid>
