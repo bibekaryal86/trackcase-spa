@@ -1,11 +1,11 @@
+import { BaseModelSchema, ResponseBase } from '@app/types/app.data.types'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { HearingCalendarSchema } from '@calendars/types/calendars.data.types'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { CaseCollectionSchema } from '@collections/types/collections.data.types'
 import { ID_DEFAULT } from '@constants/index'
-
-import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
-import { HearingCalendarSchema } from '../../calendars'
-import { ClientSchema } from '../../clients'
-import { CaseCollectionSchema } from '../../collections'
-import { FilingSchema } from '../../filings'
-import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
+import { FilingSchema } from '@filings/types/filings.data.types'
+import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
 
 export interface CourtCaseBase {
   caseTypeId: number

@@ -19,7 +19,6 @@ import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
 
 import { ClientFormData, ClientFormErrorData } from '../types/clients.data.types'
 
-
 interface ClientFormProps {
   formData: ClientFormData
   setFormData: (formData: ClientFormData) => void
