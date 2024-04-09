@@ -89,10 +89,6 @@ const Filing = (props: FilingProps): React.ReactElement => {
     return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.FILINGS)
   }, [refTypes.componentStatus])
 
-  const calendarStatusList = useCallback(() => {
-    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CALENDARS)
-  }, [refTypes.componentStatus])
-
   useEffect(() => {
     if (isForceFetch.current) {
       const fetchFiling = async (id: number) => {
@@ -187,7 +183,7 @@ const Filing = (props: FilingProps): React.ReactElement => {
       calendarsList={taskCalendars}
       courtCasesList={courtCasesList}
       filingsList={filingsList}
-      componentStatusList={calendarStatusList()}
+      componentStatusList={refTypes.componentStatus}
       selectedFiling={formData}
     />
   )
