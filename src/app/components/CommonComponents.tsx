@@ -254,7 +254,7 @@ const handleFormChangeHelper = (name: string, value: string): string => {
 }
 
 export const handleFormChange = <T extends FormData, U extends FormErrorData>(
-  event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>,
+  event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent,
   formData: T,
   formErrors: U,
   setFormData: (formData: T) => void,

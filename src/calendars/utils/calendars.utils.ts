@@ -41,14 +41,6 @@ export const isHearingCalendar = (
   calendar: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
 ): boolean => getCalendarType(calendar) === CALENDAR_TYPES.HEARING_CALENDAR
 
-export const isAreTwoCalendarsSame = (
-  one: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
-  two: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
-) =>
-  isHearingCalendar(one)
-    ? isAreTwoHearingCalendarsSame(one as HearingCalendarFormData, two as HearingCalendarFormData)
-    : isAreTwoTaskCalendarsSame(one as TaskCalendarFormData, two as TaskCalendarFormData)
-
 export const isAreTwoHearingCalendarsSame = (
   one: HearingCalendarFormData | HearingCalendarSchema,
   two: HearingCalendarFormData | HearingCalendarSchema,
@@ -91,13 +83,13 @@ export const validateHearingCalendar = (
     hasValidationErrors = true
     formErrorsLocal.hearingTypeError = 'REQUIRED'
   }
-  if (getNumber(formData.courtCaseId) <= 0) {
-    hasValidationErrors = true
-    formErrorsLocal.courtCaseError = 'REQUIRED'
-  }
   if (getNumber(formData.componentStatusId) <= 0) {
     hasValidationErrors = true
     formErrorsLocal.componentStatusError = 'REQUIRED'
+  }
+  if (getNumber(formData.courtCaseId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.courtCaseError = 'REQUIRED'
   }
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)

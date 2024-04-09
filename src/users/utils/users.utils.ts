@@ -239,13 +239,13 @@ export const appUsersTableData = (
 export const validateAppRole = (formData: AppRoleFormData, setFormErrors: (formErrors: AppRoleFormData) => void) => {
   let hasValidationErrors = false
   const formErrorsLocal: AppRoleFormData = { ...DefaultAppRoleFormData }
-  if (!getString(formData.name)) {
-    hasValidationErrors = true
-    formErrorsLocal.name = 'REQUIRED'
-  }
   if (!getString(formData.description)) {
     hasValidationErrors = true
     formErrorsLocal.description = 'REQUIRED'
+  }
+  if (!getString(formData.name)) {
+    hasValidationErrors = true
+    formErrorsLocal.name = 'REQUIRED'
   }
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)

@@ -33,7 +33,12 @@ import {
   FilingResponse,
   FilingSchema,
 } from '../types/filings.data.types'
-import { getFilingFormDataFromSchema, isAreTwoFilingsSame, validateFiling } from '../utils/filings.utils'
+import {
+  getClientFilingType,
+  getFilingFormDataFromSchema,
+  isAreTwoFilingsSame,
+  validateFiling,
+} from '../utils/filings.utils'
 
 const mapStateToProps = ({ refTypes, clients, courtCases, filings }: GlobalState) => {
   return {
@@ -176,18 +181,6 @@ const Filing = (props: FilingProps): React.ReactElement => {
       !isValidId(id) || isAreTwoFilingsSame(formData, formDataReset),
     )
 
-  const getClientFilingType = () => {
-    const selectedFilingType = refTypes.filingType.find((x) => x.id === formData.filingTypeId)
-    const selectedCourtCase = courtCasesList.find((x) => x.id === formData.courtCaseId)
-    if (selectedCourtCase) {
-      const selectedClient = clientsList.find((x) => x.id === selectedCourtCase?.clientId)
-      if (selectedFilingType && selectedClient) {
-        return ': ' + selectedClient.name + ', ' + selectedFilingType.name
-      }
-    }
-    return ''
-  }
-
   const taskCalendarsTable = () => (
     <CalendarTable
       type={CALENDAR_TYPES.TASK_CALENDAR}
@@ -204,7 +197,16 @@ const Filing = (props: FilingProps): React.ReactElement => {
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {pageTopLinksComponent(COMPONENT_STATUS_NAME.FILINGS, '/filings/', searchQueryParams)}
-          {pageTitleComponent(COMPONENT_STATUS_NAME.FILINGS, getClientFilingType())}
+          {pageTitleComponent(
+            COMPONENT_STATUS_NAME.FILINGS,
+            getClientFilingType(
+              formData.filingTypeId,
+              refTypes.filingType,
+              formData.courtCaseId,
+              courtCasesList,
+              clientsList,
+            ),
+          )}
         </Grid>
         {!id ? (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>

@@ -34,7 +34,7 @@ import {
   FilingResponse,
   FilingSchema,
 } from '../types/filings.data.types'
-import { isAreTwoFilingsSame, validateFiling } from '../utils/filings.utils'
+import { getClientFilingType, isAreTwoFilingsSame, validateFiling } from '../utils/filings.utils'
 
 const mapStateToProps = ({ refTypes, filings, courtCases, clients }: GlobalState) => {
   return {
@@ -206,21 +206,15 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       isAreTwoFilingsSame(formData, formDataReset),
     )
 
-  const getClientFilingType = () => {
-    const selectedFilingType = refTypes.filingType.find((x) => x.id === formData.filingTypeId)
-    const selectedCourtCase = courtCasesList.find((x) => x.id === formData.courtCaseId)
-    if (selectedCourtCase) {
-      const selectedClient = clientsList.find((x) => x.id === selectedCourtCase?.clientId)
-      if (selectedFilingType && selectedClient) {
-        return ': ' + selectedClient.name + ', ' + selectedFilingType.name
-      }
-    }
-    return ''
-  }
-
   const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
     formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
-  } FILING ${getClientFilingType()}?!?`
+  } FILING ${getClientFilingType(
+    formData.filingTypeId,
+    refTypes.filingType,
+    formData.courtCaseId,
+    courtCasesList,
+    clientsList,
+  )}?!?`
 
   const deleteModal = () =>
     deleteModalComponent(

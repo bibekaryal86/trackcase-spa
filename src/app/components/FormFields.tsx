@@ -74,7 +74,7 @@ interface FormSelectFieldProps {
   inputLabelSx?: object
   variant?: TextFieldVariants
   value: number | string
-  onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
+  onChange: (event: SelectChangeEvent, child: ReactNode) => void
   menuItems: React.ReactNode[]
   disabled?: boolean
 }
@@ -89,7 +89,7 @@ interface StateSelectProps {
   inputLabelSx?: object
   variant?: TextFieldVariants
   value: string | number | undefined
-  onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
+  onChange: (event: SelectChangeEvent, child: ReactNode) => void
 }
 
 interface StatusSelectProps extends StateSelectProps {

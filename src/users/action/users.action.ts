@@ -148,7 +148,7 @@ export const getAppUsers = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
-  const dispatchFunction = await appUsersAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
+  const dispatchFunction = appUsersAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
   return await dispatchFunction(dispatch)
 }
 

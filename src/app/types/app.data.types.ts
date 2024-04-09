@@ -8,8 +8,6 @@ export interface ModalState {
 
 export type TableOrder = 'asc' | 'desc'
 
-export type TableRowsPerPage = 10 | 20 | 50 | 100
-
 export type TableData = Record<string, string | number | boolean | React.JSX.Element | undefined>
 
 export type TableHeaderData = {
@@ -77,10 +75,6 @@ export interface ErrorDetail {
   error: string
 }
 
-export const DefaultErrorDetail: ErrorDetail = {
-  error: '',
-}
-
 // base models for all types
 export interface BaseModelSchema {
   id?: number
@@ -107,9 +101,4 @@ export interface ResponseBase {
   deleteCount?: number
   detail?: ErrorDetail
   metadata?: ResponseMetadata
-}
-
-export interface ErrorSuccessSchema {
-  error: string
-  success: string
 }
