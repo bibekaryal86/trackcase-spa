@@ -292,7 +292,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       formDataResetHc,
       CALENDAR_TYPES.HEARING_CALENDAR,
       isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
-      isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
+      false,
       isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
     )
 
@@ -311,7 +311,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       formDataResetTc,
       CALENDAR_TYPES.TASK_CALENDAR,
       isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
-      isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
+      false,
       isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
     )
 
@@ -330,7 +330,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       formDataResetHc,
       CALENDAR_TYPES.HEARING_CALENDAR,
       isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
-      isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
+      false,
       isAreTwoHearingCalendarsSame(formDataHc, formDataResetHc),
     )
 
@@ -349,7 +349,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       formDataResetTc,
       CALENDAR_TYPES.TASK_CALENDAR,
       isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
-      isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
+      false,
       isAreTwoTaskCalendarsSame(formDataTc, formDataResetTc),
     )
 

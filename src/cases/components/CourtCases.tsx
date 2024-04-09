@@ -173,7 +173,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       formDataReset,
       undefined,
       isAreTwoCourtCasesSame(formData, formDataReset),
-      isAreTwoCourtCasesSame(formData, formDataReset),
+      false,
       isAreTwoCourtCasesSame(formData, formDataReset),
     )
 
@@ -192,7 +192,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
       formDataReset,
       undefined,
       isAreTwoCourtCasesSame(formData, formDataReset),
-      isAreTwoCourtCasesSame(formData, formDataReset),
+      false,
       isAreTwoCourtCasesSame(formData, formDataReset),
     )
 

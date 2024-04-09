@@ -192,7 +192,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       formDataReset,
       undefined,
       isAreTwoFilingsSame(formData, formDataReset),
-      isAreTwoFilingsSame(formData, formDataReset),
+      false,
       isAreTwoFilingsSame(formData, formDataReset),
     )
 
@@ -211,7 +211,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       formDataReset,
       undefined,
       isAreTwoFilingsSame(formData, formDataReset),
-      isAreTwoFilingsSame(formData, formDataReset),
+      false,
       isAreTwoFilingsSame(formData, formDataReset),
     )
 

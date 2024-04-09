@@ -256,7 +256,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       formDataResetCase,
       COLLECTION_TYPES.CASE_COLLECTION,
       isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
-      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      false,
       isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
     )
 
@@ -275,7 +275,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       formDataResetCash,
       COLLECTION_TYPES.CASH_COLLECTION,
       isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
-      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      false,
       isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
     )
 
@@ -294,7 +294,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       formDataResetCase,
       COLLECTION_TYPES.CASE_COLLECTION,
       isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
-      isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
+      false,
       isAreTwoCaseCollectionsSame(formDataCase, formDataResetCase),
     )
 
@@ -313,7 +313,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       formDataResetCash,
       COLLECTION_TYPES.CASH_COLLECTION,
       isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
-      isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
+      false,
       isAreTwoCashCollectionsSame(formDataCash, formDataResetCash),
     )
 
