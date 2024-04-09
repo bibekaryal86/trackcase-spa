@@ -16,10 +16,10 @@ import { useModal } from '@app/utils/app.hooks'
 import { getNumber } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
 import { getCourtCases } from '@cases/actions/courtCases.action'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { getClients } from '@clients/actions/clients.action'
 import { ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, ID_DEFAULT, INVALID_INPUT } from '@constants/index'
 import { getRefTypes } from '@ref_types/actions/refTypes.action'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types'
 
@@ -61,6 +61,7 @@ interface FilingsProps {
   getCourtCases: () => void
   clientsList: ClientSchema[]
   getClients: () => void
+  selectedCourtCase?: CourtCaseSchema | CourtCaseFormData
 }
 
 const Filings = (props: FilingsProps): React.ReactElement => {
@@ -73,6 +74,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
   const { refTypes, getRefTypes } = props
   const { courtCasesList, getCourtCases } = props
   const { clientsList, getClients } = props
+  const { selectedCourtCase } = props
 
   const [formData, setFormData] = useState(DefaultFilingFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultFilingFormData)
@@ -103,6 +105,12 @@ const Filings = (props: FilingsProps): React.ReactElement => {
     refTypes.caseType.length,
     refTypes.componentStatus.length,
   ])
+
+  useEffect(() => {
+    if (selectedCourtCase) {
+      formData.courtCaseId = selectedCourtCase.id || ID_DEFAULT
+    }
+  }, [formData, selectedCourtCase])
 
   useEffect(() => {
     return () => {
@@ -164,6 +172,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
         isShowOneFiling={false}
         courtCasesList={courtCasesList}
         filingTypesList={refTypes.filingType}
+        selectedCourtCase={selectedCourtCase}
       />
     </Box>
   )

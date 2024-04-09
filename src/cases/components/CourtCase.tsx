@@ -1,7 +1,6 @@
 import { Tab, Tabs } from '@mui/material'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
@@ -17,6 +16,7 @@ import { getNumber, isValidId } from '@app/utils/app.utils'
 import { getClients } from '@clients/actions/clients.action'
 import { ClientSchema } from '@clients/types/clients.data.types'
 import { ACTION_TYPES, CASE_TABS, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import Filings from '@filings/components/Filings'
 import { getRefTypes } from '@ref_types/actions/refTypes.action'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types'
 
@@ -99,7 +99,18 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
       clientsList.length === 0 && getClients()
     }
     isForceFetch.current = false
-  }, [clientsList.length, courtCasesList.length, dispatch, getClients, getCourtCases, getRefTypes, id, refTypes.caseType.length, refTypes.componentStatus.length, store])
+  }, [
+    clientsList.length,
+    courtCasesList.length,
+    dispatch,
+    getClients,
+    getCourtCases,
+    getRefTypes,
+    id,
+    refTypes.caseType.length,
+    refTypes.componentStatus.length,
+    store,
+  ])
 
   useEffect(() => {
     return () => {
@@ -169,7 +180,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
     )
   }
 
-  const caseFilings = () => console.log('add selectedCourtCase prop to Filings.tsx')
+  const caseFilings = () => <Filings selectedCourtCase={formData} />
   const caseCalendars = () => console.log('add selectedCourtCase prop to Calendars.tsx')
   const caseCollections = () => console.log('add selectedCourtCase prop to Collections.tsx')
 
@@ -199,25 +210,16 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
             </Grid>
             {tabValue === CASE_TABS.FILINGS.toString() && (
               <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-                <Typography component="h1" variant="h6" color="primary">
-                  CASE FILINGS:
-                </Typography>
                 {caseFilings()}
               </Grid>
             )}
             {tabValue === CASE_TABS.CALENDARS.toString() && (
               <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-                <Typography component="h1" variant="h6" color="primary">
-                  CASE CALENDARS:
-                </Typography>
                 {caseCalendars()}
               </Grid>
             )}
             {tabValue === CASE_TABS.COLLECTIONS.toString() && (
               <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-                <Typography component="h1" variant="h6" color="primary">
-                  CASE COLLECTIONS:
-                </Typography>
                 {caseCollections()}
               </Grid>
             )}
