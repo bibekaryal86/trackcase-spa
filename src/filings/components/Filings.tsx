@@ -86,7 +86,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
 
   useEffect(() => {
     if (isForceFetch.current) {
-      filingsList.length === 0 && getFilings({})
+      !selectedCourtCase && filingsList.length === 0 && getFilings({})
       courtCasesList.length === 0 && getCourtCases()
       clientsList.length === 0 && getClients()
 
@@ -104,6 +104,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
     getRefTypes,
     refTypes.caseType.length,
     refTypes.componentStatus.length,
+    selectedCourtCase,
   ])
 
   useEffect(() => {
@@ -253,7 +254,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
 
   const filingsTable = () => (
     <FilingTable
-      filingsList={filingsList}
+      filingsList={selectedCourtCase ? selectedCourtCase.filings || [] : filingsList}
       actionButtons={actionButtons}
       addModalState={addModalState}
       softDeleteCallback={getFilingsWithMetadata}
@@ -261,6 +262,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       filingTypesList={refTypes.filingType}
       courtCasesList={courtCasesList}
       clientsList={clientsList}
+      selectedCourtCase={selectedCourtCase}
     />
   )
 
