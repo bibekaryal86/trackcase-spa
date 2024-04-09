@@ -30,6 +30,7 @@ import {
   DefaultCourtCaseFormErrorData,
 } from '../types/courtCases.data.types'
 import { getCourtCaseFormDataFromSchema, isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
+import Calendars from '@calendars/components/Calendars'
 
 const mapStateToProps = ({ refTypes, courtCases, clients }: GlobalState) => {
   return {
@@ -181,7 +182,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   }
 
   const caseFilings = () => <Filings selectedCourtCase={formData} />
-  const caseCalendars = () => console.log('add selectedCourtCase prop to Calendars.tsx')
+  const caseCalendars = () => <Calendars selectedCourtCase={formData} />
   const caseCollections = () => console.log('add selectedCourtCase prop to Collections.tsx')
 
   return (
