@@ -17,9 +17,10 @@ import { isBoolean } from 'lodash'
 import React, { isValidElement, useMemo, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+import { isSuperuser } from '@users/utils/users.utils'
+
 import Switch from './Switch'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { isSuperuser } from '../../users'
 import { TableData, TableHeaderData, TableOrder } from '../types/app.data.types'
 
 const TABLE_EXPORT_KEYS_TO_AVOID = ['actions', 'Actions', 'collapsed']

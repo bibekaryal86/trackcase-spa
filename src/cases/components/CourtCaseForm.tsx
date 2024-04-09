@@ -3,17 +3,13 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import {
-  FormCommentsField,
-  FormSelectField,
-  FormSelectStatusField,
-  getNumber,
-  GridFormWrapper,
-  handleFormChange,
-} from '../../app'
-import { ClientSchema } from '../../clients'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
+import { handleFormChange } from '@app/components/CommonComponents'
+import { FormCommentsField, FormSelectField, FormSelectStatusField, GridFormWrapper } from '@app/components/FormFields'
+import { getNumber } from '@app/utils/app.utils'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+
 import { CourtCaseFormData, CourtCaseFormErrorData } from '../types/courtCases.data.types'
 
 interface CourtCaseFormProps {

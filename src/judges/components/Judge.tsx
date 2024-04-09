@@ -6,20 +6,23 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import JudgeForm from './JudgeForm'
 import {
-  getNumber,
-  GlobalState,
-  isValidId,
   pageActionButtonsComponent,
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '../../app'
-import { ClientSchema, ClientTable } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
-import { CourtSchema, getCourts } from '../../courts'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { getNumber, isValidId } from '@app/utils/app.utils'
+import ClientTable from '@clients/components/ClientTable'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getCourts } from '@courts/actions/courts.action'
+import { CourtSchema } from '@courts/types/courts.data.types'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import JudgeForm from './JudgeForm'
 import { getJudge, judgesAction } from '../actions/judges.action'
 import { DefaultJudgeFormData, DefaultJudgeFormErrorData, JudgeBase, JudgeResponse } from '../types/judges.data.types'
 import { getJudgeFormDataFromSchema, isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'

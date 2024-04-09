@@ -1,5 +1,7 @@
-import { FetchRequestMetadata, getNumber, validateAddress, validatePhoneNumber } from '../../app'
-import { ID_DEFAULT } from '../../constants'
+import { getNumber, validateAddress, validatePhoneNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ID_DEFAULT } from '@constants/index'
+
 import { CourtFormData, CourtFormErrorData, CourtSchema, DefaultCourtFormErrorData } from '../types/courts.data.types'
 
 export const isAreTwoCourtsSame = (one: CourtFormData | CourtSchema, two: CourtFormData | CourtSchema) =>

@@ -3,22 +3,24 @@ import Grid from '@mui/material/Grid'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
-import CourtForm from './CourtForm'
-import CourtTable from './CourtTable'
 import {
   addModalComponent,
   deleteModalComponent,
-  FetchRequestMetadata,
-  getNumber,
-  GlobalState,
   pageTitleComponent,
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import CourtForm from './CourtForm'
+import CourtTable from './CourtTable'
 import { courtsAction, getCourts } from '../actions/courts.action'
 import {
   CourtBase,

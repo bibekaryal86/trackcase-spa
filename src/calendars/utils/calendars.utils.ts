@@ -1,8 +1,10 @@
 import * as colors from '@mui/material/colors'
 import dayjs from 'dayjs'
 
-import { FetchRequestMetadata, getDayjs, getNumber } from '../../app'
-import { CALENDAR_TYPES, DUE_AT_HEARING_ID, ID_DEFAULT } from '../../constants'
+import { getDayjs, getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { CALENDAR_TYPES, DUE_AT_HEARING_ID, ID_DEFAULT } from '@constants/index'
+
 import {
   CalendarEvents,
   DefaultHearingCalendarFormErrorData,
@@ -38,14 +40,6 @@ export const getCalendarType = (
 export const isHearingCalendar = (
   calendar: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
 ): boolean => getCalendarType(calendar) === CALENDAR_TYPES.HEARING_CALENDAR
-
-export const isAreTwoCalendarsSame = (
-  one: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
-  two: HearingCalendarSchema | TaskCalendarSchema | HearingCalendarFormData | TaskCalendarFormData,
-) =>
-  isHearingCalendar(one)
-    ? isAreTwoHearingCalendarsSame(one as HearingCalendarFormData, two as HearingCalendarFormData)
-    : isAreTwoTaskCalendarsSame(one as TaskCalendarFormData, two as TaskCalendarFormData)
 
 export const isAreTwoHearingCalendarsSame = (
   one: HearingCalendarFormData | HearingCalendarSchema,
@@ -89,13 +83,13 @@ export const validateHearingCalendar = (
     hasValidationErrors = true
     formErrorsLocal.hearingTypeError = 'REQUIRED'
   }
-  if (getNumber(formData.courtCaseId) <= 0) {
-    hasValidationErrors = true
-    formErrorsLocal.courtCaseError = 'REQUIRED'
-  }
   if (getNumber(formData.componentStatusId) <= 0) {
     hasValidationErrors = true
     formErrorsLocal.componentStatusError = 'REQUIRED'
+  }
+  if (getNumber(formData.courtCaseId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.courtCaseError = 'REQUIRED'
   }
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)

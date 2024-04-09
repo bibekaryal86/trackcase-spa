@@ -3,18 +3,19 @@ import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
+import { handleFormChange } from '@app/components/CommonComponents'
 import {
   FormCommentsField,
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
-  getNumber,
   GridFormWrapper,
-  handleFormChange,
-} from '../../app'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { CourtSchema } from '../../courts'
-import { ComponentStatusSchema } from '../../types'
+} from '@app/components/FormFields'
+import { getNumber } from '@app/utils/app.utils'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+import { CourtSchema } from '@courts/types/courts.data.types'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+
 import { JudgeFormData, JudgeFormErrorData } from '../types/judges.data.types'
 
 interface JudgeFormProps {

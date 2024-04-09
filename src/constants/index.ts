@@ -7,19 +7,11 @@ export const USE_MEDIA_QUERY_INPUT = '(max-width: 600px)'
 export const REGEX_LOGIN_INPUT_PATTERN =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/
 export const REGEX_LOGIN_PASSWORD_PATTERN = /^[A-Za-z0-9]+$/
-export const REGEX_DATE_FORMAT = new RegExp('[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}')
-export const REGEX_CURRENCY_FORMAT = new RegExp('^\\$|\\-\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{1,2})?$')
 
 export const DATE_FORMAT = 'YYYY-MM-DD'
 
 export const AMOUNT_DEFAULT = -1.0
 export const ID_DEFAULT = -1
-export const ID_ACTION_BUTTON = -2
-
-export const CHECK_BOX_OPTIONS_YES_NO = [
-  { value: 'YES', text: 'YES' },
-  { value: 'NO', text: 'NO' },
-]
 
 // BROWSER STORAGE
 export const IS_DARK_MODE = 'isDarkMode'
@@ -79,7 +71,6 @@ export const ALERT_TYPES = Object.freeze({
   WARNING: 'WARNING',
   ERROR: 'ERROR',
 })
-export type AlertTypes = keyof typeof ALERT_TYPES
 
 export const ACTION_TYPES = Object.freeze({
   CREATE: 'CREATE',
@@ -113,7 +104,6 @@ export const COMPONENT_STATUS_NAME = Object.freeze({
   APP_USERS: 'APP_USERS',
   REF_TYPES: 'REF_TYPES',
 })
-export type ComponentStatusName = keyof typeof COMPONENT_STATUS_NAME
 
 export const COMPONENT_STATUS_STATUS = Object.freeze({
   ACTIVE: 'ACTIVE',
@@ -138,7 +128,6 @@ export const COMPONENT_STATUS_STATUS = Object.freeze({
   WAIVED: 'WAIVED',
   WITHDRAWN: 'WITHDRAWN',
 })
-export type ComponentStatusStatus = keyof typeof COMPONENT_STATUS_STATUS
 
 // CALENDAR TYPES
 export const CALENDAR_TYPES = Object.freeze({
@@ -169,7 +158,6 @@ export const USER_ADMIN_REGISTRY = Object.freeze({
   APP_USERS_ROLES: 'APP_USERS_ROLES',
   APP_ROLES_PERMISSIONS: 'APP_ROLES_PERMISSIONS',
 })
-export type UserAdminRegistry = keyof typeof USER_ADMIN_REGISTRY
 
 // STATES
 export const STATES_LIST = [

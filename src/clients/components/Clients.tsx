@@ -3,23 +3,26 @@ import Grid from '@mui/material/Grid'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
-import ClientForm from './ClientForm'
-import ClientTable from './ClientTable'
 import {
   addModalComponent,
   deleteModalComponent,
-  FetchRequestMetadata,
-  getNumber,
-  GlobalState,
   pageTitleComponent,
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
-import { getJudges, JudgeSchema } from '../../judges'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getJudges } from '@judges/actions/judges.action'
+import { JudgeSchema } from '@judges/types/judges.data.types'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import ClientForm from './ClientForm'
+import ClientTable from './ClientTable'
 import { clientsAction, getClients } from '../actions/clients.action'
 import {
   ClientBase,

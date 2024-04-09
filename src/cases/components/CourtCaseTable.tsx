@@ -1,19 +1,16 @@
 import React from 'react'
 
-import {
-  FetchRequestMetadata,
-  getDayjsString,
-  Link,
-  ModalState,
-  Table,
-  tableAddButtonComponent,
-  TableData,
-  TableHeaderData,
-} from '../../app'
-import { ClientFormData, ClientSchema } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
-import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
-import { checkUserHasPermission, isSuperuser } from '../../users'
+import { tableAddButtonComponent } from '@app/components/CommonComponents'
+import Link from '@app/components/Link'
+import Table from '@app/components/Table'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
+import { getDayjsString } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ClientFormData, ClientSchema } from '@clients/types/clients.data.types'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
+import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+
 import { CourtCaseFormData, CourtCaseSchema } from '../types/courtCases.data.types'
 import { getCourtCaseFormDataFromSchema } from '../utils/courtCases.utils'
 
@@ -35,19 +32,19 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     const tableHeaderData: TableHeaderData[] = [
       {
         id: 'clientCaseType',
-        label: 'Case',
+        label: 'CASE',
       },
       {
         id: 'client',
-        label: 'Client',
+        label: 'CLIENT',
       },
       {
         id: 'status',
-        label: 'Status',
+        label: 'STATUS',
       },
       {
         id: 'created',
-        label: 'Created',
+        label: 'CREATED',
       },
     ]
     if (isSuperuser()) {

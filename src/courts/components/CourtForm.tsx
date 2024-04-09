@@ -2,16 +2,17 @@ import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
+import { handleFormChange } from '@app/components/CommonComponents'
 import {
   FormCommentsField,
   FormSelectStateField,
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-  handleFormChange,
-} from '../../app'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { ComponentStatusSchema } from '../../types'
+} from '@app/components/FormFields'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+
 import { CourtFormData, CourtFormErrorData } from '../types/courts.data.types'
 
 interface CourtFormProps {

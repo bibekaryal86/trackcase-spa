@@ -3,11 +3,12 @@ import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from '@mui/material/Toolbar'
 
+import { isLoggedIn } from '@users/utils/users.utils'
+
 import AppRoutes from './AppRoutes'
 import Footer from './Footer'
 import Header from './Header'
 import SideNav from './SideNav'
-import { isLoggedIn } from '../../users'
 
 interface BodyProps {
   isDarkMode: boolean

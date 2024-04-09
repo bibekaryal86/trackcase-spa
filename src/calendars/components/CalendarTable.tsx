@@ -1,21 +1,17 @@
 import React from 'react'
 
-import {
-  FetchRequestMetadata,
-  getDayjsString,
-  getNumber,
-  Link,
-  ModalState,
-  Table,
-  tableAddButtonComponent,
-  TableData,
-  TableHeaderData,
-} from '../../app'
-import { CourtCaseSchema } from '../../cases'
-import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, COMPONENT_STATUS_NAME } from '../../constants'
-import { FilingSchema } from '../../filings'
-import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '../../types'
-import { checkUserHasPermission, isSuperuser } from '../../users'
+import { tableAddButtonComponent } from '@app/components/CommonComponents'
+import Link from '@app/components/Link'
+import Table from '@app/components/Table'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
+import { getDayjsString, getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, COMPONENT_STATUS_NAME } from '@constants/index'
+import { FilingSchema } from '@filings/types/filings.data.types'
+import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '@ref_types/types/refTypes.data.types'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+
 import {
   HearingCalendarFormData,
   HearingCalendarSchema,
@@ -53,40 +49,40 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     const tableHeaderData: TableHeaderData[] = [
       {
         id: 'calendarDate',
-        label: 'Date',
+        label: 'DATE',
       },
       {
         id: 'calendarType',
-        label: 'Type',
+        label: 'TYPE',
       },
       {
         id: 'client',
-        label: 'Client',
+        label: 'CLIENT',
       },
       {
         id: 'case',
-        label: 'Case',
+        label: 'CASE',
       },
     ]
     if (!isHearingCalendarTable) {
       tableHeaderData.push(
         {
           id: 'hearingCalendar',
-          label: 'Hearing Calendar',
+          label: 'HEARING CALENDAR',
         },
         {
           id: 'filing',
-          label: 'Filing',
+          label: 'FILING',
         },
         {
           id: 'dueDate',
-          label: 'Due Date',
+          label: 'DUE DATE',
         },
       )
     }
     tableHeaderData.push({
       id: 'status',
-      label: 'Status',
+      label: 'STATUS',
     })
     if (isSuperuser()) {
       tableHeaderData.push({

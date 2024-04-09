@@ -1,20 +1,17 @@
 import React from 'react'
 
-import {
-  convertDateToLocaleString,
-  FetchRequestMetadata,
-  Link,
-  ModalState,
-  Table,
-  tableAddButtonComponent,
-  TableData,
-  TableHeaderData,
-} from '../../app'
-import { CourtCaseFormData, CourtCaseSchema } from '../../cases'
-import { ClientSchema } from '../../clients'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '../../constants'
-import { ComponentStatusSchema, FilingTypeSchema } from '../../types'
-import { checkUserHasPermission, isSuperuser } from '../../users'
+import { tableAddButtonComponent } from '@app/components/CommonComponents'
+import Link from '@app/components/Link'
+import Table from '@app/components/Table'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
+import { convertDateToLocaleString } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '@constants/index'
+import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+
 import { FilingFormData, FilingSchema } from '../types/filings.data.types'
 import { getFilingFormDataFromSchema } from '../utils/filings.utils'
 
@@ -38,47 +35,47 @@ const FilingTable = (props: FilingTableProps): React.ReactElement => {
     const tableHeaderData: TableHeaderData[] = [
       {
         id: 'type',
-        label: 'Filing',
+        label: 'FILING',
       },
       {
         id: 'client',
-        label: 'Client',
+        label: 'CLIENT',
       },
       {
         id: 'case',
-        label: 'Case',
+        label: 'CASE',
       },
       {
         id: 'submit',
-        label: 'Submit Date',
+        label: 'SUBMIT DATE',
       },
       {
         id: 'receipt',
-        label: 'Receipt Date',
+        label: 'RECEIPT DATE',
       },
       {
         id: 'receiptNumber',
-        label: 'Receipt Number',
+        label: 'RECEIPT NUMBER',
       },
       {
         id: 'priority',
-        label: 'Priority Date',
+        label: 'PRIORITY DATE',
       },
       {
         id: 'rfe',
-        label: 'RFE Date',
+        label: 'RFE DATE',
       },
       {
         id: 'rfeSubmit',
-        label: 'RFE Submit Date',
+        label: 'RFE SUBMIT DATE',
       },
       {
         id: 'decision',
-        label: 'Decision Date',
+        label: 'DECISION DATE',
       },
       {
         id: 'status',
-        label: 'Status',
+        label: 'STATUS',
       },
     ]
     if (isSuperuser()) {

@@ -1,10 +1,11 @@
 import { Dayjs } from 'dayjs'
 
-import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
-import { CourtCaseSchema } from '../../cases'
-import { ID_DEFAULT } from '../../constants'
-import { FilingSchema } from '../../filings'
-import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '../../types'
+import { BaseModelSchema, ResponseBase } from '@app/types/app.data.types'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ID_DEFAULT } from '@constants/index'
+import { FilingSchema } from '@filings/types/filings.data.types'
+import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '@ref_types/types/refTypes.data.types'
 
 export interface CalendarEvents {
   id: number

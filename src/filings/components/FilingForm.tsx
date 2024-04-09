@@ -4,20 +4,20 @@ import MenuItem from '@mui/material/MenuItem'
 import dayjs from 'dayjs'
 import React from 'react'
 
+import { handleFormChange, handleFormDateChange } from '@app/components/CommonComponents'
 import {
   FormCommentsField,
   FormDatePickerField,
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
-  getNumber,
   GridFormWrapper,
-  handleFormChange,
-  handleFormDateChange,
-} from '../../app'
-import { CourtCaseSchema } from '../../cases'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { CaseTypeSchema, ComponentStatusSchema } from '../../types'
+} from '@app/components/FormFields'
+import { getNumber } from '@app/utils/app.utils'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+
 import { FilingFormData, FilingFormErrorData } from '../types/filings.data.types'
 
 interface FilingFormProps {

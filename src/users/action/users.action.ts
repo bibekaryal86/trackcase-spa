@@ -1,18 +1,10 @@
 import React from 'react'
 
-import {
-  Async,
-  FetchOptions,
-  FetchRequestMetadata,
-  FetchResponse,
-  getEndpoint,
-  getErrMsg,
-  GlobalDispatch,
-  isGetDarkMode,
-  LocalStorage,
-  SessionStorage,
-} from '../../app'
-import { USER_LOGOUT } from '../../app/types/app.action.types'
+import { GlobalDispatch } from '@app/store/redux'
+import { USER_LOGOUT } from '@app/types/app.action.types'
+import { getEndpoint, getErrMsg, isGetDarkMode } from '@app/utils/app.utils'
+import { Async, FetchOptions, FetchRequestMetadata, FetchResponse } from '@app/utils/fetch.utils'
+import { LocalStorage, SessionStorage } from '@app/utils/storage.utils'
 import {
   ACTION_TYPES,
   ActionTypes,
@@ -20,7 +12,8 @@ import {
   ID_DEFAULT,
   IS_DARK_MODE,
   SOMETHING_WENT_WRONG,
-} from '../../constants'
+} from '@constants/index'
+
 import {
   APP_PERMISSIONS_COMPLETE,
   APP_ROLES_COMPLETE,
@@ -155,7 +148,7 @@ export const getAppUsers = async (
   dispatch: React.Dispatch<GlobalDispatch>,
   requestMetadata?: Partial<FetchRequestMetadata>,
 ) => {
-  const dispatchFunction = await appUsersAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
+  const dispatchFunction = appUsersAdmin({ action: ACTION_TYPES.READ, requestMetadata: requestMetadata })
   return await dispatchFunction(dispatch)
 }
 

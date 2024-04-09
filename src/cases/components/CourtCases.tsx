@@ -3,23 +3,26 @@ import Grid from '@mui/material/Grid'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
-import CourtCaseForm from './CourtCaseForm'
-import CourtCaseTable from './CourtCaseTable'
 import {
   addModalComponent,
   deleteModalComponent,
-  FetchRequestMetadata,
-  getNumber,
-  GlobalState,
   pageTitleComponent,
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
-import { ClientSchema, getClients } from '../../clients'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { getClients } from '@clients/actions/clients.action'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import CourtCaseForm from './CourtCaseForm'
+import CourtCaseTable from './CourtCaseTable'
 import { courtCasesAction, getCourtCases } from '../actions/courtCases.action'
 import {
   CourtCaseBase,

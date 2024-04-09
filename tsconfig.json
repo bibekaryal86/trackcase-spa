@@ -20,7 +20,22 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@calendars/*": ["src/calendars/*"],
+      "@cases/*": ["src/cases/*"],
+      "@clients/*": ["src/clients/*"],
+      "@collections/*": ["src/collections/*"],
+      "@constants/*": ["src/constants/*"],
+      "@courts/*": ["src/courts/*"],
+      "@filings/*": ["src/filings/*"],
+      "@home/*": ["src/home/*"],
+      "@judges/*": ["src/judges/*"],
+      "@ref_types/*": ["src/types/*"],
+      "@users/*": ["src/users/*"],
+    },
+    "baseUrl": ".",
   },
   "include": [
     "src"
@@ -28,6 +43,6 @@
   "exclude": [
     "node_modules",
     "src/**/*.test.ts",
-    "src/**/*.test.tsx"
-  ]
+    "src/**/*.test.tsx",
+  ],
 }

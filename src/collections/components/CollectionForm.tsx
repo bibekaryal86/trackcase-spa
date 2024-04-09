@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { Dayjs } from 'dayjs'
 import React from 'react'
 
+import { handleFormChange, handleFormDateChange } from '@app/components/CommonComponents'
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -11,13 +12,12 @@ import {
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-  handleFormChange,
-  handleFormDateChange,
-} from '../../app'
-import { CourtCaseSchema } from '../../cases'
-import { ClientSchema } from '../../clients'
-import { USE_MEDIA_QUERY_INPUT } from '../../constants'
-import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
+} from '@app/components/FormFields'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
+import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+
 import {
   CaseCollectionFormData,
   CaseCollectionFormErrorData,
@@ -59,6 +59,7 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
 
   const caseCollectionQuoteAmount = () => {
     return (
+      // eslint-disable-next-line react/jsx-no-undef
       <FormTextField
         componentLabel="CASE COLLECTION--QUOTE AMOUNT"
         name="quoteAmount"

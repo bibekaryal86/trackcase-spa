@@ -1,21 +1,17 @@
 import React from 'react'
 
-import {
-  FetchRequestMetadata,
-  getCurrency,
-  getDayjsString,
-  Link,
-  ModalState,
-  Table,
-  tableAddButtonComponent,
-  TableData,
-  TableHeaderData,
-} from '../../app'
-import { CourtCaseSchema } from '../../cases'
-import { ClientSchema } from '../../clients'
-import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '../../constants'
-import { CollectionMethodSchema, ComponentStatusSchema } from '../../types'
-import { checkUserHasPermission } from '../../users'
+import { tableAddButtonComponent } from '@app/components/CommonComponents'
+import Link from '@app/components/Link'
+import Table from '@app/components/Table'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
+import { getCurrency, getDayjsString } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '@constants/index'
+import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+import { checkUserHasPermission } from '@users/utils/users.utils'
+
 import {
   CaseCollectionFormData,
   CaseCollectionSchema,
@@ -58,42 +54,42 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       tableHeaderData.push(
         {
           id: 'collectionDate',
-          label: 'Collection Date',
+          label: 'COLLECTION DATE',
         },
         {
           id: 'collectedAmount',
-          label: 'Collection Amount',
+          label: 'COLLECTION AMOUNT',
         },
         {
           id: 'waivedAmount',
-          label: 'Waived Amount',
+          label: 'WAIVED AMOUNT',
         },
         {
           id: 'collectionMethod',
-          label: 'Collection Method',
+          label: 'COLLECTION METHOD',
         },
         {
           id: 'collectionMemo',
-          label: 'Collection Memo',
+          label: 'COLLECTION MEMO',
         },
       )
     } else {
       tableHeaderData.push(
         {
           id: 'client',
-          label: 'Client',
+          label: 'CLIENT',
         },
         {
           id: 'case',
-          label: 'Case',
+          label: 'CASE',
         },
         {
           id: 'quoteAmount',
-          label: 'Amount',
+          label: 'AMOUNT',
         },
         {
           id: 'status',
-          label: 'Status',
+          label: 'STATUS',
         },
       )
     }

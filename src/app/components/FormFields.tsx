@@ -11,8 +11,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
-import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '../../constants'
-import { ComponentStatusSchema } from '../../types'
+import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '@constants/index'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+
 import { getDayjs } from '../utils/app.utils'
 
 interface FormWrapperProps {
@@ -73,7 +74,7 @@ interface FormSelectFieldProps {
   inputLabelSx?: object
   variant?: TextFieldVariants
   value: number | string
-  onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
+  onChange: (event: SelectChangeEvent, child: ReactNode) => void
   menuItems: React.ReactNode[]
   disabled?: boolean
 }
@@ -88,7 +89,7 @@ interface StateSelectProps {
   inputLabelSx?: object
   variant?: TextFieldVariants
   value: string | number | undefined
-  onChange: (event: SelectChangeEvent<string>, child: ReactNode) => void
+  onChange: (event: SelectChangeEvent, child: ReactNode) => void
 }
 
 interface StatusSelectProps extends StateSelectProps {

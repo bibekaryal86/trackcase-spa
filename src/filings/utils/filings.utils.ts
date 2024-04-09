@@ -1,7 +1,12 @@
 import dayjs from 'dayjs'
 
-import { FetchRequestMetadata, getDayjs, getNumber } from '../../app'
-import { ID_DEFAULT } from '../../constants'
+import { getDayjs, getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { ID_DEFAULT } from '@constants/index'
+import { FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
+
 import {
   DefaultFilingFormErrorData,
   FilingFormData,
@@ -155,4 +160,22 @@ export const getFilingFormDataFromSchema = (x: FilingSchema): FilingFormData => 
     isHardDelete: false,
     isShowSoftDeleted: false,
   }
+}
+
+export const getClientFilingType = (
+  filingTypeId: number,
+  filingTypes: FilingTypeSchema[],
+  courtCaseId: number,
+  courtCasesList: CourtCaseSchema[],
+  clientsList: ClientSchema[],
+) => {
+  const selectedFilingType = filingTypes.find((x) => x.id === filingTypeId)
+  const selectedCourtCase = courtCasesList.find((x) => x.id === courtCaseId)
+  if (selectedCourtCase) {
+    const selectedClient = clientsList.find((x) => x.id === selectedCourtCase?.clientId)
+    if (selectedFilingType && selectedClient) {
+      return ': ' + selectedClient.name + ', ' + selectedFilingType.name
+    }
+  }
+  return ''
 }

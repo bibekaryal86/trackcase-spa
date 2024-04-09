@@ -6,21 +6,25 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect, useDispatch, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import FilingForm from './FilingForm'
 import {
-  getNumber,
-  GlobalState,
-  isValidId,
   pageActionButtonsComponent,
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '../../app'
-import { CalendarTable, TaskCalendarSchema } from '../../calendars'
-import { CourtCaseSchema, getCourtCases } from '../../cases'
-import { ClientSchema, getClients } from '../../clients'
-import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '../../constants'
-import { getRefTypes, RefTypesState } from '../../types'
+} from '@app/components/CommonComponents'
+import { GlobalState } from '@app/store/redux'
+import { getNumber, isValidId } from '@app/utils/app.utils'
+import CalendarTable from '@calendars/components/CalendarTable'
+import { TaskCalendarSchema } from '@calendars/types/calendars.data.types'
+import { getCourtCases } from '@cases/actions/courtCases.action'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { getClients } from '@clients/actions/clients.action'
+import { ClientSchema } from '@clients/types/clients.data.types'
+import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
+import { getRefTypes } from '@ref_types/actions/refTypes.action'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+
+import FilingForm from './FilingForm'
 import { filingsAction, getFiling, getFilings } from '../actions/filings.action'
 import {
   DefaultFilingFormData,
@@ -29,7 +33,12 @@ import {
   FilingResponse,
   FilingSchema,
 } from '../types/filings.data.types'
-import { getFilingFormDataFromSchema, isAreTwoFilingsSame, validateFiling } from '../utils/filings.utils'
+import {
+  getClientFilingType,
+  getFilingFormDataFromSchema,
+  isAreTwoFilingsSame,
+  validateFiling,
+} from '../utils/filings.utils'
 
 const mapStateToProps = ({ refTypes, clients, courtCases, filings }: GlobalState) => {
   return {
@@ -78,10 +87,6 @@ const Filing = (props: FilingProps): React.ReactElement => {
 
   const filingStatusList = useCallback(() => {
     return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.FILINGS)
-  }, [refTypes.componentStatus])
-
-  const calendarStatusList = useCallback(() => {
-    return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.CALENDARS)
   }, [refTypes.componentStatus])
 
   useEffect(() => {
@@ -172,25 +177,13 @@ const Filing = (props: FilingProps): React.ReactElement => {
       !isValidId(id) || isAreTwoFilingsSame(formData, formDataReset),
     )
 
-  const getClientFilingType = () => {
-    const selectedFilingType = refTypes.filingType.find((x) => x.id === formData.filingTypeId)
-    const selectedCourtCase = courtCasesList.find((x) => x.id === formData.courtCaseId)
-    if (selectedCourtCase) {
-      const selectedClient = clientsList.find((x) => x.id === selectedCourtCase?.clientId)
-      if (selectedFilingType && selectedClient) {
-        return ': ' + selectedClient.name + ', ' + selectedFilingType.name
-      }
-    }
-    return ''
-  }
-
   const taskCalendarsTable = () => (
     <CalendarTable
       type={CALENDAR_TYPES.TASK_CALENDAR}
       calendarsList={taskCalendars}
       courtCasesList={courtCasesList}
       filingsList={filingsList}
-      componentStatusList={calendarStatusList()}
+      componentStatusList={refTypes.componentStatus}
       selectedFiling={formData}
     />
   )
@@ -200,7 +193,16 @@ const Filing = (props: FilingProps): React.ReactElement => {
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {pageTopLinksComponent(COMPONENT_STATUS_NAME.FILINGS, '/filings/', searchQueryParams)}
-          {pageTitleComponent(COMPONENT_STATUS_NAME.FILINGS, getClientFilingType())}
+          {pageTitleComponent(
+            COMPONENT_STATUS_NAME.FILINGS,
+            getClientFilingType(
+              formData.filingTypeId,
+              refTypes.filingType,
+              formData.courtCaseId,
+              courtCasesList,
+              clientsList,
+            ),
+          )}
         </Grid>
         {!id ? (
           <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>

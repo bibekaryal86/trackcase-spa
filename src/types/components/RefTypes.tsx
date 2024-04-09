@@ -8,23 +8,20 @@ import { connect, useDispatch } from 'react-redux'
 
 import {
   addModalComponent,
-  convertToCamelCase,
-  convertToTitleCase,
   deleteModalComponent,
-  FetchRequestMetadata,
-  FormSelectField,
-  FormTextField,
-  getNumber,
-  GlobalState,
   handleFormChange,
   pageTitleComponent,
   secondaryButtonCallback,
-  Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
+} from '@app/components/CommonComponents'
+import { FormSelectField, FormTextField } from '@app/components/FormFields'
+import Table from '@app/components/Table'
+import { GlobalState } from '@app/store/redux'
+import { useModal } from '@app/utils/app.hooks'
+import { convertToCamelCase, convertToTitleCase, getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
 import {
   ACTION_TYPES,
   ActionTypes,
@@ -32,7 +29,8 @@ import {
   COMPONENT_STATUS_STATUS,
   REF_TYPES_REGISTRY,
   RefTypesRegistry,
-} from '../../constants'
+} from '@constants/index'
+
 import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
 import {
   DefaultRefTypeFormData,

@@ -2,8 +2,9 @@ import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { INVALID_SESSION } from '../../constants'
-import { logout } from '../../users'
+import { INVALID_SESSION } from '@constants/index'
+import { logout } from '@users/action/users.action'
+
 import { LocalStorage, SessionStorage } from '../utils/storage.utils'
 
 interface SessionTimeoutProps {

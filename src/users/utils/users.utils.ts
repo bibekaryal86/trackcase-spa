@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { convertDateToLocaleString, getNumber, getString, SessionStorage, TableData, TableHeaderData } from '../../app'
+import { TableData, TableHeaderData } from '@app/types/app.data.types'
+import { convertDateToLocaleString, getNumber, getString } from '@app/utils/app.utils'
+import { SessionStorage } from '@app/utils/storage.utils'
 import {
   ID_DEFAULT,
   LOGIN_SHOW_FORM_TYPE,
@@ -8,7 +10,8 @@ import {
   REF_TYPES_REGISTRY,
   REGEX_LOGIN_INPUT_PATTERN,
   REGEX_LOGIN_PASSWORD_PATTERN,
-} from '../../constants'
+} from '@constants/index'
+
 import {
   AppPermissionFormData,
   AppPermissionSchema,
@@ -236,13 +239,13 @@ export const appUsersTableData = (
 export const validateAppRole = (formData: AppRoleFormData, setFormErrors: (formErrors: AppRoleFormData) => void) => {
   let hasValidationErrors = false
   const formErrorsLocal: AppRoleFormData = { ...DefaultAppRoleFormData }
-  if (!getString(formData.name)) {
-    hasValidationErrors = true
-    formErrorsLocal.name = 'REQUIRED'
-  }
   if (!getString(formData.description)) {
     hasValidationErrors = true
     formErrorsLocal.description = 'REQUIRED'
+  }
+  if (!getString(formData.name)) {
+    hasValidationErrors = true
+    formErrorsLocal.name = 'REQUIRED'
   }
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)

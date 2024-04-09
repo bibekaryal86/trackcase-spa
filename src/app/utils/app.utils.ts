@@ -1,28 +1,11 @@
 import dayjs, { Dayjs } from 'dayjs'
-import React from 'react'
+
+import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE } from '@constants/index'
 
 import { SessionStorage } from './storage.utils'
-import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE } from '../../constants'
-import { GlobalDispatch } from '../store/redux'
 import { ErrorDetail } from '../types/app.data.types'
 
 export const isGetDarkMode = () => (SessionStorage.getItem(IS_DARK_MODE) as string) === 'true'
-
-export const unmountPage = (type: string) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    dispatch({
-      type: type,
-    })
-  }
-}
-
-export const clearMessages = (type: string) => {
-  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<void> => {
-    dispatch({
-      type: type,
-    })
-  }
-}
 
 export const getEndpoint = (endpoint: string): string => {
   const baseUrl = process.env.BASE_URL as string
@@ -39,17 +22,6 @@ export const getErrMsg = (errorDetail: ErrorDetail | string): string => {
     return JSON.stringify(errorDetail)
   }
 }
-
-export const getStartOfTheMonth = (): string => {
-  const year = new Date().getFullYear()
-  let month = (new Date().getMonth() + 1).toString()
-  if (month.length == 1) {
-    month = '0' + month
-  }
-  return year + '-' + month + '-01'
-}
-
-export const getStartOfTheYear = (): string => new Date().getFullYear() + '-01-01'
 
 export const getFullAddress = (streetAddress?: string, city?: string, state?: string, zipCode?: string): string =>
   streetAddress && city && state && zipCode ? `${streetAddress}, ${city}, ${state} ${zipCode}` : ''
@@ -70,14 +42,6 @@ export const getDayjsString = (value: Dayjs | null | undefined, format: string =
     return dayjs(value).format(format)
   }
   return ''
-}
-
-export const getComments = (value: string | number): string => {
-  const valueString = typeof value === 'number' ? value.toString() : value
-  if (valueString.length > 8888) {
-    return valueString.substring(0, 8888)
-  }
-  return valueString
 }
 
 export const getCurrency = (

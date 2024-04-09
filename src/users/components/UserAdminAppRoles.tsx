@@ -6,19 +6,20 @@ import { useDispatch } from 'react-redux'
 import {
   addModalComponent,
   deleteModalComponent,
-  FetchRequestMetadata,
-  FormTextField,
-  getNumber,
   handleFormChange,
   pageTitleComponent,
   secondaryButtonCallback,
-  Table,
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-  useModal,
-} from '../../app'
-import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '../../constants'
+} from '@app/components/CommonComponents'
+import { FormTextField } from '@app/components/FormFields'
+import Table from '@app/components/Table'
+import { useModal } from '@app/utils/app.hooks'
+import { getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index'
+
 import { appRolesAdmin, getAppRoles } from '../action/users.action'
 import { AppRoleFormData, AppRoleResponse, AppRoleSchema, DefaultAppRoleFormData } from '../types/users.data.types'
 import { appRolesTableData, appRolesTableHeader, validateAppRole } from '../utils/users.utils'

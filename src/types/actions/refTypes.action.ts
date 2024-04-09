@@ -1,16 +1,9 @@
 import _ from 'lodash'
 import React from 'react'
 
-import {
-  Async,
-  convertToCamelCase,
-  FetchOptions,
-  FetchRequestMetadata,
-  getEndpoint,
-  getErrMsg,
-  GlobalDispatch,
-  GlobalState,
-} from '../../app'
+import { GlobalDispatch, GlobalState } from '@app/store/redux'
+import { convertToCamelCase, getEndpoint, getErrMsg } from '@app/utils/app.utils'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
 import {
   ACTION_TYPES,
   CREATE_SUCCESS,
@@ -20,7 +13,8 @@ import {
   RefTypesRegistry,
   SOMETHING_WENT_WRONG,
   UPDATE_SUCCESS,
-} from '../../constants'
+} from '@constants/index'
+
 import {
   CASE_TYPE_COMPLETE,
   CASE_TYPE_READ_REQUEST,

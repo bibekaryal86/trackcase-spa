@@ -1,8 +1,10 @@
 import React from 'react'
 
-import { getString, TableData, TableHeaderData } from '../../app'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '../../constants'
-import { checkUserHasPermission, isSuperuser } from '../../users'
+import { TableData, TableHeaderData } from '@app/types/app.data.types'
+import { getString } from '@app/utils/app.utils'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '@constants/index'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+
 import {
   ComponentStatusSchema,
   DefaultRefTypeFormData,
@@ -10,16 +12,7 @@ import {
   RefTypeLessStatusSchema,
   RefTypeSchema,
   RefTypesRequestMetadataState,
-  RefTypesState,
 } from '../types/refTypes.data.types'
-
-export const isRefTypesStateEmpty = (refTypesState: RefTypesState) =>
-  refTypesState.componentStatus.length === 0 ||
-  refTypesState.filingType.length === 0 ||
-  refTypesState.collectionMethod.length === 0 ||
-  refTypesState.caseType.length === 0 ||
-  refTypesState.hearingType.length === 0 ||
-  refTypesState.taskType.length === 0
 
 export const refTypesDispatch = ({
   type = '',

@@ -1,5 +1,7 @@
-import { FetchRequestMetadata, getDayjs, getNumber } from '../../app'
-import { AMOUNT_DEFAULT, COLLECTION_TYPES, ID_DEFAULT } from '../../constants'
+import { getDayjs, getNumber } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { AMOUNT_DEFAULT, COLLECTION_TYPES, ID_DEFAULT } from '@constants/index'
+
 import {
   CaseCollectionFormData,
   CaseCollectionFormErrorData,
@@ -36,14 +38,6 @@ export const getCollectionType = (
 export const isCaseCollection = (
   collection: CaseCollectionSchema | CashCollectionSchema | CaseCollectionFormData | CashCollectionFormData,
 ) => getCollectionType(collection) === COLLECTION_TYPES.CASE_COLLECTION
-
-export const isAreTwoCollectionsSame = (
-  one: CaseCollectionSchema | CashCollectionSchema | CaseCollectionFormData | CashCollectionFormData,
-  two: CaseCollectionSchema | CashCollectionSchema | CaseCollectionFormData | CashCollectionFormData,
-) =>
-  isCaseCollection(one)
-    ? isAreTwoCaseCollectionsSame(one as CaseCollectionFormData, two as CaseCollectionFormData)
-    : isAreTwoCashCollectionsSame(one as CashCollectionFormData, two as CashCollectionFormData)
 
 export const isAreTwoCaseCollectionsSame = (
   one: CaseCollectionSchema | CaseCollectionFormData,
@@ -156,11 +150,6 @@ export const collectionDispatch = ({
     }
   }
 }
-
-export const getCollectionFormDataFromSchema = (x: CaseCollectionSchema | CashCollectionSchema) =>
-  isCaseCollection(x)
-    ? getCaseCollectionFormDataFromSchema(x as CaseCollectionSchema)
-    : getCashCollectionFormDataFromSchema(x as CashCollectionSchema)
 
 export const getCaseCollectionFormDataFromSchema = (x: CaseCollectionSchema): CaseCollectionFormData => {
   return {

@@ -1,10 +1,11 @@
 import { Dayjs } from 'dayjs'
 
-import { BaseModelSchema, FetchRequestMetadata, ResponseBase } from '../../app'
-import { TaskCalendarSchema } from '../../calendars'
-import { CourtCaseSchema } from '../../cases'
-import { ID_DEFAULT } from '../../constants'
-import { ComponentStatusSchema, FilingTypeSchema } from '../../types'
+import { BaseModelSchema, ResponseBase } from '@app/types/app.data.types'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { TaskCalendarSchema } from '@calendars/types/calendars.data.types'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ID_DEFAULT } from '@constants/index'
+import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
 
 export interface FilingBase {
   filingTypeId: number

@@ -8,27 +8,25 @@ import Typography from '@mui/material/Typography'
 import { Dayjs } from 'dayjs'
 import React from 'react'
 
-import Link from './Link'
-import Modal from './Modal'
 import {
   HearingCalendarFormData,
   HearingCalendarFormErrorData,
   TaskCalendarFormData,
   TaskCalendarFormErrorData,
-} from '../../calendars'
-import { CourtCaseFormData, CourtCaseFormErrorData } from '../../cases'
-import { ClientFormData, ClientFormErrorData } from '../../clients'
+} from '@calendars/types/calendars.data.types'
+import { CourtCaseFormData, CourtCaseFormErrorData } from '@cases/types/courtCases.data.types'
+import { ClientFormData, ClientFormErrorData } from '@clients/types/clients.data.types'
 import {
   CaseCollectionFormData,
   CaseCollectionFormErrorData,
   CashCollectionFormData,
   CashCollectionFormErrorData,
-} from '../../collections/types/collections.data.types'
-import { ACTION_TYPES, ActionTypes } from '../../constants'
-import { CourtFormData, CourtFormErrorData } from '../../courts'
-import { FilingFormData, FilingFormErrorData } from '../../filings'
-import { JudgeFormData, JudgeFormErrorData } from '../../judges'
-import { RefTypeFormData } from '../../types'
+} from '@collections/types/collections.data.types'
+import { ACTION_TYPES, ActionTypes } from '@constants/index'
+import { CourtFormData, CourtFormErrorData } from '@courts/types/courts.data.types'
+import { FilingFormData, FilingFormErrorData } from '@filings/types/filings.data.types'
+import { JudgeFormData, JudgeFormErrorData } from '@judges/types/judges.data.types'
+import { RefTypeFormData } from '@ref_types/types/refTypes.data.types'
 import {
   AppPermissionFormData,
   AppRoleFormData,
@@ -38,9 +36,11 @@ import {
   AppUserFormErrorData,
   AppUserRoleFormData,
   AppUserRoleFormErrorData,
-  checkUserHasPermission,
-  isSuperuser,
-} from '../../users'
+} from '@users/types/users.data.types'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+
+import Link from './Link'
+import Modal from './Modal'
 import { ModalState } from '../types/app.data.types'
 import { getNumericOnly, isNumericOnly } from '../utils/app.utils'
 
@@ -254,7 +254,7 @@ const handleFormChangeHelper = (name: string, value: string): string => {
 }
 
 export const handleFormChange = <T extends FormData, U extends FormErrorData>(
-  event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>,
+  event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent,
   formData: T,
   formErrors: U,
   setFormData: (formData: T) => void,

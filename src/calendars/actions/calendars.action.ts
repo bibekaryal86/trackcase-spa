@@ -1,14 +1,8 @@
 import React from 'react'
 
-import {
-  Async,
-  FetchOptions,
-  FetchRequestMetadata,
-  getEndpoint,
-  getErrMsg,
-  GlobalDispatch,
-  GlobalState,
-} from '../../app'
+import { GlobalDispatch, GlobalState } from '@app/store/redux'
+import { getEndpoint, getErrMsg } from '@app/utils/app.utils'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
 import {
   ACTION_SUCCESS,
   ACTION_TYPES,
@@ -19,7 +13,8 @@ import {
   SOMETHING_WENT_WRONG,
   TYPE_IS_INCORRECT,
   TYPE_IS_MISSING,
-} from '../../constants'
+} from '@constants/index'
+
 import {
   CALENDARS_COMPLETE,
   CALENDARS_READ_FAILURE,

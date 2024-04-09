@@ -1,19 +1,16 @@
 import React from 'react'
 
-import {
-  FetchRequestMetadata,
-  getFullAddress,
-  Link,
-  ModalState,
-  Table,
-  tableAddButtonComponent,
-  TableData,
-  TableHeaderData,
-} from '../../app'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '../../constants'
-import { JudgeFormData, JudgeSchema } from '../../judges'
-import { ComponentStatusSchema } from '../../types'
-import { checkUserHasPermission, isSuperuser } from '../../users'
+import { tableAddButtonComponent } from '@app/components/CommonComponents'
+import Link from '@app/components/Link'
+import Table from '@app/components/Table'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
+import { getFullAddress } from '@app/utils/app.utils'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
+import { JudgeFormData, JudgeSchema } from '@judges/types/judges.data.types'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+
 import { ClientFormData, ClientSchema } from '../types/clients.data.types'
 import { getClientFormDataFromSchema } from '../utils/clients.utils'
 
@@ -34,35 +31,35 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     const tableHeaderData: TableHeaderData[] = [
       {
         id: 'name',
-        label: 'Name',
+        label: 'NAME',
       },
       {
         id: 'aNumber',
-        label: 'A-Number',
+        label: 'A-NUMBER',
         isDisableSorting: true,
       },
       {
         id: 'email',
-        label: 'Email',
+        label: 'EMAIL',
         isDisableSorting: true,
       },
       {
         id: 'phone',
-        label: 'Phone',
+        label: 'PHONE',
         isDisableSorting: true,
       },
       {
         id: 'address',
-        label: 'Address',
+        label: 'ADDRESS',
         isDisableSorting: true,
       },
       {
         id: 'judge',
-        label: 'Judge',
+        label: 'JUDGE',
       },
       {
         id: 'status',
-        label: 'Status',
+        label: 'STATUS',
       },
     ]
     if (isSuperuser()) {
