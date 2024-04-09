@@ -17,7 +17,7 @@ import { useModal } from '@app/utils/app.hooks'
 import { getCurrency, getNumber } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
 import { getCourtCases } from '@cases/actions/courtCases.action'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { getClients } from '@clients/actions/clients.action'
 import { ClientSchema } from '@clients/types/clients.data.types'
 import {
@@ -26,6 +26,7 @@ import {
   COLLECTION_TYPES,
   CollectionTypes,
   COMPONENT_STATUS_NAME,
+  ID_DEFAULT,
   INVALID_INPUT,
 } from '@constants/index'
 import { getRefTypes } from '@ref_types/actions/refTypes.action'
@@ -79,6 +80,7 @@ interface CollectionsProps {
   getCourtCasesList: () => void
   clientsList: ClientSchema[]
   getClientsList: () => void
+  selectedCourtCase?: CourtCaseFormData
 }
 
 const Collections = (props: CollectionsProps): React.ReactElement => {
@@ -98,6 +100,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
   const { refTypes, getRefTypes } = props
   const { courtCasesList, getCourtCasesList } = props
   const { clientsList, getClientsList } = props
+  const { selectedCourtCase } = props
 
   const minCollectionDate = dayjs().subtract(1, 'month')
   const maxCollectionDate = dayjs().add(1, 'week')
@@ -138,6 +141,12 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
     refTypes.collectionMethod.length,
     refTypes.componentStatus.length,
   ])
+
+  useEffect(() => {
+    if (selectedCourtCase) {
+      formDataCase.courtCaseId = selectedCourtCase.id || ID_DEFAULT
+    }
+  }, [formDataCase, selectedCourtCase])
 
   useEffect(() => {
     return () => {
@@ -219,6 +228,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
         courtCasesList={courtCasesList}
         collectionStatusList={collectionStatusList()}
         isShowOneCollection={false}
+        selectedCourtCase={selectedCourtCase}
       />
     </Box>
   )
@@ -237,6 +247,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
         minCollectionDate={minCollectionDate}
         maxCollectionDate={maxCollectionDate}
         isShowOneCollection={false}
+        selectedCourtCase={selectedCourtCase}
       />
     </Box>
   )
@@ -403,6 +414,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       actionButtonsCase={actionButtonsCase}
       actionButtonsCash={actionButtonsCash}
       addCashCollectionButtonCallback={addCashCollectionButtonCallback}
+      selectedCourtCase={selectedCourtCase}
     />
   )
 

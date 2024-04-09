@@ -13,7 +13,7 @@ import {
   FormTextField,
   GridFormWrapper,
 } from '@app/components/FormFields'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { ClientSchema } from '@clients/types/clients.data.types'
 import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
 import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
@@ -35,6 +35,7 @@ interface CollectionFormPropsCase {
   courtCasesList: CourtCaseSchema[]
   collectionStatusList: ComponentStatusSchema[]
   isShowOneCollection: boolean
+  selectedCourtCase?: CourtCaseFormData
 }
 
 interface CollectionFormPropsCash {
@@ -49,6 +50,7 @@ interface CollectionFormPropsCash {
   minCollectionDate: Dayjs
   maxCollectionDate: Dayjs
   isShowOneCollection: boolean
+  selectedCourtCase?: CourtCaseFormData
 }
 
 export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactElement => {
@@ -56,6 +58,7 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
   const { formData, setFormData, formErrors, setFormErrors } = props
   const { courtCasesList, collectionStatusList } = props
   const { isShowOneCollection } = props
+  const { selectedCourtCase } = props
 
   const caseCollectionQuoteAmount = () => {
     return (
@@ -74,14 +77,22 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
     )
   }
 
-  const caseCollectionCourtCasesListForSelect = () =>
-    courtCasesList
+  const caseCollectionCourtCasesListForSelect = () => {
+    if (selectedCourtCase) {
+      return [
+        <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
+          {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
+        </MenuItem>,
+      ]
+    }
+    return courtCasesList
       .filter((x) => formData.courtCaseId === x.id || x.componentStatus?.isActive)
       .map((x) => (
         <MenuItem key={x.id} value={x.id}>
           {x.client?.name}, {x.caseType?.name}
         </MenuItem>
       ))
+  }
 
   const caseCollectionCourtCasesList = () => {
     return (
@@ -94,6 +105,7 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
         error={!!formErrors.courtCaseError}
         helperText={formErrors.courtCaseError}
         required
+        disabled={!!selectedCourtCase}
       />
     )
   }
@@ -146,6 +158,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
   const { formData, setFormData, formErrors, setFormErrors } = props
   const { collectionMethodsList, courtCasesList, clientsList, caseCollectionList } = props
   const { minCollectionDate, maxCollectionDate, isShowOneCollection } = props
+  const { selectedCourtCase } = props
 
   const cashCollectionCollectionDate = () => {
     return (
@@ -239,14 +252,24 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
     return `${client?.name}, ${courtCase?.caseType?.name}`
   }
 
-  const cashCollectionCaseCollectionListForSelect = () =>
-    caseCollectionList
+  const cashCollectionCaseCollectionListForSelect = () => {
+    if (selectedCourtCase && selectedCourtCase.caseCollections) {
+      return selectedCourtCase.caseCollections
+        .filter((x) => formData.caseCollectionId === x.id || x.componentStatus?.isActive)
+        .map((x) => (
+          <MenuItem key={x.id} value={x.id}>
+            {cashCollectionCaseCollectionForSelect(x)}
+          </MenuItem>
+        ))
+    }
+    return caseCollectionList
       .filter((x) => formData.caseCollectionId === x.id || x.componentStatus?.isActive)
       .map((x) => (
         <MenuItem key={x.id} value={x.id}>
           {cashCollectionCaseCollectionForSelect(x)}
         </MenuItem>
       ))
+  }
 
   const cashCollectionCaseCollectionList = () => {
     return (
@@ -259,6 +282,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         error={!!formErrors.caseCollectionError}
         helperText={formErrors.caseCollectionError}
         required
+        disabled={!!selectedCourtCase}
       />
     )
   }

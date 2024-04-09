@@ -13,8 +13,10 @@ import {
 } from '@app/components/CommonComponents'
 import { GlobalState } from '@app/store/redux'
 import { getNumber, isValidId } from '@app/utils/app.utils'
+import Calendars from '@calendars/components/Calendars'
 import { getClients } from '@clients/actions/clients.action'
 import { ClientSchema } from '@clients/types/clients.data.types'
+import Collections from '@collections/components/Collections'
 import { ACTION_TYPES, CASE_TABS, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
 import Filings from '@filings/components/Filings'
 import { getRefTypes } from '@ref_types/actions/refTypes.action'
@@ -30,7 +32,6 @@ import {
   DefaultCourtCaseFormErrorData,
 } from '../types/courtCases.data.types'
 import { getCourtCaseFormDataFromSchema, isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
-import Calendars from '@calendars/components/Calendars'
 
 const mapStateToProps = ({ refTypes, courtCases, clients }: GlobalState) => {
   return {
@@ -183,7 +184,7 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
 
   const caseFilings = () => <Filings selectedCourtCase={formData} />
   const caseCalendars = () => <Calendars selectedCourtCase={formData} />
-  const caseCollections = () => console.log('add selectedCourtCase prop to Collections.tsx')
+  const caseCollections = () => <Collections selectedCourtCase={formData} />
 
   return (
     <Box sx={{ display: 'flex' }}>

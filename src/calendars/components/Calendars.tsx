@@ -282,6 +282,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
         isShowOneCalendar={false}
         minCalendarDate={minCalendarDate}
         maxCalendarDate={maxCalendarDate}
+        selectedCourtCase={selectedCourtCase}
       />
     </Box>
   )
@@ -463,6 +464,7 @@ const Calendars = (props: CalendarsProps): React.ReactElement => {
       componentStatusList={calendarStatusList()}
       taskTypesList={refTypes.taskType}
       hearingCalendarsList={hearingCalendarsList}
+      selectedCourtCase={selectedCourtCase}
     />
   )
 
