@@ -32,19 +32,19 @@ const CourtCaseTable = (props: CourtCaseTableProps): React.ReactElement => {
     const tableHeaderData: TableHeaderData[] = [
       {
         id: 'clientCaseType',
-        label: 'Case',
+        label: 'CASE',
       },
       {
         id: 'client',
-        label: 'Client',
+        label: 'CLIENT',
       },
       {
         id: 'status',
-        label: 'Status',
+        label: 'STATUS',
       },
       {
         id: 'created',
-        label: 'Created',
+        label: 'CREATED',
       },
     ]
     if (isSuperuser()) {

@@ -31,35 +31,35 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
     const tableHeaderData: TableHeaderData[] = [
       {
         id: 'name',
-        label: 'Name',
+        label: 'NAME',
       },
       {
         id: 'aNumber',
-        label: 'A-Number',
+        label: 'A-NUMBER',
         isDisableSorting: true,
       },
       {
         id: 'email',
-        label: 'Email',
+        label: 'EMAIL',
         isDisableSorting: true,
       },
       {
         id: 'phone',
-        label: 'Phone',
+        label: 'PHONE',
         isDisableSorting: true,
       },
       {
         id: 'address',
-        label: 'Address',
+        label: 'ADDRESS',
         isDisableSorting: true,
       },
       {
         id: 'judge',
-        label: 'Judge',
+        label: 'JUDGE',
       },
       {
         id: 'status',
-        label: 'Status',
+        label: 'STATUS',
       },
     ]
     if (isSuperuser()) {

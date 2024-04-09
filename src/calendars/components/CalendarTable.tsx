@@ -49,40 +49,40 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     const tableHeaderData: TableHeaderData[] = [
       {
         id: 'calendarDate',
-        label: 'Date',
+        label: 'DATE',
       },
       {
         id: 'calendarType',
-        label: 'Type',
+        label: 'TYPE',
       },
       {
         id: 'client',
-        label: 'Client',
+        label: 'CLIENT',
       },
       {
         id: 'case',
-        label: 'Case',
+        label: 'CASE',
       },
     ]
     if (!isHearingCalendarTable) {
       tableHeaderData.push(
         {
           id: 'hearingCalendar',
-          label: 'Hearing Calendar',
+          label: 'HEARING CALENDAR',
         },
         {
           id: 'filing',
-          label: 'Filing',
+          label: 'FILING',
         },
         {
           id: 'dueDate',
-          label: 'Due Date',
+          label: 'DUE DATE',
         },
       )
     }
     tableHeaderData.push({
       id: 'status',
-      label: 'Status',
+      label: 'STATUS',
     })
     if (isSuperuser()) {
       tableHeaderData.push({

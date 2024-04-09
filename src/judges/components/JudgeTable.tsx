@@ -34,7 +34,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
       },
       {
         id: 'court',
-        label: 'Court',
+        label: 'COURT',
       },
       {
         id: 'webex',

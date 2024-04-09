@@ -35,47 +35,47 @@ const FilingTable = (props: FilingTableProps): React.ReactElement => {
     const tableHeaderData: TableHeaderData[] = [
       {
         id: 'type',
-        label: 'Filing',
+        label: 'FILING',
       },
       {
         id: 'client',
-        label: 'Client',
+        label: 'CLIENT',
       },
       {
         id: 'case',
-        label: 'Case',
+        label: 'CASE',
       },
       {
         id: 'submit',
-        label: 'Submit Date',
+        label: 'SUBMIT DATE',
       },
       {
         id: 'receipt',
-        label: 'Receipt Date',
+        label: 'RECEIPT DATE',
       },
       {
         id: 'receiptNumber',
-        label: 'Receipt Number',
+        label: 'RECEIPT NUMBER',
       },
       {
         id: 'priority',
-        label: 'Priority Date',
+        label: 'PRIORITY DATE',
       },
       {
         id: 'rfe',
-        label: 'RFE Date',
+        label: 'RFE DATE',
       },
       {
         id: 'rfeSubmit',
-        label: 'RFE Submit Date',
+        label: 'RFE SUBMIT DATE',
       },
       {
         id: 'decision',
-        label: 'Decision Date',
+        label: 'DECISION DATE',
       },
       {
         id: 'status',
-        label: 'Status',
+        label: 'STATUS',
       },
     ]
     if (isSuperuser()) {

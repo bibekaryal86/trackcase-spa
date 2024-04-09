@@ -54,42 +54,42 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       tableHeaderData.push(
         {
           id: 'collectionDate',
-          label: 'Collection Date',
+          label: 'COLLECTION DATE',
         },
         {
           id: 'collectedAmount',
-          label: 'Collection Amount',
+          label: 'COLLECTION AMOUNT',
         },
         {
           id: 'waivedAmount',
-          label: 'Waived Amount',
+          label: 'WAIVED AMOUNT',
         },
         {
           id: 'collectionMethod',
-          label: 'Collection Method',
+          label: 'COLLECTION METHOD',
         },
         {
           id: 'collectionMemo',
-          label: 'Collection Memo',
+          label: 'COLLECTION MEMO',
         },
       )
     } else {
       tableHeaderData.push(
         {
           id: 'client',
-          label: 'Client',
+          label: 'CLIENT',
         },
         {
           id: 'case',
-          label: 'Case',
+          label: 'CASE',
         },
         {
           id: 'quoteAmount',
-          label: 'Amount',
+          label: 'AMOUNT',
         },
         {
           id: 'status',
-          label: 'Status',
+          label: 'STATUS',
         },
       )
     }
