@@ -161,7 +161,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       formDataReset,
       undefined,
       isAreTwoClientsSame(formData, formDataReset),
-      isAreTwoClientsSame(formData, formDataReset),
+      false,
       isAreTwoClientsSame(formData, formDataReset),
     )
 
@@ -180,7 +180,7 @@ const Clients = (props: ClientsProps): React.ReactElement => {
       formDataReset,
       undefined,
       isAreTwoClientsSame(formData, formDataReset),
-      isAreTwoClientsSame(formData, formDataReset),
+      false,
       isAreTwoClientsSame(formData, formDataReset),
     )
 

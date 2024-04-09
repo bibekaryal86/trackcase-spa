@@ -93,7 +93,6 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
     if (
       (checkUserHasPermission(COMPONENT_STATUS_NAME.CALENDARS, ACTION_TYPES.UPDATE) ||
         checkUserHasPermission(COMPONENT_STATUS_NAME.CALENDARS, ACTION_TYPES.DELETE)) &&
-      !selectedCourtCase &&
       !selectedFiling
     ) {
       tableHeaderData.push({

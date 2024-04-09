@@ -13,8 +13,7 @@ import {
   FormTextField,
   GridFormWrapper,
 } from '@app/components/FormFields'
-import { getNumber } from '@app/utils/app.utils'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
 import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
 
@@ -29,13 +28,14 @@ interface FilingFormProps {
   isShowOneFiling: boolean
   filingTypesList: CaseTypeSchema[]
   courtCasesList: CourtCaseSchema[]
-  courtCaseId?: number
+  selectedCourtCase?: CourtCaseFormData
 }
 
 const FilingForm = (props: FilingFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { formData, formErrors, setFormData, setFormErrors, filingStatusList, isShowOneFiling } = props
-  const { filingTypesList, courtCasesList, courtCaseId } = props
+  const { filingTypesList, courtCasesList } = props
+  const { selectedCourtCase } = props
 
   const filingTypesListForSelect = () =>
     filingTypesList.map((x) => (
@@ -58,15 +58,12 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
   )
 
   const courtCasesListForSelect = () => {
-    if (getNumber(courtCaseId) > 0) {
-      const selectedCourtCase = courtCasesList.find((x) => x.id === courtCaseId)
-      if (selectedCourtCase) {
-        return [
-          <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
-            {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
-          </MenuItem>,
-        ]
-      }
+    if (selectedCourtCase) {
+      return [
+        <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
+          {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
+        </MenuItem>,
+      ]
     } else {
       return courtCasesList
         .filter((x) => formData.courtCaseId === x.id || x.componentStatus?.isActive)
@@ -76,7 +73,6 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
           </MenuItem>
         ))
     }
-    return []
   }
 
   const filingCourtCase = () => (
@@ -89,6 +85,7 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
       helperText={formErrors.courtCaseError}
       menuItems={courtCasesListForSelect()}
       required
+      disabled={!!selectedCourtCase}
     />
   )
 

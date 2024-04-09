@@ -15,7 +15,6 @@
     * `trackcase-spa`
       * All necessary changes after the service changes above
       * MAJOR
-        * Implement relative imports from modules
         * Disable sorting from table headers
           * Add separate component for sort/filter for tables
         * Besides ref types, courts and judges do not store items on redux

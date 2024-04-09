@@ -95,9 +95,8 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     }
 
     if (
-      (checkUserHasPermission(COMPONENT_STATUS_NAME.COLLECTIONS, ACTION_TYPES.UPDATE) ||
-        checkUserHasPermission(COMPONENT_STATUS_NAME.COLLECTIONS, ACTION_TYPES.DELETE)) &&
-      !selectedCourtCase
+      checkUserHasPermission(COMPONENT_STATUS_NAME.COLLECTIONS, ACTION_TYPES.UPDATE) ||
+      checkUserHasPermission(COMPONENT_STATUS_NAME.COLLECTIONS, ACTION_TYPES.DELETE)
     ) {
       tableHeaderData.push({
         id: 'actions',

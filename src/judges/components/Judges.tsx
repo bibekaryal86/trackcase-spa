@@ -161,7 +161,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       formDataReset,
       undefined,
       isAreTwoJudgesSame(formData, formDataReset),
-      isAreTwoJudgesSame(formData, formDataReset),
+      false,
       isAreTwoJudgesSame(formData, formDataReset),
     )
 
@@ -180,7 +180,7 @@ const Judges = (props: JudgesProps): React.ReactElement => {
       formDataReset,
       undefined,
       isAreTwoJudgesSame(formData, formDataReset),
-      isAreTwoJudgesSame(formData, formDataReset),
+      false,
       isAreTwoJudgesSame(formData, formDataReset),
     )
 
