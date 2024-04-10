@@ -9,8 +9,6 @@
       * Separate Filing with RFE
         * add RFE to it's own table
     * MINOR
-      * calculate case collection amount remaining
-        * case collection MINUS sum of cash collections
       * when updating hearing calendar, update related task calendars if still active
     * `trackcase-spa`
       * All necessary changes after the service changes above
@@ -25,5 +23,3 @@
       * MINOR
         * add new case
           * when adding a new case, allow options to add client, calendar, collections etc
-
-@constants/index
