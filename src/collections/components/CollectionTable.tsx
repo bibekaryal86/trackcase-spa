@@ -85,7 +85,11 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         },
         {
           id: 'quoteAmount',
-          label: 'AMOUNT',
+          label: 'QUOTE',
+        },
+        {
+          id: 'balanceAmount',
+          label: 'BALANCE',
         },
         {
           id: 'status',
@@ -162,6 +166,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         client: linkToClient(y),
         case: linkToCase(y),
         quoteAmount: getCurrency(y.quoteAmount),
+        balanceAmount: getCurrency(y.balanceAmount),
         status: getComponentStatus(y),
       }
     }
