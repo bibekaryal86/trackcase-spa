@@ -2,6 +2,7 @@
 
 * A simple app to manage clients and cases for a lawyer's office
 * Track filings, manage hearing and task calendars and keep track of collections
+* Backend services provided by: https://github.com/bibekaryal86/trackcase-service
 
 * Things to ADD/UPDATE
   * `trackcase-service`
