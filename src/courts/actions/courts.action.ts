@@ -50,7 +50,7 @@ export const courtsAction = ({
       endpoint = getEndpoint(process.env.COURT_CREATE as string)
       options = {
         method: HTTP_METHODS.POST,
-        requestBody: { ...courtsRequest },
+        requestBody: courtsRequest,
       }
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint = getEndpoint(process.env.COURT_UPDATE as string)

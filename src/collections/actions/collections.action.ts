@@ -74,7 +74,7 @@ export const collectionsAction = ({
           : getEndpoint(process.env.COLLECTION_CASH_CREATE as string)
       options = {
         method: HTTP_METHODS.POST,
-        requestBody: { ...collectionsRequest },
+        requestBody: collectionsRequest,
       }
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint =

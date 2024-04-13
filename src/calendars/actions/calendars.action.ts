@@ -79,7 +79,7 @@ export const calendarsAction = ({
           : getEndpoint(process.env.CALENDAR_TASK_CREATE as string)
       options = {
         method: HTTP_METHODS.POST,
-        requestBody: { ...calendarsRequest },
+        requestBody: calendarsRequest,
       }
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint =
