@@ -13,13 +13,22 @@ import {
 } from '@constants/index'
 
 import {
+  FILING_RFES_READ_FAILURE,
+  FILING_RFES_READ_REQUEST,
   FILINGS_COMPLETE,
   FILINGS_READ_FAILURE,
   FILINGS_READ_REQUEST,
   FILINGS_READ_SUCCESS,
 } from '../types/filings.action.types'
-import { FilingBase, FilingResponse, FilingSchema } from '../types/filings.data.types'
-import { filingDispatch } from '../utils/filings.utils'
+import {
+  FilingBase,
+  FilingResponse,
+  FilingRfeBase,
+  FilingRfeResponse,
+  FilingRfeSchema,
+  FilingSchema,
+} from '../types/filings.data.types'
+import { filingDispatch, filingRfeDispatch } from '../utils/filings.utils'
 
 export const filingsAction = ({
   action,
@@ -50,7 +59,7 @@ export const filingsAction = ({
       endpoint = getEndpoint(process.env.FILING_CREATE as string)
       options = {
         method: HTTP_METHODS.POST,
-        requestBody: { ...filingsRequest },
+        requestBody: filingsRequest,
       }
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint = getEndpoint(process.env.FILING_UPDATE as string)
@@ -82,6 +91,75 @@ export const filingsAction = ({
       return filingResponse
     } catch (error) {
       console.log(`Filing ${action} Error: `, error)
+      dispatch(filingDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
+      return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
+    } finally {
+      dispatch(filingDispatch({ type: FILINGS_COMPLETE }))
+    }
+  }
+}
+
+export const filingRfesAction = ({
+  action,
+  filingRfesRequest,
+  id,
+  isRestore,
+  isHardDelete,
+}: {
+  action: ActionTypes
+  filingRfesRequest?: FilingRfeBase
+  id?: number
+  isRestore?: boolean
+  isHardDelete?: boolean
+}) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>): Promise<FilingRfeResponse> => {
+    if (action === ACTION_TYPES.RESTORE) {
+      action = ACTION_TYPES.UPDATE
+    }
+    const typeRequest = `FILING_RFES_${action}_REQUEST`
+    const typeSuccess = `FILING_RFES_${action}_SUCCESS`
+    const typeFailure = `FILING_RFES_${action}_FAILURE`
+    dispatch(filingRfeDispatch({ type: typeRequest }))
+
+    let endpoint = ''
+    let options: Partial<FetchOptions> = {}
+
+    if (action === ACTION_TYPES.CREATE) {
+      endpoint = getEndpoint(process.env.FILING_RFE_CREATE as string)
+      options = {
+        method: HTTP_METHODS.POST,
+        requestBody: filingRfesRequest,
+      }
+    } else if (action === ACTION_TYPES.UPDATE) {
+      endpoint = getEndpoint(process.env.FILING_RFE_UPDATE as string)
+      options = {
+        method: HTTP_METHODS.PUT,
+        requestBody: filingRfesRequest,
+        queryParams: { is_restore: isRestore || false },
+        pathParams: { filing_rfe_id: id || ID_DEFAULT },
+      }
+    } else if (action === ACTION_TYPES.DELETE) {
+      endpoint = getEndpoint(process.env.FILING_RFE_DELETE as string)
+      options = {
+        method: HTTP_METHODS.DELETE,
+        pathParams: { filing_rfe_id: id || ID_DEFAULT, is_hard_delete: isHardDelete || false },
+      }
+    }
+
+    try {
+      const filingRfeResponse = (await Async.fetch(endpoint, options)) as FilingRfeResponse
+      if (filingRfeResponse.detail) {
+        dispatch(filingRfeDispatch({ type: typeFailure, error: getErrMsg(filingRfeResponse.detail) }))
+      } else {
+        if (action === ACTION_TYPES.READ) {
+          console.log('filingRfesAction -> this should not be happening')
+        } else {
+          dispatch(filingRfeDispatch({ type: typeSuccess, success: ACTION_SUCCESS(action, 'FILING RFE') }))
+        }
+      }
+      return filingRfeResponse
+    } catch (error) {
+      console.log(`Filing RFE ${action} Error: `, error)
       dispatch(filingDispatch({ type: typeFailure, error: SOMETHING_WENT_WRONG }))
       return { data: [], detail: { error: SOMETHING_WENT_WRONG } }
     } finally {
@@ -171,6 +249,48 @@ export const getFiling = (filingId: number, isIncludeExtra?: boolean) => {
       return oneFiling
     } finally {
       dispatch(filingDispatch({ type: FILINGS_COMPLETE }))
+    }
+  }
+}
+
+export const getFilingRfe = (filingRfeId: number, isIncludeExtra?: boolean) => {
+  return async (dispatch: React.Dispatch<GlobalDispatch>, state: GlobalState): Promise<FilingRfeSchema | undefined> => {
+    dispatch(filingDispatch({ type: FILING_RFES_READ_REQUEST }))
+    let oneFilingRfe = undefined
+
+    try {
+      const filingsInStore = state.filings.filings
+      const filingRfesInStore = filingsInStore.flatMap((x) => x.filingRfes || [])
+      if (filingRfesInStore) {
+        oneFilingRfe = filingRfesInStore.find((x) => x.id === filingRfeId)
+      }
+
+      if (oneFilingRfe) {
+        return oneFilingRfe
+      } else {
+        const endpoint = getEndpoint(process.env.FILING_RFE_READ as string)
+        const requestMetadata: Partial<FetchRequestMetadata> = {
+          schemaModelId: filingRfeId,
+          isIncludeExtra: isIncludeExtra === true,
+        }
+        const options: Partial<FetchOptions> = {
+          method: HTTP_METHODS.GET,
+          metadataParams: requestMetadata,
+        }
+        const filingRfeResponse = (await Async.fetch(endpoint, options)) as FilingRfeResponse
+        if (filingRfeResponse.detail) {
+          dispatch(filingDispatch({ type: FILING_RFES_READ_FAILURE, error: getErrMsg(filingRfeResponse.detail) }))
+        } else {
+          oneFilingRfe = filingRfeResponse.data.find((x) => x.id === filingRfeId)
+        }
+      }
+      return oneFilingRfe
+    } catch (error) {
+      console.log(`Get Filing Rfe Error: `, error)
+      dispatch(filingRfeDispatch({ type: FILING_RFES_READ_FAILURE, error: SOMETHING_WENT_WRONG }))
+      return oneFilingRfe
+    } finally {
+      dispatch(filingRfeDispatch({ type: FILINGS_COMPLETE }))
     }
   }
 }

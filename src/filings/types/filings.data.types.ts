@@ -14,8 +14,6 @@ export interface FilingBase {
   receiptDate?: Dayjs
   receiptNumber?: string
   priorityDate?: Dayjs
-  rfeDate?: Dayjs
-  rfeSubmitDate?: Dayjs
   decisionDate?: Dayjs
   componentStatusId: number
   comments?: string
@@ -26,6 +24,7 @@ export interface FilingSchema extends FilingBase, BaseModelSchema {
   filingType?: FilingTypeSchema
   courtCase?: CourtCaseSchema
   componentStatus?: ComponentStatusSchema
+  filingRfes?: FilingRfeSchema[]
   taskCalendars?: TaskCalendarSchema[]
   // history
   historyFilings?: HistoryFilingSchema[]
@@ -33,6 +32,25 @@ export interface FilingSchema extends FilingBase, BaseModelSchema {
 
 export interface FilingResponse extends ResponseBase {
   data: FilingSchema[]
+}
+
+export interface FilingRfeBase {
+  filingId: number
+  rfeDate?: Dayjs
+  rfeSubmitDate?: Dayjs
+  rfeReason: string
+  comments?: string
+}
+
+export interface FilingRfeSchema extends FilingRfeBase, BaseModelSchema {
+  // orm_mode
+  filing?: FilingSchema
+  // history
+  historyFilingRfes?: HistoryFilingRfeSchema[]
+}
+
+export interface FilingRfeResponse extends ResponseBase {
+  data: FilingRfeSchema[]
 }
 
 export interface HistoryFilingSchema extends Partial<FilingBase>, BaseModelSchema {
@@ -45,6 +63,14 @@ export interface HistoryFilingSchema extends Partial<FilingBase>, BaseModelSchem
   componentStatus?: ComponentStatusSchema
 }
 
+export interface HistoryFilingRfeSchema extends Partial<FilingRfeBase>, BaseModelSchema {
+  appUserId: number
+  filingRfeId: number
+  // orm_mode
+  filingRfe?: FilingRfeSchema
+  filing?: FilingSchema
+}
+
 export interface FilingsState {
   filings: FilingSchema[]
   requestMetadata: Partial<FetchRequestMetadata>
@@ -55,6 +81,11 @@ export interface FilingsAction extends FilingsState {
 }
 
 export interface FilingFormData extends FilingSchema {
+  isHardDelete: boolean
+  isShowSoftDeleted: boolean
+}
+
+export interface FilingRfeFormData extends FilingRfeSchema {
   isHardDelete: boolean
   isShowSoftDeleted: boolean
 }
@@ -72,6 +103,12 @@ export interface FilingFormErrorData extends FilingSchema {
   componentStatusError: string
 }
 
+export interface FilingRfeFormErrorData extends FilingRfeSchema {
+  filingIdError: string
+  rfeDateError: string
+  rfeSubmitDateError: string
+}
+
 export const DefaultFilingSchema: FilingSchema = {
   filingTypeId: ID_DEFAULT,
   courtCaseId: ID_DEFAULT,
@@ -79,10 +116,16 @@ export const DefaultFilingSchema: FilingSchema = {
   receiptDate: undefined,
   receiptNumber: '',
   priorityDate: undefined,
-  rfeDate: undefined,
-  rfeSubmitDate: undefined,
   decisionDate: undefined,
   componentStatusId: ID_DEFAULT,
+  comments: '',
+}
+
+export const DefaultFilingRfeSchema: FilingRfeSchema = {
+  filingId: ID_DEFAULT,
+  rfeDate: undefined,
+  rfeSubmitDate: undefined,
+  rfeReason: '',
   comments: '',
 }
 
@@ -93,6 +136,13 @@ export const DefaultFilingState: FilingsState = {
 
 export const DefaultFilingFormData: FilingFormData = {
   ...DefaultFilingSchema,
+  id: ID_DEFAULT,
+  isHardDelete: false,
+  isShowSoftDeleted: false,
+}
+
+export const DefaultFilingRfeFormData: FilingRfeFormData = {
+  ...DefaultFilingRfeSchema,
   id: ID_DEFAULT,
   isHardDelete: false,
   isShowSoftDeleted: false,
@@ -110,4 +160,11 @@ export const DefaultFilingFormErrorData: FilingFormErrorData = {
   rfeSubmitDateError: '',
   decisionDateError: '',
   componentStatusError: '',
+}
+
+export const DefaultFilingRfeFormErrorData: FilingRfeFormErrorData = {
+  ...DefaultFilingRfeFormData,
+  filingIdError: '',
+  rfeDateError: '',
+  rfeSubmitDateError: '',
 }

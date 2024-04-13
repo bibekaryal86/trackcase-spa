@@ -1,4 +1,7 @@
 import {
+  FILING_RFES_CREATE_SUCCESS,
+  FILING_RFES_DELETE_SUCCESS,
+  FILING_RFES_UPDATE_SUCCESS,
   FILINGS_CREATE_SUCCESS,
   FILINGS_DELETE_SUCCESS,
   FILINGS_READ_SUCCESS,
@@ -14,8 +17,11 @@ export default function filings(state = DefaultFilingState, action: FilingsActio
         requestMetadata: action.requestMetadata,
       }
     case FILINGS_CREATE_SUCCESS:
+    case FILING_RFES_CREATE_SUCCESS:
     case FILINGS_UPDATE_SUCCESS:
+    case FILING_RFES_UPDATE_SUCCESS:
     case FILINGS_DELETE_SUCCESS:
+    case FILING_RFES_DELETE_SUCCESS:
       return {
         ...state,
         filings: [],
