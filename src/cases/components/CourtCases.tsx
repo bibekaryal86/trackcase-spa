@@ -160,7 +160,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
 
   const addModal = () =>
     addModalComponent(
-      COMPONENT_STATUS_NAME.COURT_CASES,
+      COMPONENT_STATUS_NAME.COURT_CASES.replace("_", " "),
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -179,7 +179,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
 
   const updateModal = () =>
     updateModalComponent(
-      COMPONENT_STATUS_NAME.COURT_CASES,
+      COMPONENT_STATUS_NAME.COURT_CASES.replace("_", " "),
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -211,7 +211,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
 
   const deleteModal = () =>
     deleteModalComponent(
-      COMPONENT_STATUS_NAME.COURT_CASES,
+      COMPONENT_STATUS_NAME.COURT_CASES.replace("_", " "),
       deleteModalContextText,
       primaryButtonCallback,
       addModalState,
