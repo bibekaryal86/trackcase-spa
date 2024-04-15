@@ -237,7 +237,7 @@ export const getClientFilingType = (
   if (selectedCourtCase) {
     const selectedClient = clientsList.find((x) => x.id === selectedCourtCase?.clientId)
     if (selectedFilingType && selectedClient) {
-      return ': ' + selectedClient.name + ', ' + selectedFilingType.name
+      return selectedClient.name + ', ' + selectedFilingType.name
     }
   }
   return ''

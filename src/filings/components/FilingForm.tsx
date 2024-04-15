@@ -1,10 +1,15 @@
 import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import MenuItem from '@mui/material/MenuItem'
 import dayjs from 'dayjs'
 import React from 'react'
 
-import { handleFormChange, handleFormDateChange } from '@app/components/CommonComponents'
+import {
+  courtCasesListForSelect,
+  filingListForSelect,
+  handleFormChange,
+  handleFormDateChange,
+  refTypesListForSelect,
+} from '@app/components/CommonComponents'
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -14,10 +19,17 @@ import {
   GridFormWrapper,
 } from '@app/components/FormFields'
 import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ClientSchema } from '@clients/types/clients.data.types'
 import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
 
-import { FilingFormData, FilingFormErrorData } from '../types/filings.data.types'
+import {
+  FilingFormData,
+  FilingFormErrorData,
+  FilingRfeFormData,
+  FilingRfeFormErrorData,
+  FilingSchema,
+} from '../types/filings.data.types'
 
 interface FilingFormProps {
   formData: FilingFormData
@@ -26,23 +38,27 @@ interface FilingFormProps {
   setFormErrors: (formErrors: FilingFormErrorData) => void
   filingStatusList: ComponentStatusSchema[]
   isShowOneFiling: boolean
-  filingTypesList: CaseTypeSchema[]
+  filingTypesList: FilingTypeSchema[]
   courtCasesList: CourtCaseSchema[]
   selectedCourtCase?: CourtCaseFormData
 }
 
-const FilingForm = (props: FilingFormProps): React.ReactElement => {
+interface FilingRfeFormProps {
+  formData: FilingRfeFormData
+  setFormData: (formData: FilingRfeFormData) => void
+  formErrors: FilingRfeFormErrorData
+  setFormErrors: (formErrors: FilingRfeFormErrorData) => void
+  filingsList: FilingSchema[]
+  filingTypesList: FilingTypeSchema[]
+  courtCasesList: CourtCaseSchema[]
+  clientsList: ClientSchema[]
+}
+
+export const FilingForm = (props: FilingFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { formData, formErrors, setFormData, setFormErrors, filingStatusList, isShowOneFiling } = props
   const { filingTypesList, courtCasesList } = props
   const { selectedCourtCase } = props
-
-  const filingTypesListForSelect = () =>
-    filingTypesList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.name}
-      </MenuItem>
-    ))
 
   const filingType = () => (
     <FormSelectField
@@ -52,28 +68,10 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.filingTypeError}
       helperText={formErrors.filingTypeError}
-      menuItems={filingTypesListForSelect()}
+      menuItems={refTypesListForSelect(filingTypesList)}
       required
     />
   )
-
-  const courtCasesListForSelect = () => {
-    if (selectedCourtCase) {
-      return [
-        <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
-          {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
-        </MenuItem>,
-      ]
-    } else {
-      return courtCasesList
-        .filter((x) => formData.courtCaseId === x.id || x.componentStatus?.isActive)
-        .map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {x.client?.name}, {x.caseType?.name}
-          </MenuItem>
-        ))
-    }
-  }
 
   const filingCourtCase = () => (
     <FormSelectField
@@ -83,7 +81,7 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.courtCaseError}
       helperText={formErrors.courtCaseError}
-      menuItems={courtCasesListForSelect()}
+      menuItems={courtCasesListForSelect(courtCasesList, selectedCourtCase, formData.courtCaseId)}
       required
       disabled={!!selectedCourtCase}
     />
@@ -136,32 +134,6 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
       helperText={formErrors.priorityDateError}
-    />
-  )
-
-  const filingRfeDate = () => (
-    <FormDatePickerField
-      componentLabel="FILING--RFE DATE"
-      name="rfeDate"
-      value={formData.rfeDate}
-      onChange={(value) => handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)}
-      minDate={dayjs().subtract(1, 'month')}
-      maxDate={dayjs().add(1, 'month')}
-      helperText={formErrors.rfeDateError}
-    />
-  )
-
-  const filingRfeSubmitDate = () => (
-    <FormDatePickerField
-      componentLabel="FILING--RFE SUBMIT DATE"
-      name="rfeSubmitDate"
-      value={formData.rfeSubmitDate}
-      onChange={(value) =>
-        handleFormDateChange('rfeSubmitDate', value, formData, formErrors, setFormData, setFormErrors)
-      }
-      minDate={dayjs().subtract(1, 'month')}
-      maxDate={dayjs().add(1, 'month')}
-      helperText={formErrors.rfeSubmitDateError}
     />
   )
 
@@ -223,12 +195,6 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
         {filingPriorityDate()}
       </Grid>
       <Grid item xs={6}>
-        {filingRfeDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingRfeSubmitDate()}
-      </Grid>
-      <Grid item xs={6}>
         {filingDecisionDate()}
       </Grid>
       <Grid item xs={6}>
@@ -243,4 +209,88 @@ const FilingForm = (props: FilingFormProps): React.ReactElement => {
   )
 }
 
-export default FilingForm
+export const FilingRfeForm = (props: FilingRfeFormProps): React.ReactElement => {
+  const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
+  const { formData, formErrors, setFormData, setFormErrors } = props
+  const { filingsList, courtCasesList, clientsList } = props
+
+  const filingRfeFiling = () => (
+    <FormSelectField
+      componentLabel="FILING RFE--FILING"
+      name="filingId"
+      value={formData.filingId}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.filingIdError}
+      helperText={formErrors.filingIdError}
+      menuItems={filingListForSelect(filingsList, clientsList, courtCasesList)}
+      required
+    />
+  )
+
+  const filingRfeRfeDate = () => (
+    <FormDatePickerField
+      componentLabel="FILING RFE--RFE DATE"
+      name="rfeDate"
+      value={formData.rfeDate}
+      onChange={(value) => handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)}
+      minDate={dayjs().subtract(1, 'month')}
+      maxDate={dayjs().add(1, 'month')}
+      helperText={formErrors.rfeDateError}
+    />
+  )
+
+  const filingRfeRfeSubmitDate = () => (
+    <FormDatePickerField
+      componentLabel="FILING RFE--RFE SUBMIT DATE"
+      name="rfeSubmitDate"
+      value={formData.rfeSubmitDate}
+      onChange={(value) =>
+        handleFormDateChange('rfeSubmitDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
+      minDate={dayjs().subtract(1, 'month')}
+      maxDate={dayjs().add(1, 'month')}
+      helperText={formErrors.rfeSubmitDateError}
+    />
+  )
+
+  const filingRfeRfeReason = () => (
+    <FormTextField
+      componentLabel="FILING RFE--RFE REASON"
+      name="rfeReason"
+      value={formData.rfeReason}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.rfeReason}
+      helperText={formErrors.rfeReason}
+      required
+      fullWidth
+    />
+  )
+
+  const filingRfeComments = () => (
+    <FormCommentsField
+      componentLabel="FILING RFE--COMMENTS"
+      value={formData.comments}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+    />
+  )
+
+  return (
+    <GridFormWrapper isSmallScreen={isSmallScreen}>
+      <Grid item xs={12}>
+        {filingRfeFiling()}
+      </Grid>
+      <Grid item xs={6}>
+        {filingRfeRfeDate()}
+      </Grid>
+      <Grid item xs={6}>
+        {filingRfeRfeSubmitDate()}
+      </Grid>
+      <Grid item xs={12}>
+        {filingRfeRfeReason()}
+      </Grid>
+      <Grid item xs={12}>
+        {filingRfeComments()}
+      </Grid>
+    </GridFormWrapper>
+  )
+}

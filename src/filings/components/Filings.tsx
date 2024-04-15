@@ -20,10 +20,10 @@ import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data
 import { getClients } from '@clients/actions/clients.action'
 import { ClientSchema } from '@clients/types/clients.data.types'
 import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, ID_DEFAULT, INVALID_INPUT } from '@constants/index'
+import { FilingForm } from '@filings/components/FilingForm'
 import { getRefTypes } from '@ref_types/actions/refTypes.action'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types'
 
-import FilingForm from './FilingForm'
 import FilingTable from './FilingTable'
 import { filingsAction, getFilings } from '../actions/filings.action'
 import {

@@ -27,7 +27,13 @@ import {
 } from '@collections/types/collections.data.types'
 import { ACTION_TYPES, ActionTypes } from '@constants/index'
 import { CourtFormData, CourtFormErrorData, CourtSchema } from '@courts/types/courts.data.types'
-import { FilingFormData, FilingFormErrorData, FilingSchema } from '@filings/types/filings.data.types'
+import {
+  FilingFormData,
+  FilingFormErrorData,
+  FilingRfeFormData,
+  FilingRfeFormErrorData,
+  FilingSchema,
+} from '@filings/types/filings.data.types'
 import { JudgeFormData, JudgeFormErrorData, JudgeSchema } from '@judges/types/judges.data.types'
 import { ComponentStatusSchema, RefTypeFormData, RefTypeLessStatusSchema } from '@ref_types/types/refTypes.data.types'
 import {
@@ -59,6 +65,7 @@ type FormData =
   | ClientFormData
   | CourtCaseFormData
   | FilingFormData
+  | FilingRfeFormData
   | HearingCalendarFormData
   | TaskCalendarFormData
   | CaseCollectionFormData
@@ -74,6 +81,7 @@ type FormErrorData =
   | ClientFormErrorData
   | CourtCaseFormErrorData
   | FilingFormErrorData
+  | FilingRfeFormErrorData
   | HearingCalendarFormErrorData
   | TaskCalendarFormErrorData
   | CaseCollectionFormErrorData
