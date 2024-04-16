@@ -203,6 +203,10 @@ const FilingTable = (props: FilingTableProps): React.ReactElement => {
 
   const getFilingRfesTable = (x: FilingSchema) => {
     const filingRfesList = x.filingRfes || []
+    if (filingRfesList.length === 0) {
+      return undefined
+    }
+
     const filingRfesHeaderData = filingsTableHeaderData(true)
     const filingRfesTableData = Array.from(filingRfesList, (y: FilingRfeSchema) => {
       return {
