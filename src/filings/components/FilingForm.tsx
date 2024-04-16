@@ -209,7 +209,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
   )
 }
 
-export const FilingRfeForm = (props: FilingRfeFormProps): React.ReactElement => {
+export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => {
   const isSmallScreen = useMediaQuery(USE_MEDIA_QUERY_INPUT)
   const { formData, formErrors, setFormData, setFormErrors } = props
   const { filingsList, courtCasesList, clientsList } = props

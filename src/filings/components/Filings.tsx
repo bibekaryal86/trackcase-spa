@@ -13,28 +13,47 @@ import {
 } from '@app/components/CommonComponents'
 import { GlobalState } from '@app/store/redux'
 import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
+import { getDayjsString, getNumber } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
 import { getCourtCases } from '@cases/actions/courtCases.action'
 import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { getClients } from '@clients/actions/clients.action'
 import { ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, ID_DEFAULT, INVALID_INPUT } from '@constants/index'
-import { FilingForm } from '@filings/components/FilingForm'
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  COMPONENT_STATUS_NAME,
+  FILING_TYPES,
+  FilingTypes,
+  ID_DEFAULT,
+  INVALID_INPUT,
+} from '@constants/index'
+import { FilingForm, FilingFormRfe } from '@filings/components/FilingForm'
 import { getRefTypes } from '@ref_types/actions/refTypes.action'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types'
 
 import FilingTable from './FilingTable'
-import { filingsAction, getFilings } from '../actions/filings.action'
+import { filingRfesAction, filingsAction, getFilings } from '../actions/filings.action'
 import {
   DefaultFilingFormData,
   DefaultFilingFormErrorData,
+  DefaultFilingRfeFormData,
+  DefaultFilingRfeFormErrorData,
   FilingBase,
   FilingFormData,
   FilingResponse,
+  FilingRfeBase,
+  FilingRfeFormData,
+  FilingRfeResponse,
   FilingSchema,
 } from '../types/filings.data.types'
-import { getClientFilingType, isAreTwoFilingsSame, validateFiling } from '../utils/filings.utils'
+import {
+  getClientFilingType,
+  isAreTwoFilingRfesSame,
+  isAreTwoFilingsSame,
+  validateFiling,
+  validateFilingRfe,
+} from '../utils/filings.utils'
 
 const mapStateToProps = ({ refTypes, filings, courtCases, clients }: GlobalState) => {
   return {
@@ -68,7 +87,14 @@ const Filings = (props: FilingsProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
   const dispatch = useDispatch()
-  const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
+  const [
+    addModalState,
+    addModalStateRfe,
+    updateModalState,
+    updateModalStateRfe,
+    deleteModalState,
+    deleteModalStateRfe,
+  ] = [useModal(), useModal(), useModal(), useModal(), useModal(), useModal()]
 
   const { filingsList, getFilings } = props
   const { refTypes, getRefTypes } = props
@@ -77,8 +103,11 @@ const Filings = (props: FilingsProps): React.ReactElement => {
   const { selectedCourtCase } = props
 
   const [formData, setFormData] = useState(DefaultFilingFormData)
+  const [formDataRfe, setFormDataRfe] = useState(DefaultFilingRfeFormData)
   const [formDataReset, setFormDataReset] = useState(DefaultFilingFormData)
+  const [formDataResetRfe, setFormDataResetRfe] = useState(DefaultFilingRfeFormData)
   const [formErrors, setFormErrors] = useState(DefaultFilingFormErrorData)
+  const [formErrorsRfe, setFormErrorsRfe] = useState(DefaultFilingRfeFormErrorData)
 
   const filingStatusList = useCallback(() => {
     return refTypes.componentStatus.filter((x) => x.componentName === COMPONENT_STATUS_NAME.FILINGS)
@@ -123,40 +152,65 @@ const Filings = (props: FilingsProps): React.ReactElement => {
     getFilings(requestMetadata)
   }
 
-  const primaryButtonCallback = async (action: ActionTypes) => {
-    const hasFormErrors = validateFiling(formData, setFormErrors)
+  const primaryButtonCallback = async (action: ActionTypes, type?: string) => {
+    const isRfe = type === FILING_TYPES.FILING_RFE
+    const filingId = isRfe ? getNumber(formDataRfe.id) : getNumber(formData.id)
+
+    const filingsRequest: FilingBase | FilingRfeBase = isRfe ? { ...formDataRfe } : { ...formData }
+
+    const hasFormErrors = isRfe
+      ? validateFilingRfe(formDataRfe, setFormErrorsRfe)
+      : validateFiling(formData, setFormErrors)
     if (hasFormErrors) {
       return
     }
 
-    let filingResponse: FilingResponse = { data: [], detail: { error: INVALID_INPUT } }
+    let filingResponse: FilingResponse | FilingRfeResponse = { data: [], detail: { error: INVALID_INPUT } }
     if (action === ACTION_TYPES.CREATE) {
-      const filingsRequest: FilingBase = { ...formData }
-      filingResponse = await filingsAction({ action, filingsRequest })(dispatch)
+      filingResponse = isRfe
+        ? await filingRfesAction({ action, filingRfesRequest: filingsRequest as FilingRfeBase })(dispatch)
+        : await filingsAction({ action, filingsRequest: filingsRequest as FilingBase })(dispatch)
     } else if (
       (action === ACTION_TYPES.UPDATE || action === ACTION_TYPES.DELETE || action === ACTION_TYPES.RESTORE) &&
-      getNumber(formData.id) > 0
+      getNumber(filingId) > 0
     ) {
-      const filingsRequest: FilingBase = { ...formData }
-      filingResponse = await filingsAction({
-        action: action,
-        filingsRequest: filingsRequest,
-        id: formData.id,
-        isRestore: action === ACTION_TYPES.RESTORE,
-        isHardDelete: formData.isHardDelete,
-      })(dispatch)
+      filingResponse = isRfe
+        ? await filingRfesAction({
+            action: action,
+            filingRfesRequest: filingsRequest as FilingRfeBase,
+            id: formData.id,
+            isRestore: action === ACTION_TYPES.RESTORE,
+            isHardDelete: formData.isHardDelete,
+          })(dispatch)
+        : await filingsAction({
+            action: action,
+            filingsRequest: filingsRequest as FilingBase,
+            id: formData.id,
+            isRestore: action === ACTION_TYPES.RESTORE,
+            isHardDelete: formData.isHardDelete,
+          })(dispatch)
     }
 
     if (filingResponse && !filingResponse.detail) {
-      secondaryButtonCallback(
-        addModalState,
-        updateModalState,
-        deleteModalState,
-        setFormData,
-        setFormErrors,
-        DefaultFilingFormData,
-        DefaultFilingFormErrorData,
-      )
+      isRfe
+        ? secondaryButtonCallback(
+            addModalStateRfe,
+            updateModalStateRfe,
+            deleteModalStateRfe,
+            setFormDataRfe,
+            setFormErrorsRfe,
+            DefaultFilingRfeFormData,
+            DefaultFilingRfeFormErrorData,
+          )
+        : secondaryButtonCallback(
+            addModalState,
+            updateModalState,
+            deleteModalState,
+            setFormData,
+            setFormErrors,
+            DefaultFilingFormData,
+            DefaultFilingFormErrorData,
+          )
       isForceFetch.current = true
       filingsList.length === 0 && getFilings({})
     }
@@ -174,6 +228,21 @@ const Filings = (props: FilingsProps): React.ReactElement => {
         courtCasesList={courtCasesList}
         filingTypesList={refTypes.filingType}
         selectedCourtCase={selectedCourtCase}
+      />
+    </Box>
+  )
+
+  const addUpdateModalContentRfe = () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginTop: -2 }}>
+      <FilingFormRfe
+        formData={formDataRfe}
+        setFormData={setFormDataRfe}
+        formErrors={formErrorsRfe}
+        setFormErrors={setFormErrorsRfe}
+        filingsList={filingsList}
+        filingTypesList={refTypes.filingType}
+        courtCasesList={courtCasesList}
+        clientsList={clientsList}
       />
     </Box>
   )
@@ -197,6 +266,25 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       isAreTwoFilingsSame(formData, formDataReset),
     )
 
+  const addModalRfe = () =>
+    addModalComponent(
+      COMPONENT_STATUS_NAME.FILINGS,
+      addUpdateModalContentRfe(),
+      primaryButtonCallback,
+      addModalStateRfe,
+      updateModalStateRfe,
+      deleteModalStateRfe,
+      setFormDataRfe,
+      setFormErrorsRfe,
+      DefaultFilingRfeFormData,
+      DefaultFilingRfeFormErrorData,
+      formDataResetRfe,
+      undefined,
+      isAreTwoFilingRfesSame(formDataRfe, formDataResetRfe),
+      false,
+      isAreTwoFilingRfesSame(formDataRfe, formDataResetRfe),
+    )
+
   const updateModal = () =>
     updateModalComponent(
       COMPONENT_STATUS_NAME.FILINGS,
@@ -216,20 +304,44 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       isAreTwoFilingsSame(formData, formDataReset),
     )
 
-  const deleteModalContextText = `ARE YOU SURE YOU WANT TO ${
-    formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
-  } FILING ${getClientFilingType(
-    formData.filingTypeId,
-    refTypes.filingType,
-    formData.courtCaseId,
-    courtCasesList,
-    clientsList,
-  )}?!?`
+  const updateModalRfe = () =>
+    updateModalComponent(
+      COMPONENT_STATUS_NAME.FILINGS,
+      addUpdateModalContentRfe(),
+      primaryButtonCallback,
+      addModalStateRfe,
+      updateModalStateRfe,
+      deleteModalStateRfe,
+      setFormDataRfe,
+      setFormErrorsRfe,
+      DefaultFilingRfeFormData,
+      DefaultFilingRfeFormErrorData,
+      formDataResetRfe,
+      undefined,
+      isAreTwoFilingRfesSame(formDataRfe, formDataResetRfe),
+      false,
+      isAreTwoFilingRfesSame(formDataRfe, formDataResetRfe),
+    )
+
+  const getDeleteModalContextText = (type: FilingTypes) =>
+    type === FILING_TYPES.FILING
+      ? `ARE YOU SURE YOU WANT TO ${
+          formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE
+        } FILING ${getClientFilingType(
+          formData.filingTypeId,
+          refTypes.filingType,
+          formData.courtCaseId,
+          courtCasesList,
+          clientsList,
+        )}?!?`
+      : `ARE YOU SURE YOU WANT TO ${formDataRfe.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} FILING RFE ${
+          formDataRfe.rfeReason
+        }, ${getDayjsString(formDataRfe.rfeDate)}?!?`
 
   const deleteModal = () =>
     deleteModalComponent(
       COMPONENT_STATUS_NAME.FILINGS,
-      deleteModalContextText,
+      getDeleteModalContextText(FILING_TYPES.FILING),
       primaryButtonCallback,
       addModalState,
       updateModalState,
@@ -242,6 +354,22 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       formErrors,
     )
 
+  const deleteModalRfe = () =>
+    deleteModalComponent(
+      COMPONENT_STATUS_NAME.FILINGS,
+      getDeleteModalContextText(FILING_TYPES.FILING_RFE),
+      primaryButtonCallback,
+      addModalStateRfe,
+      updateModalStateRfe,
+      deleteModalStateRfe,
+      setFormDataRfe,
+      setFormErrorsRfe,
+      DefaultFilingRfeFormData,
+      DefaultFilingRfeFormErrorData,
+      formDataRfe,
+      formErrorsRfe,
+    )
+
   const actionButtons = (formDataModal: FilingFormData) =>
     tableActionButtonsComponent(
       COMPONENT_STATUS_NAME.FILINGS,
@@ -252,18 +380,44 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       setFormDataReset,
     )
 
+  const actionButtonsRfe = (formDataModal: FilingRfeFormData) =>
+    tableActionButtonsComponent(
+      COMPONENT_STATUS_NAME.FILINGS,
+      formDataModal,
+      updateModalStateRfe,
+      deleteModalStateRfe,
+      setFormDataRfe,
+      setFormDataResetRfe,
+    )
+
+  const addFilingRfeButtonCallback = (filingId: number) => setFormDataRfe({ ...DefaultFilingRfeFormData, filingId })
+
   const filingsTable = () => (
     <FilingTable
       filingsList={selectedCourtCase ? selectedCourtCase.filings || [] : filingsList}
       actionButtons={actionButtons}
+      actionButtonsRfe={actionButtonsRfe}
       addModalState={addModalState}
+      addModalStateRfe={addModalStateRfe}
       softDeleteCallback={getFilingsWithMetadata}
       componentStatusList={filingStatusList()}
       filingTypesList={refTypes.filingType}
       courtCasesList={courtCasesList}
       clientsList={clientsList}
       selectedCourtCase={selectedCourtCase}
+      addFilingRfeButtonCallback={addFilingRfeButtonCallback}
     />
+  )
+
+  const showModals = () => (
+    <>
+      {addModal()}
+      {addModalRfe()}
+      {updateModal()}
+      {updateModalRfe()}
+      {deleteModal()}
+      {deleteModalRfe()}
+    </>
   )
 
   return (
@@ -276,9 +430,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
           {filingsTable()}
         </Grid>
       </Grid>
-      {addModal()}
-      {updateModal()}
-      {deleteModal()}
+      {showModals()}
     </Box>
   )
 }

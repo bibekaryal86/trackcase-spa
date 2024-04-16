@@ -178,6 +178,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     const cashCollectionsTableData = Array.from(cashCollectionsList, (y: CashCollectionSchema) => {
       return {
         ...collectionsTableDataCommon(y, true),
+        isDeleted: y.isDeleted,
         actions: actionButtonsCash ? actionButtonsCash(getCashCollectionFormDataFromSchema(y)) : undefined,
       }
     })
@@ -205,6 +206,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       return {
         ...collectionsTableDataCommon(x, false),
         cashCollections: getCashCollectionsTable(x),
+        isDeleted: x.isDeleted,
         actions: actionButtonsCase ? actionButtonsCase(getCaseCollectionFormDataFromSchema(x)) : undefined,
       }
     })
