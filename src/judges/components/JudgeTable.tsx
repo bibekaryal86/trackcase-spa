@@ -107,7 +107,11 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
       componentName={COMPONENT_STATUS_NAME.JUDGES}
       headerData={judgesTableHeaderData()}
       tableData={judgesTableData()}
-      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.JUDGES, addModalState)}
+      addModelComponent={tableAddButtonComponent(
+        COMPONENT_STATUS_NAME.JUDGES,
+        COMPONENT_STATUS_NAME.JUDGES,
+        addModalState,
+      )}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )

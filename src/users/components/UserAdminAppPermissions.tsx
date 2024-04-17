@@ -38,9 +38,6 @@ const UserAdminAppPermissions = (): React.ReactElement => {
   const [formDataReset, setFormDataReset] = useState(DefaultAppPermissionFormData)
   const [formErrors, setFormErrors] = useState(DefaultAppPermissionFormData)
 
-  const componentName = USER_ADMIN_REGISTRY.APP_PERMISSIONS
-  const componentNameNoUnderscore = componentName.replace('_', ' ')
-
   useEffect(() => {
     getAppPermissions(dispatch).then((r) => setAppPermissionsList(r.data))
   }, [dispatch])
@@ -112,7 +109,7 @@ const UserAdminAppPermissions = (): React.ReactElement => {
 
   const addModal = () =>
     addModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_PERMISSIONS,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -127,7 +124,7 @@ const UserAdminAppPermissions = (): React.ReactElement => {
 
   const updateModal = () =>
     updateModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_PERMISSIONS,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -146,7 +143,7 @@ const UserAdminAppPermissions = (): React.ReactElement => {
 
   const deleteModal = () =>
     deleteModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_PERMISSIONS,
       deleteModalContextText,
       primaryButtonCallback,
       addModalState,
@@ -172,10 +169,14 @@ const UserAdminAppPermissions = (): React.ReactElement => {
 
   const appPermissionTable = () => (
     <Table
-      componentName={componentNameNoUnderscore}
+      componentName={USER_ADMIN_REGISTRY.APP_PERMISSIONS}
       headerData={appPermissionsTableHeader()}
       tableData={appPermissionsTableData(appPermissionsList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_PERMISSIONS, addModalState)}
+      addModelComponent={tableAddButtonComponent(
+        USER_ADMIN_REGISTRY.APP_PERMISSIONS,
+        USER_ADMIN_REGISTRY.APP_PERMISSIONS,
+        addModalState,
+      )}
       getSoftDeletedCallback={() => getAppPermissionsWithMetadata({ isIncludeDeleted: true })}
     />
   )

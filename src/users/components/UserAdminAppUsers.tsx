@@ -61,9 +61,6 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
   const [formDataReset, setFormDataReset] = useState(DefaultAppUserFormData)
   const [formErrors, setFormErrors] = useState(DefaultAppUserFormErrorData)
 
-  const componentName = USER_ADMIN_REGISTRY.APP_USERS
-  const componentNameNoUnderscore = componentName.replace('_', ' ')
-
   useEffect(() => {
     getAppUsers(dispatch).then((r) => setAppUsersList(r.data))
   }, [dispatch])
@@ -158,7 +155,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const addModal = () =>
     addModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_USERS,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -173,7 +170,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const updateModal = () =>
     updateModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_USERS,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -192,7 +189,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const deleteModal = () =>
     deleteModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_USERS,
       deleteModalContextText,
       primaryButtonCallback,
       addModalState,
@@ -218,10 +215,14 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
 
   const appUserTable = () => (
     <Table
-      componentName={componentNameNoUnderscore}
+      componentName={USER_ADMIN_REGISTRY.APP_USERS}
       headerData={appUsersTableHeader()}
       tableData={appUsersTableData(appUsersList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_USERS, addModalState)}
+      addModelComponent={tableAddButtonComponent(
+        USER_ADMIN_REGISTRY.APP_USERS,
+        USER_ADMIN_REGISTRY.APP_USERS,
+        addModalState,
+      )}
       getSoftDeletedCallback={() => getAppUsersWithMetadata({ isIncludeDeleted: true })}
     />
   )

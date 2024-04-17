@@ -220,11 +220,12 @@ const FilingTable = (props: FilingTableProps): React.ReactElement => {
 
     return (
       <Table
-        componentName={FILING_TYPES.FILING_RFE.replace('_', ' ')}
+        componentName={FILING_TYPES.FILING_RFE}
         headerData={filingRfesHeaderData}
         tableData={filingRfesTableData}
         addModelComponent={tableAddButtonComponent(
           COMPONENT_STATUS_NAME.FILINGS,
+          FILING_TYPES.FILING_RFE,
           addModalStateRfe,
           addButtonExtraCallback,
         )}
@@ -250,7 +251,7 @@ const FilingTable = (props: FilingTableProps): React.ReactElement => {
       componentName={COMPONENT_STATUS_NAME.FILINGS}
       headerData={filingsTableHeaderData(false)}
       tableData={filingsTableData()}
-      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.FILINGS, addModalState)}
+      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.FILINGS, FILING_TYPES.FILING, addModalState)}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )

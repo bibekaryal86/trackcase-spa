@@ -91,7 +91,7 @@ export const pageTitleComponent = (component: string, componentName?: string) =>
   <>
     <Typography component="h1" variant="h6" color="primary">
       {component}
-      {componentName ? `: ${componentName}` : ''}
+      {componentName ? `: ${componentName.replace('_', ' ')}` : ''}
     </Typography>
     <Divider />
   </>
@@ -104,7 +104,7 @@ export const pageTopLinksComponent = (
 ) => {
   const backToPageText = 'BACK TO PREV PAGE'
   const backToPageLink = searchQueryParams.get('backTo') || ''
-  const viewAllText = `VIEW ALL ${viewAllComponent}`
+  const viewAllText = `VIEW ALL ${viewAllComponent.replace('_', ' ')}`
   return (
     <Box sx={{ display: 'flex' }}>
       {backToPageLink && (
@@ -119,7 +119,7 @@ export const pageTopLinksComponent = (
 
 export const pageNotSelectedComponent = (component: string) => (
   <Typography component="h1" variant="h6" color="error" gutterBottom>
-    {`ITEM NOT SELECTED! NOTHING TO DISPLAY!! GO TO ${component} PAGE AND CLICK ONE TO SELECT!!!`}
+    {`ITEM NOT SELECTED! NOTHING TO DISPLAY!! GO TO ${component.replace('_', ' ')} PAGE AND CLICK ONE TO SELECT!!!`}
   </Typography>
 )
 
@@ -144,8 +144,16 @@ export const pageActionButtonsComponent = <T extends FormData>(
   </>
 )
 
+export const getComponentNameDisplay = (componentName: string, isKeepPlural?: boolean) => {
+  if (componentName.endsWith('S') && !isKeepPlural) {
+    componentName = componentName.slice(0, -1)
+  }
+  return componentName.replace(/_/g, ' ')
+}
+
 export const tableAddButtonComponent = (
   componentName: string,
+  createNewDisplay: string,
   addModalState?: ModalState,
   extraCallback?: () => void,
 ) =>
@@ -156,7 +164,7 @@ export const tableAddButtonComponent = (
         extraCallback && extraCallback()
       }}
     >
-      {ACTION_TYPES.CREATE} NEW
+      {ACTION_TYPES.CREATE} {getComponentNameDisplay(createNewDisplay)}
     </Button>
   ) : undefined
 
@@ -327,7 +335,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
         addModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${ACTION_TYPES.CREATE} ${componentName}`}
+      title={`${ACTION_TYPES.CREATE} ${getComponentNameDisplay(componentName)}`}
       primaryButtonText={ACTION_TYPES.CREATE}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE, type)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
@@ -385,7 +393,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
         updateModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${ACTION_TYPES.UPDATE} ${componentName}`}
+      title={`${ACTION_TYPES.UPDATE} ${getComponentNameDisplay(componentName)}`}
       primaryButtonText={ACTION_TYPES.UPDATE}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE, type)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
@@ -444,7 +452,9 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
         deleteModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${componentName}`}
+      title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${getComponentNameDisplay(
+        componentName,
+      )}`}
       primaryButtonText={formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
       primaryButtonCallback={() =>
         primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE, type)

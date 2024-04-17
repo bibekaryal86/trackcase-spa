@@ -43,7 +43,6 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
   const { selectedCourtCase, selectedFiling } = props
 
   const isHearingCalendarTable = type === CALENDAR_TYPES.HEARING_CALENDAR
-  const calendarTypeForDisplay = type.toString().replace('_', ' ')
 
   const calendarsTableHeaderData = (): TableHeaderData[] => {
     const tableHeaderData: TableHeaderData[] = [
@@ -271,10 +270,14 @@ const CalendarTable = (props: CalendarTableProps): React.ReactElement => {
 
   return (
     <Table
-      componentName={calendarTypeForDisplay}
+      componentName={type}
       headerData={calendarsTableHeaderData()}
       tableData={calendarsTableData()}
-      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.CALENDARS, addModalState)}
+      addModelComponent={tableAddButtonComponent(
+        COMPONENT_STATUS_NAME.CALENDARS,
+        isHearingCalendarTable ? CALENDAR_TYPES.HEARING_CALENDAR : CALENDAR_TYPES.TASK_CALENDAR,
+        addModalState,
+      )}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )

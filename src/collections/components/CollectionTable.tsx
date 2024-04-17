@@ -191,11 +191,12 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
     return (
       <Table
-        componentName={COLLECTION_TYPES.CASH_COLLECTION.replace('_', ' ')}
+        componentName={COLLECTION_TYPES.CASH_COLLECTION}
         headerData={cashCollectionsHeaderData}
         tableData={cashCollectionsTableData}
         addModelComponent={tableAddButtonComponent(
           COMPONENT_STATUS_NAME.COLLECTIONS,
+          COLLECTION_TYPES.CASH_COLLECTION,
           addModalStateCash,
           addButtonExtraCallback,
         )}
@@ -218,10 +219,14 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
   return (
     <Table
-      componentName={COLLECTION_TYPES.CASE_COLLECTION.replace('_', ' ')}
+      componentName={COLLECTION_TYPES.CASE_COLLECTION}
       headerData={collectionsTableHeaderData(false)}
       tableData={collectionsTableData()}
-      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalStateCase)}
+      addModelComponent={tableAddButtonComponent(
+        COMPONENT_STATUS_NAME.COLLECTIONS,
+        COLLECTION_TYPES.CASE_COLLECTION,
+        addModalStateCase,
+      )}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )

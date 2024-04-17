@@ -17,6 +17,7 @@ import { isBoolean } from 'lodash'
 import React, { isValidElement, useMemo, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
+import { getComponentNameDisplay } from '@app/components/CommonComponents'
 import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
 import { isSuperuser } from '@users/utils/users.utils'
 
@@ -180,7 +181,7 @@ const emptyTableMessage = (
 ): React.JSX.Element => {
   const messageText =
     'TABLE IS EMPTY! IF AN ERROR MESSAGE WAS NOT DISPLAYED, THEN THERE ARE LIKELY NO ' +
-    'COMPONENT IN THE SYSTEM...'.replace('COMPONENT', componentName)
+    'COMPONENT IN THE SYSTEM...'.replace('COMPONENT', getComponentNameDisplay(componentName, true))
   const messageStyle: React.CSSProperties = {
     paddingTop: '25px',
     paddingBottom: '25px',

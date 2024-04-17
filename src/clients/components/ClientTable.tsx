@@ -125,7 +125,11 @@ const ClientTable = (props: ClientTableProps): React.ReactElement => {
       componentName={COMPONENT_STATUS_NAME.CLIENTS}
       headerData={clientsTableHeaderData()}
       tableData={clientsTableData()}
-      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.CLIENTS, addModalState)}
+      addModelComponent={tableAddButtonComponent(
+        COMPONENT_STATUS_NAME.CLIENTS,
+        COMPONENT_STATUS_NAME.CLIENTS,
+        addModalState,
+      )}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )
