@@ -174,10 +174,6 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
   const getCashCollectionsTable = (x: CaseCollectionSchema) => {
     const cashCollectionsList = x.cashCollections || []
-    if (cashCollectionsList.length === 0) {
-      return undefined
-    }
-
     const cashCollectionsHeaderData = collectionsTableHeaderData(true)
     const cashCollectionsTableData = Array.from(cashCollectionsList, (y: CashCollectionSchema) => {
       return {
@@ -202,6 +198,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
         )}
         defaultDense
         isDisablePagination
+        isNoShowEmptyTableMessage={cashCollectionsTableData.length === 0}
       />
     )
   }

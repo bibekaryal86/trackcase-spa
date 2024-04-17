@@ -34,6 +34,7 @@ interface TableHeaderProps {
   onRequestSort?: (event: React.MouseEvent<unknown>, property: keyof TableData) => void
   isSortDisabledInTable?: boolean
   isCollapse?: boolean
+  isNoShowEmptyTable?: boolean
 }
 interface TableProps {
   componentName: string
@@ -51,6 +52,7 @@ interface TableProps {
   tableLayout?: string
   isDisablePagination?: boolean
   getSoftDeletedCallback?: (isIncludeDeleted: boolean) => void
+  isNoShowEmptyTableMessage?: boolean
 }
 interface TableRowProps {
   row: TableData
@@ -178,7 +180,11 @@ function getCollapseRowKey(tableData: TableData): string | undefined {
 const emptyTableMessage = (
   componentName: string,
   showSoftDeleteComponent: React.JSX.Element | null,
-): React.JSX.Element => {
+  isNoShowEmptyTableMessage: boolean
+): React.JSX.Element | undefined => {
+  if (isNoShowEmptyTableMessage) {
+    return undefined
+  }
   const messageText =
     'TABLE IS EMPTY! IF AN ERROR MESSAGE WAS NOT DISPLAYED, THEN THERE ARE LIKELY NO ' +
     'COMPONENT IN THE SYSTEM...'.replace('COMPONENT', getComponentNameDisplay(componentName, true))
@@ -234,6 +240,10 @@ const tablePagination = (
 )
 
 const TableHeader = (props: TableHeaderProps) => {
+  if (props.isNoShowEmptyTable) {
+    return undefined
+  }
+
   const { headerData, order, orderBy, onRequestSort } = props
   const createSortHandler = (property: keyof TableData) => (event: React.MouseEvent<unknown>) => {
     onRequestSort && onRequestSort(event, property)
@@ -411,6 +421,7 @@ const Table = (props: TableProps) => {
             onRequestSort={handleRequestSort}
             isSortDisabledInTable={props.isSortDisabledInTable}
             isCollapse={!!collapseRowKey}
+            isNoShowEmptyTable={props.isNoShowEmptyTableMessage || false}
           />
           <TableBody>
             {visibleRows.map((row: TableData, index: number) => (
@@ -435,7 +446,7 @@ const Table = (props: TableProps) => {
         </MuiTable>
       </TableContainer>
       {tableData.length === 0
-        ? emptyTableMessage(props.componentName, showSoftDeletedComponent())
+        ? emptyTableMessage(props.componentName, showSoftDeletedComponent(), props.isNoShowEmptyTableMessage || false)
         : props.isDisablePagination
         ? null
         : tablePagination(
