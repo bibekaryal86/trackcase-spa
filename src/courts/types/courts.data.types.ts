@@ -7,6 +7,7 @@ import { AppUserSchema } from '@users/types/users.data.types'
 
 export interface CourtBase extends AddressBaseSchema {
   name: string
+  courtUrl: string
   componentStatusId: number
   dhsAddress?: string
   comments?: string
@@ -52,6 +53,7 @@ export interface CourtFormErrorData extends CourtSchema {
 
 export const DefaultCourtSchema: CourtSchema = {
   name: '',
+  courtUrl: '',
   componentStatusId: ID_DEFAULT,
   streetAddress: '',
   city: '',
