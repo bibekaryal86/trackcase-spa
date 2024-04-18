@@ -178,7 +178,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
         ? await filingRfesAction({
             action: action,
             filingRfesRequest: filingsRequest as FilingRfeBase,
-            id: formData.id,
+            id: formDataRfe.id,
             isRestore: action === ACTION_TYPES.RESTORE,
             isHardDelete: formData.isHardDelete,
           })(dispatch)
