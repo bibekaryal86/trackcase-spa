@@ -11,6 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
+import { componentStatusListForSelect } from '@app/components/CommonComponents'
 import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '@constants/index'
 import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
 
@@ -298,13 +299,6 @@ export const FormSelectStateField: React.FC<StateSelectProps> = ({
   />
 )
 
-const getStatusItems = (statusList: ComponentStatusSchema[]) =>
-  statusList.map((status) => (
-    <MenuItem key={status.id} value={status.id}>
-      {status.statusName}
-    </MenuItem>
-  ))
-
 export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
   componentLabel,
   name = 'componentStatusId',
@@ -320,7 +314,7 @@ export const FormSelectStatusField: React.FC<StatusSelectProps> = ({
     name={name}
     value={value || ''}
     onChange={onChange}
-    menuItems={getStatusItems(statusList)}
+    menuItems={componentStatusListForSelect(statusList)}
     required={required}
     error={error}
     helperText={helperText}

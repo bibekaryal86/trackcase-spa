@@ -4,6 +4,7 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import Divider from '@mui/material/Divider'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import { Dayjs } from 'dayjs'
 import React from 'react'
@@ -11,22 +12,30 @@ import React from 'react'
 import {
   HearingCalendarFormData,
   HearingCalendarFormErrorData,
+  HearingCalendarSchema,
   TaskCalendarFormData,
   TaskCalendarFormErrorData,
 } from '@calendars/types/calendars.data.types'
-import { CourtCaseFormData, CourtCaseFormErrorData } from '@cases/types/courtCases.data.types'
-import { ClientFormData, ClientFormErrorData } from '@clients/types/clients.data.types'
+import { CourtCaseFormData, CourtCaseFormErrorData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
+import { ClientFormData, ClientFormErrorData, ClientSchema } from '@clients/types/clients.data.types'
 import {
   CaseCollectionFormData,
   CaseCollectionFormErrorData,
+  CaseCollectionSchema,
   CashCollectionFormData,
   CashCollectionFormErrorData,
 } from '@collections/types/collections.data.types'
 import { ACTION_TYPES, ActionTypes } from '@constants/index'
-import { CourtFormData, CourtFormErrorData } from '@courts/types/courts.data.types'
-import { FilingFormData, FilingFormErrorData } from '@filings/types/filings.data.types'
-import { JudgeFormData, JudgeFormErrorData } from '@judges/types/judges.data.types'
-import { RefTypeFormData } from '@ref_types/types/refTypes.data.types'
+import { CourtFormData, CourtFormErrorData, CourtSchema } from '@courts/types/courts.data.types'
+import {
+  FilingFormData,
+  FilingFormErrorData,
+  FilingRfeFormData,
+  FilingRfeFormErrorData,
+  FilingSchema,
+} from '@filings/types/filings.data.types'
+import { JudgeFormData, JudgeFormErrorData, JudgeSchema } from '@judges/types/judges.data.types'
+import { ComponentStatusSchema, RefTypeFormData, RefTypeLessStatusSchema } from '@ref_types/types/refTypes.data.types'
 import {
   AppPermissionFormData,
   AppRoleFormData,
@@ -42,7 +51,7 @@ import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
 import Link from './Link'
 import Modal from './Modal'
 import { ModalState } from '../types/app.data.types'
-import { getNumericOnly, isNumericOnly } from '../utils/app.utils'
+import { getDayjsString, getNumber, getNumericOnly, isNumericOnly } from '../utils/app.utils'
 
 type FormData =
   | AppUserFormData
@@ -56,6 +65,7 @@ type FormData =
   | ClientFormData
   | CourtCaseFormData
   | FilingFormData
+  | FilingRfeFormData
   | HearingCalendarFormData
   | TaskCalendarFormData
   | CaseCollectionFormData
@@ -71,6 +81,7 @@ type FormErrorData =
   | ClientFormErrorData
   | CourtCaseFormErrorData
   | FilingFormErrorData
+  | FilingRfeFormErrorData
   | HearingCalendarFormErrorData
   | TaskCalendarFormErrorData
   | CaseCollectionFormErrorData
@@ -80,7 +91,7 @@ export const pageTitleComponent = (component: string, componentName?: string) =>
   <>
     <Typography component="h1" variant="h6" color="primary">
       {component}
-      {componentName ? `: ${componentName}` : ''}
+      {componentName ? `: ${componentName.replace('_', ' ')}` : ''}
     </Typography>
     <Divider />
   </>
@@ -93,7 +104,7 @@ export const pageTopLinksComponent = (
 ) => {
   const backToPageText = 'BACK TO PREV PAGE'
   const backToPageLink = searchQueryParams.get('backTo') || ''
-  const viewAllText = `VIEW ALL ${viewAllComponent}`
+  const viewAllText = `VIEW ALL ${viewAllComponent.replace('_', ' ')}`
   return (
     <Box sx={{ display: 'flex' }}>
       {backToPageLink && (
@@ -108,7 +119,7 @@ export const pageTopLinksComponent = (
 
 export const pageNotSelectedComponent = (component: string) => (
   <Typography component="h1" variant="h6" color="error" gutterBottom>
-    {`ITEM NOT SELECTED! NOTHING TO DISPLAY!! GO TO ${component} PAGE AND CLICK ONE TO SELECT!!!`}
+    {`ITEM NOT SELECTED! NOTHING TO DISPLAY!! GO TO ${component.replace('_', ' ')} PAGE AND CLICK ONE TO SELECT!!!`}
   </Typography>
 )
 
@@ -133,8 +144,16 @@ export const pageActionButtonsComponent = <T extends FormData>(
   </>
 )
 
+export const getComponentNameDisplay = (componentName: string, isKeepPlural?: boolean) => {
+  if (componentName.endsWith('S') && !isKeepPlural) {
+    componentName = componentName.slice(0, -1)
+  }
+  return componentName.replace(/_/g, ' ')
+}
+
 export const tableAddButtonComponent = (
   componentName: string,
+  createNewDisplay: string,
   addModalState?: ModalState,
   extraCallback?: () => void,
 ) =>
@@ -145,7 +164,7 @@ export const tableAddButtonComponent = (
         extraCallback && extraCallback()
       }}
     >
-      {ACTION_TYPES.CREATE} NEW
+      {ACTION_TYPES.CREATE} {getComponentNameDisplay(createNewDisplay)}
     </Button>
   ) : undefined
 
@@ -316,7 +335,7 @@ export const addModalComponent = <T extends FormData, U extends FormErrorData>(
         addModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${ACTION_TYPES.CREATE} ${componentName}`}
+      title={`${ACTION_TYPES.CREATE} ${getComponentNameDisplay(componentName)}`}
       primaryButtonText={ACTION_TYPES.CREATE}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.CREATE, type)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
@@ -374,7 +393,7 @@ export const updateModalComponent = <T extends FormData, U extends FormErrorData
         updateModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${ACTION_TYPES.UPDATE} ${componentName}`}
+      title={`${ACTION_TYPES.UPDATE} ${getComponentNameDisplay(componentName)}`}
       primaryButtonText={ACTION_TYPES.UPDATE}
       primaryButtonCallback={() => primaryButtonCallback(ACTION_TYPES.UPDATE, type)}
       secondaryButtonText={ACTION_TYPES.CANCEL}
@@ -433,7 +452,9 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
         deleteModalState.toggleModalView()
         setFormData({ ...defaultFormData })
       }}
-      title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${componentName}`}
+      title={`${formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE} ${getComponentNameDisplay(
+        componentName,
+      )}`}
       primaryButtonText={formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE}
       primaryButtonCallback={() =>
         primaryButtonCallback(formData.isDeleted ? ACTION_TYPES.RESTORE : ACTION_TYPES.DELETE, type)
@@ -457,4 +478,209 @@ export const deleteModalComponent = <T extends FormData, U extends FormErrorData
       resetButtonDisabled={resetButtonDisabled}
     />
   )
+}
+
+export const componentStatusListForSelect = (componentStatusList: ComponentStatusSchema[]) =>
+  componentStatusList.map((status) => (
+    <MenuItem key={status.id} value={status.id}>
+      {status.statusName}
+    </MenuItem>
+  ))
+
+export const refTypesListForSelect = (refTypesList: RefTypeLessStatusSchema[]) =>
+  refTypesList.map((x) => (
+    <MenuItem key={x.id} value={x.id}>
+      {x.name}
+    </MenuItem>
+  ))
+
+export const courtsListForSelect = (courtsList: CourtSchema[], courtId?: number, formDataCourtId?: number) => {
+  if (getNumber(courtId) > 0) {
+    const selectedCourt = courtsList.find((x) => x.id === courtId)
+    if (selectedCourt) {
+      return [
+        <MenuItem key={selectedCourt.id} value={selectedCourt.id}>
+          {selectedCourt.name}
+        </MenuItem>,
+      ]
+    }
+  } else {
+    return courtsList
+      .filter((x) => formDataCourtId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.name}
+        </MenuItem>
+      ))
+  }
+  return []
+}
+
+export const judgesListForSelect = (judgesList: JudgeSchema[], judgeId?: number, formDataJudgeId?: number) => {
+  if (getNumber(judgeId) > 0) {
+    const selectedJudge = judgesList.find((x) => x.id === judgeId)
+    if (selectedJudge) {
+      return [
+        <MenuItem key={selectedJudge.id} value={selectedJudge.id}>
+          {selectedJudge.name}
+        </MenuItem>,
+      ]
+    }
+  } else {
+    return judgesList
+      .filter((x) => formDataJudgeId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.name}
+        </MenuItem>
+      ))
+  }
+  return []
+}
+
+export const clientsListForSelect = (clientsList: ClientSchema[], clientId?: number, formDataClientId?: number) => {
+  if (getNumber(clientId) > 0) {
+    const selectedClient = clientsList.find((x) => x.id === clientId)
+    if (selectedClient) {
+      return [
+        <MenuItem key={selectedClient.id} value={selectedClient.id}>
+          {selectedClient.name}
+        </MenuItem>,
+      ]
+    }
+  } else {
+    return clientsList
+      .filter((x) => formDataClientId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.name}
+        </MenuItem>
+      ))
+  }
+  return []
+}
+
+export const courtCasesListForSelect = (
+  courtCasesList: CourtCaseSchema[],
+  selectedCourtCase?: CourtCaseSchema,
+  formDataCourtCaseId?: number,
+) => {
+  if (selectedCourtCase) {
+    return [
+      <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
+        {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
+      </MenuItem>,
+    ]
+  } else {
+    return courtCasesList
+      .filter((x) => formDataCourtCaseId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {x.client?.name}, {x.caseType?.name}
+        </MenuItem>
+      ))
+  }
+}
+
+const hearingCalendarForSelect = (
+  x: HearingCalendarSchema,
+  clientsList: ClientSchema[],
+  courtCasesList: CourtCaseSchema[],
+) => {
+  const client = clientsList.find((y) => x.courtCase?.clientId === y.id)
+  const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+  return `${client?.name}, ${courtCase?.caseType?.name} [${getDayjsString(x.hearingDate)}]`
+}
+
+export const hearingCalendarListForSelect = (
+  hearingCalendarList: HearingCalendarSchema[],
+  clientsList: ClientSchema[],
+  courtCasesList: CourtCaseSchema[],
+  selectedCourtCase?: CourtCaseSchema,
+  formDataHearingCalendarId?: number,
+) => {
+  if (selectedCourtCase && selectedCourtCase.hearingCalendars) {
+    return selectedCourtCase.hearingCalendars
+      .filter((x) => formDataHearingCalendarId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {hearingCalendarForSelect(x, clientsList, courtCasesList)}
+        </MenuItem>
+      ))
+  } else {
+    return hearingCalendarList
+      .filter((x) => formDataHearingCalendarId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {hearingCalendarForSelect(x, clientsList, courtCasesList)}
+        </MenuItem>
+      ))
+  }
+}
+
+const filingForSelect = (x: FilingSchema, clientsList: ClientSchema[], courtCasesList: CourtCaseSchema[]) => {
+  const client = clientsList.find((y) => x.courtCase?.clientId === y.id)
+  const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+  return `${client?.name}, ${courtCase?.caseType?.name} [${x.filingType?.name}]`
+}
+
+export const filingListForSelect = (
+  filingsList: FilingSchema[],
+  clientsList: ClientSchema[],
+  courtCasesList: CourtCaseSchema[],
+  selectedCourtCase?: CourtCaseSchema,
+  formDataFilingId?: number,
+) => {
+  if (selectedCourtCase && selectedCourtCase.filings) {
+    return selectedCourtCase.filings
+      .filter((x) => formDataFilingId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {filingForSelect(x, clientsList, courtCasesList)}
+        </MenuItem>
+      ))
+  } else {
+    return filingsList
+      .filter((x) => formDataFilingId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {filingForSelect(x, clientsList, courtCasesList)}
+        </MenuItem>
+      ))
+  }
+}
+
+const caseCollectionForSelect = (
+  x: CaseCollectionSchema,
+  clientsList: ClientSchema[],
+  courtCasesList: CourtCaseSchema[],
+) => {
+  const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
+  const client = clientsList.find((y) => courtCase?.clientId === y.id)
+  return `${client?.name}, ${courtCase?.caseType?.name}`
+}
+
+export const caseCollectionListForSelect = (
+  caseCollectionList: CaseCollectionSchema[],
+  clientsList: ClientSchema[],
+  courtCasesList: CourtCaseSchema[],
+  selectedCourtCase?: CourtCaseSchema,
+  formDataCaseCollectionId?: number,
+) => {
+  if (selectedCourtCase && selectedCourtCase.caseCollections) {
+    return selectedCourtCase.caseCollections
+      .filter((x) => formDataCaseCollectionId === x.id || x.componentStatus?.isActive)
+      .map((x) => (
+        <MenuItem key={x.id} value={x.id}>
+          {caseCollectionForSelect(x, clientsList, courtCasesList)}
+        </MenuItem>
+      ))
+  }
+  return caseCollectionList
+    .filter((x) => formDataCaseCollectionId === x.id || x.componentStatus?.isActive)
+    .map((x) => (
+      <MenuItem key={x.id} value={x.id}>
+        {caseCollectionForSelect(x, clientsList, courtCasesList)}
+      </MenuItem>
+    ))
 }

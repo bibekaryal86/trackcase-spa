@@ -250,7 +250,7 @@ const CourtCases = (props: CourtCasesProps): React.ReactElement => {
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {pageTitleComponent(COMPONENT_STATUS_NAME.COURT_CASES.replace('_', ' '))}
+          {pageTitleComponent(COMPONENT_STATUS_NAME.COURT_CASES)}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {courtCasesTable()}

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { getDayjs, getNumber } from '@app/utils/app.utils'
+import { getDayjs, getNumber, getString } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
 import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
 import { ClientSchema } from '@clients/types/clients.data.types'
@@ -9,8 +9,12 @@ import { FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
 
 import {
   DefaultFilingFormErrorData,
+  DefaultFilingRfeFormErrorData,
   FilingFormData,
   FilingFormErrorData,
+  FilingRfeFormData,
+  FilingRfeFormErrorData,
+  FilingRfeSchema,
   FilingSchema,
 } from '../types/filings.data.types'
 
@@ -23,10 +27,20 @@ export const isAreTwoFilingsSame = (one: FilingSchema | FilingFormData, two: Fil
   one.receiptDate === two.receiptDate &&
   one.receiptNumber === two.receiptNumber &&
   one.receiptDate === two.receiptDate &&
-  one.rfeDate === two.rfeDate &&
-  one.rfeSubmitDate === two.rfeSubmitDate &&
   one.decisionDate === two.decisionDate &&
   one.componentStatusId === two.componentStatusId &&
+  one.comments === two.comments
+
+export const isAreTwoFilingRfesSame = (
+  one: FilingRfeSchema | FilingRfeFormData,
+  two: FilingRfeSchema | FilingRfeFormData,
+) =>
+  one &&
+  two &&
+  one.filingId === two.filingId &&
+  one.rfeDate === two.rfeDate &&
+  one.rfeSubmitDate === two.rfeSubmitDate &&
+  one.rfeReason === two.rfeReason &&
   one.comments === two.comments
 
 export const validateFiling = (formData: FilingFormData, setFormErrors: (formErrors: FilingFormErrorData) => void) => {
@@ -75,16 +89,44 @@ export const validateFiling = (formData: FilingFormData, setFormErrors: (formErr
       formErrorsLocal.receiptDateError = 'REQUIRED/INVALID (AFTER PRIORITY DATE)'
     }
   }
+  const decisionDate = getDayjs(formData.decisionDate)
+  if (decisionDate) {
+    if (!decisionDate.isValid() || decisionDate.isBefore(oneWeekBeforeDate)) {
+      hasValidationErrors = true
+      formErrorsLocal.decisionDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
+    }
+    if (priorityDate && priorityDate.isBefore(decisionDate)) {
+      hasValidationErrors = true
+      formErrorsLocal.priorityDateError = 'REQUIRED/INVALID (AFTER DECISION DATE)'
+    }
+  }
+  if (hasValidationErrors) {
+    setFormErrors(formErrorsLocal)
+  }
+  return hasValidationErrors
+}
+
+export const validateFilingRfe = (
+  formData: FilingRfeFormData,
+  setFormErrors: (formErrors: FilingRfeFormErrorData) => void,
+) => {
+  let hasValidationErrors = false
+  const formErrorsLocal: FilingRfeFormErrorData = { ...DefaultFilingRfeFormErrorData }
+  const oneWeekBeforeDate = dayjs().subtract(1, 'week')
+
+  if (getNumber(formData.filingId) <= 0) {
+    hasValidationErrors = true
+    formErrorsLocal.filingIdError = 'REQUIRED'
+  }
   const rfeDate = getDayjs(formData.rfeDate)
   if (rfeDate) {
     if (!rfeDate.isValid() || rfeDate.isBefore(oneWeekBeforeDate)) {
       hasValidationErrors = true
       formErrorsLocal.rfeDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
-    if (!priorityDate || priorityDate.isBefore(rfeDate)) {
-      hasValidationErrors = true
-      formErrorsLocal.priorityDateError = 'REQUIRED/INVALID (AFTER PRIORITY DATE)'
-    }
+  } else {
+    hasValidationErrors = true
+    formErrorsLocal.rfeDateError = 'REQUIRED'
   }
   const rfeSubmitDate = getDayjs(formData.rfeSubmitDate)
   if (rfeSubmitDate) {
@@ -92,31 +134,16 @@ export const validateFiling = (formData: FilingFormData, setFormErrors: (formErr
       hasValidationErrors = true
       formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
-    if (!rfeDate || rfeSubmitDate.isBefore(rfeDate)) {
+    if (rfeDate && rfeSubmitDate.isBefore(rfeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.rfeDateError = 'REQUIRED/INVALID (AFTER RFE SUBMIT DATE)'
+      formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (BEFORE RFE DATE)'
     }
   }
-  const decisionDate = getDayjs(formData.decisionDate)
-  if (decisionDate) {
-    if (!decisionDate.isValid() || decisionDate.isBefore(oneWeekBeforeDate)) {
-      hasValidationErrors = true
-      formErrorsLocal.decisionDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
-    }
-    if (!priorityDate) {
-      if (!rfeSubmitDate) {
-        hasValidationErrors = true
-        formErrorsLocal.priorityDateError = 'REQUIRED/INVALID (REQUIRED FOR DECISION DATE)'
-        formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (REQUIRED FOR DECISION DATE)'
-      } else if (rfeSubmitDate.isBefore(decisionDate)) {
-        hasValidationErrors = true
-        formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (AFTER DECISION DATE)'
-      }
-    } else if (priorityDate.isBefore(decisionDate)) {
-      hasValidationErrors = true
-      formErrorsLocal.priorityDateError = 'REQUIRED/INVALID (AFTER DECISION DATE)'
-    }
+  if (!getString(formData.rfeReason)) {
+    hasValidationErrors = true
+    formErrorsLocal.rfeReason = 'REQUIRED'
   }
+
   if (hasValidationErrors) {
     setFormErrors(formErrorsLocal)
   }
@@ -153,7 +180,46 @@ export const filingDispatch = ({
   }
 }
 
+export const filingRfeDispatch = ({
+  type = '',
+  error = '',
+  success = '',
+  filingRfes = [] as FilingRfeSchema[],
+  requestMetadata = {} as Partial<FetchRequestMetadata>,
+} = {}) => {
+  if (error) {
+    return {
+      type,
+      error,
+    }
+  } else if (success) {
+    return {
+      type,
+      success,
+    }
+  } else if (filingRfes) {
+    return {
+      type,
+      filingRfes,
+      requestMetadata,
+    }
+  } else {
+    return {
+      type,
+    }
+  }
+}
+
 export const getFilingFormDataFromSchema = (x: FilingSchema): FilingFormData => {
+  return {
+    ...x,
+    id: x.id || ID_DEFAULT,
+    isHardDelete: false,
+    isShowSoftDeleted: false,
+  }
+}
+
+export const getFilingRfeFormDataFromSchema = (x: FilingRfeSchema): FilingRfeFormData => {
   return {
     ...x,
     id: x.id || ID_DEFAULT,
@@ -174,7 +240,7 @@ export const getClientFilingType = (
   if (selectedCourtCase) {
     const selectedClient = clientsList.find((x) => x.id === selectedCourtCase?.clientId)
     if (selectedFilingType && selectedClient) {
-      return ': ' + selectedClient.name + ', ' + selectedFilingType.name
+      return selectedClient.name + ', ' + selectedFilingType.name
     }
   }
   return ''

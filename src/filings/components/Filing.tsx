@@ -24,7 +24,7 @@ import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } fr
 import { getRefTypes } from '@ref_types/actions/refTypes.action'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types'
 
-import FilingForm from './FilingForm'
+import { FilingForm } from './FilingForm'
 import { filingsAction, getFiling, getFilings } from '../actions/filings.action'
 import {
   DefaultFilingFormData,

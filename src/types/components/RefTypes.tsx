@@ -72,8 +72,6 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
   const [formDataReset, setFormDataReset] = useState(DefaultRefTypeFormData)
   const [formErrors, setFormErrors] = useState(DefaultRefTypeFormData)
 
-  const componentNameNoUnderscore = refType.replace('_', ' ')
-
   const refTypeTitle = useCallback(() => {
     return convertToTitleCase(refType, '_').toUpperCase()
   }, [refType])
@@ -230,7 +228,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
   const addModal = () =>
     addModalComponent(
-      componentNameNoUnderscore,
+      refType,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -245,7 +243,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
   const updateModal = () =>
     updateModalComponent(
-      componentNameNoUnderscore,
+      refType,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -264,7 +262,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
 
   const deleteModal = () =>
     deleteModalComponent(
-      componentNameNoUnderscore,
+      refType,
       deleteModalContextText,
       primaryButtonCallback,
       addModalState,
@@ -297,7 +295,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
       componentName={refTypeTitle()}
       headerData={refTypeTableHeader(refType)}
       tableData={refTypeTableData(refType, refTypeList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(refType, addModalState)}
+      addModelComponent={tableAddButtonComponent(refType, refType, addModalState)}
       getSoftDeletedCallback={() => getRefTypeWithMetadata({ isIncludeDeleted: true })}
     />
   )
@@ -306,7 +304,7 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
-          {pageTitleComponent(componentNameNoUnderscore)}
+          {pageTitleComponent(refType)}
         </Grid>
         <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {refTypeTable()}

@@ -1,9 +1,8 @@
 import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import { handleFormChange } from '@app/components/CommonComponents'
+import { handleFormChange, judgesListForSelect } from '@app/components/CommonComponents'
 import {
   FormCommentsField,
   FormSelectField,
@@ -12,7 +11,6 @@ import {
   FormTextField,
   GridFormWrapper,
 } from '@app/components/FormFields'
-import { getNumber } from '@app/utils/app.utils'
 import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '@constants/index'
 import { JudgeSchema } from '@judges/types/judges.data.types'
 import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
@@ -135,35 +133,13 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     />
   )
 
-  const judgesListForSelect = () => {
-    if (getNumber(judgeId) > 0) {
-      const selectedJudge = judgesList.find((x) => x.id === judgeId)
-      if (selectedJudge) {
-        return [
-          <MenuItem key={selectedJudge.id} value={selectedJudge.id}>
-            {selectedJudge.name}
-          </MenuItem>,
-        ]
-      }
-    } else {
-      return judgesList
-        .filter((x) => formData.judgeId === x.id || x.componentStatus?.isActive)
-        .map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {x.name}
-          </MenuItem>
-        ))
-    }
-    return []
-  }
-
   const clientJudgesList = () => (
     <FormSelectField
       componentLabel="CLIENT--JUDGE"
       name="judgeId"
       value={formData.judgeId || ID_DEFAULT}
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
-      menuItems={judgesListForSelect()}
+      menuItems={judgesListForSelect(judgesList, judgeId, formData.judgeId)}
       error={!!formErrors.judgeError}
       helperText={formErrors.judgeError}
     />

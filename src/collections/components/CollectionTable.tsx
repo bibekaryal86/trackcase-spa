@@ -178,6 +178,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
     const cashCollectionsTableData = Array.from(cashCollectionsList, (y: CashCollectionSchema) => {
       return {
         ...collectionsTableDataCommon(y, true),
+        isDeleted: y.isDeleted,
         actions: actionButtonsCash ? actionButtonsCash(getCashCollectionFormDataFromSchema(y)) : undefined,
       }
     })
@@ -186,16 +187,18 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
     return (
       <Table
-        componentName={COLLECTION_TYPES.CASH_COLLECTION.replace('_', ' ')}
+        componentName={COLLECTION_TYPES.CASH_COLLECTION}
         headerData={cashCollectionsHeaderData}
         tableData={cashCollectionsTableData}
         addModelComponent={tableAddButtonComponent(
           COMPONENT_STATUS_NAME.COLLECTIONS,
+          COLLECTION_TYPES.CASH_COLLECTION,
           addModalStateCash,
           addButtonExtraCallback,
         )}
         defaultDense
         isDisablePagination
+        isNoShowEmptyTableMessage={cashCollectionsTableData.length === 0}
       />
     )
   }
@@ -205,6 +208,7 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
       return {
         ...collectionsTableDataCommon(x, false),
         cashCollections: getCashCollectionsTable(x),
+        isDeleted: x.isDeleted,
         actions: actionButtonsCase ? actionButtonsCase(getCaseCollectionFormDataFromSchema(x)) : undefined,
       }
     })
@@ -212,10 +216,14 @@ const CollectionTable = (props: CollectionTableProps): React.ReactElement => {
 
   return (
     <Table
-      componentName={COLLECTION_TYPES.CASE_COLLECTION.replace('_', ' ')}
+      componentName={COLLECTION_TYPES.CASE_COLLECTION}
       headerData={collectionsTableHeaderData(false)}
       tableData={collectionsTableData()}
-      addModelComponent={tableAddButtonComponent(COMPONENT_STATUS_NAME.COLLECTIONS, addModalStateCase)}
+      addModelComponent={tableAddButtonComponent(
+        COMPONENT_STATUS_NAME.COLLECTIONS,
+        COLLECTION_TYPES.CASE_COLLECTION,
+        addModalStateCase,
+      )}
       getSoftDeletedCallback={() => (softDeleteCallback ? softDeleteCallback({ isIncludeDeleted: true }) : undefined)}
     />
   )

@@ -74,7 +74,7 @@ export const collectionsAction = ({
           : getEndpoint(process.env.COLLECTION_CASH_CREATE as string)
       options = {
         method: HTTP_METHODS.POST,
-        requestBody: { ...collectionsRequest },
+        requestBody: collectionsRequest,
       }
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint =
@@ -106,12 +106,7 @@ export const collectionsAction = ({
         dispatch(collectionDispatch({ type: typeFailure, error: getErrMsg(collectionResponse.detail) }))
       } else {
         if (action === ACTION_TYPES.READ) {
-          dispatch(
-            collectionDispatch({
-              type: typeSuccess,
-              caseCollections: collectionResponse.data as CaseCollectionSchema[],
-            }),
-          )
+          console.log('collectionsAction -> this should not be happening')
         } else {
           dispatch(collectionDispatch({ type: typeSuccess, success: ACTION_SUCCESS(action, 'COLLECTION') }))
         }

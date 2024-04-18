@@ -1,10 +1,15 @@
 import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import MenuItem from '@mui/material/MenuItem'
 import { Dayjs } from 'dayjs'
 import React from 'react'
 
-import { handleFormChange, handleFormDateChange } from '@app/components/CommonComponents'
+import {
+  caseCollectionListForSelect,
+  courtCasesListForSelect,
+  handleFormChange,
+  handleFormDateChange,
+  refTypesListForSelect,
+} from '@app/components/CommonComponents'
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -77,30 +82,13 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
     )
   }
 
-  const caseCollectionCourtCasesListForSelect = () => {
-    if (selectedCourtCase) {
-      return [
-        <MenuItem key={selectedCourtCase.id} value={selectedCourtCase.id}>
-          {selectedCourtCase.client?.name}, {selectedCourtCase.caseType?.name}
-        </MenuItem>,
-      ]
-    }
-    return courtCasesList
-      .filter((x) => formData.courtCaseId === x.id || x.componentStatus?.isActive)
-      .map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {x.client?.name}, {x.caseType?.name}
-        </MenuItem>
-      ))
-  }
-
   const caseCollectionCourtCasesList = () => {
     return (
       <FormSelectField
         componentLabel="CASE COLLECTION--COURT CASE"
         name="courtCaseId"
         value={formData.courtCaseId}
-        menuItems={caseCollectionCourtCasesListForSelect()}
+        menuItems={courtCasesListForSelect(courtCasesList, selectedCourtCase, formData.courtCaseId)}
         onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.courtCaseError}
         helperText={formErrors.courtCaseError}
@@ -160,6 +148,28 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
   const { minCollectionDate, maxCollectionDate, isShowOneCollection } = props
   const { selectedCourtCase } = props
 
+  const cashCollectionCaseCollectionList = () => {
+    return (
+      <FormSelectField
+        componentLabel="CASH COLLECTION--CASE COLLECTION"
+        name="caseCollectionId"
+        value={formData.caseCollectionId}
+        menuItems={caseCollectionListForSelect(
+          caseCollectionList,
+          clientsList,
+          courtCasesList,
+          selectedCourtCase,
+          formData.caseCollectionId,
+        )}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.caseCollectionError}
+        helperText={formErrors.caseCollectionError}
+        required
+        disabled
+      />
+    )
+  }
+
   const cashCollectionCollectionDate = () => {
     return (
       <FormDatePickerField
@@ -193,6 +203,21 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
     )
   }
 
+  const cashCollectionCollectionMethodsList = () => {
+    return (
+      <FormSelectField
+        componentLabel="CASH COLLECTION--COLLECTION METHOD"
+        name="collectionMethodId"
+        value={formData.collectionMethodId}
+        menuItems={refTypesListForSelect(collectionMethodsList)}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.collectionMethodError}
+        helperText={formErrors.collectionMethodError}
+        required
+      />
+    )
+  }
+
   const cashCollectionWaivedAmount = () => {
     return (
       <FormTextField
@@ -220,69 +245,6 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         helperText={formErrors.memo}
         required
         fullWidth
-      />
-    )
-  }
-
-  const cashCollectionCollectionMethodsListForSelect = () =>
-    collectionMethodsList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.name}
-      </MenuItem>
-    ))
-
-  const cashCollectionCollectionMethodsList = () => {
-    return (
-      <FormSelectField
-        componentLabel="CASH COLLECTION--COLLECTION METHOD"
-        name="collectionMethodId"
-        value={formData.collectionMethodId}
-        menuItems={cashCollectionCollectionMethodsListForSelect()}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
-        error={!!formErrors.collectionMethodError}
-        helperText={formErrors.collectionMethodError}
-        required
-      />
-    )
-  }
-
-  const cashCollectionCaseCollectionForSelect = (x: CaseCollectionSchema) => {
-    const courtCase = courtCasesList.find((y) => x.courtCaseId === y.id)
-    const client = clientsList.find((y) => courtCase?.clientId === y.id)
-    return `${client?.name}, ${courtCase?.caseType?.name}`
-  }
-
-  const cashCollectionCaseCollectionListForSelect = () => {
-    if (selectedCourtCase && selectedCourtCase.caseCollections) {
-      return selectedCourtCase.caseCollections
-        .filter((x) => formData.caseCollectionId === x.id || x.componentStatus?.isActive)
-        .map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {cashCollectionCaseCollectionForSelect(x)}
-          </MenuItem>
-        ))
-    }
-    return caseCollectionList
-      .filter((x) => formData.caseCollectionId === x.id || x.componentStatus?.isActive)
-      .map((x) => (
-        <MenuItem key={x.id} value={x.id}>
-          {cashCollectionCaseCollectionForSelect(x)}
-        </MenuItem>
-      ))
-  }
-
-  const cashCollectionCaseCollectionList = () => {
-    return (
-      <FormSelectField
-        componentLabel="CASH COLLECTION--CASE COLLECTION"
-        name="caseCollectionId"
-        value={formData.caseCollectionId}
-        menuItems={cashCollectionCaseCollectionListForSelect()}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
-        error={!!formErrors.caseCollectionError}
-        helperText={formErrors.caseCollectionError}
-        required
-        disabled={!!selectedCourtCase}
       />
     )
   }

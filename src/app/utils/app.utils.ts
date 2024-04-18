@@ -28,7 +28,8 @@ export const getFullAddress = (streetAddress?: string, city?: string, state?: st
 
 export const getNumber = (value: number | string | null | undefined): number => (value ? Number(value) : ID_DEFAULT)
 
-export const getString = (value: string | number | Dayjs | null | undefined): string => (value ? value.toString() : '')
+export const getString = (value: string | number | Dayjs | null | undefined): string =>
+  value ? value.toString().trim() : ''
 
 export const getDayjs = (value: Dayjs | Date | null | undefined) => {
   if (value) {

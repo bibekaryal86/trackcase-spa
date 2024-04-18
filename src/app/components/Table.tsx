@@ -17,6 +17,7 @@ import { isBoolean } from 'lodash'
 import React, { isValidElement, useMemo, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
+import { getComponentNameDisplay } from '@app/components/CommonComponents'
 import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
 import { isSuperuser } from '@users/utils/users.utils'
 
@@ -33,6 +34,7 @@ interface TableHeaderProps {
   onRequestSort?: (event: React.MouseEvent<unknown>, property: keyof TableData) => void
   isSortDisabledInTable?: boolean
   isCollapse?: boolean
+  isNoShowEmptyTable?: boolean
 }
 interface TableProps {
   componentName: string
@@ -50,6 +52,7 @@ interface TableProps {
   tableLayout?: string
   isDisablePagination?: boolean
   getSoftDeletedCallback?: (isIncludeDeleted: boolean) => void
+  isNoShowEmptyTableMessage?: boolean
 }
 interface TableRowProps {
   row: TableData
@@ -177,10 +180,14 @@ function getCollapseRowKey(tableData: TableData): string | undefined {
 const emptyTableMessage = (
   componentName: string,
   showSoftDeleteComponent: React.JSX.Element | null,
-): React.JSX.Element => {
+  isNoShowEmptyTableMessage: boolean,
+): React.JSX.Element | undefined => {
+  if (isNoShowEmptyTableMessage) {
+    return undefined
+  }
   const messageText =
     'TABLE IS EMPTY! IF AN ERROR MESSAGE WAS NOT DISPLAYED, THEN THERE ARE LIKELY NO ' +
-    'COMPONENT IN THE SYSTEM...'.replace('COMPONENT', componentName)
+    'COMPONENT IN THE SYSTEM...'.replace('COMPONENT', getComponentNameDisplay(componentName, true))
   const messageStyle: React.CSSProperties = {
     paddingTop: '25px',
     paddingBottom: '25px',
@@ -233,6 +240,10 @@ const tablePagination = (
 )
 
 const TableHeader = (props: TableHeaderProps) => {
+  if (props.isNoShowEmptyTable) {
+    return undefined
+  }
+
   const { headerData, order, orderBy, onRequestSort } = props
   const createSortHandler = (property: keyof TableData) => (event: React.MouseEvent<unknown>) => {
     onRequestSort && onRequestSort(event, property)
@@ -410,6 +421,7 @@ const Table = (props: TableProps) => {
             onRequestSort={handleRequestSort}
             isSortDisabledInTable={props.isSortDisabledInTable}
             isCollapse={!!collapseRowKey}
+            isNoShowEmptyTable={props.isNoShowEmptyTableMessage || false}
           />
           <TableBody>
             {visibleRows.map((row: TableData, index: number) => (
@@ -434,7 +446,7 @@ const Table = (props: TableProps) => {
         </MuiTable>
       </TableContainer>
       {tableData.length === 0
-        ? emptyTableMessage(props.componentName, showSoftDeletedComponent())
+        ? emptyTableMessage(props.componentName, showSoftDeletedComponent(), props.isNoShowEmptyTableMessage || false)
         : props.isDisablePagination
         ? null
         : tablePagination(

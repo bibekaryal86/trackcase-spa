@@ -143,6 +143,13 @@ export const COLLECTION_TYPES = Object.freeze({
 })
 export type CollectionTypes = keyof typeof COLLECTION_TYPES
 
+// FILING TYPES
+export const FILING_TYPES = Object.freeze({
+  FILING: 'FILING',
+  FILING_RFE: 'FILING_RFE',
+})
+export type FilingTypes = keyof typeof FILING_TYPES
+
 // CASE PAGE TABS
 export const CASE_TABS = Object.freeze({
   FILINGS: 'FILINGS',

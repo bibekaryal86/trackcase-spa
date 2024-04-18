@@ -53,7 +53,7 @@ export const clientsAction = ({
       endpoint = getEndpoint(process.env.CLIENT_CREATE as string)
       options = {
         method: HTTP_METHODS.POST,
-        requestBody: { ...clientsRequest },
+        requestBody: clientsRequest,
       }
     } else if (action === ACTION_TYPES.UPDATE) {
       endpoint = getEndpoint(process.env.CLIENT_UPDATE as string)

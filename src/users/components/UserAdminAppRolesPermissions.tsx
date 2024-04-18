@@ -44,9 +44,6 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
   const [formDataReset, setFormDataReset] = useState(DefaultAppRolePermissionFormData)
   const [formErrors, setFormErrors] = useState(DefaultAppRolePermissionFormErrorData)
 
-  const componentName = USER_ADMIN_REGISTRY.APP_PERMISSIONS
-  const componentNameNoUnderscore = componentName.replace('_', ' ')
-
   useEffect(() => {
     getAppRolesPermissions(dispatch).then((r) => setAppRolesPermissionsList(r.data))
   }, [dispatch])
@@ -134,7 +131,7 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
 
   const addModal = () =>
     addModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -149,7 +146,7 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
 
   const updateModal = () =>
     updateModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS,
       addUpdateModalContent(),
       primaryButtonCallback,
       addModalState,
@@ -168,7 +165,7 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
 
   const deleteModal = () =>
     deleteModalComponent(
-      componentNameNoUnderscore,
+      USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS,
       deleteModalContextText,
       primaryButtonCallback,
       addModalState,
@@ -184,7 +181,7 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
 
   const actionButtons = (formDataModal: AppRolePermissionFormData) =>
     tableActionButtonsComponent(
-      USER_ADMIN_REGISTRY.APP_PERMISSIONS,
+      USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS,
       formDataModal,
       updateModalState,
       deleteModalState,
@@ -194,10 +191,14 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
 
   const appRolePermissionTable = () => (
     <Table
-      componentName={componentNameNoUnderscore}
+      componentName={USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS}
       headerData={appRolePermissionTableHeader()}
       tableData={appRolePermissionTableData(appRolePermissionsList, actionButtons)}
-      addModelComponent={tableAddButtonComponent(USER_ADMIN_REGISTRY.APP_PERMISSIONS, addModalState)}
+      addModelComponent={tableAddButtonComponent(
+        USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS,
+        USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS,
+        addModalState,
+      )}
       getSoftDeletedCallback={() => getAppRolesPermissionsWithMetadata({ isIncludeDeleted: true })}
     />
   )

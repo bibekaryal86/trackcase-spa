@@ -1,11 +1,9 @@
 import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
 
-import { handleFormChange } from '@app/components/CommonComponents'
+import { clientsListForSelect, handleFormChange, refTypesListForSelect } from '@app/components/CommonComponents'
 import { FormCommentsField, FormSelectField, FormSelectStatusField, GridFormWrapper } from '@app/components/FormFields'
-import { getNumber } from '@app/utils/app.utils'
 import { ClientSchema } from '@clients/types/clients.data.types'
 import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
 import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
@@ -29,13 +27,6 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
   const { formData, formErrors, setFormData, setFormErrors, courtCaseStatusList, isShowOneCourtCase } = props
   const { caseTypesList, clientsList, clientId } = props
 
-  const caseTypesListForSelect = () =>
-    caseTypesList.map((x) => (
-      <MenuItem key={x.id} value={x.id}>
-        {x.name}
-      </MenuItem>
-    ))
-
   const courtCaseType = () => (
     <FormSelectField
       componentLabel="COURT CASE--CASE TYPE"
@@ -45,31 +36,9 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.caseTypeError}
       helperText={formErrors.caseTypeError}
-      menuItems={caseTypesListForSelect()}
+      menuItems={refTypesListForSelect(caseTypesList)}
     />
   )
-
-  const clientsListForSelect = () => {
-    if (getNumber(clientId) > 0) {
-      const selectedClient = clientsList.find((x) => x.id === clientId)
-      if (selectedClient) {
-        return [
-          <MenuItem key={selectedClient.id} value={selectedClient.id}>
-            {selectedClient.name}
-          </MenuItem>,
-        ]
-      }
-    } else {
-      return clientsList
-        .filter((x) => formData.clientId === x.id || x.componentStatus?.isActive)
-        .map((x) => (
-          <MenuItem key={x.id} value={x.id}>
-            {x.name}
-          </MenuItem>
-        ))
-    }
-    return []
-  }
 
   const courtCaseClient = () => (
     <FormSelectField
@@ -80,7 +49,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.clientError}
       helperText={formErrors.clientError}
-      menuItems={clientsListForSelect()}
+      menuItems={clientsListForSelect(clientsList, clientId, formData.clientId)}
     />
   )
 
