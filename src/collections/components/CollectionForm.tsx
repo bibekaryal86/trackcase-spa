@@ -148,6 +148,28 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
   const { minCollectionDate, maxCollectionDate, isShowOneCollection } = props
   const { selectedCourtCase } = props
 
+  const cashCollectionCaseCollectionList = () => {
+    return (
+      <FormSelectField
+        componentLabel="CASH COLLECTION--CASE COLLECTION"
+        name="caseCollectionId"
+        value={formData.caseCollectionId}
+        menuItems={caseCollectionListForSelect(
+          caseCollectionList,
+          clientsList,
+          courtCasesList,
+          selectedCourtCase,
+          formData.caseCollectionId,
+        )}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.caseCollectionError}
+        helperText={formErrors.caseCollectionError}
+        required
+        disabled
+      />
+    )
+  }
+
   const cashCollectionCollectionDate = () => {
     return (
       <FormDatePickerField
@@ -181,6 +203,21 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
     )
   }
 
+  const cashCollectionCollectionMethodsList = () => {
+    return (
+      <FormSelectField
+        componentLabel="CASH COLLECTION--COLLECTION METHOD"
+        name="collectionMethodId"
+        value={formData.collectionMethodId}
+        menuItems={refTypesListForSelect(collectionMethodsList)}
+        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        error={!!formErrors.collectionMethodError}
+        helperText={formErrors.collectionMethodError}
+        required
+      />
+    )
+  }
+
   const cashCollectionWaivedAmount = () => {
     return (
       <FormTextField
@@ -208,43 +245,6 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         helperText={formErrors.memo}
         required
         fullWidth
-      />
-    )
-  }
-
-  const cashCollectionCollectionMethodsList = () => {
-    return (
-      <FormSelectField
-        componentLabel="CASH COLLECTION--COLLECTION METHOD"
-        name="collectionMethodId"
-        value={formData.collectionMethodId}
-        menuItems={refTypesListForSelect(collectionMethodsList)}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
-        error={!!formErrors.collectionMethodError}
-        helperText={formErrors.collectionMethodError}
-        required
-      />
-    )
-  }
-
-  const cashCollectionCaseCollectionList = () => {
-    return (
-      <FormSelectField
-        componentLabel="CASH COLLECTION--CASE COLLECTION"
-        name="caseCollectionId"
-        value={formData.caseCollectionId}
-        menuItems={caseCollectionListForSelect(
-          caseCollectionList,
-          clientsList,
-          courtCasesList,
-          selectedCourtCase,
-          formData.caseCollectionId,
-        )}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
-        error={!!formErrors.caseCollectionError}
-        helperText={formErrors.caseCollectionError}
-        required
-        disabled={!!selectedCourtCase}
       />
     )
   }

@@ -281,7 +281,7 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       deleteModalStateCash,
       setFormDataCash,
       setFormErrorsCash,
-      DefaultCashCollectionFormData,
+      formDataResetCash,
       DefaultCashCollectionFormErrorData,
       formDataResetCash,
       COLLECTION_TYPES.CASH_COLLECTION,
@@ -398,8 +398,10 @@ const Collections = (props: CollectionsProps): React.ReactElement => {
       setFormDataResetCash,
     )
 
-  const addCashCollectionButtonCallback = (caseCollectionId: number) =>
+  const addCashCollectionButtonCallback = (caseCollectionId: number) => {
     setFormDataCash({ ...DefaultCashCollectionFormData, caseCollectionId })
+    setFormDataResetCash({ ...DefaultCashCollectionFormData, caseCollectionId })
+  }
 
   const collectionTable = () => (
     <CollectionTable

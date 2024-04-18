@@ -224,6 +224,7 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       helperText={formErrors.filingIdError}
       menuItems={filingListForSelect(filingsList, clientsList, courtCasesList)}
       required
+      disabled
     />
   )
 

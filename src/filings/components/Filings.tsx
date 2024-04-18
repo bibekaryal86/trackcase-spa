@@ -276,7 +276,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       deleteModalStateRfe,
       setFormDataRfe,
       setFormErrorsRfe,
-      DefaultFilingRfeFormData,
+      formDataResetRfe,
       DefaultFilingRfeFormErrorData,
       formDataResetRfe,
       FILING_TYPES.FILING_RFE,
@@ -392,7 +392,10 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       setFormDataResetRfe,
     )
 
-  const addFilingRfeButtonCallback = (filingId: number) => setFormDataRfe({ ...DefaultFilingRfeFormData, filingId })
+  const addFilingRfeButtonCallback = (filingId: number) => {
+    setFormDataRfe({ ...DefaultFilingRfeFormData, filingId })
+    setFormDataResetRfe({ ...DefaultFilingRfeFormData, filingId })
+  }
 
   const filingsTable = () => (
     <FilingTable
