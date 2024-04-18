@@ -236,6 +236,7 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
       helperText={formErrors.rfeDateError}
+      required
     />
   )
 

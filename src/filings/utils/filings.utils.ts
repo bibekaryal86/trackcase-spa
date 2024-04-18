@@ -124,6 +124,9 @@ export const validateFilingRfe = (
       hasValidationErrors = true
       formErrorsLocal.rfeDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
+  } else {
+    hasValidationErrors = true
+    formErrorsLocal.rfeDateError = 'REQUIRED'
   }
   const rfeSubmitDate = getDayjs(formData.rfeSubmitDate)
   if (rfeSubmitDate) {
@@ -131,9 +134,9 @@ export const validateFilingRfe = (
       hasValidationErrors = true
       formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (BEFORE 1 WEEK)'
     }
-    if (!rfeDate || rfeSubmitDate.isBefore(rfeDate)) {
+    if (rfeDate && rfeSubmitDate.isBefore(rfeDate)) {
       hasValidationErrors = true
-      formErrorsLocal.rfeDateError = 'REQUIRED/INVALID (AFTER RFE SUBMIT DATE)'
+      formErrorsLocal.rfeSubmitDateError = 'REQUIRED/INVALID (BEFORE RFE DATE)'
     }
   }
   if (!getString(formData.rfeReason)) {

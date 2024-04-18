@@ -260,7 +260,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       DefaultFilingFormData,
       DefaultFilingFormErrorData,
       formDataReset,
-      undefined,
+      FILING_TYPES.FILING,
       isAreTwoFilingsSame(formData, formDataReset),
       false,
       isAreTwoFilingsSame(formData, formDataReset),
@@ -279,7 +279,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       DefaultFilingRfeFormData,
       DefaultFilingRfeFormErrorData,
       formDataResetRfe,
-      undefined,
+      FILING_TYPES.FILING_RFE,
       isAreTwoFilingRfesSame(formDataRfe, formDataResetRfe),
       false,
       isAreTwoFilingRfesSame(formDataRfe, formDataResetRfe),
@@ -298,7 +298,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       DefaultFilingFormData,
       DefaultFilingFormErrorData,
       formDataReset,
-      undefined,
+      FILING_TYPES.FILING,
       isAreTwoFilingsSame(formData, formDataReset),
       false,
       isAreTwoFilingsSame(formData, formDataReset),
@@ -317,7 +317,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       DefaultFilingRfeFormData,
       DefaultFilingRfeFormErrorData,
       formDataResetRfe,
-      undefined,
+      FILING_TYPES.FILING_RFE,
       isAreTwoFilingRfesSame(formDataRfe, formDataResetRfe),
       false,
       isAreTwoFilingRfesSame(formDataRfe, formDataResetRfe),
@@ -352,6 +352,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       DefaultFilingFormErrorData,
       formData,
       formErrors,
+      FILING_TYPES.FILING,
     )
 
   const deleteModalRfe = () =>
@@ -368,6 +369,7 @@ const Filings = (props: FilingsProps): React.ReactElement => {
       DefaultFilingRfeFormErrorData,
       formDataRfe,
       formErrorsRfe,
+      FILING_TYPES.FILING_RFE,
     )
 
   const actionButtons = (formDataModal: FilingFormData) =>

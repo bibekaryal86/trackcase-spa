@@ -180,7 +180,7 @@ function getCollapseRowKey(tableData: TableData): string | undefined {
 const emptyTableMessage = (
   componentName: string,
   showSoftDeleteComponent: React.JSX.Element | null,
-  isNoShowEmptyTableMessage: boolean
+  isNoShowEmptyTableMessage: boolean,
 ): React.JSX.Element | undefined => {
   if (isNoShowEmptyTableMessage) {
     return undefined
