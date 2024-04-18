@@ -7,8 +7,6 @@
 * Things to ADD/UPDATE
   * `trackcase-service`
     * MAJOR
-      * Separate Filing with RFE
-        * add RFE to it's own table
     * MINOR
       * when updating hearing calendar, update related task calendars if still active
         * check if date or type is being updated and update task calendars as needed
