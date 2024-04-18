@@ -8,6 +8,7 @@ export const isAreTwoCourtsSame = (one: CourtFormData | CourtSchema, two: CourtF
   one &&
   two &&
   one.name === two.name &&
+  one.courtUrl === two.courtUrl &&
   one.dhsAddress === two.dhsAddress &&
   one.componentStatusId === two.componentStatusId &&
   one.comments === two.comments &&
@@ -24,6 +25,10 @@ export const validateCourt = (formData: CourtFormData, setFormErrors: (formError
   if (!formData.name.trim()) {
     hasValidationErrors = true
     formErrorsLocal.name = 'REQUIRED'
+  }
+  if (!formData.courtUrl.trim()) {
+    hasValidationErrors = true
+    formErrorsLocal.courtUrl = 'REQUIRED'
   }
   if (!validateAddress(formData.streetAddress, formData.city, formData.state, formData.zipCode, true)) {
     hasValidationErrors = true

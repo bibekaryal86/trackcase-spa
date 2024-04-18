@@ -1,3 +1,4 @@
+import OpenInNew from '@mui/icons-material/OpenInNew'
 import React from 'react'
 
 import { tableAddButtonComponent } from '@app/components/CommonComponents'
@@ -69,7 +70,7 @@ const JudgeTable = (props: JudgeTableProps): React.ReactElement => {
   }
 
   const linkToWebex = (webex?: string) =>
-    webex ? <Link text={webex} href={webex.toLowerCase()} target="_blank" /> : ''
+    webex ? <Link text="" icon={<OpenInNew />} href={webex} target="_blank" /> : ''
 
   const linkToCourt = (x?: CourtSchema) =>
     selectedCourt ? (

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 interface LinkProps {
   text: string | undefined
+  icon?: React.JSX.Element
   navigateToPage?: string
   onClick?: () => void
   href?: string
@@ -31,12 +32,12 @@ const Link = (props: LinkProps) => {
   return (
     <MuiLink
       onClick={handleClick}
-      href={props.href ? props.href : '#'}
+      href={props.href ? props.href.toLowerCase() : '#'}
       target={props.target ? props.target : ''}
       color={props.color ? props.color : 'primary'}
       underline={props.underline ? props.underline : 'hover'}
     >
-      {props.text || ''}
+      {props.text || props.icon || ''}
     </MuiLink>
   )
 }

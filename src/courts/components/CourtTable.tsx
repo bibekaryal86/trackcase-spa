@@ -1,3 +1,4 @@
+import OpenInNew from '@mui/icons-material/OpenInNew'
 import React from 'react'
 
 import { tableAddButtonComponent } from '@app/components/CommonComponents'
@@ -69,7 +70,15 @@ const CourtTable = (props: CourtTableProps): React.ReactElement => {
     return tableHeaderData
   }
 
-  const linkToCourt = (x: CourtSchema) => <Link text={`${x.name}, ${x.state}`} navigateToPage={`/court/${x.id}`} />
+  const linkToCourt = (x: CourtSchema) => {
+    return (
+      <>
+        <Link text={`${x.name}, ${x.state}`} navigateToPage={`/court/${x.id}`} />
+        {'  '}
+        <Link text="" icon={<OpenInNew fontSize="small" />} href={x.courtUrl} target="_blank" />
+      </>
+    )
+  }
 
   const courtsTableData = (): TableData[] => {
     return Array.from(courtsList, (x) => {

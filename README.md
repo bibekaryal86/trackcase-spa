@@ -11,7 +11,6 @@
       * when updating hearing calendar, update related task calendars if still active
         * check if date or type is being updated and update task calendars as needed
     * `trackcase-spa`
-      * All necessary changes after the service changes above
       * MAJOR
         * Disable sorting from table headers
           * Add separate component for sort/filter for tables

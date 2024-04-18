@@ -116,6 +116,19 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
     />
   )
 
+  const courtUrl = () => (
+    <FormTextField
+      componentLabel="COURT--COURT URL"
+      name="courtUrl"
+      value={formData.courtUrl}
+      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      error={!!formErrors.courtUrl}
+      helperText={formErrors.courtUrl}
+      required
+      fullWidth
+    />
+  )
+
   const courtStatus = () => (
     <FormSelectStatusField
       componentLabel="COURT--STATUS"
@@ -160,6 +173,9 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
       </Grid>
       <Grid item xs={12}>
         {courtDhsAddress()}
+      </Grid>
+      <Grid item xs={12}>
+        {courtUrl()}
       </Grid>
       {isShowOneCourt && (
         <Grid item xs={12}>
