@@ -448,19 +448,19 @@ const Table = (props: TableProps) => {
       {tableData.length === 0
         ? emptyTableMessage(props.componentName, showSoftDeletedComponent(), props.isNoShowEmptyTableMessage || false)
         : props.isDisablePagination
-        ? null
-        : tablePagination(
-            rowsPerPageOptions,
-            tableData.length,
-            rowsPerPage,
-            page,
-            handleChangePage,
-            handleChangeRowsPerPage,
-            denseComponent(isSmallScreen),
-            exportComponent(),
-            isSmallScreen,
-            showSoftDeletedComponent(),
-          )}
+          ? null
+          : tablePagination(
+              rowsPerPageOptions,
+              tableData.length,
+              rowsPerPage,
+              page,
+              handleChangePage,
+              handleChangeRowsPerPage,
+              denseComponent(isSmallScreen),
+              exportComponent(),
+              isSmallScreen,
+              showSoftDeletedComponent(),
+            )}
     </div>
   )
 }

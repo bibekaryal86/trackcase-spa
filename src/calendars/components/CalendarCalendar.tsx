@@ -345,8 +345,8 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
           ? ['PAST_DUE'].includes(event.status)
             ? red.A700
             : ['DONE', 'PAST_DONE'].includes(event.status)
-            ? green.A200
-            : grey.A200
+              ? green.A200
+              : grey.A200
           : grey.A200,
         opacity: event.status && ['PAST_DUE', 'PAST_DONE'].includes(event.status) ? 0.7 : 1,
         fontWeight: event.status && ['PAST_DUE', 'PAST_DONE'].includes(event.status) ? 'bolder' : '',
