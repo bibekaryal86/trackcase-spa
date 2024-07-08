@@ -3,7 +3,7 @@
 import { composeWithDevTools } from '@redux-devtools/extension'
 import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant'
-import thunk from 'redux-thunk'
+import { thunk } from 'redux-thunk'
 
 import calendars from '@calendars/reducers/calendars.reducer'
 import { CalendarsState } from '@calendars/types/calendars.data.types'
