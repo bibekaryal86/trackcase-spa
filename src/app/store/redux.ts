@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { composeWithDevTools } from '@redux-devtools/extension'
 import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
-import reduxImmutableStateInvariant from 'redux-immutable-state-invariant'
 import { thunk } from 'redux-thunk'
 
 import calendars from '@calendars/reducers/calendars.reducer'
@@ -71,6 +70,6 @@ const rootReducer = (state: any, action: any) => {
 const store =
   process.env.NODE_ENV === 'production'
     ? createStore(rootReducer, applyMiddleware(thunk))
-    : createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, reduxImmutableStateInvariant())))
+    : createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 
 export default store
