@@ -2,7 +2,7 @@ import { Tab, Tabs } from '@mui/material'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect, useDispatch, useStore } from 'react-redux'
+import { connect, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import {
@@ -11,7 +11,7 @@ import {
   pageTitleComponent,
   pageTopLinksComponent,
 } from '@app/components/CommonComponents'
-import { GlobalState } from '@app/store/redux'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux'
 import { getNumber, isValidId } from '@app/utils/app.utils'
 import Calendars from '@calendars/components/Calendars'
 import { getClients } from '@clients/actions/clients.action'
@@ -59,7 +59,7 @@ interface CourtCaseProps {
 const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
-  const dispatch = useDispatch()
+  const dispatch = useGlobalDispatch()
   const store = useStore<GlobalState>().getState()
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()

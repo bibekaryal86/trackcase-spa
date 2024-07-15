@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React, { useEffect, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 
 import {
   addModalComponent,
@@ -16,7 +16,7 @@ import {
 } from '@app/components/CommonComponents'
 import { FormSelectField, FormTextField } from '@app/components/FormFields'
 import Table from '@app/components/Table'
-import { GlobalState } from '@app/store/redux'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux'
 import { useModal } from '@app/utils/app.hooks'
 import { getNumber } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
@@ -51,7 +51,7 @@ interface AppUserProps {
 }
 
 const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
-  const dispatch = useDispatch()
+  const dispatch = useGlobalDispatch()
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const { refTypes, getRefTypes } = props

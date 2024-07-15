@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import {
   addModalComponent,
@@ -15,6 +14,7 @@ import {
 } from '@app/components/CommonComponents'
 import { FormTextField } from '@app/components/FormFields'
 import Table from '@app/components/Table'
+import { useGlobalDispatch } from '@app/store/redux'
 import { useModal } from '@app/utils/app.hooks'
 import { getNumber } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
@@ -30,7 +30,7 @@ import {
 import { appPermissionsTableData, appPermissionsTableHeader, validateAppPermission } from '../utils/users.utils'
 
 const UserAdminAppPermissions = (): React.ReactElement => {
-  const dispatch = useDispatch()
+  const dispatch = useGlobalDispatch()
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const [appPermissionsList, setAppPermissionsList] = useState([] as AppPermissionSchema[])

@@ -3,7 +3,7 @@ import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect, useDispatch, useStore } from 'react-redux'
+import { connect, useStore } from 'react-redux'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import {
@@ -12,7 +12,7 @@ import {
   pageTitleComponent,
   pageTopLinksComponent,
 } from '@app/components/CommonComponents'
-import { GlobalState } from '@app/store/redux'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux'
 import { getNumber, isValidId } from '@app/utils/app.utils'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
 import JudgeTable from '@judges/components/JudgeTable'
@@ -43,7 +43,7 @@ interface CourtProps {
 const Court = (props: CourtProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
-  const dispatch = useDispatch()
+  const dispatch = useGlobalDispatch()
   const store = useStore<GlobalState>().getState()
   const { id } = useParams()
   const [searchQueryParams] = useSearchParams()

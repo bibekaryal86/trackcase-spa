@@ -4,7 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 
 import {
   addModalComponent,
@@ -18,7 +18,7 @@ import {
 } from '@app/components/CommonComponents'
 import { FormSelectField, FormTextField } from '@app/components/FormFields'
 import Table from '@app/components/Table'
-import { GlobalState } from '@app/store/redux'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux'
 import { useModal } from '@app/utils/app.hooks'
 import { convertToCamelCase, convertToTitleCase, getNumber } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
@@ -62,7 +62,7 @@ interface RefTypeProps {
 const RefTypes = (props: RefTypeProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
-  const dispatch = useDispatch()
+  const dispatch = useGlobalDispatch()
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
 
   const { refType, refTypes, getRefType } = props
