@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import dayjs from 'dayjs'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 
 import {
   addModalComponent,
@@ -12,7 +12,7 @@ import {
   tableActionButtonsComponent,
   updateModalComponent,
 } from '@app/components/CommonComponents'
-import { GlobalState } from '@app/store/redux'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux'
 import { useModal } from '@app/utils/app.hooks'
 import { getCurrency, getNumber } from '@app/utils/app.utils'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils'
@@ -86,7 +86,7 @@ interface CollectionsProps {
 const Collections = (props: CollectionsProps): React.ReactElement => {
   // to avoid multiple api calls, avoid infinite loop if empty list returned
   const isForceFetch = useRef(true)
-  const dispatch = useDispatch()
+  const dispatch = useGlobalDispatch()
   const [
     addModalStateCase,
     addModalStateCash,

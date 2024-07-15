@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { composeWithDevTools } from '@redux-devtools/extension'
+import { useDispatch as useReduxDispatch } from 'react-redux'
 import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
-import { thunk } from 'redux-thunk'
+import { thunk, ThunkDispatch } from 'redux-thunk'
 
 import calendars from '@calendars/reducers/calendars.reducer'
 import { CalendarsState } from '@calendars/types/calendars.data.types'
@@ -46,6 +47,8 @@ export interface GlobalState {
 export interface GlobalDispatch {
   type: string
 }
+
+export const useGlobalDispatch = () => useReduxDispatch<ThunkDispatch<GlobalState, void, GlobalDispatch>>()
 
 const appReducers = combineReducers({
   alert,
