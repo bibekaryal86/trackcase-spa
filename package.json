@@ -35,8 +35,8 @@
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
-    "@mui/icons-material": "^5.16.5",
-    "@mui/material": "^5.16.5",
+    "@mui/icons-material": "^5.16.6",
+    "@mui/material": "^5.16.6",
     "@mui/x-date-pickers": "^7.11.1",
     "dayjs": "^1.11.12",
     "lodash": "^4.17.21",
@@ -51,10 +51,10 @@
     "styled-components": "^6.1.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.9",
-    "@babel/plugin-transform-react-jsx": "^7.24.7",
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-transform-react-jsx": "^7.25.2",
     "@babel/plugin-transform-runtime": "^7.24.7",
-    "@babel/preset-env": "^7.25.0",
+    "@babel/preset-env": "^7.25.2",
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
     "@babel/runtime": "^7.25.0",
