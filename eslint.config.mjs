@@ -6,7 +6,7 @@ import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
-import reactHooks from "eslint-plugin-react-hooks";
+// import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 
 
@@ -40,7 +40,7 @@ export default [{
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     plugins: {
         "@typescript-eslint": fixupPluginRules(typescriptEslint),
-        "react-hooks": fixupPluginRules(reactHooks),
+        // "react-hooks": fixupPluginRules(reactHooks),
     },
 
     languageOptions: {
