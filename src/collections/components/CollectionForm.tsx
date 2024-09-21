@@ -67,7 +67,6 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
 
   const caseCollectionQuoteAmount = () => {
     return (
-       
       <FormTextField
         componentLabel="CASE COLLECTION--QUOTE AMOUNT"
         name="quoteAmount"

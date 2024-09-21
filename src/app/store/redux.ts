@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
- 
+
 import { composeWithDevTools } from '@redux-devtools/extension'
 import { useDispatch as useReduxDispatch } from 'react-redux'
 import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
