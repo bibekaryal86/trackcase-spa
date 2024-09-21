@@ -78,6 +78,7 @@
     "dotenv-webpack": "^8.1.0",
     "eslint": "^9.7.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import-x": "^4.2.1",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.36.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc-e4953922-20240919",
