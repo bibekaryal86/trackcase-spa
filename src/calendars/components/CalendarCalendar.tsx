@@ -17,6 +17,7 @@ import {
   DateHeaderProps,
   DateLocalizer,
   dayjsLocalizer,
+  Event as RbcEvent,
   Formats,
   Navigate,
   SlotInfo,
@@ -280,7 +281,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
   }
 
   const components: Partial<{
-    toolbar: (toolbarProps: ToolbarProps<Event>) => React.ReactElement
+    toolbar: (toolbarProps: ToolbarProps<RbcEvent>) => React.ReactElement
     month: {
       dateHeader: (dateHeaderProps: DateHeaderProps) => React.ReactElement
     }
