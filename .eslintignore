@@ -1,8 +1,0 @@
-*.snap
-webpack.dev.config.js
-webpack.prod.config.js
-jest.setup.js
-jest.config.js
-variables.env
-node_modules/
-build/
