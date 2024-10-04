@@ -86,6 +86,7 @@ module.exports = (env) => {
       //   },
       // }),
       new ESLintPlugin({
+        configType: 'flat',
         extensions: ['js', 'ts', 'tsx'],
         failOnWarning: false,
         failOnError: false,
