@@ -23,7 +23,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install
-        run: npm install
+        run: npm install --force
+        # using --force temporarily for react-big-calendar react19 issues
       - name: Prettier
         run: npm run prettier
       - name: Lint
