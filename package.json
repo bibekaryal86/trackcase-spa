@@ -23,24 +23,15 @@
     "type": "git",
     "url": "git+https://github.com/bibekaryal86/trackcase-spa.git"
   },
-  "keywords": [
-    "react",
-    "redux",
-    "typescript",
-    "babel",
-    "webpack",
-    "eslint",
-    "prettier",
-    "jest"
-  ],
+  "keywords": [ "react", "redux", "typescript", "babel", "webpack", "eslint", "prettier", "jest" ],
   "author": "Bibek Aryal",
   "license": "ISC",
   "homepage": "https://github.com/bibekaryal86/trackcase-spa#readme",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.4.11",
-    "@mui/material": "^6.4.11",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
     "@mui/x-date-pickers": "^7.28.3",
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
