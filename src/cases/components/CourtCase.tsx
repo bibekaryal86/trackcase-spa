@@ -189,35 +189,35 @@ const CourtCase = (props: CourtCaseProps): React.ReactElement => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {pageTopLinksComponent(COMPONENT_STATUS_NAME.COURT_CASES, '/court_cases/', searchQueryParams)}
           {pageTitleComponent(COMPONENT_STATUS_NAME.COURT_CASES, getClientCaseType())}
         </Grid>
         {!id ? (
-          <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             {pageNotSelectedComponent(COMPONENT_STATUS_NAME.COURT_CASES)}
           </Grid>
         ) : (
           <>
-            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+            <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {courtCaseForm()}
               {courtCaseButtons()}
             </Grid>
-            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+            <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {showTabs()}
             </Grid>
             {tabValue === CASE_TABS.FILINGS.toString() && (
-              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
                 {caseFilings()}
               </Grid>
             )}
             {tabValue === CASE_TABS.CALENDARS.toString() && (
-              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
                 {caseCalendars()}
               </Grid>
             )}
             {tabValue === CASE_TABS.COLLECTIONS.toString() && (
-              <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+              <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
                 {caseCollections()}
               </Grid>
             )}

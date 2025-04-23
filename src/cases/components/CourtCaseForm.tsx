@@ -78,20 +78,10 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       isShowOne={isShowOneCourtCase}
       justifyContent={isShowOneCourtCase ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={12}>
-        {courtCaseType()}
-      </Grid>
-      <Grid item xs={12}>
-        {courtCaseClient()}
-      </Grid>
-      <Grid item xs={6}>
-        {courtCaseStatus()}
-      </Grid>
-      {isShowOneCourtCase && (
-        <Grid item xs={12}>
-          {courtCaseComments()}
-        </Grid>
-      )}
+      <Grid size={12}>{courtCaseType()}</Grid>
+      <Grid size={12}>{courtCaseClient()}</Grid>
+      <Grid size={6}>{courtCaseStatus()}</Grid>
+      {isShowOneCourtCase && <Grid size={12}>{courtCaseComments()}</Grid>}
     </GridFormWrapper>
   )
 }

@@ -191,7 +191,7 @@ const Filing = (props: FilingProps): React.ReactElement => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {pageTopLinksComponent(COMPONENT_STATUS_NAME.FILINGS, '/filings/', searchQueryParams)}
           {pageTitleComponent(
             COMPONENT_STATUS_NAME.FILINGS,
@@ -205,16 +205,16 @@ const Filing = (props: FilingProps): React.ReactElement => {
           )}
         </Grid>
         {!id ? (
-          <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             {pageNotSelectedComponent(COMPONENT_STATUS_NAME.FILINGS)}
           </Grid>
         ) : (
           <>
-            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+            <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {filingForm()}
               {filingButtons()}
             </Grid>
-            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+            <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               <Divider />
               <Typography component="h1" variant="h6" color="primary">
                 TASK CALENDARS OF FILINGS

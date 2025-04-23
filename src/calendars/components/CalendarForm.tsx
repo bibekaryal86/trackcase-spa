@@ -140,21 +140,11 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
       isShowOne={isShowOneCalendar}
       justifyContent={isShowOneCalendar ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={6}>
-        {calendarHearingDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {calendarHearingTypesList()}
-      </Grid>
-      <Grid item xs={6}>
-        {calendarCourtCasesList()}
-      </Grid>
-      <Grid item xs={6}>
-        {calendarStatus()}
-      </Grid>
-      <Grid item xs={12}>
-        {calendarComments()}
-      </Grid>
+      <Grid size={6}>{calendarHearingDate()}</Grid>
+      <Grid size={6}>{calendarHearingTypesList()}</Grid>
+      <Grid size={6}>{calendarCourtCasesList()}</Grid>
+      <Grid size={6}>{calendarStatus()}</Grid>
+      <Grid size={12}>{calendarComments()}</Grid>
     </GridFormWrapper>
   )
 }
@@ -274,27 +264,13 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
       isShowOne={isShowOneCalendar}
       justifyContent={isShowOneCalendar ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={6}>
-        {calendarTaskDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {calendarDueDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {calendarTaskTypesList()}
-      </Grid>
-      <Grid item xs={6}>
-        {calendarHearingCalendarList()}
-      </Grid>
-      <Grid item xs={6}>
-        {calendarFilingList()}
-      </Grid>
-      <Grid item xs={6}>
-        {calendarStatus()}
-      </Grid>
-      <Grid item xs={12}>
-        {calendarComments()}
-      </Grid>
+      <Grid size={6}>{calendarTaskDate()}</Grid>
+      <Grid size={6}>{calendarDueDate()}</Grid>
+      <Grid size={6}>{calendarTaskTypesList()}</Grid>
+      <Grid size={6}>{calendarHearingCalendarList()}</Grid>
+      <Grid size={6}>{calendarFilingList()}</Grid>
+      <Grid size={6}>{calendarStatus()}</Grid>
+      <Grid size={12}>{calendarComments()}</Grid>
     </GridFormWrapper>
   )
 }
