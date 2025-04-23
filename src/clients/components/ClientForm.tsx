@@ -170,41 +170,17 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       isShowOne={isShowOneClient}
       justifyContent={isShowOneClient ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={12}>
-        {clientName()}
-      </Grid>
-      <Grid item xs={6}>
-        {clientANumber()}
-      </Grid>
-      <Grid item xs={6}>
-        {clientPhoneNumber()}
-      </Grid>
-      <Grid item xs={12}>
-        {clientEmail()}
-      </Grid>
-      <Grid item xs={8}>
-        {clientStreetAddress()}
-      </Grid>
-      <Grid item xs={4}>
-        {clientCity()}
-      </Grid>
-      <Grid item xs={6}>
-        {clientState()}
-      </Grid>
-      <Grid item xs={6}>
-        {clientZipCode()}
-      </Grid>
-      <Grid item xs={12}>
-        {clientJudgesList()}
-      </Grid>
-      <Grid item xs={6}>
-        {clientStatus()}
-      </Grid>
-      {isShowOneClient && (
-        <Grid item xs={12}>
-          {clientComments()}
-        </Grid>
-      )}
+      <Grid size={12}>{clientName()}</Grid>
+      <Grid size={6}>{clientANumber()}</Grid>
+      <Grid size={6}>{clientPhoneNumber()}</Grid>
+      <Grid size={12}>{clientEmail()}</Grid>
+      <Grid size={8}>{clientStreetAddress()}</Grid>
+      <Grid size={4}>{clientCity()}</Grid>
+      <Grid size={6}>{clientState()}</Grid>
+      <Grid size={6}>{clientZipCode()}</Grid>
+      <Grid size={12}>{clientJudgesList()}</Grid>
+      <Grid size={6}>{clientStatus()}</Grid>
+      {isShowOneClient && <Grid size={12}>{clientComments()}</Grid>}
     </GridFormWrapper>
   )
 }

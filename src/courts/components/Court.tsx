@@ -133,21 +133,21 @@ const Court = (props: CourtProps): React.ReactElement => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {pageTopLinksComponent(COMPONENT_STATUS_NAME.COURTS, '/courts/', searchQueryParams)}
           {pageTitleComponent(COMPONENT_STATUS_NAME.COURTS, `${formData.name}, ${formData.state}`)}
         </Grid>
         {!id ? (
-          <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             {pageNotSelectedComponent(COMPONENT_STATUS_NAME.COURTS)}
           </Grid>
         ) : (
           <>
-            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+            <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               {courtForm()}
               {courtButtons()}
             </Grid>
-            <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+            <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
               <Divider />
               <Typography component="h1" variant="h6" color="primary">
                 JUDGES IN COURT:

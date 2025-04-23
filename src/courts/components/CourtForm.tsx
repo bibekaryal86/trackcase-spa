@@ -150,38 +150,16 @@ const CourtForm = (props: CourtFormProps): React.ReactElement => {
 
   return (
     <GridFormWrapper isSmallScreen={isSmallScreen} isShowOne={isShowOneCourt}>
-      <Grid item xs={12}>
-        {courtName()}
-      </Grid>
-      <Grid item xs={8}>
-        {courtStreetAddress()}
-      </Grid>
-      <Grid item xs={4}>
-        {courtCity()}
-      </Grid>
-      <Grid item xs={6}>
-        {courtState()}
-      </Grid>
-      <Grid item xs={6}>
-        {courtZipCode()}
-      </Grid>
-      <Grid item xs={6}>
-        {courtPhoneNumber()}
-      </Grid>
-      <Grid item xs={6}>
-        {courtStatus()}
-      </Grid>
-      <Grid item xs={12}>
-        {courtDhsAddress()}
-      </Grid>
-      <Grid item xs={12}>
-        {courtUrl()}
-      </Grid>
-      {isShowOneCourt && (
-        <Grid item xs={12}>
-          {courtComments()}
-        </Grid>
-      )}
+      <Grid size={12}>{courtName()}</Grid>
+      <Grid size={8}>{courtStreetAddress()}</Grid>
+      <Grid size={4}>{courtCity()}</Grid>
+      <Grid size={6}>{courtState()}</Grid>
+      <Grid size={6}>{courtZipCode()}</Grid>
+      <Grid size={6}>{courtPhoneNumber()}</Grid>
+      <Grid size={6}>{courtStatus()}</Grid>
+      <Grid size={12}>{courtDhsAddress()}</Grid>
+      <Grid size={12}>{courtUrl()}</Grid>
+      {isShowOneCourt && <Grid size={12}>{courtComments()}</Grid>}
     </GridFormWrapper>
   )
 }

@@ -46,31 +46,31 @@ const UserAdmin = (): React.ReactElement => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {showTabs()}
         </Grid>
         {tabValue === USER_ADMIN_REGISTRY.APP_USERS.toString() && (
-          <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppUsers />
           </Grid>
         )}
         {tabValue === USER_ADMIN_REGISTRY.APP_ROLES.toString() && (
-          <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppRoles />
           </Grid>
         )}
         {tabValue === USER_ADMIN_REGISTRY.APP_PERMISSIONS.toString() && (
-          <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppPermissions />
           </Grid>
         )}
         {tabValue === USER_ADMIN_REGISTRY.APP_USERS_ROLES.toString() && (
-          <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppUsersRoles />
           </Grid>
         )}
         {tabValue === USER_ADMIN_REGISTRY.APP_ROLES_PERMISSIONS.toString() && (
-          <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+          <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
             <UserAdminAppRolesPermissions />
           </Grid>
         )}

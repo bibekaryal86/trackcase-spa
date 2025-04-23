@@ -206,10 +206,10 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {pageTitleComponent('APP ROLES PERMISSIONS MANAGEMENT')}
         </Grid>
-        <Grid item xs={12} sx={{ ml: 1, mr: 1, p: 0 }}>
+        <Grid size={12} sx={{ ml: 1, mr: 1, p: 0 }}>
           {appRolePermissionTable()}
         </Grid>
       </Grid>

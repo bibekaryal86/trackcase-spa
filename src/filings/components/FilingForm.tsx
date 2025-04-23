@@ -176,35 +176,15 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       isShowOne={isShowOneFiling}
       justifyContent={isShowOneFiling ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={12}>
-        {filingCourtCase()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingType()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingReceiptNumber()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingSubmitDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingReceiptDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingPriorityDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingDecisionDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingStatus()}
-      </Grid>
-      {isShowOneFiling && (
-        <Grid item xs={12}>
-          {filingComments()}
-        </Grid>
-      )}
+      <Grid size={12}>{filingCourtCase()}</Grid>
+      <Grid size={6}>{filingType()}</Grid>
+      <Grid size={6}>{filingReceiptNumber()}</Grid>
+      <Grid size={6}>{filingSubmitDate()}</Grid>
+      <Grid size={6}>{filingReceiptDate()}</Grid>
+      <Grid size={6}>{filingPriorityDate()}</Grid>
+      <Grid size={6}>{filingDecisionDate()}</Grid>
+      <Grid size={6}>{filingStatus()}</Grid>
+      {isShowOneFiling && <Grid size={12}>{filingComments()}</Grid>}
     </GridFormWrapper>
   )
 }
@@ -278,21 +258,11 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
 
   return (
     <GridFormWrapper isSmallScreen={isSmallScreen}>
-      <Grid item xs={12}>
-        {filingRfeFiling()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingRfeRfeDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {filingRfeRfeSubmitDate()}
-      </Grid>
-      <Grid item xs={12}>
-        {filingRfeRfeReason()}
-      </Grid>
-      <Grid item xs={12}>
-        {filingRfeComments()}
-      </Grid>
+      <Grid size={12}>{filingRfeFiling()}</Grid>
+      <Grid size={6}>{filingRfeRfeDate()}</Grid>
+      <Grid size={6}>{filingRfeRfeSubmitDate()}</Grid>
+      <Grid size={12}>{filingRfeRfeReason()}</Grid>
+      <Grid size={12}>{filingRfeComments()}</Grid>
     </GridFormWrapper>
   )
 }

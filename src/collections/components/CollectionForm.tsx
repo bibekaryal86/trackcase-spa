@@ -124,18 +124,10 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
       isShowOne={isShowOneCollection}
       justifyContent={isShowOneCollection ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={6}>
-        {caseCollectionCourtCasesList()}
-      </Grid>
-      <Grid item xs={6}>
-        {caseCollectionQuoteAmount()}
-      </Grid>
-      <Grid item xs={6}>
-        {caseCollectionStatus()}
-      </Grid>
-      <Grid item xs={12}>
-        {caseCollectionComments()}
-      </Grid>
+      <Grid size={6}>{caseCollectionCourtCasesList()}</Grid>
+      <Grid size={6}>{caseCollectionQuoteAmount()}</Grid>
+      <Grid size={6}>{caseCollectionStatus()}</Grid>
+      <Grid size={12}>{caseCollectionComments()}</Grid>
     </GridFormWrapper>
   )
 }
@@ -254,24 +246,12 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
       isShowOne={isShowOneCollection}
       justifyContent={isShowOneCollection ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={6}>
-        {cashCollectionCaseCollectionList()}
-      </Grid>
-      <Grid item xs={6}>
-        {cashCollectionCollectionDate()}
-      </Grid>
-      <Grid item xs={6}>
-        {cashCollectionCollectedAmount()}
-      </Grid>
-      <Grid item xs={6}>
-        {cashCollectionCollectionMethodsList()}
-      </Grid>
-      <Grid item xs={6}>
-        {cashCollectionWaivedAmount()}
-      </Grid>
-      <Grid item xs={12}>
-        {cashCollectionMemo()}
-      </Grid>
+      <Grid size={6}>{cashCollectionCaseCollectionList()}</Grid>
+      <Grid size={6}>{cashCollectionCollectionDate()}</Grid>
+      <Grid size={6}>{cashCollectionCollectedAmount()}</Grid>
+      <Grid size={6}>{cashCollectionCollectionMethodsList()}</Grid>
+      <Grid size={6}>{cashCollectionWaivedAmount()}</Grid>
+      <Grid size={12}>{cashCollectionMemo()}</Grid>
     </GridFormWrapper>
   )
 }

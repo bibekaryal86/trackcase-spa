@@ -95,23 +95,11 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       isShowOne={isShowOneJudge}
       justifyContent={isShowOneJudge ? 'flex-start' : 'flex-end'}
     >
-      <Grid item xs={12}>
-        {judgeName()}
-      </Grid>
-      <Grid item xs={12}>
-        {judgeWebex()}
-      </Grid>
-      <Grid item xs={8}>
-        {judgeCourtsList()}
-      </Grid>
-      <Grid item xs={4}>
-        {judgeStatus()}
-      </Grid>
-      {isShowOneJudge && (
-        <Grid item xs={12}>
-          {judgeComments()}
-        </Grid>
-      )}
+      <Grid size={12}>{judgeName()}</Grid>
+      <Grid size={12}>{judgeWebex()}</Grid>
+      <Grid size={8}>{judgeCourtsList()}</Grid>
+      <Grid size={4}>{judgeStatus()}</Grid>
+      {isShowOneJudge && <Grid size={12}>{judgeComments()}</Grid>}
     </GridFormWrapper>
   )
 }
