@@ -32,7 +32,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
-    "@mui/x-date-pickers": "^8.19.0",
+    "@mui/x-date-pickers": "^8.21.0",
     "dayjs": "^1.11.19",
     "lodash": "^4.17.21",
     "react": "^19.2.1",
@@ -40,7 +40,7 @@
     "react-csv": "^2.2.2",
     "react-dom": "^19.2.1",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.10.0",
+    "react-router-dom": "^7.10.1",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
     "styled-components": "^6.1.19"
