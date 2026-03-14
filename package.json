@@ -33,7 +33,7 @@
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
     "@mui/x-date-pickers": "^8.27.2",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "lodash": "^4.17.23",
     "react": "^19.2.4",
     "react-big-calendar": "^1.19.4",
@@ -86,7 +86,7 @@
     "style-loader": "^4.0.0",
     "typescript": "^5.9.3",
     "webpack": "^5.99.9",
-    "webpack-cli": "^6.0.1",
+    "webpack-cli": "^7.0.0",
     "webpack-dev-server": "^5.2.3"
   }
 }
