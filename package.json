@@ -23,7 +23,16 @@
     "type": "git",
     "url": "git+https://github.com/bibekaryal86/trackcase-spa.git"
   },
-  "keywords": [ "react", "redux", "typescript", "babel", "webpack", "eslint", "prettier", "jest" ],
+  "keywords": [
+    "react",
+    "redux",
+    "typescript",
+    "babel",
+    "webpack",
+    "eslint",
+    "prettier",
+    "jest"
+  ],
   "author": "Bibek Aryal",
   "license": "ISC",
   "homepage": "https://github.com/bibekaryal86/trackcase-spa#readme",
@@ -58,6 +67,7 @@
     "@eslint/js": "^9.39.4",
     "@redux-devtools/extension": "^4.0.0",
     "@types/lodash": "^4.17.24",
+    "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-big-calendar": "^1.16.3",
     "@types/react-csv": "^1.1.10",
