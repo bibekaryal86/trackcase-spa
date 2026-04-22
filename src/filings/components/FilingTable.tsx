@@ -1,19 +1,19 @@
 import React from 'react'
 
-import { tableAddButtonComponent } from '@app/components/CommonComponents'
-import Link from '@app/components/Link'
-import Table from '@app/components/Table'
-import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
-import { convertDateToLocaleString, getDayjsString } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, FILING_TYPES, ID_DEFAULT } from '@constants/index'
-import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
-import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+import { tableAddButtonComponent } from '@app/components/CommonComponents.tsx'
+import Link from '@app/components/Link.tsx'
+import Table from '@app/components/Table.tsx'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types.ts'
+import { convertDateToLocaleString, getDayjsString } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, FILING_TYPES, ID_DEFAULT } from '@constants/index.ts'
+import { FilingFormData, FilingRfeFormData, FilingRfeSchema, FilingSchema } from '@filings/types/filings.data.types.ts'
+import { getFilingFormDataFromSchema, getFilingRfeFormDataFromSchema } from '@filings/utils/filings.utils.ts'
+import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-import { FilingFormData, FilingRfeFormData, FilingRfeSchema, FilingSchema } from '../types/filings.data.types'
-import { getFilingFormDataFromSchema, getFilingRfeFormDataFromSchema } from '../utils/filings.utils'
 
 interface FilingTableProps {
   filingsList: FilingSchema[]

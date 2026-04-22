@@ -3,7 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { GlobalState } from '../store/redux'
+import { GlobalState } from '@app/store/redux.ts'
 
 interface SpinnerProps {
   isLoading: boolean

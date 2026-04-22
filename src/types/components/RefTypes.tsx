@@ -15,13 +15,13 @@ import {
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { FormSelectField, FormTextField } from '@app/components/FormFields'
-import Table from '@app/components/Table'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { convertToCamelCase, convertToTitleCase, getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+} from '@app/components/CommonComponents.tsx'
+import { FormSelectField, FormTextField } from '@app/components/FormFields.tsx'
+import Table from '@app/components/Table.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { convertToCamelCase, convertToTitleCase, getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   ACTION_TYPES,
   ActionTypes,
@@ -29,9 +29,8 @@ import {
   COMPONENT_STATUS_STATUS,
   REF_TYPES_REGISTRY,
   RefTypesRegistry,
-} from '@constants/index'
-
-import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
+} from '@constants/index.ts'
+import { addRefType, deleteRefType, editRefType, getRefType } from '@ref_types/actions/refTypes.action.ts'
 import {
   DefaultRefTypeFormData,
   RefTypeFormData,
@@ -39,8 +38,8 @@ import {
   RefTypeSchema,
   RefTypesReduxStoreKeys,
   RefTypesState,
-} from '../types/refTypes.data.types'
-import { refTypeTableData, refTypeTableHeader, validateFormData } from '../utils/refTypes.utils'
+} from '@ref_types/types/refTypes.data.types.ts'
+import { refTypeTableData, refTypeTableHeader, validateFormData } from '@ref_types/utils/refTypes.utils.ts'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {

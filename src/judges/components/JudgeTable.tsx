@@ -1,18 +1,18 @@
 import OpenInNew from '@mui/icons-material/OpenInNew'
 import React from 'react'
 
-import { tableAddButtonComponent } from '@app/components/CommonComponents'
-import Link from '@app/components/Link'
-import Table from '@app/components/Table'
-import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
-import { CourtFormData, CourtSchema } from '@courts/types/courts.data.types'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+import { tableAddButtonComponent } from '@app/components/CommonComponents.tsx'
+import Link from '@app/components/Link.tsx'
+import Table from '@app/components/Table.tsx'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index.ts'
+import { CourtFormData, CourtSchema } from '@courts/types/courts.data.types.ts'
+import { JudgeFormData, JudgeSchema } from '@judges/types/judges.data.types.ts'
+import { getJudgeFormDataFromSchema } from '@judges/utils/judges.utils.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-import { JudgeFormData, JudgeSchema } from '../types/judges.data.types'
-import { getJudgeFormDataFromSchema } from '../utils/judges.utils'
 
 interface JudgeTableProps {
   judgesList: JudgeSchema[]

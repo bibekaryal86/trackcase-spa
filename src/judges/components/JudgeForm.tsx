@@ -2,19 +2,19 @@ import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
-import { courtsListForSelect, handleFormChange } from '@app/components/CommonComponents'
+import { courtsListForSelect, handleFormChange } from '@app/components/CommonComponents.tsx'
 import {
   FormCommentsField,
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-} from '@app/components/FormFields'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { CourtSchema } from '@courts/types/courts.data.types'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+} from '@app/components/FormFields.tsx'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
+import { CourtSchema } from '@courts/types/courts.data.types.ts'
+import { JudgeFormData, JudgeFormErrorData } from '@judges/types/judges.data.types.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-import { JudgeFormData, JudgeFormErrorData } from '../types/judges.data.types'
 
 interface JudgeFormProps {
   formData: JudgeFormData

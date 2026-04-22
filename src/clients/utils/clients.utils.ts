@@ -1,13 +1,13 @@
-import { getNumber, validateAddress, validateEmailAddress, validatePhoneNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ID_DEFAULT } from '@constants/index'
-
+import { getNumber, validateAddress, validateEmailAddress, validatePhoneNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   ClientFormData,
   ClientFormErrorData,
   ClientSchema,
   DefaultClientFormErrorData,
-} from '../types/clients.data.types'
+} from '@clients/types/clients.data.types.ts'
+import { ID_DEFAULT } from '@constants/index.ts'
+
 
 export const isAreTwoClientsSame = (one: ClientFormData | ClientSchema, two: ClientFormData | ClientSchema) =>
   one &&

@@ -9,33 +9,35 @@ import Typography from '@mui/material/Typography'
 import { Dayjs } from 'dayjs'
 import React from 'react'
 
+import { ModalState } from '@app/types/app.data.types.ts'
+import { getDayjsString, getNumber, getNumericOnly, isNumericOnly } from '@app/utils/app.utils.ts'
 import {
   HearingCalendarFormData,
   HearingCalendarFormErrorData,
   HearingCalendarSchema,
   TaskCalendarFormData,
   TaskCalendarFormErrorData,
-} from '@calendars/types/calendars.data.types'
-import { CourtCaseFormData, CourtCaseFormErrorData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ClientFormData, ClientFormErrorData, ClientSchema } from '@clients/types/clients.data.types'
+} from '@calendars/types/calendars.data.types.ts'
+import { CourtCaseFormData, CourtCaseFormErrorData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { ClientFormData, ClientFormErrorData, ClientSchema } from '@clients/types/clients.data.types.ts'
 import {
   CaseCollectionFormData,
   CaseCollectionFormErrorData,
   CaseCollectionSchema,
   CashCollectionFormData,
   CashCollectionFormErrorData,
-} from '@collections/types/collections.data.types'
-import { ACTION_TYPES, ActionTypes } from '@constants/index'
-import { CourtFormData, CourtFormErrorData, CourtSchema } from '@courts/types/courts.data.types'
+} from '@collections/types/collections.data.types.ts'
+import { ACTION_TYPES, ActionTypes } from '@constants/index.ts'
+import { CourtFormData, CourtFormErrorData, CourtSchema } from '@courts/types/courts.data.types.ts'
 import {
   FilingFormData,
   FilingFormErrorData,
   FilingRfeFormData,
   FilingRfeFormErrorData,
   FilingSchema,
-} from '@filings/types/filings.data.types'
-import { JudgeFormData, JudgeFormErrorData, JudgeSchema } from '@judges/types/judges.data.types'
-import { ComponentStatusSchema, RefTypeFormData, RefTypeLessStatusSchema } from '@ref_types/types/refTypes.data.types'
+} from '@filings/types/filings.data.types.ts'
+import { JudgeFormData, JudgeFormErrorData, JudgeSchema } from '@judges/types/judges.data.types.ts'
+import { ComponentStatusSchema, RefTypeFormData, RefTypeLessStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 import {
   AppPermissionFormData,
   AppRoleFormData,
@@ -45,13 +47,11 @@ import {
   AppUserFormErrorData,
   AppUserRoleFormData,
   AppUserRoleFormErrorData,
-} from '@users/types/users.data.types'
-import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+} from '@users/types/users.data.types.ts'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-import Link from './Link'
-import Modal from './Modal'
-import { ModalState } from '../types/app.data.types'
-import { getDayjsString, getNumber, getNumericOnly, isNumericOnly } from '../utils/app.utils'
+import Link from './Link.tsx'
+import Modal from './Modal.tsx'
 
 type FormData =
   | AppUserFormData

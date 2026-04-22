@@ -11,26 +11,26 @@ import {
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { getNumber, isValidId } from '@app/utils/app.utils'
-import CourtCaseTable from '@cases/components/CourtCaseTable'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-import { getJudges } from '@judges/actions/judges.action'
-import { JudgeSchema } from '@judges/types/judges.data.types'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import ClientForm from './ClientForm'
-import { clientsAction, getClient } from '../actions/clients.action'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { getNumber, isValidId } from '@app/utils/app.utils.ts'
+import CourtCaseTable from '@cases/components/CourtCaseTable.tsx'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { clientsAction, getClient } from '@clients/actions/clients.action.ts'
 import {
   ClientBase,
   ClientResponse,
   DefaultClientFormData,
   DefaultClientFormErrorData,
-} from '../types/clients.data.types'
-import { getClientFormDataFromSchema, isAreTwoClientsSame, validateClient } from '../utils/clients.utils'
+} from '@clients/types/clients.data.types.ts'
+import { getClientFormDataFromSchema, isAreTwoClientsSame, validateClient } from '@clients/utils/clients.utils.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
+import { getJudges } from '@judges/actions/judges.action.ts'
+import { JudgeSchema } from '@judges/types/judges.data.types.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import ClientForm from './ClientForm.tsx'
 
 const mapStateToProps = ({ refTypes, judges }: GlobalState) => {
   return {

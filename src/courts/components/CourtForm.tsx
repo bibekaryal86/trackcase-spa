@@ -2,18 +2,18 @@ import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
-import { handleFormChange } from '@app/components/CommonComponents'
+import { handleFormChange } from '@app/components/CommonComponents.tsx'
 import {
   FormCommentsField,
   FormSelectStateField,
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-} from '@app/components/FormFields'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+} from '@app/components/FormFields.tsx'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
+import { CourtFormData, CourtFormErrorData } from '@courts/types/courts.data.types.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-import { CourtFormData, CourtFormErrorData } from '../types/courts.data.types'
 
 interface CourtFormProps {
   formData: CourtFormData

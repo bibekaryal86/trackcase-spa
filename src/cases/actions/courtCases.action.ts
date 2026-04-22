@@ -1,8 +1,16 @@
 import React from 'react'
 
-import { GlobalDispatch, GlobalState } from '@app/store/redux'
-import { getEndpoint, getErrMsg } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
+import { getEndpoint, getErrMsg } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import {
+  COURT_CASES_COMPLETE,
+  COURT_CASES_READ_FAILURE,
+  COURT_CASES_READ_REQUEST,
+  COURT_CASES_READ_SUCCESS,
+} from '@cases/types/courtCases.action.types.ts'
+import { CourtCaseBase, CourtCaseResponse, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { courtCaseDispatch } from '@cases/utils/courtCases.utils.ts'
 import {
   ACTION_SUCCESS,
   ACTION_TYPES,
@@ -10,16 +18,7 @@ import {
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
-} from '@constants/index'
-
-import {
-  COURT_CASES_COMPLETE,
-  COURT_CASES_READ_FAILURE,
-  COURT_CASES_READ_REQUEST,
-  COURT_CASES_READ_SUCCESS,
-} from '../types/courtCases.action.types'
-import { CourtCaseBase, CourtCaseResponse, CourtCaseSchema } from '../types/courtCases.data.types'
-import { courtCaseDispatch } from '../utils/courtCases.utils'
+} from '@constants/index.ts'
 
 export const courtCasesAction = ({
   action,

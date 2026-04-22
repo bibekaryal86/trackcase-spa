@@ -10,6 +10,7 @@
     ],
     "types": ["node"],
     "allowJs": true,
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,6 +22,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+
     "jsx": "react-jsx",
     "paths": {
       "@app/*": ["src/app/*"],

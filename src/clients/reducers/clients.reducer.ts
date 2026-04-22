@@ -3,8 +3,8 @@ import {
   CLIENTS_DELETE_SUCCESS,
   CLIENTS_READ_SUCCESS,
   CLIENTS_UPDATE_SUCCESS,
-} from '../types/clients.action.types'
-import { ClientsAction, ClientsState, DefaultClientState } from '../types/clients.data.types'
+} from '@clients/types/clients.action.types.ts'
+import { ClientsAction, ClientsState, DefaultClientState } from '@clients/types/clients.data.types.ts'
 
 export default function clients(state = DefaultClientState, action: ClientsAction): ClientsState {
   switch (action.type) {

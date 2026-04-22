@@ -10,28 +10,28 @@ import {
   handleFormDateChange,
   hearingCalendarListForSelect,
   refTypesListForSelect,
-} from '@app/components/CommonComponents'
+} from '@app/components/CommonComponents.tsx'
 import {
   FormCommentsField,
   FormDatePickerField,
   FormSelectField,
   FormSelectStatusField,
   GridFormWrapper,
-} from '@app/components/FormFields'
-import { getNumber } from '@app/utils/app.utils'
-import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { FilingSchema } from '@filings/types/filings.data.types'
-import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '@ref_types/types/refTypes.data.types'
-
+} from '@app/components/FormFields.tsx'
+import { getNumber } from '@app/utils/app.utils.ts'
 import {
   HearingCalendarFormData,
   HearingCalendarFormErrorData,
   HearingCalendarSchema,
   TaskCalendarFormData,
   TaskCalendarFormErrorData,
-} from '../types/calendars.data.types'
+} from '@calendars//types/calendars.data.types.ts'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
+import { FilingSchema } from '@filings/types/filings.data.types.ts'
+import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
+
 
 interface CalendarFormProps {
   calendarStatusList: ComponentStatusSchema[]

@@ -12,16 +12,17 @@ import {
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { FormSelectField } from '@app/components/FormFields'
-import Table from '@app/components/Table'
-import { useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index'
+} from '@app/components/CommonComponents.tsx'
+import { FormSelectField } from '@app/components/FormFields.tsx'
+import Table from '@app/components/Table.tsx'
+import { useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index.ts'
+import { appUsersRolesAdmin, getAppUsersRoles } from '@users/action/users.action.ts'
+import { appUserRoleTableData, appUserRoleTableHeader, validateAppUserRole } from '@users/utils/users.utils.ts'
 
-import { appUsersRolesAdmin, getAppUsersRoles } from '../action/users.action'
 import {
   AppUserRoleFormData,
   AppUserRoleResponse,
@@ -29,7 +30,6 @@ import {
   DefaultAppUserRoleFormData,
   DefaultAppUserRoleFormErrorData,
 } from '../types/users.data.types'
-import { appUserRoleTableData, appUserRoleTableHeader, validateAppUserRole } from '../utils/users.utils'
 
 const UserAdminAppUsersRoles = (): React.ReactElement => {
   const dispatch = useGlobalDispatch()

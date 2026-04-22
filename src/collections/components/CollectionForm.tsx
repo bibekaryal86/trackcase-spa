@@ -9,7 +9,7 @@ import {
   handleFormChange,
   handleFormDateChange,
   refTypesListForSelect,
-} from '@app/components/CommonComponents'
+} from '@app/components/CommonComponents.tsx'
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -17,20 +17,20 @@ import {
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-} from '@app/components/FormFields'
-import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-
+} from '@app/components/FormFields.tsx'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
 import {
   CaseCollectionFormData,
   CaseCollectionFormErrorData,
   CaseCollectionSchema,
   CashCollectionFormData,
   CashCollectionFormErrorData,
-} from '../types/collections.data.types'
-import { getAmountForDisplay } from '../utils/collections.utils'
+} from '@collections/types/collections.data.types.ts'
+import { getAmountForDisplay } from '@collections/utils/collections.utils.ts'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
+import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
+
 
 interface CollectionFormPropsCase {
   formData: CaseCollectionFormData

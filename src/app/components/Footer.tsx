@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography'
 import React from 'react'
 
-import Link from './Link'
+import Link from './Link.tsx'
 
 const BUILD_NUMBER = process.env.BUILD_NUMBER
 const CURRENT_YEAR = new Date().getFullYear()

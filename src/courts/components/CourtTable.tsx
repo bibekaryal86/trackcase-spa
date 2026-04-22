@@ -1,17 +1,16 @@
 import OpenInNew from '@mui/icons-material/OpenInNew'
 import React from 'react'
 
-import { tableAddButtonComponent } from '@app/components/CommonComponents'
-import Link from '@app/components/Link'
-import Table from '@app/components/Table'
-import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
-import { getFullAddress } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
-import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
-
-import { CourtFormData, CourtSchema } from '../types/courts.data.types'
-import { getCourtFormDataFromSchema } from '../utils/courts.utils'
+import { tableAddButtonComponent } from '@app/components/CommonComponents.tsx'
+import Link from '@app/components/Link.tsx'
+import Table from '@app/components/Table.tsx'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types.ts'
+import { getFullAddress } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index.ts'
+import { CourtFormData, CourtSchema } from '@courts/types/courts.data.types.ts'
+import { getCourtFormDataFromSchema } from '@courts/utils/courts.utils.ts'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
 interface CourtTableProps {
   courtsList: CourtSchema[]

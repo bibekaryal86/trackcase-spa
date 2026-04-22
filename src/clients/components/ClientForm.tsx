@@ -11,11 +11,11 @@ import {
   FormTextField,
   GridFormWrapper,
 } from '@app/components/FormFields'
+import { ClientFormData, ClientFormErrorData } from '@clients/types/clients.data.types'
 import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '@constants/index'
 import { JudgeSchema } from '@judges/types/judges.data.types'
 import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
 
-import { ClientFormData, ClientFormErrorData } from '../types/clients.data.types'
 
 interface ClientFormProps {
   formData: ClientFormData

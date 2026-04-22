@@ -1,12 +1,10 @@
 import dayjs from 'dayjs'
 
-import { getDayjs, getNumber, getString } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { ID_DEFAULT } from '@constants/index'
-import { FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
-
+import { getDayjs, getNumber, getString } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { ID_DEFAULT } from '@constants/index.ts'
 import {
   DefaultFilingFormErrorData,
   DefaultFilingRfeFormErrorData,
@@ -16,7 +14,9 @@ import {
   FilingRfeFormErrorData,
   FilingRfeSchema,
   FilingSchema,
-} from '../types/filings.data.types'
+} from '@filings/types/filings.data.types.ts'
+import { FilingTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
+
 
 export const isAreTwoFilingsSame = (one: FilingSchema | FilingFormData, two: FilingSchema | FilingFormData) =>
   one &&

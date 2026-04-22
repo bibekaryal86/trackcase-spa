@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { GlobalState } from '../store/redux'
-import { RESET_SPINNER, SET_SPINNER } from '../types/app.action.types'
-import { SpinnerAction } from '../types/app.data.types'
+import { GlobalState } from '@app/store/redux.ts'
+import { RESET_SPINNER, SET_SPINNER } from '@app/types/app.action.types.ts'
+import { SpinnerAction } from '@app/types/app.data.types.ts'
 
 export const setSpinner = () => {
   return (dispatch: React.Dispatch<SpinnerAction>, getStore: () => GlobalState): void => {

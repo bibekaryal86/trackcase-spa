@@ -1,10 +1,8 @@
 import React from 'react'
 
-import { TableData, TableHeaderData } from '@app/types/app.data.types'
-import { getString } from '@app/utils/app.utils'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '@constants/index'
-import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
-
+import { TableData, TableHeaderData } from '@app/types/app.data.types.ts'
+import { getString } from '@app/utils/app.utils.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '@constants/index.ts'
 import {
   ComponentStatusSchema,
   DefaultRefTypeFormData,
@@ -12,7 +10,9 @@ import {
   RefTypeLessStatusSchema,
   RefTypeSchema,
   RefTypesRequestMetadataState,
-} from '../types/refTypes.data.types'
+} from '@ref_types/types/refTypes.data.types.ts'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
+
 
 export const refTypesDispatch = ({
   type = '',

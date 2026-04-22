@@ -1,10 +1,10 @@
-import { BaseModelSchema, NameDescBaseSchema, ResponseBase } from '@app/types/app.data.types'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { HearingCalendarSchema, TaskCalendarSchema } from '@calendars/types/calendars.data.types'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { CashCollectionSchema } from '@collections/types/collections.data.types'
-import { ID_DEFAULT, RefTypesRegistry } from '@constants/index'
-import { FilingSchema } from '@filings/types/filings.data.types'
+import { BaseModelSchema, NameDescBaseSchema, ResponseBase } from '@app/types/app.data.types.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { HearingCalendarSchema, TaskCalendarSchema } from '@calendars/types/calendars.data.types.ts'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { CashCollectionSchema } from '@collections/types/collections.data.types.ts'
+import { ID_DEFAULT, RefTypesRegistry } from '@constants/index.ts'
+import { FilingSchema } from '@filings/types/filings.data.types.ts'
 
 export interface ComponentStatusSchema extends BaseModelSchema {
   componentName: string

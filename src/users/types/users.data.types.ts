@@ -1,8 +1,8 @@
 import { Dayjs } from 'dayjs'
 
-import { AddressBaseSchema, BaseModelSchema, NameDescBaseSchema, ResponseBase } from '@app/types/app.data.types'
-import { ID_DEFAULT } from '@constants/index'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+import { AddressBaseSchema, BaseModelSchema, NameDescBaseSchema, ResponseBase } from '@app/types/app.data.types.ts'
+import { ID_DEFAULT } from '@constants/index.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
 export interface AppUserLoginRequest {
   username: string

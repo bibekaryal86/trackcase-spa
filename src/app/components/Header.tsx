@@ -10,10 +10,10 @@ import Typography from '@mui/material/Typography'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { isLoggedIn } from '@users/utils/users.utils'
+import { isLoggedIn } from '@users/utils/users.utils.ts'
 
-import Link from './Link'
-import Switch from './Switch'
+import Link from './Link.tsx'
+import Switch from './Switch.tsx'
 
 interface HeaderProps {
   isDarkMode: boolean

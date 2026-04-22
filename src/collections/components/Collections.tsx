@@ -11,30 +11,16 @@ import {
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getCurrency, getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { getCourtCases } from '@cases/actions/courtCases.action'
-import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { getClients } from '@clients/actions/clients.action'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import {
-  ACTION_TYPES,
-  ActionTypes,
-  COLLECTION_TYPES,
-  CollectionTypes,
-  COMPONENT_STATUS_NAME,
-  ID_DEFAULT,
-  INVALID_INPUT,
-} from '@constants/index'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import { CollectionFormCase, CollectionFormCash } from './CollectionForm'
-import CollectionTable from './CollectionTable'
-import { collectionsAction, getCollections } from '../actions/collections.action'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getCurrency, getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { getCourtCases } from '@cases/actions/courtCases.action.ts'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { getClients } from '@clients/actions/clients.action.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { collectionsAction, getCollections } from '@collections/actions/collections.action.ts'
 import {
   CaseCollectionBase,
   CaseCollectionFormData,
@@ -47,13 +33,27 @@ import {
   DefaultCaseCollectionFormErrorData,
   DefaultCashCollectionFormData,
   DefaultCashCollectionFormErrorData,
-} from '../types/collections.data.types'
+} from '@collections/types/collections.data.types.ts'
 import {
   isAreTwoCaseCollectionsSame,
   isAreTwoCashCollectionsSame,
   validateCaseCollection,
   validateCashCollection,
-} from '../utils/collections.utils'
+} from '@collections/utils/collections.utils.ts'
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  COLLECTION_TYPES,
+  CollectionTypes,
+  COMPONENT_STATUS_NAME,
+  ID_DEFAULT,
+  INVALID_INPUT,
+} from '@constants/index.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import { CollectionFormCase, CollectionFormCash } from './CollectionForm.tsx'
+import CollectionTable from './CollectionTable.tsx'
 
 const mapStateToProps = ({ collections, refTypes, courtCases, clients }: GlobalState) => {
   return {

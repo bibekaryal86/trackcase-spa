@@ -1,8 +1,26 @@
 import React from 'react'
 
-import { GlobalDispatch, GlobalState } from '@app/store/redux'
-import { getEndpoint, getErrMsg } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
+import { getEndpoint, getErrMsg } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import {
+  CASE_COLLECTIONS_COMPLETE,
+  CASE_COLLECTIONS_READ_FAILURE,
+  CASE_COLLECTIONS_READ_REQUEST,
+  CASE_COLLECTIONS_READ_SUCCESS,
+  CASH_COLLECTIONS_COMPLETE,
+  CASH_COLLECTIONS_READ_FAILURE,
+  CASH_COLLECTIONS_READ_REQUEST,
+} from '@collections/types/collections.action.types.ts'
+import {
+  CaseCollectionBase,
+  CaseCollectionResponse,
+  CaseCollectionSchema,
+  CashCollectionBase,
+  CashCollectionResponse,
+  CashCollectionSchema,
+} from '@collections/types/collections.data.types.ts'
+import { checkCorrectCollectionTypes, collectionDispatch } from '@collections/utils/collections.utils.ts'
 import {
   ACTION_SUCCESS,
   ACTION_TYPES,
@@ -13,26 +31,7 @@ import {
   SOMETHING_WENT_WRONG,
   TYPE_IS_INCORRECT,
   TYPE_IS_MISSING,
-} from '@constants/index'
-
-import {
-  CASE_COLLECTIONS_COMPLETE,
-  CASE_COLLECTIONS_READ_FAILURE,
-  CASE_COLLECTIONS_READ_REQUEST,
-  CASE_COLLECTIONS_READ_SUCCESS,
-  CASH_COLLECTIONS_COMPLETE,
-  CASH_COLLECTIONS_READ_FAILURE,
-  CASH_COLLECTIONS_READ_REQUEST,
-} from '../types/collections.action.types'
-import {
-  CaseCollectionBase,
-  CaseCollectionResponse,
-  CaseCollectionSchema,
-  CashCollectionBase,
-  CashCollectionResponse,
-  CashCollectionSchema,
-} from '../types/collections.data.types'
-import { checkCorrectCollectionTypes, collectionDispatch } from '../utils/collections.utils'
+} from '@constants/index.ts'
 
 export const collectionsAction = ({
   type,

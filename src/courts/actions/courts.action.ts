@@ -10,16 +10,15 @@ import {
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
-} from '@constants/index'
-
+} from '@constants/index.ts'
 import {
   COURTS_COMPLETE,
   COURTS_READ_FAILURE,
   COURTS_READ_REQUEST,
   COURTS_READ_SUCCESS,
-} from '../types/courts.action.types'
-import { CourtBase, CourtResponse, CourtSchema } from '../types/courts.data.types'
-import { courtDispatch } from '../utils/courts.utils'
+} from '@courts/types/courts.action.types.ts'
+import { CourtBase, CourtResponse, CourtSchema } from '@courts/types/courts.data.types.ts'
+import { courtDispatch } from '@courts/utils/courts.utils.ts'
 
 export const courtsAction = ({
   action,

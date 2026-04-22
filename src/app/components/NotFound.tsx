@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 
-import Link from './Link'
+import Link from './Link.tsx'
 
 const NotFound = (): React.ReactElement => {
   return (

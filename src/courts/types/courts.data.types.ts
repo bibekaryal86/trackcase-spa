@@ -1,9 +1,9 @@
-import { AddressBaseSchema, BaseModelSchema, ResponseBase } from '@app/types/app.data.types'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ID_DEFAULT } from '@constants/index'
-import { JudgeSchema } from '@judges/types/judges.data.types'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-import { AppUserSchema } from '@users/types/users.data.types'
+import { AddressBaseSchema, BaseModelSchema, ResponseBase } from '@app/types/app.data.types.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ID_DEFAULT } from '@constants/index.ts'
+import { JudgeSchema } from '@judges/types/judges.data.types.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
+import { AppUserSchema } from '@users/types/users.data.types.ts'
 
 export interface CourtBase extends AddressBaseSchema {
   name: string

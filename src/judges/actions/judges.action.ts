@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { GlobalDispatch, GlobalState } from '@app/store/redux'
-import { getEndpoint, getErrMsg } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
+import { getEndpoint, getErrMsg } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   ACTION_SUCCESS,
   ACTION_TYPES,
@@ -10,16 +10,15 @@ import {
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
-} from '@constants/index'
-
+} from '@constants/index.ts'
 import {
   JUDGES_COMPLETE,
   JUDGES_READ_FAILURE,
   JUDGES_READ_REQUEST,
   JUDGES_READ_SUCCESS,
-} from '../types/judges.action.types'
-import { JudgeBase, JudgeResponse, JudgeSchema } from '../types/judges.data.types'
-import { judgeDispatch } from '../utils/judges.utils'
+} from '@judges/types/judges.action.types.ts'
+import { JudgeBase, JudgeResponse, JudgeSchema } from '@judges/types/judges.data.types.ts'
+import { judgeDispatch } from '@judges/utils/judges.utils.ts'
 
 export const judgesAction = ({
   action,

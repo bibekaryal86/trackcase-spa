@@ -1,5 +1,5 @@
-import { CASE_COLLECTIONS_READ_SUCCESS } from '../types/collections.action.types'
-import { CollectionsAction, CollectionsState, DefaultCollectionsState } from '../types/collections.data.types'
+import { CASE_COLLECTIONS_READ_SUCCESS } from '@collections/types/collections.action.types.ts'
+import { CollectionsAction, CollectionsState, DefaultCollectionsState } from '@collections/types/collections.data.types.ts'
 
 export default function collections(state = DefaultCollectionsState, action: CollectionsAction): CollectionsState {
   const matchesSuccessCase = /^CASE_COLLECTIONS_(CREATE|UPDATE|DELETE)_SUCCESS$/.exec(action.type)

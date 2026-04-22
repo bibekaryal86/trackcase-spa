@@ -10,28 +10,28 @@ import {
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { getNumber, isValidId } from '@app/utils/app.utils'
-import Calendars from '@calendars/components/Calendars'
-import { getClients } from '@clients/actions/clients.action'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import Collections from '@collections/components/Collections'
-import { ACTION_TYPES, CASE_TABS, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-import Filings from '@filings/components/Filings'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import CourtCaseForm from './CourtCaseForm'
-import { courtCasesAction, getCourtCase, getCourtCases } from '../actions/courtCases.action'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { getNumber, isValidId } from '@app/utils/app.utils.ts'
+import Calendars from '@calendars/components/Calendars.tsx'
+import { courtCasesAction, getCourtCase, getCourtCases } from '@cases/actions/courtCases.action.ts'
 import {
   CourtCaseBase,
   CourtCaseResponse,
   CourtCaseSchema,
   DefaultCourtCaseFormData,
   DefaultCourtCaseFormErrorData,
-} from '../types/courtCases.data.types'
-import { getCourtCaseFormDataFromSchema, isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
+} from '@cases/types/courtCases.data.types.ts'
+import { getCourtCaseFormDataFromSchema, isAreTwoCourtCasesSame, validateCourtCase } from '@cases/utils/courtCases.utils.ts'
+import { getClients } from '@clients/actions/clients.action.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import Collections from '@collections/components/Collections.tsx'
+import { ACTION_TYPES, CASE_TABS, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
+import Filings from '@filings/components/Filings.tsx'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import CourtCaseForm from './CourtCaseForm.tsx'
 
 const mapStateToProps = ({ refTypes, courtCases, clients }: GlobalState) => {
   return {

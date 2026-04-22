@@ -6,8 +6,8 @@ import {
   FILINGS_DELETE_SUCCESS,
   FILINGS_READ_SUCCESS,
   FILINGS_UPDATE_SUCCESS,
-} from '../types/filings.action.types'
-import { DefaultFilingState, FilingsAction, FilingsState } from '../types/filings.data.types'
+} from '@filings/types/filings.action.types.ts'
+import { DefaultFilingState, FilingsAction, FilingsState } from '@filings/types/filings.data.types.ts'
 
 export default function filings(state = DefaultFilingState, action: FilingsAction): FilingsState {
   switch (action.type) {

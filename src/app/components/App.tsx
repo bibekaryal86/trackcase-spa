@@ -3,16 +3,17 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { ALERT_TYPES, IS_DARK_MODE, SIGNIN_FIRST } from '@constants/index'
-import { logout } from '@users/action/users.action'
-import { isLoggedIn } from '@users/utils/users.utils'
+import { setAlert } from '@app/utils/alerts.utils.ts'
+import { SessionStorage } from '@app/utils/storage.utils.ts'
+import { ALERT_TYPES, IS_DARK_MODE, SIGNIN_FIRST } from '@constants/index.ts'
+import { logout } from '@users/action/users.action.ts'
+import { isLoggedIn } from '@users/utils/users.utils.ts'
 
-import Alerts from './Alerts'
-import Body from './Body'
-import SessionTimeout from './SessionTimeout'
-import Spinner from './Spinner'
-import { setAlert } from '../utils/alerts.utils'
-import { SessionStorage } from '../utils/storage.utils'
+import Alerts from './Alerts.tsx'
+import Body from './Body.tsx'
+import SessionTimeout from './SessionTimeout.tsx'
+import Spinner from './Spinner.tsx'
+
 
 const lightTheme = createTheme({
   palette: {

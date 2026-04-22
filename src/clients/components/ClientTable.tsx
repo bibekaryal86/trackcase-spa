@@ -1,18 +1,18 @@
 import React from 'react'
 
-import { tableAddButtonComponent } from '@app/components/CommonComponents'
-import Link from '@app/components/Link'
-import Table from '@app/components/Table'
-import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
-import { getFullAddress } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
-import { JudgeFormData, JudgeSchema } from '@judges/types/judges.data.types'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+import { tableAddButtonComponent } from '@app/components/CommonComponents.tsx'
+import Link from '@app/components/Link.tsx'
+import Table from '@app/components/Table.tsx'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types.ts'
+import { getFullAddress } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ClientFormData, ClientSchema } from '@clients/types/clients.data.types.ts'
+import { getClientFormDataFromSchema } from '@clients/utils/clients.utils.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index.ts'
+import { JudgeFormData, JudgeSchema } from '@judges/types/judges.data.types.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-import { ClientFormData, ClientSchema } from '../types/clients.data.types'
-import { getClientFormDataFromSchema } from '../utils/clients.utils'
 
 interface ClientTableProps {
   clientsList: ClientSchema[]

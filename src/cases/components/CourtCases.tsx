@@ -10,20 +10,12 @@ import {
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { getClients } from '@clients/actions/clients.action'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import CourtCaseForm from './CourtCaseForm'
-import CourtCaseTable from './CourtCaseTable'
-import { courtCasesAction, getCourtCases } from '../actions/courtCases.action'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { courtCasesAction, getCourtCases } from '@cases/actions/courtCases.action.ts'
 import {
   CourtCaseBase,
   CourtCaseFormData,
@@ -31,8 +23,16 @@ import {
   CourtCaseSchema,
   DefaultCourtCaseFormData,
   DefaultCourtCaseFormErrorData,
-} from '../types/courtCases.data.types'
-import { isAreTwoCourtCasesSame, validateCourtCase } from '../utils/courtCases.utils'
+} from '@cases/types/courtCases.data.types.ts'
+import { isAreTwoCourtCasesSame, validateCourtCase } from '@cases/utils/courtCases.utils.ts'
+import { getClients } from '@clients/actions/clients.action.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import CourtCaseForm from './CourtCaseForm.tsx'
+import CourtCaseTable from './CourtCaseTable.tsx'
 
 const mapStateToProps = ({ refTypes, courtCases, clients }: GlobalState) => {
   return {

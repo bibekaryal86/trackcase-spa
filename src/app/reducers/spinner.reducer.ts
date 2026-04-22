@@ -1,5 +1,5 @@
-import { RESET_SPINNER, SET_SPINNER } from '../types/app.action.types'
-import { SpinnerAction, SpinnerState } from '../types/app.data.types'
+import { RESET_SPINNER, SET_SPINNER } from '@app/types/app.action.types.ts'
+import { SpinnerAction, SpinnerState } from '@app/types/app.data.types.ts'
 
 const initialState: SpinnerState = {
   isLoading: false,

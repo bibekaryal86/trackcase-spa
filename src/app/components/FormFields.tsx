@@ -11,11 +11,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
-import { componentStatusListForSelect } from '@app/components/CommonComponents'
-import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '@constants/index'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+import { componentStatusListForSelect } from '@app/components/CommonComponents.tsx'
+import { getDayjs } from '@app/utils/app.utils.ts'
+import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '@constants/index.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-import { getDayjs } from '../utils/app.utils'
 
 interface FormWrapperProps {
   isSmallScreen?: boolean

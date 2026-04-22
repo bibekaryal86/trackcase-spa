@@ -9,7 +9,7 @@ import {
   handleFormChange,
   handleFormDateChange,
   refTypesListForSelect,
-} from '@app/components/CommonComponents'
+} from '@app/components/CommonComponents.tsx'
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -17,19 +17,19 @@ import {
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-} from '@app/components/FormFields'
-import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
-
+} from '@app/components/FormFields.tsx'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
 import {
   FilingFormData,
   FilingFormErrorData,
   FilingRfeFormData,
   FilingRfeFormErrorData,
   FilingSchema,
-} from '../types/filings.data.types'
+} from '@filings/types/filings.data.types.ts'
+import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
+
 
 interface FilingFormProps {
   formData: FilingFormData
