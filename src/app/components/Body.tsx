@@ -1,4 +1,4 @@
-import { Container } from '@mui/material'
+import { Container, Theme } from '@mui/material'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from '@mui/material/Toolbar'
@@ -25,7 +25,7 @@ const Body = (props: BodyProps) => {
       <Header {...props} />
       <Box
         sx={{
-          backgroundColor: (theme) =>
+          backgroundColor: (theme: Theme) =>
             theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
           flexGrow: 1,
           height: '100vh',

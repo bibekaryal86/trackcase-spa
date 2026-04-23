@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
@@ -24,8 +25,6 @@ import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, USER_ADMIN_REGISTRY }
 import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
 import { appUsersAdmin, getAppUsers } from '@users/action/users.action.ts'
-import { appUsersTableData, appUsersTableHeader, validateAppUser } from '@users/utils/users.utils.ts'
-
 import {
   AppUserFormData,
   AppUserRequest,
@@ -33,7 +32,9 @@ import {
   AppUserSchema,
   DefaultAppUserFormData,
   DefaultAppUserFormErrorData,
-} from '../types/users.data.types'
+} from '@users/types/users.data.types.ts'
+import { appUsersTableData, appUsersTableHeader, validateAppUser } from '@users/utils/users.utils.ts'
+
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
@@ -126,7 +127,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--EMAIL"
         name="email"
         value={formData.email}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.email}
         helperText={formErrors.email}
         required
@@ -135,7 +136,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--FULL NAME"
         name="fullName"
         value={formData.fullName}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.fullName}
         helperText={formErrors.fullName}
         required
@@ -144,7 +145,7 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--STATUS"
         name="componentStatusId"
         value={formData.componentStatusId}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.componentStatusId}
         helperText={formErrors.componentStatusId}
         menuItems={componentStatusMenuItems()}

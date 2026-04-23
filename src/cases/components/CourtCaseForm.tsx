@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@mui/material'
+import { SelectChangeEvent, useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
@@ -33,7 +33,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       required
       name="caseTypeId"
       value={formData.caseTypeId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.caseTypeError}
       helperText={formErrors.caseTypeError}
       menuItems={refTypesListForSelect(caseTypesList)}
@@ -46,7 +46,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       required
       name="clientId"
       value={formData.clientId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.clientError}
       helperText={formErrors.clientError}
       menuItems={clientsListForSelect(clientsList, clientId, formData.clientId)}
@@ -57,7 +57,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
     <FormSelectStatusField
       componentLabel="COURT CASE--STATUS"
       value={formData.componentStatusId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
       helperText={formErrors.componentStatusError}
       statusList={courtCaseStatusList}
@@ -68,7 +68,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="COURT CASE--COMMENTS"
       value={formData.comments}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
     />
   )
 

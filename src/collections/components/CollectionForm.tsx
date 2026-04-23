@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@mui/material'
+import { SelectChangeEvent, useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { Dayjs } from 'dayjs'
 import React from 'react'
@@ -72,7 +72,7 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
         name="quoteAmount"
         value={getAmountForDisplay(formData.quoteAmount)}
         maxLength={5}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.quoteAmountError}
         helperText={formErrors.quoteAmountError}
         required
@@ -88,7 +88,7 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
         name="courtCaseId"
         value={formData.courtCaseId}
         menuItems={courtCasesListForSelect(courtCasesList, selectedCourtCase, formData.courtCaseId)}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.courtCaseError}
         helperText={formErrors.courtCaseError}
         required
@@ -101,7 +101,7 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
     <FormSelectStatusField
       componentLabel="CASE COLLECTION--STATUS"
       value={formData.componentStatusId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       statusList={collectionStatusList}
       error={!!formErrors.componentStatusError}
       helperText={formErrors.componentStatusError}
@@ -113,7 +113,7 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
       <FormCommentsField
         componentLabel="CASE COLLECTION--COMMENTS"
         value={formData.comments}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       />
     )
   }
@@ -152,7 +152,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
           selectedCourtCase,
           formData.caseCollectionId,
         )}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.caseCollectionError}
         helperText={formErrors.caseCollectionError}
         required
@@ -167,7 +167,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         componentLabel="CASH COLLECTION--COLLECTION DATE"
         name="collectionDate"
         value={formData.collectionDate}
-        onChange={(value) =>
+        onChange={(value: Dayjs) =>
           handleFormDateChange('collectionDate', value, formData, formErrors, setFormData, setFormErrors)
         }
         minDate={minCollectionDate}
@@ -185,7 +185,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         name="collectedAmount"
         value={getAmountForDisplay(formData.collectedAmount)}
         maxLength={5}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.collectedAmountError}
         helperText={formErrors.collectedAmountError}
         required
@@ -201,7 +201,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         name="collectionMethodId"
         value={formData.collectionMethodId}
         menuItems={refTypesListForSelect(collectionMethodsList)}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.collectionMethodError}
         helperText={formErrors.collectionMethodError}
         required
@@ -216,7 +216,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         name="waivedAmount"
         value={getAmountForDisplay(formData.waivedAmount)}
         maxLength={5}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.waivedAmountError}
         helperText={formErrors.waivedAmountError}
         required
@@ -231,7 +231,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         componentLabel="CASH COLLECTION--MEMO"
         name="memo"
         value={formData.memo}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.memo}
         helperText={formErrors.memo}
         required

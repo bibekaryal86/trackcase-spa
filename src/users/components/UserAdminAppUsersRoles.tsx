@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
@@ -21,15 +22,15 @@ import { getNumber } from '@app/utils/app.utils.ts'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index.ts'
 import { appUsersRolesAdmin, getAppUsersRoles } from '@users/action/users.action.ts'
-import { appUserRoleTableData, appUserRoleTableHeader, validateAppUserRole } from '@users/utils/users.utils.ts'
-
 import {
   AppUserRoleFormData,
   AppUserRoleResponse,
   AppUserRoleSchema,
   DefaultAppUserRoleFormData,
   DefaultAppUserRoleFormErrorData,
-} from '../types/users.data.types'
+} from '@users/types/users.data.types.ts'
+import { appUserRoleTableData, appUserRoleTableHeader, validateAppUserRole } from '@users/utils/users.utils.ts'
+
 
 const UserAdminAppUsersRoles = (): React.ReactElement => {
   const dispatch = useGlobalDispatch()
@@ -107,7 +108,7 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
         name="appUserId"
         required
         value={formData.appUserId}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         menuItems={appUsersMenuItems()}
         error={!!formErrors.appUserId}
         helperText={formErrors.appUserId}
@@ -117,7 +118,7 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
         name="appRoleId"
         required
         value={formData.appRoleId}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         menuItems={appRolesMenuItems()}
         error={!!formErrors.appRoleId}
         helperText={formErrors.appRoleId}

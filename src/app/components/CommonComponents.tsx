@@ -255,7 +255,7 @@ export const hardDeleteCheckboxComponent = <T extends FormData, U extends FormEr
         <Checkbox
           name="isHardDelete"
           checked={formData.isHardDelete}
-          onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         />
       }
     />

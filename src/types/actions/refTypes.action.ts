@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { isEqual } from 'lodash'
 import React from 'react'
 
 import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
@@ -186,7 +186,7 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
           const index = requestMetadataState.findIndex((x) => x.refType === refType)
           if (index !== -1) {
             const requestMetadataInStore = updatedRequestMetadataState[index]
-            isRequestMetadataSame = _.isEqual(requestMetadata, requestMetadataInStore.requestMetadata)
+            isRequestMetadataSame = isEqual(requestMetadata, requestMetadataInStore.requestMetadata)
             if (!isRequestMetadataSame) {
               updatedRequestMetadataState[index] = {
                 ...updatedRequestMetadataState[index],

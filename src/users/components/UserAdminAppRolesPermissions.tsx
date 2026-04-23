@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
@@ -110,7 +111,7 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
         name="appRoleId"
         required
         value={formData.appRoleId}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         menuItems={appRolesMenuItems()}
         error={!!formErrors.appRoleId}
         helperText={formErrors.appRoleId}
@@ -120,7 +121,7 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
         name="appPermissionId"
         required
         value={formData.appPermissionId}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         menuItems={appPermissionsMenuItems()}
         error={!!formErrors.appPermissionId}
         helperText={formErrors.appPermissionId}

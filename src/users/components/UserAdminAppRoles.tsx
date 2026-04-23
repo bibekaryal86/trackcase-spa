@@ -84,7 +84,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
         componentLabel="APP ROLE--NAME"
         name="name"
         value={formData.name}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.name}
         helperText={formErrors.name}
         required
@@ -93,7 +93,7 @@ const UserAdminAppRoles = (): React.ReactElement => {
         componentLabel="APP ROLE--DESCRIPTION"
         name="description"
         value={formData.description}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
         error={!!formErrors.description}
         helperText={formErrors.description}
         required

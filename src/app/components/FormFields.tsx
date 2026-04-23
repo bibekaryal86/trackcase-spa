@@ -187,7 +187,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       multiline={multiline}
       onKeyDown={
         isReadOnly
-          ? (e) => {
+          ? (e: React.ChangeEvent<HTMLInputElement>) => {
               e.preventDefault()
             }
           : undefined

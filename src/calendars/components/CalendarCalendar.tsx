@@ -265,7 +265,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
                 openTo="month"
                 views={['year', 'month']}
                 value={dayjs(selectedDate)}
-                onChange={(newDate) => handleDateChange(newDate)}
+                onChange={(newDate: Dayjs) => handleDateChange(newDate)}
               />
             </LocalizationProvider>
           </DialogContent>
@@ -371,7 +371,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         onSelectSlot={onSelectSlot}
         onSelectEvent={onSelectEvent}
         eventPropGetter={eventStyleGetter}
-        onNavigate={(newDate) => setSelectedDate(dayjs(newDate))}
+        onNavigate={(newDate: Dayjs) => setSelectedDate(dayjs(newDate))}
       />
       {addCalendarModal()}
       {showDatePicker && datePickerModal()}
