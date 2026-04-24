@@ -11,34 +11,34 @@ import {
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { getNumber, isValidId } from '@app/utils/app.utils'
-import CalendarTable from '@calendars/components/CalendarTable'
-import { TaskCalendarSchema } from '@calendars/types/calendars.data.types'
-import { getCourtCases } from '@cases/actions/courtCases.action'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { getClients } from '@clients/actions/clients.action'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import { FilingForm } from './FilingForm'
-import { filingsAction, getFiling, getFilings } from '../actions/filings.action'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { getNumber, isValidId } from '@app/utils/app.utils.ts'
+import CalendarTable from '@calendars/components/CalendarTable.tsx'
+import { TaskCalendarSchema } from '@calendars/types/calendars.data.types.ts'
+import { getCourtCases } from '@cases/actions/courtCases.action.ts'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { getClients } from '@clients/actions/clients.action.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { ACTION_TYPES, CALENDAR_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
+import { filingsAction, getFiling, getFilings } from '@filings/actions/filings.action.ts'
 import {
   DefaultFilingFormData,
   DefaultFilingFormErrorData,
   FilingBase,
   FilingResponse,
   FilingSchema,
-} from '../types/filings.data.types'
+} from '@filings/types/filings.data.types.ts'
 import {
   getClientFilingType,
   getFilingFormDataFromSchema,
   isAreTwoFilingsSame,
   validateFiling,
-} from '../utils/filings.utils'
+} from '@filings/utils/filings.utils.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import { FilingForm } from './FilingForm.tsx'
 
 const mapStateToProps = ({ refTypes, clients, courtCases, filings }: GlobalState) => {
   return {

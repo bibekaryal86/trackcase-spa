@@ -2,8 +2,8 @@ import {
   CALENDARS_READ_SUCCESS,
   HEARING_CALENDARS_READ_SUCCESS,
   TASK_CALENDARS_READ_SUCCESS,
-} from '../types/calendars.action.types'
-import { CalendarsAction, CalendarsState, DefaultCalendarsState } from '../types/calendars.data.types'
+} from '@calendars//types/calendars.action.types.ts'
+import { CalendarsAction, CalendarsState, DefaultCalendarsState } from '@calendars//types/calendars.data.types.ts'
 
 export default function calendars(state = DefaultCalendarsState, action: CalendarsAction): CalendarsState {
   const matchesSuccessHc = /^HEARING_CALENDARS_(CREATE|UPDATE|DELETE)_SUCCESS$/.exec(action.type)

@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { RESET_ALERT, SET_ALERT } from '../types/app.action.types'
-import { AlertAction } from '../types/app.data.types'
+import { RESET_ALERT, SET_ALERT } from '@app/types/app.action.types.ts'
+import { AlertAction } from '@app/types/app.data.types.ts'
 
 export const resetAlert = () => {
   return (dispatch: React.Dispatch<Partial<AlertAction>>): void => {

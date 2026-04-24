@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
@@ -12,28 +13,27 @@ import {
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { FormSelectField } from '@app/components/FormFields'
-import Table from '@app/components/Table'
-import { useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index'
-
-import { appRolesPermissionsAdmin, getAppRolesPermissions } from '../action/users.action'
+} from '@app/components/CommonComponents.tsx'
+import { FormSelectField } from '@app/components/FormFields.tsx'
+import Table from '@app/components/Table.tsx'
+import { useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index.ts'
+import { appRolesPermissionsAdmin, getAppRolesPermissions } from '@users//action/users.action.ts'
 import {
   AppRolePermissionFormData,
   AppRolePermissionResponse,
   AppRolePermissionSchema,
   DefaultAppRolePermissionFormData,
   DefaultAppRolePermissionFormErrorData,
-} from '../types/users.data.types'
+} from '@users/types/users.data.types.ts'
 import {
   appRolePermissionTableData,
   appRolePermissionTableHeader,
   validateAppRolePermission,
-} from '../utils/users.utils'
+} from '@users/utils/users.utils.ts'
 
 const UserAdminAppRolesPermissions = (): React.ReactElement => {
   const dispatch = useGlobalDispatch()
@@ -111,7 +111,9 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
         name="appRoleId"
         required
         value={formData.appRoleId}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={appRolesMenuItems()}
         error={!!formErrors.appRoleId}
         helperText={formErrors.appRoleId}
@@ -121,7 +123,9 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
         name="appPermissionId"
         required
         value={formData.appPermissionId}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={appPermissionsMenuItems()}
         error={!!formErrors.appPermissionId}
         helperText={formErrors.appPermissionId}

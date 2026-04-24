@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { GlobalDispatch, GlobalState } from '@app/store/redux'
-import { getEndpoint, getErrMsg } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
+import { getEndpoint, getErrMsg } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   ACTION_SUCCESS,
   ACTION_TYPES,
@@ -10,16 +10,15 @@ import {
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
-} from '@constants/index'
-
+} from '@constants/index.ts'
 import {
   COURTS_COMPLETE,
   COURTS_READ_FAILURE,
   COURTS_READ_REQUEST,
   COURTS_READ_SUCCESS,
-} from '../types/courts.action.types'
-import { CourtBase, CourtResponse, CourtSchema } from '../types/courts.data.types'
-import { courtDispatch } from '../utils/courts.utils'
+} from '@courts/types/courts.action.types.ts'
+import { CourtBase, CourtResponse, CourtSchema } from '@courts/types/courts.data.types.ts'
+import { courtDispatch } from '@courts/utils/courts.utils.ts'
 
 export const courtsAction = ({
   action,
@@ -134,7 +133,7 @@ export const getCourt = (courtId: number, isIncludeExtra?: boolean) => {
     try {
       const courtsInStore = state.courts.courts
       if (courtsInStore) {
-        oneCourt = courtsInStore.find((x) => x.id === courtId)
+        oneCourt = courtsInStore.find((x: CourtSchema) => x.id === courtId)
 
         if (isIncludeExtra && oneCourt && (!oneCourt.judges || !oneCourt.judges.length)) {
           oneCourt = undefined

@@ -1,13 +1,12 @@
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ID_DEFAULT } from '@constants/index'
-
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   CourtCaseFormData,
   CourtCaseFormErrorData,
   CourtCaseSchema,
   DefaultCourtCaseFormErrorData,
-} from '../types/courtCases.data.types'
+} from '@cases/types/courtCases.data.types.ts'
+import { ID_DEFAULT } from '@constants/index.ts'
 
 export const isAreTwoCourtCasesSame = (
   one: CourtCaseFormData | CourtCaseSchema,

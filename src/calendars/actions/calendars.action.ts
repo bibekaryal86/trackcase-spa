@@ -1,20 +1,9 @@
 import React from 'react'
 
-import { GlobalDispatch, GlobalState } from '@app/store/redux'
-import { getEndpoint, getErrMsg } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
-import {
-  ACTION_SUCCESS,
-  ACTION_TYPES,
-  ActionTypes,
-  CALENDAR_TYPES,
-  HTTP_METHODS,
-  ID_DEFAULT,
-  SOMETHING_WENT_WRONG,
-  TYPE_IS_INCORRECT,
-  TYPE_IS_MISSING,
-} from '@constants/index'
-
+import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
+import { getEndpoint, getErrMsg } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { calendarDispatch, checkCorrectCalendarTypes } from '@calendars//utils/calendars.utils.ts'
 import {
   CALENDARS_COMPLETE,
   CALENDARS_READ_FAILURE,
@@ -26,7 +15,7 @@ import {
   TASK_CALENDARS_COMPLETE,
   TASK_CALENDARS_READ_FAILURE,
   TASK_CALENDARS_READ_REQUEST,
-} from '../types/calendars.action.types'
+} from '@calendars/types/calendars.action.types.ts'
 import {
   CalendarResponse,
   HearingCalendarBase,
@@ -35,8 +24,18 @@ import {
   TaskCalendarBase,
   TaskCalendarResponse,
   TaskCalendarSchema,
-} from '../types/calendars.data.types'
-import { calendarDispatch, checkCorrectCalendarTypes } from '../utils/calendars.utils'
+} from '@calendars/types/calendars.data.types.ts'
+import {
+  ACTION_SUCCESS,
+  ACTION_TYPES,
+  ActionTypes,
+  CALENDAR_TYPES,
+  HTTP_METHODS,
+  ID_DEFAULT,
+  SOMETHING_WENT_WRONG,
+  TYPE_IS_INCORRECT,
+  TYPE_IS_MISSING,
+} from '@constants/index.ts'
 
 export const calendarsAction = ({
   type,

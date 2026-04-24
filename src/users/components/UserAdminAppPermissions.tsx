@@ -11,23 +11,22 @@ import {
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { FormTextField } from '@app/components/FormFields'
-import Table from '@app/components/Table'
-import { useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index'
-
-import { appPermissionsAdmin, getAppPermissions } from '../action/users.action'
+} from '@app/components/CommonComponents.tsx'
+import { FormTextField } from '@app/components/FormFields.tsx'
+import Table from '@app/components/Table.tsx'
+import { useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ACTION_TYPES, ActionTypes, USER_ADMIN_REGISTRY } from '@constants/index.ts'
+import { appPermissionsAdmin, getAppPermissions } from '@users/action/users.action.ts'
 import {
   AppPermissionFormData,
   AppPermissionResponse,
   AppPermissionSchema,
   DefaultAppPermissionFormData,
-} from '../types/users.data.types'
-import { appPermissionsTableData, appPermissionsTableHeader, validateAppPermission } from '../utils/users.utils'
+} from '@users/types/users.data.types.ts'
+import { appPermissionsTableData, appPermissionsTableHeader, validateAppPermission } from '@users/utils/users.utils.ts'
 
 const UserAdminAppPermissions = (): React.ReactElement => {
   const dispatch = useGlobalDispatch()
@@ -90,7 +89,9 @@ const UserAdminAppPermissions = (): React.ReactElement => {
         componentLabel="APP PERMISSION--NAME"
         name="name"
         value={formData.name}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.name}
         helperText={formErrors.name}
         required
@@ -99,7 +100,9 @@ const UserAdminAppPermissions = (): React.ReactElement => {
         componentLabel="APP PERMISSION--DESCRIPTION"
         name="description"
         value={formData.description}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.description}
         helperText={formErrors.description}
         required

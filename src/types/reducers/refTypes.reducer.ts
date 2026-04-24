@@ -23,7 +23,7 @@ import {
   TASK_TYPE_DELETE_SUCCESS,
   TASK_TYPE_READ_SUCCESS,
   TASK_TYPE_UPDATE_SUCCESS,
-} from '../types/refTypes.action.types'
+} from '@ref_types/types/refTypes.action.types.ts'
 import {
   CaseTypeSchema,
   CollectionMethodSchema,
@@ -33,7 +33,7 @@ import {
   RefTypesAction,
   RefTypesState,
   TaskTypeSchema,
-} from '../types/refTypes.data.types'
+} from '@ref_types/types/refTypes.data.types.ts'
 
 const DefaultRefTypesState: RefTypesState = {
   componentStatus: [],

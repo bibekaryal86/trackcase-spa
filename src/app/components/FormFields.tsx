@@ -11,11 +11,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Dayjs } from 'dayjs'
 import React, { ReactNode } from 'react'
 
-import { componentStatusListForSelect } from '@app/components/CommonComponents'
-import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '@constants/index'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-
-import { getDayjs } from '../utils/app.utils'
+import { componentStatusListForSelect } from '@app/components/CommonComponents.tsx'
+import { getDayjs } from '@app/utils/app.utils.ts'
+import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '@constants/index.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
 interface FormWrapperProps {
   isSmallScreen?: boolean
@@ -128,9 +127,8 @@ export const GridFormWrapper: React.FC<FormWrapperProps> = ({
       <Grid
         container
         direction={flexDirection}
-        justifyContent={justifyContent}
-        alignItems={alignItems}
         spacing={spacing ? spacing : isSmallScreen ? 1 : 2}
+        sx={{ justifyContent, alignItems }}
       >
         {children}
       </Grid>
@@ -176,18 +174,17 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       variant={variant}
       margin={margin}
       id={id}
-      inputProps={{ maxLength: maxLength }}
+      slotProps={{ htmlInput: { maxLength: maxLength }, inputLabel: InputLabelProps }}
       value={value || ''}
       onChange={onChange}
       error={error}
       helperText={helperText}
       sx={sx}
       type={type}
-      InputLabelProps={InputLabelProps}
       multiline={multiline}
       onKeyDown={
         isReadOnly
-          ? (e) => {
+          ? (e: React.KeyboardEvent<HTMLDivElement>) => {
               e.preventDefault()
             }
           : undefined

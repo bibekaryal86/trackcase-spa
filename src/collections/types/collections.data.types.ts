@@ -1,10 +1,10 @@
 import { Dayjs } from 'dayjs'
 
-import { BaseModelSchema, ResponseBase } from '@app/types/app.data.types'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { AMOUNT_DEFAULT, ID_DEFAULT } from '@constants/index'
-import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
+import { BaseModelSchema, ResponseBase } from '@app/types/app.data.types.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { AMOUNT_DEFAULT, ID_DEFAULT } from '@constants/index.ts'
+import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
 export interface CaseCollectionBase {
   quoteAmount: number

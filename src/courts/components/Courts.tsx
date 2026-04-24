@@ -10,18 +10,13 @@ import {
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import CourtForm from './CourtForm'
-import CourtTable from './CourtTable'
-import { courtsAction, getCourts } from '../actions/courts.action'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
+import { courtsAction, getCourts } from '@courts/actions/courts.action.ts'
 import {
   CourtBase,
   CourtFormData,
@@ -29,8 +24,13 @@ import {
   CourtSchema,
   DefaultCourtFormData,
   DefaultCourtFormErrorData,
-} from '../types/courts.data.types'
-import { isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
+} from '@courts/types/courts.data.types.ts'
+import { isAreTwoCourtsSame, validateCourt } from '@courts/utils/courts.utils.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import CourtForm from './CourtForm.tsx'
+import CourtTable from './CourtTable.tsx'
 
 const mapStateToProps = ({ refTypes, courts }: GlobalState) => {
   return {

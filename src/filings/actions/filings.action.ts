@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { GlobalDispatch, GlobalState } from '@app/store/redux'
-import { getEndpoint, getErrMsg } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
+import { getEndpoint, getErrMsg } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   ACTION_SUCCESS,
   ACTION_TYPES,
@@ -10,8 +10,7 @@ import {
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
-} from '@constants/index'
-
+} from '@constants/index.ts'
 import {
   FILING_RFES_READ_FAILURE,
   FILING_RFES_READ_REQUEST,
@@ -19,7 +18,7 @@ import {
   FILINGS_READ_FAILURE,
   FILINGS_READ_REQUEST,
   FILINGS_READ_SUCCESS,
-} from '../types/filings.action.types'
+} from '@filings/types/filings.action.types.ts'
 import {
   FilingBase,
   FilingResponse,
@@ -27,8 +26,8 @@ import {
   FilingRfeResponse,
   FilingRfeSchema,
   FilingSchema,
-} from '../types/filings.data.types'
-import { filingDispatch, filingRfeDispatch } from '../utils/filings.utils'
+} from '@filings/types/filings.data.types.ts'
+import { filingDispatch, filingRfeDispatch } from '@filings/utils/filings.utils.ts'
 
 export const filingsAction = ({
   action,

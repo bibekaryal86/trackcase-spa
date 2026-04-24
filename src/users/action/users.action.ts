@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { GlobalDispatch } from '@app/store/redux'
-import { USER_LOGOUT } from '@app/types/app.action.types'
-import { getEndpoint, getErrMsg, isGetDarkMode } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata, FetchResponse } from '@app/utils/fetch.utils'
-import { LocalStorage, SessionStorage } from '@app/utils/storage.utils'
+import { GlobalDispatch } from '@app/store/redux.ts'
+import { USER_LOGOUT } from '@app/types/app.action.types.ts'
+import { getEndpoint, getErrMsg, isGetDarkMode } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata, FetchResponse } from '@app/utils/fetch.utils.ts'
+import { LocalStorage, SessionStorage } from '@app/utils/storage.utils.ts'
 import {
   ACTION_TYPES,
   ActionTypes,
@@ -12,15 +12,14 @@ import {
   ID_DEFAULT,
   IS_DARK_MODE,
   SOMETHING_WENT_WRONG,
-} from '@constants/index'
-
+} from '@constants/index.ts'
 import {
   APP_PERMISSIONS_COMPLETE,
   APP_ROLES_COMPLETE,
   APP_ROLES_PERMISSIONS_COMPLETE,
   APP_USERS_COMPLETE,
   APP_USERS_ROLES_COMPLETE,
-} from '../types/users.action.types'
+} from '@users//types/users.action.types.ts'
 import {
   AppPermissionResponse,
   AppPermissionSchema,
@@ -36,8 +35,8 @@ import {
   AppUserRoleSchema,
   DefaultAppUserLoginResponse,
   DefaultAppUserResponse,
-} from '../types/users.data.types'
-import { userAdminDispatch } from '../utils/users.utils'
+} from '@users/types/users.data.types.ts'
+import { userAdminDispatch } from '@users/utils/users.utils.ts'
 
 export const signup = async (username: string, password: string, fullName: string): Promise<AppUserResponse> => {
   try {

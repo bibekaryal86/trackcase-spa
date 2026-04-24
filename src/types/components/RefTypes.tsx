@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -15,13 +16,13 @@ import {
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { FormSelectField, FormTextField } from '@app/components/FormFields'
-import Table from '@app/components/Table'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { convertToCamelCase, convertToTitleCase, getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
+} from '@app/components/CommonComponents.tsx'
+import { FormSelectField, FormTextField } from '@app/components/FormFields.tsx'
+import Table from '@app/components/Table.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { convertToCamelCase, convertToTitleCase, getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   ACTION_TYPES,
   ActionTypes,
@@ -29,9 +30,8 @@ import {
   COMPONENT_STATUS_STATUS,
   REF_TYPES_REGISTRY,
   RefTypesRegistry,
-} from '@constants/index'
-
-import { addRefType, deleteRefType, editRefType, getRefType } from '../actions/refTypes.action'
+} from '@constants/index.ts'
+import { addRefType, deleteRefType, editRefType, getRefType } from '@ref_types/actions/refTypes.action.ts'
 import {
   DefaultRefTypeFormData,
   RefTypeFormData,
@@ -39,8 +39,8 @@ import {
   RefTypeSchema,
   RefTypesReduxStoreKeys,
   RefTypesState,
-} from '../types/refTypes.data.types'
-import { refTypeTableData, refTypeTableHeader, validateFormData } from '../utils/refTypes.utils'
+} from '@ref_types/types/refTypes.data.types.ts'
+import { refTypeTableData, refTypeTableHeader, validateFormData } from '@ref_types/utils/refTypes.utils.ts'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
@@ -163,7 +163,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         name="nameOrComponentName"
         required
         value={formData.nameOrComponentName}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
         helperText={formErrors.nameOrComponentName}
         menuItems={componentNameMenuItems()}
@@ -173,7 +175,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         name="descOrStatusName"
         required
         value={formData.descOrStatusName}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
         helperText={formErrors.descOrStatusName}
         menuItems={componentStatusMenuItems()}
@@ -184,7 +188,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           <Checkbox
             name="isActive"
             checked={formData.isActive}
-            onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+            }
           />
         }
       />
@@ -197,7 +203,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
         name="nameOrComponentName"
         value={formData.nameOrComponentName}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
         helperText={formErrors.nameOrComponentName}
         required
@@ -206,7 +214,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
         name="descOrStatusName"
         value={formData.descOrStatusName}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
         helperText={formErrors.descOrStatusName}
         required

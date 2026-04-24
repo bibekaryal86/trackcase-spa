@@ -10,15 +10,15 @@ import {
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getDayjsString, getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { getCourtCases } from '@cases/actions/courtCases.action'
-import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { getClients } from '@clients/actions/clients.action'
-import { ClientSchema } from '@clients/types/clients.data.types'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getDayjsString, getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { getCourtCases } from '@cases/actions/courtCases.action.ts'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { getClients } from '@clients/actions/clients.action.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
 import {
   ACTION_TYPES,
   ActionTypes,
@@ -27,13 +27,8 @@ import {
   FilingTypes,
   ID_DEFAULT,
   INVALID_INPUT,
-} from '@constants/index'
-import { FilingForm, FilingFormRfe } from '@filings/components/FilingForm'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import FilingTable from './FilingTable'
-import { filingRfesAction, filingsAction, getFilings } from '../actions/filings.action'
+} from '@constants/index.ts'
+import { FilingForm, FilingFormRfe } from '@filings/components/FilingForm.tsx'
 import {
   DefaultFilingFormData,
   DefaultFilingFormErrorData,
@@ -46,14 +41,19 @@ import {
   FilingRfeFormData,
   FilingRfeResponse,
   FilingSchema,
-} from '../types/filings.data.types'
+} from '@filings/types/filings.data.types.ts'
 import {
   getClientFilingType,
   isAreTwoFilingRfesSame,
   isAreTwoFilingsSame,
   validateFiling,
   validateFilingRfe,
-} from '../utils/filings.utils'
+} from '@filings/utils/filings.utils.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import FilingTable from './FilingTable.tsx'
+import { filingRfesAction, filingsAction, getFilings } from '../actions/filings.action.ts'
 
 const mapStateToProps = ({ refTypes, filings, courtCases, clients }: GlobalState) => {
   return {

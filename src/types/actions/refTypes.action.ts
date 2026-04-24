@@ -1,9 +1,9 @@
-import _ from 'lodash'
+import { isEqual } from 'lodash'
 import React from 'react'
 
-import { GlobalDispatch, GlobalState } from '@app/store/redux'
-import { convertToCamelCase, getEndpoint, getErrMsg } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
+import { convertToCamelCase, getEndpoint, getErrMsg } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   ACTION_TYPES,
   CREATE_SUCCESS,
@@ -13,8 +13,7 @@ import {
   RefTypesRegistry,
   SOMETHING_WENT_WRONG,
   UPDATE_SUCCESS,
-} from '@constants/index'
-
+} from '@constants/index.ts'
 import {
   CASE_TYPE_COMPLETE,
   CASE_TYPE_READ_REQUEST,
@@ -34,15 +33,15 @@ import {
   TASK_TYPE_COMPLETE,
   TASK_TYPE_READ_REQUEST,
   TASK_TYPE_READ_SUCCESS,
-} from '../types/refTypes.action.types'
+} from '@ref_types/types/refTypes.action.types.ts'
 import {
   RefTypeResponse,
   RefTypeSchema,
   RefTypesReduxStoreKeys,
   RefTypesRequestMetadataState,
   RefTypesResponse,
-} from '../types/refTypes.data.types'
-import { refTypesDispatch } from '../utils/refTypes.utils'
+} from '@ref_types/types/refTypes.data.types.ts'
+import { refTypesDispatch } from '@ref_types/utils/refTypes.utils.ts'
 
 export const getRefTypes = () => {
   return async (dispatch: React.Dispatch<GlobalDispatch>, getStore: () => GlobalState): Promise<void> => {
@@ -187,7 +186,7 @@ export const getRefType = (refType: RefTypesRegistry, requestMetadata?: Partial<
           const index = requestMetadataState.findIndex((x) => x.refType === refType)
           if (index !== -1) {
             const requestMetadataInStore = updatedRequestMetadataState[index]
-            isRequestMetadataSame = _.isEqual(requestMetadata, requestMetadataInStore.requestMetadata)
+            isRequestMetadataSame = isEqual(requestMetadata, requestMetadataInStore.requestMetadata)
             if (!isRequestMetadataSame) {
               updatedRequestMetadataState[index] = {
                 ...updatedRequestMetadataState[index],

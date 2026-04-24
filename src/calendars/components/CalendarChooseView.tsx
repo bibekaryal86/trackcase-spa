@@ -2,7 +2,7 @@ import { CalendarMonth, FormatListBulletedOutlined } from '@mui/icons-material'
 import { Box, Tooltip } from '@mui/material'
 import React from 'react'
 
-import { CALENDAR_EVENT_BG_COLOR } from '../utils/calendars.utils'
+import { CALENDAR_EVENT_BG_COLOR } from '@calendars//utils/calendars.utils.ts'
 
 interface CalendarViewSelectorProps {
   isShowListView: boolean

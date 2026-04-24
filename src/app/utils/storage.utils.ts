@@ -1,4 +1,4 @@
-import { SessionStorageItem } from '../types/app.data.types'
+import { SessionStorageItem } from '@app/types/app.data.types.ts'
 
 export const LocalStorage = {
   getItem: (key: string): unknown => {

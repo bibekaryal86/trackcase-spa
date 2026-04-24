@@ -1,7 +1,5 @@
-import { getDayjs, getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { AMOUNT_DEFAULT, COLLECTION_TYPES, ID_DEFAULT } from '@constants/index'
-
+import { getDayjs, getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   CaseCollectionFormData,
   CaseCollectionFormErrorData,
@@ -11,7 +9,8 @@ import {
   CashCollectionSchema,
   DefaultCaseCollectionFormErrorData,
   DefaultCashCollectionFormErrorData,
-} from '../types/collections.data.types'
+} from '@collections/types/collections.data.types.ts'
+import { AMOUNT_DEFAULT, COLLECTION_TYPES, ID_DEFAULT } from '@constants/index.ts'
 
 export const getAmountForDisplay = (value: number) => {
   if (value) {

@@ -1,6 +1,6 @@
-import { useMediaQuery } from '@mui/material'
+import { SelectChangeEvent, useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 
 import {
@@ -9,7 +9,7 @@ import {
   handleFormChange,
   handleFormDateChange,
   refTypesListForSelect,
-} from '@app/components/CommonComponents'
+} from '@app/components/CommonComponents.tsx'
 import {
   FormCommentsField,
   FormDatePickerField,
@@ -17,19 +17,18 @@ import {
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-} from '@app/components/FormFields'
-import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types'
-
+} from '@app/components/FormFields.tsx'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
 import {
   FilingFormData,
   FilingFormErrorData,
   FilingRfeFormData,
   FilingRfeFormErrorData,
   FilingSchema,
-} from '../types/filings.data.types'
+} from '@filings/types/filings.data.types.ts'
+import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
 
 interface FilingFormProps {
   formData: FilingFormData
@@ -65,7 +64,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--FILING TYPE"
       name="filingTypeId"
       value={formData.filingTypeId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.filingTypeError}
       helperText={formErrors.filingTypeError}
       menuItems={refTypesListForSelect(filingTypesList)}
@@ -78,7 +77,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--COURT CASE"
       name="courtCaseId"
       value={formData.courtCaseId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.courtCaseError}
       helperText={formErrors.courtCaseError}
       menuItems={courtCasesListForSelect(courtCasesList, selectedCourtCase, formData.courtCaseId)}
@@ -92,7 +91,9 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--SUBMIT DATE"
       name="submitDate"
       value={formData.submitDate}
-      onChange={(value) => handleFormDateChange('submitDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) =>
+        handleFormDateChange('submitDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
       minDate={dayjs().subtract(1, 'week')}
       maxDate={dayjs().add(1, 'week')}
       helperText={formErrors.submitDateError}
@@ -104,7 +105,9 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--RECEIPT DATE"
       name="receiptDate"
       value={formData.receiptDate}
-      onChange={(value) => handleFormDateChange('receiptDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) =>
+        handleFormDateChange('receiptDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
       minDate={dayjs().subtract(1, 'week')}
       maxDate={dayjs().add(1, 'week')}
       helperText={formErrors.receiptDateError}
@@ -116,7 +119,9 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--RECEIPT NUMBER"
       name="receiptNumber"
       value={formData.receiptNumber}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.receiptNumberError}
       helperText={formErrors.receiptNumberError}
       fullWidth
@@ -128,7 +133,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--PRIORITY DATE"
       name="priorityDate"
       value={formData.priorityDate}
-      onChange={(value) =>
+      onChange={(value: Dayjs | null) =>
         handleFormDateChange('priorityDate', value, formData, formErrors, setFormData, setFormErrors)
       }
       minDate={dayjs().subtract(1, 'month')}
@@ -142,7 +147,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--DECISION DATE"
       name="decisionDate"
       value={formData.decisionDate}
-      onChange={(value) =>
+      onChange={(value: Dayjs | null) =>
         handleFormDateChange('decisionDate', value, formData, formErrors, setFormData, setFormErrors)
       }
       minDate={dayjs().subtract(1, 'month')}
@@ -155,7 +160,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
     <FormSelectStatusField
       componentLabel="FILING--STATUS"
       value={formData.componentStatusId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
       helperText={formErrors.componentStatusError}
       statusList={filingStatusList}
@@ -166,7 +171,9 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="FILING--COMMENTS"
       value={formData.comments}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 
@@ -199,7 +206,7 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       componentLabel="FILING RFE--FILING"
       name="filingId"
       value={formData.filingId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.filingIdError}
       helperText={formErrors.filingIdError}
       menuItems={filingListForSelect(filingsList, clientsList, courtCasesList)}
@@ -213,7 +220,9 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       componentLabel="FILING RFE--RFE DATE"
       name="rfeDate"
       value={formData.rfeDate}
-      onChange={(value) => handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) =>
+        handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
       helperText={formErrors.rfeDateError}
@@ -226,7 +235,7 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       componentLabel="FILING RFE--RFE SUBMIT DATE"
       name="rfeSubmitDate"
       value={formData.rfeSubmitDate}
-      onChange={(value) =>
+      onChange={(value: Dayjs | null) =>
         handleFormDateChange('rfeSubmitDate', value, formData, formErrors, setFormData, setFormErrors)
       }
       minDate={dayjs().subtract(1, 'month')}
@@ -240,7 +249,9 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       componentLabel="FILING RFE--RFE REASON"
       name="rfeReason"
       value={formData.rfeReason}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.rfeReason}
       helperText={formErrors.rfeReason}
       required
@@ -252,7 +263,9 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
     <FormCommentsField
       componentLabel="FILING RFE--COMMENTS"
       value={formData.comments}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 

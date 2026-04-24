@@ -3,8 +3,8 @@ import {
   COURTS_DELETE_SUCCESS,
   COURTS_READ_SUCCESS,
   COURTS_UPDATE_SUCCESS,
-} from '../types/courts.action.types'
-import { CourtsAction, CourtsState, DefaultCourtState } from '../types/courts.data.types'
+} from '@courts/types/courts.action.types.ts'
+import { CourtsAction, CourtsState, DefaultCourtState } from '@courts/types/courts.data.types.ts'
 
 export default function courts(state = DefaultCourtState, action: CourtsAction): CourtsState {
   switch (action.type) {

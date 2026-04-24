@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
@@ -13,18 +14,17 @@ import {
   tableActionButtonsComponent,
   tableAddButtonComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { FormSelectField, FormTextField } from '@app/components/FormFields'
-import Table from '@app/components/Table'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, USER_ADMIN_REGISTRY } from '@constants/index'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import { appUsersAdmin, getAppUsers } from '../action/users.action'
+} from '@app/components/CommonComponents.tsx'
+import { FormSelectField, FormTextField } from '@app/components/FormFields.tsx'
+import Table from '@app/components/Table.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, USER_ADMIN_REGISTRY } from '@constants/index.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+import { appUsersAdmin, getAppUsers } from '@users/action/users.action.ts'
 import {
   AppUserFormData,
   AppUserRequest,
@@ -32,8 +32,8 @@ import {
   AppUserSchema,
   DefaultAppUserFormData,
   DefaultAppUserFormErrorData,
-} from '../types/users.data.types'
-import { appUsersTableData, appUsersTableHeader, validateAppUser } from '../utils/users.utils'
+} from '@users/types/users.data.types.ts'
+import { appUsersTableData, appUsersTableHeader, validateAppUser } from '@users/utils/users.utils.ts'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
@@ -126,7 +126,9 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--EMAIL"
         name="email"
         value={formData.email}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.email}
         helperText={formErrors.email}
         required
@@ -135,7 +137,9 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--FULL NAME"
         name="fullName"
         value={formData.fullName}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.fullName}
         helperText={formErrors.fullName}
         required
@@ -144,7 +148,9 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--STATUS"
         name="componentStatusId"
         value={formData.componentStatusId}
-        onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.componentStatusId}
         helperText={formErrors.componentStatusId}
         menuItems={componentStatusMenuItems()}

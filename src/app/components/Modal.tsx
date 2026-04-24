@@ -6,7 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import React from 'react'
 
-import { ActionTypes, CalendarTypes } from '@constants/index'
+import { ActionTypes, CalendarTypes } from '@constants/index.ts'
 
 interface ModalProps {
   open: boolean

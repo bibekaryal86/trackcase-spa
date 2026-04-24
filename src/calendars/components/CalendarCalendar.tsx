@@ -25,12 +25,10 @@ import {
   Views,
 } from 'react-big-calendar'
 
-import Modal from '@app/components/Modal'
-import { ModalState } from '@app/types/app.data.types'
-import { useModal } from '@app/utils/app.hooks'
-import { getDayjs, getNumber, getString } from '@app/utils/app.utils'
-import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '@constants/index'
-
+import Modal from '@app/components/Modal.tsx'
+import { ModalState } from '@app/types/app.data.types.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getDayjs, getNumber, getString } from '@app/utils/app.utils.ts'
 import {
   CalendarEvents,
   DefaultCalendarSchema,
@@ -40,8 +38,9 @@ import {
   HearingCalendarSchema,
   TaskCalendarFormData,
   TaskCalendarSchema,
-} from '../types/calendars.data.types'
-import { getCalendarEventBgColor, getCalendarFormDataFromSchema } from '../utils/calendars.utils'
+} from '@calendars//types/calendars.data.types.ts'
+import { getCalendarEventBgColor, getCalendarFormDataFromSchema } from '@calendars//utils/calendars.utils.ts'
+import { ACTION_TYPES, CALENDAR_TYPES, CalendarTypes, DATE_FORMAT, USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
 
 interface CalendarViewProps {
   calendarEvents: CalendarEvents[]
@@ -266,7 +265,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
                 openTo="month"
                 views={['year', 'month']}
                 value={dayjs(selectedDate)}
-                onChange={(newDate) => handleDateChange(newDate)}
+                onChange={(newDate: Dayjs | null) => handleDateChange(newDate)}
               />
             </LocalizationProvider>
           </DialogContent>
@@ -372,7 +371,7 @@ const CalendarCalendar = (props: CalendarViewProps): React.ReactElement => {
         onSelectSlot={onSelectSlot}
         onSelectEvent={onSelectEvent}
         eventPropGetter={eventStyleGetter}
-        onNavigate={(newDate) => setSelectedDate(dayjs(newDate))}
+        onNavigate={(newDate: Date) => setSelectedDate(dayjs(newDate))}
       />
       {addCalendarModal()}
       {showDatePicker && datePickerModal()}

@@ -4,11 +4,10 @@ import Stack from '@mui/material/Stack'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
-import { INVALID_SESSION } from '@constants/index'
-
-import { GlobalState } from '../store/redux'
-import { AlertState } from '../types/app.data.types'
-import { resetAlert } from '../utils/alerts.utils'
+import { GlobalState } from '@app/store/redux.ts'
+import { AlertState } from '@app/types/app.data.types.ts'
+import { resetAlert } from '@app/utils/alerts.utils.ts'
+import { INVALID_SESSION } from '@constants/index.ts'
 
 interface AlertsProps extends AlertState {
   resetAlert: () => void

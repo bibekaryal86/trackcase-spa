@@ -1,9 +1,9 @@
 import { Dayjs } from 'dayjs'
 
-import { FORCE_LOGOUT, HttpMethods } from '@constants/index'
+import { ErrorDetail } from '@app/types/app.data.types.ts'
+import { FORCE_LOGOUT, HttpMethods } from '@constants/index.ts'
 
-import { LocalStorage, SessionStorage } from './storage.utils'
-import { ErrorDetail } from '../types/app.data.types'
+import { LocalStorage, SessionStorage } from './storage.utils.ts'
 
 type FetchParamObjects = { [key: string]: string | number | boolean }
 

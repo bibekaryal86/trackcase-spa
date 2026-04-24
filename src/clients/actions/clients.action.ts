@@ -1,8 +1,16 @@
 import React from 'react'
 
-import { GlobalDispatch, GlobalState } from '@app/store/redux'
-import { getEndpoint, getErrMsg, getNumber } from '@app/utils/app.utils'
-import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils'
+import { GlobalDispatch, GlobalState } from '@app/store/redux.ts'
+import { getEndpoint, getErrMsg, getNumber } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions, FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import {
+  CLIENTS_COMPLETE,
+  CLIENTS_READ_FAILURE,
+  CLIENTS_READ_REQUEST,
+  CLIENTS_READ_SUCCESS,
+} from '@clients/types/clients.action.types.ts'
+import { ClientBase, ClientResponse, ClientSchema } from '@clients/types/clients.data.types.ts'
+import { clientDispatch } from '@clients/utils/clients.utils.ts'
 import {
   ACTION_SUCCESS,
   ACTION_TYPES,
@@ -10,16 +18,7 @@ import {
   HTTP_METHODS,
   ID_DEFAULT,
   SOMETHING_WENT_WRONG,
-} from '@constants/index'
-
-import {
-  CLIENTS_COMPLETE,
-  CLIENTS_READ_FAILURE,
-  CLIENTS_READ_REQUEST,
-  CLIENTS_READ_SUCCESS,
-} from '../types/clients.action.types'
-import { ClientBase, ClientResponse, ClientSchema } from '../types/clients.data.types'
-import { clientDispatch } from '../utils/clients.utils'
+} from '@constants/index.ts'
 
 export const clientsAction = ({
   action,

@@ -11,10 +11,10 @@ import Tooltip from '@mui/material/Tooltip'
 import { useCallback, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { ACTION_TYPES } from '@constants/index'
-import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
+import { ACTION_TYPES } from '@constants/index.ts'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-import { protectedRoutes, refTypesRoutes, userManagementRoutes } from './AppRoutes'
+import { protectedRoutes, refTypesRoutes, userManagementRoutes } from './AppRoutes.tsx'
 
 interface SideNavProps {
   anchorEl: HTMLElement | null

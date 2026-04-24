@@ -1,24 +1,26 @@
 import React from 'react'
 
-import { tableAddButtonComponent } from '@app/components/CommonComponents'
-import Link from '@app/components/Link'
-import Table from '@app/components/Table'
-import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
-import { getCurrency, getDayjsString } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '@constants/index'
-import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-import { checkUserHasPermission } from '@users/utils/users.utils'
-
+import { tableAddButtonComponent } from '@app/components/CommonComponents.tsx'
+import Link from '@app/components/Link.tsx'
+import Table from '@app/components/Table.tsx'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types.ts'
+import { getCurrency, getDayjsString } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
 import {
   CaseCollectionFormData,
   CaseCollectionSchema,
   CashCollectionFormData,
   CashCollectionSchema,
-} from '../types/collections.data.types'
-import { getCaseCollectionFormDataFromSchema, getCashCollectionFormDataFromSchema } from '../utils/collections.utils'
+} from '@collections/types/collections.data.types.ts'
+import {
+  getCaseCollectionFormDataFromSchema,
+  getCashCollectionFormDataFromSchema,
+} from '@collections/utils/collections.utils.ts'
+import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '@constants/index.ts'
+import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
+import { checkUserHasPermission } from '@users/utils/users.utils.ts'
 
 interface CollectionTableProps {
   caseCollectionsList: CaseCollectionSchema[]

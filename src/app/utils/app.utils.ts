@@ -1,9 +1,8 @@
 import dayjs, { Dayjs } from 'dayjs'
 
-import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE } from '@constants/index'
-
-import { SessionStorage } from './storage.utils'
-import { ErrorDetail } from '../types/app.data.types'
+import { ErrorDetail } from '@app/types/app.data.types.ts'
+import { SessionStorage } from '@app/utils/storage.utils.ts'
+import { DATE_FORMAT, ID_DEFAULT, IS_DARK_MODE } from '@constants/index.ts'
 
 export const isGetDarkMode = () => (SessionStorage.getItem(IS_DARK_MODE) as string) === 'true'
 

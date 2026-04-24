@@ -11,21 +11,26 @@ import {
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { getNumber, isValidId } from '@app/utils/app.utils'
-import ClientTable from '@clients/components/ClientTable'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-import { getCourts } from '@courts/actions/courts.action'
-import { CourtSchema } from '@courts/types/courts.data.types'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { getNumber, isValidId } from '@app/utils/app.utils.ts'
+import ClientTable from '@clients/components/ClientTable.tsx'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
+import { getCourts } from '@courts/actions/courts.action.ts'
+import { CourtSchema } from '@courts/types/courts.data.types.ts'
+import { getJudge, judgesAction } from '@judges/actions/judges.action.ts'
+import {
+  DefaultJudgeFormData,
+  DefaultJudgeFormErrorData,
+  JudgeBase,
+  JudgeResponse,
+} from '@judges/types/judges.data.types.ts'
+import { getJudgeFormDataFromSchema, isAreTwoJudgesSame, validateJudge } from '@judges/utils/judges.utils.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
 
-import JudgeForm from './JudgeForm'
-import { getJudge, judgesAction } from '../actions/judges.action'
-import { DefaultJudgeFormData, DefaultJudgeFormErrorData, JudgeBase, JudgeResponse } from '../types/judges.data.types'
-import { getJudgeFormDataFromSchema, isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
+import JudgeForm from './JudgeForm.tsx'
 
 const mapStateToProps = ({ refTypes, courts }: GlobalState) => {
   return {

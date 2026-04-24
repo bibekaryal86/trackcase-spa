@@ -3,8 +3,8 @@ import {
   JUDGES_DELETE_SUCCESS,
   JUDGES_READ_SUCCESS,
   JUDGES_UPDATE_SUCCESS,
-} from '../types/judges.action.types'
-import { DefaultJudgeState, JudgesAction, JudgesState } from '../types/judges.data.types'
+} from '@judges/types/judges.action.types.ts'
+import { DefaultJudgeState, JudgesAction, JudgesState } from '@judges/types/judges.data.types.ts'
 
 export default function judges(state = DefaultJudgeState, action: JudgesAction): JudgesState {
   switch (action.type) {

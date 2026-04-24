@@ -1,20 +1,19 @@
-import { useMediaQuery } from '@mui/material'
+import { SelectChangeEvent, useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
-import { courtsListForSelect, handleFormChange } from '@app/components/CommonComponents'
+import { courtsListForSelect, handleFormChange } from '@app/components/CommonComponents.tsx'
 import {
   FormCommentsField,
   FormSelectField,
   FormSelectStatusField,
   FormTextField,
   GridFormWrapper,
-} from '@app/components/FormFields'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { CourtSchema } from '@courts/types/courts.data.types'
-import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-
-import { JudgeFormData, JudgeFormErrorData } from '../types/judges.data.types'
+} from '@app/components/FormFields.tsx'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
+import { CourtSchema } from '@courts/types/courts.data.types.ts'
+import { JudgeFormData, JudgeFormErrorData } from '@judges/types/judges.data.types.ts'
+import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
 interface JudgeFormProps {
   formData: JudgeFormData
@@ -38,7 +37,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       autoFocus={!isShowOneJudge}
       name="name"
       value={formData.name}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.name}
       helperText={formErrors.name}
       required
@@ -51,7 +52,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       componentLabel="JUDGE--WEBEX"
       name="webex"
       value={formData.webex}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       helperText={formErrors.webex}
       fullWidth
     />
@@ -62,7 +65,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       componentLabel="JUDGE--COURT"
       name="courtId"
       value={formData.courtId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       menuItems={courtsListForSelect(courtsList, courtId, formData.courtId)}
       error={!!formErrors.courtError}
       helperText={formErrors.courtError}
@@ -74,7 +77,7 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormSelectStatusField
       componentLabel="JUDGE--STATUS"
       value={formData.componentStatusId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
       helperText={formErrors.componentStatusError}
       statusList={judgeStatusList}
@@ -85,7 +88,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="JUDGE--COMMENTS"
       value={formData.comments}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 

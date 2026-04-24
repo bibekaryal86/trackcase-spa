@@ -8,10 +8,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import { resetAlert, setAlert } from '@app/utils/alerts.utils'
-import { getErrMsg, getString } from '@app/utils/app.utils'
-import { resetSpinner, setSpinner } from '@app/utils/spinner.utils'
-import { SessionStorage } from '@app/utils/storage.utils'
+import { resetAlert, setAlert } from '@app/utils/alerts.utils.ts'
+import { getErrMsg, getString } from '@app/utils/app.utils.ts'
+import { resetSpinner, setSpinner } from '@app/utils/spinner.utils.ts'
+import { SessionStorage } from '@app/utils/storage.utils.ts'
 import {
   ALERT_TYPES,
   INVALID_INPUT,
@@ -25,11 +25,10 @@ import {
   SOMETHING_WENT_WRONG,
   VALIDATE_FAILURE,
   VALIDATE_SUCCESS,
-} from '@constants/index'
-
-import { login, resetExit, resetInit, signup, validateInit } from '../action/users.action'
-import { AppUserLoginResponse } from '../types/users.data.types'
-import { isLoggedIn, validatePassword, validateSignInUpInput } from '../utils/users.utils'
+} from '@constants/index.ts'
+import { login, resetExit, resetInit, signup, validateInit } from '@users/action/users.action.ts'
+import { AppUserLoginResponse } from '@users/types/users.data.types.ts'
+import { isLoggedIn, validatePassword, validateSignInUpInput } from '@users/utils/users.utils.ts'
 
 interface LoginProps {
   setAlert: (type: string, messageText: string) => void

@@ -1,18 +1,17 @@
 import React from 'react'
 
-import { tableAddButtonComponent } from '@app/components/CommonComponents'
-import Link from '@app/components/Link'
-import Table from '@app/components/Table'
-import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types'
-import { getDayjsString } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ClientFormData, ClientSchema } from '@clients/types/clients.data.types'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index'
-import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils'
-
-import { CourtCaseFormData, CourtCaseSchema } from '../types/courtCases.data.types'
-import { getCourtCaseFormDataFromSchema } from '../utils/courtCases.utils'
+import { tableAddButtonComponent } from '@app/components/CommonComponents.tsx'
+import Link from '@app/components/Link.tsx'
+import Table from '@app/components/Table.tsx'
+import { ModalState, TableData, TableHeaderData } from '@app/types/app.data.types.ts'
+import { getDayjsString } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { getCourtCaseFormDataFromSchema } from '@cases/utils/courtCases.utils.ts'
+import { ClientFormData, ClientSchema } from '@clients/types/clients.data.types.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index.ts'
+import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
+import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
 interface CourtCaseTableProps {
   courtCasesList: CourtCaseSchema[]

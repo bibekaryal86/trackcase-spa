@@ -1,10 +1,8 @@
 import * as colors from '@mui/material/colors'
 import dayjs from 'dayjs'
 
-import { getDayjs, getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { CALENDAR_TYPES, DUE_AT_HEARING_ID, ID_DEFAULT } from '@constants/index'
-
+import { getDayjs, getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import {
   CalendarEvents,
   DefaultHearingCalendarFormErrorData,
@@ -15,7 +13,8 @@ import {
   TaskCalendarFormData,
   TaskCalendarFormErrorData,
   TaskCalendarSchema,
-} from '../types/calendars.data.types'
+} from '@calendars//types/calendars.data.types.ts'
+import { CALENDAR_TYPES, DUE_AT_HEARING_ID, ID_DEFAULT } from '@constants/index.ts'
 
 export const getCalendarEventBgColor = (type?: string): string => (type ? CALENDAR_EVENT_BG_COLOR.get(type) || '' : '')
 

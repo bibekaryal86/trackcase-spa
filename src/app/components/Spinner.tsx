@@ -1,9 +1,10 @@
+import { Theme } from '@mui/material'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { GlobalState } from '../store/redux'
+import { GlobalState } from '@app/store/redux.ts'
 
 interface SpinnerProps {
   isLoading: boolean
@@ -15,7 +16,7 @@ const Spinner = (props: SpinnerProps): React.ReactElement => {
       <Backdrop sx={{ color: '#fff', zIndex: 5555 }} open={props.isLoading}>
         <CircularProgress
           sx={{
-            color: (theme) => (theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8'),
+            color: (theme: Theme) => (theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8'),
             animationDuration: '1s',
             position: 'absolute',
           }}

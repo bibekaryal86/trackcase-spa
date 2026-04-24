@@ -12,33 +12,12 @@ import {
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { getCourtCases } from '@cases/actions/courtCases.action'
-import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types'
-import { getClients } from '@clients/actions/clients.action'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import {
-  ACTION_TYPES,
-  ActionTypes,
-  CALENDAR_TYPES,
-  COMPONENT_STATUS_NAME,
-  ID_DEFAULT,
-  INVALID_INPUT,
-} from '@constants/index'
-import { getFilings } from '@filings/actions/filings.action'
-import { FilingSchema } from '@filings/types/filings.data.types'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import CalendarCalendar from './CalendarCalendar'
-import CalendarChooseView from './CalendarChooseView'
-import { CalendarFormHc, CalendarFormTc } from './CalendarForm'
-import CalendarTable from './CalendarTable'
-import { calendarsAction, getCalendars } from '../actions/calendars.action'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { calendarsAction, getCalendars } from '@calendars//actions/calendars.action.ts'
 import {
   CalendarEvents,
   DefaultHearingCalendarFormData,
@@ -53,13 +32,34 @@ import {
   TaskCalendarFormData,
   TaskCalendarResponse,
   TaskCalendarSchema,
-} from '../types/calendars.data.types'
+} from '@calendars//types/calendars.data.types.ts'
 import {
   isAreTwoHearingCalendarsSame,
   isAreTwoTaskCalendarsSame,
   validateHearingCalendar,
   validateTaskCalendar,
-} from '../utils/calendars.utils'
+} from '@calendars//utils/calendars.utils.ts'
+import { getCourtCases } from '@cases/actions/courtCases.action.ts'
+import { CourtCaseFormData, CourtCaseSchema } from '@cases/types/courtCases.data.types.ts'
+import { getClients } from '@clients/actions/clients.action.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import {
+  ACTION_TYPES,
+  ActionTypes,
+  CALENDAR_TYPES,
+  COMPONENT_STATUS_NAME,
+  ID_DEFAULT,
+  INVALID_INPUT,
+} from '@constants/index.ts'
+import { getFilings } from '@filings/actions/filings.action.ts'
+import { FilingSchema } from '@filings/types/filings.data.types.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import CalendarCalendar from './CalendarCalendar.tsx'
+import CalendarChooseView from './CalendarChooseView.tsx'
+import { CalendarFormHc, CalendarFormTc } from './CalendarForm.tsx'
+import CalendarTable from './CalendarTable.tsx'
 
 const mapStateToProps = ({ calendars, refTypes, courtCases, filings, clients }: GlobalState) => {
   return {

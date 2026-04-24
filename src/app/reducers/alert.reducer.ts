@@ -1,7 +1,6 @@
-import { ALERT_TYPES } from '@constants/index'
-
-import { RESET_ALERT, SET_ALERT } from '../types/app.action.types'
-import { AlertAction, AlertState } from '../types/app.data.types'
+import { RESET_ALERT, SET_ALERT } from '@app/types/app.action.types.ts'
+import { AlertAction, AlertState } from '@app/types/app.data.types.ts'
+import { ALERT_TYPES } from '@constants/index.ts'
 
 const initialState: AlertState = {
   messageType: '',

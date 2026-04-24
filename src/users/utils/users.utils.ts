@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { TableData, TableHeaderData } from '@app/types/app.data.types'
-import { convertDateToLocaleString, getNumber, getString } from '@app/utils/app.utils'
-import { SessionStorage } from '@app/utils/storage.utils'
+import { TableData, TableHeaderData } from '@app/types/app.data.types.ts'
+import { convertDateToLocaleString, getNumber, getString } from '@app/utils/app.utils.ts'
+import { SessionStorage } from '@app/utils/storage.utils.ts'
 import {
   ID_DEFAULT,
   LOGIN_SHOW_FORM_TYPE,
@@ -10,8 +10,7 @@ import {
   REF_TYPES_REGISTRY,
   REGEX_LOGIN_INPUT_PATTERN,
   REGEX_LOGIN_PASSWORD_PATTERN,
-} from '@constants/index'
-
+} from '@constants/index.ts'
 import {
   AppPermissionFormData,
   AppPermissionSchema,
@@ -31,7 +30,7 @@ import {
   DefaultAppRolePermissionFormErrorData,
   DefaultAppUserFormErrorData,
   DefaultAppUserRoleFormErrorData,
-} from '../types/users.data.types'
+} from '@users/types/users.data.types.ts'
 
 export const isLoggedIn = (): AppUserSchema | undefined => {
   const token = SessionStorage.getItem('token') as string
@@ -43,7 +42,7 @@ export const isSuperuser = (): boolean => {
   const appUserDetails = isLoggedIn()
   if (appUserDetails) {
     const appRoles = appUserDetails.appRoles || []
-    return appRoles.some((appUserDetail) => appUserDetail.name === 'SUPERUSER')
+    return appRoles.some((appRole: AppRoleSchema) => appRole.name === 'SUPERUSER')
   }
   return false
 }
@@ -79,10 +78,10 @@ export const checkUserHasPermission = (
     // this is added for single page load (court, judge, client, court_case, filing, calendar, collection)
     componentName = componentName.concat('S')
   }
-  if (appUserDetails && appUserDetails.appRoles && appUserDetails.appRoles) {
-    const permission = componentName.concat('_', action)
-    const appPermissions = appUserDetails.appRoles.flatMap((appRole) => appRole.appPermissions)
-    return appPermissions && appPermissions.some((appPermission) => appPermission?.name === permission)
+  if (appUserDetails?.appRoles) {
+    const permission = `${componentName}_${action}`
+    const appPermissions = appUserDetails.appRoles.flatMap((appRole: AppRoleSchema) => appRole.appPermissions ?? [])
+    return appPermissions.some((appPermission: AppPermissionSchema) => appPermission?.name === permission)
   }
   return false
 }

@@ -11,19 +11,24 @@ import {
   pageNotSelectedComponent,
   pageTitleComponent,
   pageTopLinksComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { getNumber, isValidId } from '@app/utils/app.utils'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-import JudgeTable from '@judges/components/JudgeTable'
-import { JudgeSchema } from '@judges/types/judges.data.types'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { getNumber, isValidId } from '@app/utils/app.utils.ts'
+import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
+import { courtsAction, getCourt } from '@courts/actions/courts.action.ts'
+import {
+  CourtBase,
+  CourtResponse,
+  DefaultCourtFormData,
+  DefaultCourtFormErrorData,
+} from '@courts/types/courts.data.types.ts'
+import { getCourtFormDataFromSchema, isAreTwoCourtsSame, validateCourt } from '@courts/utils/courts.utils.ts'
+import JudgeTable from '@judges/components/JudgeTable.tsx'
+import { JudgeSchema } from '@judges/types/judges.data.types.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
 
-import CourtForm from './CourtForm'
-import { courtsAction, getCourt } from '../actions/courts.action'
-import { CourtBase, CourtResponse, DefaultCourtFormData, DefaultCourtFormErrorData } from '../types/courts.data.types'
-import { getCourtFormDataFromSchema, isAreTwoCourtsSame, validateCourt } from '../utils/courts.utils'
+import CourtForm from './CourtForm.tsx'
 
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {

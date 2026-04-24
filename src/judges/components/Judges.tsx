@@ -10,20 +10,15 @@ import {
   secondaryButtonCallback,
   tableActionButtonsComponent,
   updateModalComponent,
-} from '@app/components/CommonComponents'
-import { GlobalState, useGlobalDispatch } from '@app/store/redux'
-import { useModal } from '@app/utils/app.hooks'
-import { getNumber } from '@app/utils/app.utils'
-import { FetchRequestMetadata } from '@app/utils/fetch.utils'
-import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index'
-import { getCourts } from '@courts/actions/courts.action'
-import { CourtSchema } from '@courts/types/courts.data.types'
-import { getRefTypes } from '@ref_types/actions/refTypes.action'
-import { RefTypesState } from '@ref_types/types/refTypes.data.types'
-
-import JudgeForm from './JudgeForm'
-import JudgeTable from './JudgeTable'
-import { getJudges, judgesAction } from '../actions/judges.action'
+} from '@app/components/CommonComponents.tsx'
+import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
+import { useModal } from '@app/utils/app.hooks.ts'
+import { getNumber } from '@app/utils/app.utils.ts'
+import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
+import { ACTION_TYPES, ActionTypes, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
+import { getCourts } from '@courts/actions/courts.action.ts'
+import { CourtSchema } from '@courts/types/courts.data.types.ts'
+import { getJudges, judgesAction } from '@judges/actions/judges.action.ts'
 import {
   DefaultJudgeFormData,
   DefaultJudgeFormErrorData,
@@ -31,8 +26,13 @@ import {
   JudgeFormData,
   JudgeResponse,
   JudgeSchema,
-} from '../types/judges.data.types'
-import { isAreTwoJudgesSame, validateJudge } from '../utils/judges.utils'
+} from '@judges/types/judges.data.types.ts'
+import { isAreTwoJudgesSame, validateJudge } from '@judges/utils/judges.utils.ts'
+import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
+import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
+
+import JudgeForm from './JudgeForm.tsx'
+import JudgeTable from './JudgeTable.tsx'
 
 const mapStateToProps = ({ refTypes, judges, courts }: GlobalState) => {
   return {

@@ -1,14 +1,18 @@
-import { useMediaQuery } from '@mui/material'
+import { SelectChangeEvent, useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 
-import { clientsListForSelect, handleFormChange, refTypesListForSelect } from '@app/components/CommonComponents'
-import { FormCommentsField, FormSelectField, FormSelectStatusField, GridFormWrapper } from '@app/components/FormFields'
-import { ClientSchema } from '@clients/types/clients.data.types'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types'
-
-import { CourtCaseFormData, CourtCaseFormErrorData } from '../types/courtCases.data.types'
+import { clientsListForSelect, handleFormChange, refTypesListForSelect } from '@app/components/CommonComponents.tsx'
+import {
+  FormCommentsField,
+  FormSelectField,
+  FormSelectStatusField,
+  GridFormWrapper,
+} from '@app/components/FormFields.tsx'
+import { CourtCaseFormData, CourtCaseFormErrorData } from '@cases/types/courtCases.data.types.ts'
+import { ClientSchema } from '@clients/types/clients.data.types.ts'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
+import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
 interface CourtCaseFormProps {
   formData: CourtCaseFormData
@@ -33,7 +37,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       required
       name="caseTypeId"
       value={formData.caseTypeId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.caseTypeError}
       helperText={formErrors.caseTypeError}
       menuItems={refTypesListForSelect(caseTypesList)}
@@ -46,7 +50,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
       required
       name="clientId"
       value={formData.clientId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.clientError}
       helperText={formErrors.clientError}
       menuItems={clientsListForSelect(clientsList, clientId, formData.clientId)}
@@ -57,7 +61,7 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
     <FormSelectStatusField
       componentLabel="COURT CASE--STATUS"
       value={formData.componentStatusId}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
       error={!!formErrors.componentStatusError}
       helperText={formErrors.componentStatusError}
       statusList={courtCaseStatusList}
@@ -68,7 +72,9 @@ const CourtCaseForm = (props: CourtCaseFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="COURT CASE--COMMENTS"
       value={formData.comments}
-      onChange={(event) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 

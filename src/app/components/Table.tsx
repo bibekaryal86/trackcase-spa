@@ -17,15 +17,16 @@ import { isBoolean } from 'lodash'
 import React, { isValidElement, useMemo, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
-import { getComponentNameDisplay } from '@app/components/CommonComponents'
-import { USE_MEDIA_QUERY_INPUT } from '@constants/index'
-import { isSuperuser } from '@users/utils/users.utils'
+import { getComponentNameDisplay } from '@app/components/CommonComponents.tsx'
+import { TableData, TableHeaderData, TableOrder } from '@app/types/app.data.types.ts'
+import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
+import { isSuperuser } from '@users/utils/users.utils.ts'
 
-import Switch from './Switch'
-import { TableData, TableHeaderData, TableOrder } from '../types/app.data.types'
+import Switch from './Switch.tsx'
 
 const TABLE_EXPORT_KEYS_TO_AVOID = ['actions', 'Actions', 'collapsed']
 const TABLE_EXPORT_KEY_FOR_TITLE = 'title'
+
 // props
 interface TableHeaderProps {
   headerData: TableHeaderData[]

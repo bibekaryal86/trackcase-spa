@@ -1,5 +1,5 @@
-import { getEndpoint } from '../utils/app.utils'
-import { Async, FetchOptions } from '../utils/fetch.utils'
+import { getEndpoint } from '@app/utils/app.utils.ts'
+import { Async, FetchOptions } from '@app/utils/fetch.utils.ts'
 
 export const testDatabase = () => {
   try {
