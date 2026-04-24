@@ -128,9 +128,8 @@ export const GridFormWrapper: React.FC<FormWrapperProps> = ({
       <Grid
         container
         direction={flexDirection}
-        justifyContent={justifyContent}
-        alignItems={alignItems}
         spacing={spacing ? spacing : isSmallScreen ? 1 : 2}
+        sx={{ justifyContent, alignItems }}
       >
         {children}
       </Grid>
@@ -176,18 +175,17 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
       variant={variant}
       margin={margin}
       id={id}
-      inputProps={{ maxLength: maxLength }}
+      slotProps={{ htmlInput: { maxLength: maxLength }, inputLabel: InputLabelProps }}
       value={value || ''}
       onChange={onChange}
       error={error}
       helperText={helperText}
       sx={sx}
       type={type}
-      InputLabelProps={InputLabelProps}
       multiline={multiline}
       onKeyDown={
         isReadOnly
-          ? (e: React.ChangeEvent<HTMLInputElement>) => {
+          ? (e: React.KeyboardEvent<HTMLDivElement>) => {
               e.preventDefault()
             }
           : undefined

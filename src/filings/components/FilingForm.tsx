@@ -92,7 +92,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--SUBMIT DATE"
       name="submitDate"
       value={formData.submitDate}
-      onChange={(value: Dayjs) => handleFormDateChange('submitDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) => handleFormDateChange('submitDate', value, formData, formErrors, setFormData, setFormErrors)}
       minDate={dayjs().subtract(1, 'week')}
       maxDate={dayjs().add(1, 'week')}
       helperText={formErrors.submitDateError}
@@ -104,7 +104,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--RECEIPT DATE"
       name="receiptDate"
       value={formData.receiptDate}
-      onChange={(value: Dayjs) => handleFormDateChange('receiptDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) => handleFormDateChange('receiptDate', value, formData, formErrors, setFormData, setFormErrors)}
       minDate={dayjs().subtract(1, 'week')}
       maxDate={dayjs().add(1, 'week')}
       helperText={formErrors.receiptDateError}
@@ -128,7 +128,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--PRIORITY DATE"
       name="priorityDate"
       value={formData.priorityDate}
-      onChange={(value: Dayjs) =>
+      onChange={(value: Dayjs | null) =>
         handleFormDateChange('priorityDate', value, formData, formErrors, setFormData, setFormErrors)
       }
       minDate={dayjs().subtract(1, 'month')}
@@ -142,7 +142,7 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--DECISION DATE"
       name="decisionDate"
       value={formData.decisionDate}
-      onChange={(value: Dayjs) =>
+      onChange={(value: Dayjs | null) =>
         handleFormDateChange('decisionDate', value, formData, formErrors, setFormData, setFormErrors)
       }
       minDate={dayjs().subtract(1, 'month')}
@@ -213,7 +213,7 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       componentLabel="FILING RFE--RFE DATE"
       name="rfeDate"
       value={formData.rfeDate}
-      onChange={(value: Dayjs) => handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) => handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)}
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
       helperText={formErrors.rfeDateError}
@@ -226,7 +226,7 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       componentLabel="FILING RFE--RFE SUBMIT DATE"
       name="rfeSubmitDate"
       value={formData.rfeSubmitDate}
-      onChange={(value: Dayjs) =>
+      onChange={(value: Dayjs | null) =>
         handleFormDateChange('rfeSubmitDate', value, formData, formErrors, setFormData, setFormErrors)
       }
       minDate={dayjs().subtract(1, 'month')}

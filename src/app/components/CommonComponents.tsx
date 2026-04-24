@@ -247,7 +247,7 @@ export const hardDeleteCheckboxComponent = <T extends FormData, U extends FormEr
   isSuperuser() ? (
     <FormControlLabel
       label={
-        <Typography variant="body1" fontSize="0.75rem">
+        <Typography variant="body1" sx={{ fontSize: '0.75rem' }}>
           HARD DELETE [WILL DELETE PERMANENTLY, OVERRIDES RESTORE BUTTON]!
         </Typography>
       }

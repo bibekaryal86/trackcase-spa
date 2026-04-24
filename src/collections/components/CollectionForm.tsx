@@ -167,7 +167,7 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         componentLabel="CASH COLLECTION--COLLECTION DATE"
         name="collectionDate"
         value={formData.collectionDate}
-        onChange={(value: Dayjs) =>
+        onChange={(value: Dayjs | null) =>
           handleFormDateChange('collectionDate', value, formData, formErrors, setFormData, setFormErrors)
         }
         minDate={minCollectionDate}

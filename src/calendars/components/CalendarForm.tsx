@@ -73,7 +73,7 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
         componentLabel="HEARING CALENDAR--HEARING DATE"
         name="hearingDate"
         value={formData.hearingDate}
-        onChange={(value: Dayjs) =>
+        onChange={(value: Dayjs | null) =>
           handleFormDateChange('hearingDate', value, formData, formErrors, setFormData, setFormErrors)
         }
         minDate={minCalendarDate}
@@ -162,7 +162,7 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
         componentLabel="TASK CALENDAR--TASK DATE"
         name="taskDate"
         value={formData.taskDate}
-        onChange={(value: Dayjs) => handleFormDateChange('taskDate', value, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(value: Dayjs | null) => handleFormDateChange('taskDate', value, formData, formErrors, setFormData, setFormErrors)}
         minDate={minCalendarDate}
         maxDate={maxCalendarDate}
         helperText={formErrors.taskDateError}
@@ -177,7 +177,7 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
         componentLabel="TASK CALENDAR--DUE DATE"
         name="dueDate"
         value={formData.dueDate}
-        onChange={(value: Dayjs) => handleFormDateChange('dueDate', value, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(value: Dayjs | null) => handleFormDateChange('dueDate', value, formData, formErrors, setFormData, setFormErrors)}
         minDate={minCalendarDate}
         maxDate={maxCalendarDate}
         helperText={formErrors.dueDateError}

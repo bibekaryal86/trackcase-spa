@@ -47,7 +47,7 @@ const Header = (props: HeaderProps) => {
         <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
           <Link text="TrackCase Service" color="inherit" navigateToPage="/home" />
         </Typography>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <Tooltip title={props.isDarkMode ? 'Dark Mode ON' : 'Dark Mode [BETA]'}>
             <FormGroup>
               <Switch isChecked={!props.isDarkMode} onChangeCallback={props.darkModeCallback} />
