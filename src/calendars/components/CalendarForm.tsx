@@ -32,7 +32,6 @@ import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
 import { FilingSchema } from '@filings/types/filings.data.types.ts'
 import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-
 interface CalendarFormProps {
   calendarStatusList: ComponentStatusSchema[]
   calendarTypesList: HearingTypeSchema[] | TaskTypeSchema[]
@@ -90,7 +89,9 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
         componentLabel="HEARING CALENDAR--HEARING TYPE"
         name="hearingTypeId"
         value={formData.hearingTypeId}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={refTypesListForSelect(calendarTypesList)}
         error={!!formErrors.hearingTypeError}
         helperText={formErrors.hearingTypeError}
@@ -105,7 +106,9 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
         componentLabel="HEARING CALENDAR--COURT CASE"
         name="courtCaseId"
         value={formData.courtCaseId}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={courtCasesListForSelect(courtCasesList, selectedCourtCase, formData.courtCaseId)}
         error={!!formErrors.courtCaseError}
         helperText={formErrors.courtCaseError}
@@ -130,7 +133,9 @@ export const CalendarFormHc = (props: CalendarFormPropsHc): React.ReactElement =
     <FormCommentsField
       componentLabel="HEARING CALENDAR--COMMENTS"
       value={formData.comments}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 
@@ -162,7 +167,9 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
         componentLabel="TASK CALENDAR--TASK DATE"
         name="taskDate"
         value={formData.taskDate}
-        onChange={(value: Dayjs | null) => handleFormDateChange('taskDate', value, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(value: Dayjs | null) =>
+          handleFormDateChange('taskDate', value, formData, formErrors, setFormData, setFormErrors)
+        }
         minDate={minCalendarDate}
         maxDate={maxCalendarDate}
         helperText={formErrors.taskDateError}
@@ -177,7 +184,9 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
         componentLabel="TASK CALENDAR--DUE DATE"
         name="dueDate"
         value={formData.dueDate}
-        onChange={(value: Dayjs | null) => handleFormDateChange('dueDate', value, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(value: Dayjs | null) =>
+          handleFormDateChange('dueDate', value, formData, formErrors, setFormData, setFormErrors)
+        }
         minDate={minCalendarDate}
         maxDate={maxCalendarDate}
         helperText={formErrors.dueDateError}
@@ -192,7 +201,9 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
         componentLabel="TASK CALENDAR--TASK TYPE"
         name="taskTypeId"
         value={formData.taskTypeId}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={refTypesListForSelect(calendarTypesList)}
         error={!!formErrors.taskTypeError}
         helperText={formErrors.taskTypeError}
@@ -208,7 +219,9 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
         componentLabel="TASK CALENDAR--HEARING CALENDAR"
         name="hearingCalendarId"
         value={getNumber(formData.hearingCalendarId)}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={hearingCalendarListForSelect(
           hearingCalendarList,
           clientsList,
@@ -230,7 +243,9 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
         componentLabel="TASK CALENDAR--FILING"
         name="filingId"
         value={getNumber(formData.filingId)}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={filingListForSelect(filingsList, clientsList, courtCasesList, selectedCourtCase, formData.filingId)}
         disabled={hearingCalendarId > 0}
         error={!!formErrors.filingError}
@@ -254,7 +269,9 @@ export const CalendarFormTc = (props: CalendarFormPropsTc): React.ReactElement =
     <FormCommentsField
       componentLabel="TASK CALENDAR--COMMENTS"
       value={formData.comments}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 

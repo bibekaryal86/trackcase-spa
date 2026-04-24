@@ -1,4 +1,3 @@
-
 import { RESET_ALERT, SET_ALERT } from '@app/types/app.action.types.ts'
 import { AlertAction, AlertState } from '@app/types/app.data.types.ts'
 import { ALERT_TYPES } from '@constants/index.ts'

@@ -25,7 +25,6 @@ import { JudgesState } from '@judges/types/judges.data.types.ts'
 import refTypes from '@ref_types/reducers/refTypes.reducer.ts'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'
 
-
 // ACTIONS (ESP: FETCH ACTIONS) SHOULD BE NAMED IN THE FOLLOWING PATTERN:
 // xxx_REQUEST, xxx_SUCCESS, xxx_FAILURE, xxx_COMPLETE
 // see spinner.reducer.ts for reason

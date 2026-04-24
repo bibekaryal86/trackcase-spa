@@ -31,7 +31,6 @@ import {
 } from '@users/types/users.data.types.ts'
 import { appUserRoleTableData, appUserRoleTableHeader, validateAppUserRole } from '@users/utils/users.utils.ts'
 
-
 const UserAdminAppUsersRoles = (): React.ReactElement => {
   const dispatch = useGlobalDispatch()
   const [addModalState, updateModalState, deleteModalState] = [useModal(), useModal(), useModal()]
@@ -108,7 +107,9 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
         name="appUserId"
         required
         value={formData.appUserId}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={appUsersMenuItems()}
         error={!!formErrors.appUserId}
         helperText={formErrors.appUserId}
@@ -118,7 +119,9 @@ const UserAdminAppUsersRoles = (): React.ReactElement => {
         name="appRoleId"
         required
         value={formData.appRoleId}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={appRolesMenuItems()}
         error={!!formErrors.appRoleId}
         helperText={formErrors.appRoleId}

@@ -16,7 +16,12 @@ import { GlobalState, useGlobalDispatch } from '@app/store/redux.ts'
 import { getNumber, isValidId } from '@app/utils/app.utils.ts'
 import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/index.ts'
 import { courtsAction, getCourt } from '@courts/actions/courts.action.ts'
-import { CourtBase, CourtResponse, DefaultCourtFormData, DefaultCourtFormErrorData } from '@courts/types/courts.data.types.ts'
+import {
+  CourtBase,
+  CourtResponse,
+  DefaultCourtFormData,
+  DefaultCourtFormErrorData,
+} from '@courts/types/courts.data.types.ts'
 import { getCourtFormDataFromSchema, isAreTwoCourtsSame, validateCourt } from '@courts/utils/courts.utils.ts'
 import JudgeTable from '@judges/components/JudgeTable.tsx'
 import { JudgeSchema } from '@judges/types/judges.data.types.ts'

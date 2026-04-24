@@ -13,7 +13,6 @@ import { JudgeFormData, JudgeSchema } from '@judges/types/judges.data.types.ts'
 import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-
 interface ClientTableProps {
   clientsList: ClientSchema[]
   actionButtons?: (formDataForModal: ClientFormData) => React.JSX.Element

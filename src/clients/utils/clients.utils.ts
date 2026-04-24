@@ -8,7 +8,6 @@ import {
 } from '@clients/types/clients.data.types.ts'
 import { ID_DEFAULT } from '@constants/index.ts'
 
-
 export const isAreTwoClientsSame = (one: ClientFormData | ClientSchema, two: ClientFormData | ClientSchema) =>
   one &&
   two &&

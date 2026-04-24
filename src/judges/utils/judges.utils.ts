@@ -1,7 +1,12 @@
 import { getNumber } from '@app/utils/app.utils.ts'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import { ID_DEFAULT } from '@constants/index.ts'
-import { DefaultJudgeFormErrorData, JudgeFormData, JudgeFormErrorData, JudgeSchema } from '@judges/types/judges.data.types.ts'
+import {
+  DefaultJudgeFormErrorData,
+  JudgeFormData,
+  JudgeFormErrorData,
+  JudgeSchema,
+} from '@judges/types/judges.data.types.ts'
 
 export const isAreTwoJudgesSame = (one: JudgeFormData | JudgeSchema, two: JudgeFormData | JudgeSchema) =>
   one &&

@@ -80,12 +80,8 @@ export const checkUserHasPermission = (
   }
   if (appUserDetails?.appRoles) {
     const permission = `${componentName}_${action}`
-    const appPermissions = appUserDetails.appRoles.flatMap(
-      (appRole: AppRoleSchema) => appRole.appPermissions ?? []
-    )
-    return appPermissions.some(
-      (appPermission: AppPermissionSchema) => appPermission?.name === permission
-    )
+    const appPermissions = appUserDetails.appRoles.flatMap((appRole: AppRoleSchema) => appRole.appPermissions ?? [])
+    return appPermissions.some((appPermission: AppPermissionSchema) => appPermission?.name === permission)
   }
   return false
 }

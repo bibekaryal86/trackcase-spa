@@ -8,7 +8,6 @@ import {
 } from '@cases/types/courtCases.data.types.ts'
 import { ID_DEFAULT } from '@constants/index.ts'
 
-
 export const isAreTwoCourtCasesSame = (
   one: CourtCaseFormData | CourtCaseSchema,
   two: CourtCaseFormData | CourtCaseSchema,

@@ -16,7 +16,6 @@ import { ID_DEFAULT, USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
 import { JudgeSchema } from '@judges/types/judges.data.types.ts'
 import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-
 interface ClientFormProps {
   formData: ClientFormData
   setFormData: (formData: ClientFormData) => void
@@ -39,7 +38,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       componentLabel="CLIENT--NAME"
       name="name"
       value={formData.name}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.name}
       helperText={formErrors.name}
       required
@@ -52,7 +53,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       componentLabel="CLIENT--A NUMBER"
       name="aNumber"
       value={formData.aNumber}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.aNumber}
       helperText={formErrors.aNumber}
       fullWidth
@@ -64,7 +67,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       componentLabel="CLIENT--EMAIL"
       name="email"
       value={formData.email}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.email}
       helperText={formErrors.email}
       required
@@ -78,7 +83,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       name="phoneNumber"
       maxLength={15}
       value={formData.phoneNumber}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.phoneNumber}
       helperText={formErrors.phoneNumber}
       required
@@ -91,7 +98,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       componentLabel="CLIENT--STREET ADDRESS"
       name="streetAddress"
       value={formData.streetAddress}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.streetAddress}
       helperText={formErrors.streetAddress}
       fullWidth
@@ -103,7 +112,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       componentLabel="CLIENT--CITY"
       name="city"
       value={formData.city}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.city}
       helperText={formErrors.city}
       fullWidth
@@ -126,7 +137,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
       maxLength={5}
       name="zipCode"
       value={formData.zipCode}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.zipCode}
       helperText={formErrors.zipCode}
       fullWidth
@@ -160,7 +173,9 @@ const ClientForm = (props: ClientFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="CLIENT--COMMENTS"
       value={formData.comments}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 

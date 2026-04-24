@@ -15,7 +15,6 @@ import { CourtSchema } from '@courts/types/courts.data.types.ts'
 import { JudgeFormData, JudgeFormErrorData } from '@judges/types/judges.data.types.ts'
 import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-
 interface JudgeFormProps {
   formData: JudgeFormData
   setFormData: (formData: JudgeFormData) => void
@@ -38,7 +37,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       autoFocus={!isShowOneJudge}
       name="name"
       value={formData.name}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.name}
       helperText={formErrors.name}
       required
@@ -51,7 +52,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
       componentLabel="JUDGE--WEBEX"
       name="webex"
       value={formData.webex}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       helperText={formErrors.webex}
       fullWidth
     />
@@ -85,7 +88,9 @@ const JudgeForm = (props: JudgeFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="JUDGE--COMMENTS"
       value={formData.comments}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 

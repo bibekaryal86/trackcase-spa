@@ -30,7 +30,6 @@ import {
 } from '@filings/types/filings.data.types.ts'
 import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-
 interface FilingFormProps {
   formData: FilingFormData
   setFormData: (formData: FilingFormData) => void
@@ -92,7 +91,9 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--SUBMIT DATE"
       name="submitDate"
       value={formData.submitDate}
-      onChange={(value: Dayjs | null) => handleFormDateChange('submitDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) =>
+        handleFormDateChange('submitDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
       minDate={dayjs().subtract(1, 'week')}
       maxDate={dayjs().add(1, 'week')}
       helperText={formErrors.submitDateError}
@@ -104,7 +105,9 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--RECEIPT DATE"
       name="receiptDate"
       value={formData.receiptDate}
-      onChange={(value: Dayjs | null) => handleFormDateChange('receiptDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) =>
+        handleFormDateChange('receiptDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
       minDate={dayjs().subtract(1, 'week')}
       maxDate={dayjs().add(1, 'week')}
       helperText={formErrors.receiptDateError}
@@ -116,7 +119,9 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
       componentLabel="FILING--RECEIPT NUMBER"
       name="receiptNumber"
       value={formData.receiptNumber}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.receiptNumberError}
       helperText={formErrors.receiptNumberError}
       fullWidth
@@ -166,7 +171,9 @@ export const FilingForm = (props: FilingFormProps): React.ReactElement => {
     <FormCommentsField
       componentLabel="FILING--COMMENTS"
       value={formData.comments}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 
@@ -213,7 +220,9 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       componentLabel="FILING RFE--RFE DATE"
       name="rfeDate"
       value={formData.rfeDate}
-      onChange={(value: Dayjs | null) => handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(value: Dayjs | null) =>
+        handleFormDateChange('rfeDate', value, formData, formErrors, setFormData, setFormErrors)
+      }
       minDate={dayjs().subtract(1, 'month')}
       maxDate={dayjs().add(1, 'month')}
       helperText={formErrors.rfeDateError}
@@ -240,7 +249,9 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
       componentLabel="FILING RFE--RFE REASON"
       name="rfeReason"
       value={formData.rfeReason}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
       error={!!formErrors.rfeReason}
       helperText={formErrors.rfeReason}
       required
@@ -252,7 +263,9 @@ export const FilingFormRfe = (props: FilingRfeFormProps): React.ReactElement => 
     <FormCommentsField
       componentLabel="FILING RFE--COMMENTS"
       value={formData.comments}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+      }
     />
   )
 

@@ -14,7 +14,6 @@ import Body from './Body.tsx'
 import SessionTimeout from './SessionTimeout.tsx'
 import Spinner from './Spinner.tsx'
 
-
 const lightTheme = createTheme({
   palette: {
     mode: 'light',

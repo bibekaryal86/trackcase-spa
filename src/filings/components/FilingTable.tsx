@@ -14,7 +14,6 @@ import { getFilingFormDataFromSchema, getFilingRfeFormDataFromSchema } from '@fi
 import { ComponentStatusSchema, FilingTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
 import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-
 interface FilingTableProps {
   filingsList: FilingSchema[]
   actionButtons?: (formDataForModal: FilingFormData) => React.JSX.Element

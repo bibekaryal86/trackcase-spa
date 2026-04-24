@@ -6,7 +6,6 @@ import { LocalStorage, SessionStorage } from '@app/utils/storage.utils.ts'
 import { INVALID_SESSION } from '@constants/index.ts'
 import { logout } from '@users/action/users.action.ts'
 
-
 interface SessionTimeoutProps {
   logout: () => void
 }

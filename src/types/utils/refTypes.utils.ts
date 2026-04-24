@@ -2,7 +2,13 @@ import React from 'react'
 
 import { TableData, TableHeaderData } from '@app/types/app.data.types.ts'
 import { getString } from '@app/utils/app.utils.ts'
-import { ACTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT, REF_TYPES_REGISTRY, RefTypesRegistry } from '@constants/index.ts'
+import {
+  ACTION_TYPES,
+  COMPONENT_STATUS_NAME,
+  ID_DEFAULT,
+  REF_TYPES_REGISTRY,
+  RefTypesRegistry,
+} from '@constants/index.ts'
 import {
   ComponentStatusSchema,
   DefaultRefTypeFormData,
@@ -12,7 +18,6 @@ import {
   RefTypesRequestMetadataState,
 } from '@ref_types/types/refTypes.data.types.ts'
 import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
-
 
 export const refTypesDispatch = ({
   type = '',

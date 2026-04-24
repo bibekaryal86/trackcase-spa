@@ -13,7 +13,6 @@ import { ACTION_TYPES, COMPONENT_STATUS_NAME } from '@constants/index.ts'
 import { CaseTypeSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-
 interface CourtCaseTableProps {
   courtCasesList: CourtCaseSchema[]
   actionButtons?: (formDataForModal: CourtCaseFormData) => React.JSX.Element

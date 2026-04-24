@@ -19,7 +19,6 @@ import { FilingSchema } from '@filings/types/filings.data.types.ts'
 import { ComponentStatusSchema, HearingTypeSchema, TaskTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
 import { checkUserHasPermission, isSuperuser } from '@users/utils/users.utils.ts'
 
-
 interface CalendarTableProps {
   type: CalendarTypes
   calendarsList: HearingCalendarSchema[] | TaskCalendarSchema[]

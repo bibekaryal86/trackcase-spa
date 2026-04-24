@@ -14,11 +14,13 @@ import {
   CashCollectionFormData,
   CashCollectionSchema,
 } from '@collections/types/collections.data.types.ts'
-import { getCaseCollectionFormDataFromSchema, getCashCollectionFormDataFromSchema } from '@collections/utils/collections.utils.ts'
+import {
+  getCaseCollectionFormDataFromSchema,
+  getCashCollectionFormDataFromSchema,
+} from '@collections/utils/collections.utils.ts'
 import { ACTION_TYPES, COLLECTION_TYPES, COMPONENT_STATUS_NAME, ID_DEFAULT } from '@constants/index.ts'
 import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 import { checkUserHasPermission } from '@users/utils/users.utils.ts'
-
 
 interface CollectionTableProps {
   caseCollectionsList: CaseCollectionSchema[]

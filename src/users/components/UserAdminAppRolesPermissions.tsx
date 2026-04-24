@@ -111,7 +111,9 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
         name="appRoleId"
         required
         value={formData.appRoleId}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={appRolesMenuItems()}
         error={!!formErrors.appRoleId}
         helperText={formErrors.appRoleId}
@@ -121,7 +123,9 @@ const UserAdminAppRolesPermissions = (): React.ReactElement => {
         name="appPermissionId"
         required
         value={formData.appPermissionId}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         menuItems={appPermissionsMenuItems()}
         error={!!formErrors.appPermissionId}
         helperText={formErrors.appPermissionId}

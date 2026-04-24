@@ -20,7 +20,12 @@ import { ACTION_TYPES, COMPONENT_STATUS_NAME, INVALID_INPUT } from '@constants/i
 import { getCourts } from '@courts/actions/courts.action.ts'
 import { CourtSchema } from '@courts/types/courts.data.types.ts'
 import { getJudge, judgesAction } from '@judges/actions/judges.action.ts'
-import { DefaultJudgeFormData, DefaultJudgeFormErrorData, JudgeBase, JudgeResponse } from '@judges/types/judges.data.types.ts'
+import {
+  DefaultJudgeFormData,
+  DefaultJudgeFormErrorData,
+  JudgeBase,
+  JudgeResponse,
+} from '@judges/types/judges.data.types.ts'
 import { getJudgeFormDataFromSchema, isAreTwoJudgesSame, validateJudge } from '@judges/utils/judges.utils.ts'
 import { getRefTypes } from '@ref_types/actions/refTypes.action.ts'
 import { RefTypesState } from '@ref_types/types/refTypes.data.types.ts'

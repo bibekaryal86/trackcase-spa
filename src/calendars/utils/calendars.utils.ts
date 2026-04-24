@@ -16,7 +16,6 @@ import {
 } from '@calendars//types/calendars.data.types.ts'
 import { CALENDAR_TYPES, DUE_AT_HEARING_ID, ID_DEFAULT } from '@constants/index.ts'
 
-
 export const getCalendarEventBgColor = (type?: string): string => (type ? CALENDAR_EVENT_BG_COLOR.get(type) || '' : '')
 
 export const CALENDAR_EVENT_BG_COLOR = new Map([

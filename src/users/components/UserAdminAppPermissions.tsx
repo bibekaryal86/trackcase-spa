@@ -89,7 +89,9 @@ const UserAdminAppPermissions = (): React.ReactElement => {
         componentLabel="APP PERMISSION--NAME"
         name="name"
         value={formData.name}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.name}
         helperText={formErrors.name}
         required
@@ -98,7 +100,9 @@ const UserAdminAppPermissions = (): React.ReactElement => {
         componentLabel="APP PERMISSION--DESCRIPTION"
         name="description"
         value={formData.description}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.description}
         helperText={formErrors.description}
         required

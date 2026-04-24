@@ -37,7 +37,11 @@ import {
   FilingSchema,
 } from '@filings/types/filings.data.types.ts'
 import { JudgeFormData, JudgeFormErrorData, JudgeSchema } from '@judges/types/judges.data.types.ts'
-import { ComponentStatusSchema, RefTypeFormData, RefTypeLessStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
+import {
+  ComponentStatusSchema,
+  RefTypeFormData,
+  RefTypeLessStatusSchema,
+} from '@ref_types/types/refTypes.data.types.ts'
 import {
   AppPermissionFormData,
   AppRoleFormData,
@@ -255,7 +259,9 @@ export const hardDeleteCheckboxComponent = <T extends FormData, U extends FormEr
         <Checkbox
           name="isHardDelete"
           checked={formData.isHardDelete}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+          }
         />
       }
     />

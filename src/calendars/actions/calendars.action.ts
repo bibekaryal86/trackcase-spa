@@ -37,7 +37,6 @@ import {
   TYPE_IS_MISSING,
 } from '@constants/index.ts'
 
-
 export const calendarsAction = ({
   type,
   action,

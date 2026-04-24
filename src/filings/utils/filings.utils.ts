@@ -17,7 +17,6 @@ import {
 } from '@filings/types/filings.data.types.ts'
 import { FilingTypeSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-
 export const isAreTwoFilingsSame = (one: FilingSchema | FilingFormData, two: FilingSchema | FilingFormData) =>
   one &&
   two &&

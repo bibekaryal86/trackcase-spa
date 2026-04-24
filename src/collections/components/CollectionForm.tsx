@@ -31,7 +31,6 @@ import { getAmountForDisplay } from '@collections/utils/collections.utils.ts'
 import { USE_MEDIA_QUERY_INPUT } from '@constants/index.ts'
 import { CollectionMethodSchema, ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-
 interface CollectionFormPropsCase {
   formData: CaseCollectionFormData
   setFormData: (formData: CaseCollectionFormData) => void
@@ -72,7 +71,9 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
         name="quoteAmount"
         value={getAmountForDisplay(formData.quoteAmount)}
         maxLength={5}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.quoteAmountError}
         helperText={formErrors.quoteAmountError}
         required
@@ -88,7 +89,9 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
         name="courtCaseId"
         value={formData.courtCaseId}
         menuItems={courtCasesListForSelect(courtCasesList, selectedCourtCase, formData.courtCaseId)}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.courtCaseError}
         helperText={formErrors.courtCaseError}
         required
@@ -113,7 +116,9 @@ export const CollectionFormCase = (props: CollectionFormPropsCase): React.ReactE
       <FormCommentsField
         componentLabel="CASE COLLECTION--COMMENTS"
         value={formData.comments}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
       />
     )
   }
@@ -152,7 +157,9 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
           selectedCourtCase,
           formData.caseCollectionId,
         )}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.caseCollectionError}
         helperText={formErrors.caseCollectionError}
         required
@@ -185,7 +192,9 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         name="collectedAmount"
         value={getAmountForDisplay(formData.collectedAmount)}
         maxLength={5}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.collectedAmountError}
         helperText={formErrors.collectedAmountError}
         required
@@ -201,7 +210,9 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         name="collectionMethodId"
         value={formData.collectionMethodId}
         menuItems={refTypesListForSelect(collectionMethodsList)}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.collectionMethodError}
         helperText={formErrors.collectionMethodError}
         required
@@ -216,7 +227,9 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         name="waivedAmount"
         value={getAmountForDisplay(formData.waivedAmount)}
         maxLength={5}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.waivedAmountError}
         helperText={formErrors.waivedAmountError}
         required
@@ -231,7 +244,9 @@ export const CollectionFormCash = (props: CollectionFormPropsCash): React.ReactE
         componentLabel="CASH COLLECTION--MEMO"
         name="memo"
         value={formData.memo}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.memo}
         helperText={formErrors.memo}
         required

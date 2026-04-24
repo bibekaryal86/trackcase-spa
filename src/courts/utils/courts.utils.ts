@@ -1,7 +1,12 @@
 import { getNumber, validateAddress, validatePhoneNumber } from '@app/utils/app.utils.ts'
 import { FetchRequestMetadata } from '@app/utils/fetch.utils.ts'
 import { ID_DEFAULT } from '@constants/index.ts'
-import { CourtFormData, CourtFormErrorData, CourtSchema, DefaultCourtFormErrorData } from '@courts/types/courts.data.types.ts'
+import {
+  CourtFormData,
+  CourtFormErrorData,
+  CourtSchema,
+  DefaultCourtFormErrorData,
+} from '@courts/types/courts.data.types.ts'
 
 export const isAreTwoCourtsSame = (one: CourtFormData | CourtSchema, two: CourtFormData | CourtSchema) =>
   one &&

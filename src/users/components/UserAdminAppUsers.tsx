@@ -35,7 +35,6 @@ import {
 } from '@users/types/users.data.types.ts'
 import { appUsersTableData, appUsersTableHeader, validateAppUser } from '@users/utils/users.utils.ts'
 
-
 const mapStateToProps = ({ refTypes }: GlobalState) => {
   return {
     refTypes: refTypes,
@@ -127,7 +126,9 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--EMAIL"
         name="email"
         value={formData.email}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.email}
         helperText={formErrors.email}
         required
@@ -136,7 +137,9 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--FULL NAME"
         name="fullName"
         value={formData.fullName}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.fullName}
         helperText={formErrors.fullName}
         required
@@ -145,7 +148,9 @@ const UserAdminAppUsers = (props: AppUserProps): React.ReactElement => {
         componentLabel="APP USER--STATUS"
         name="componentStatusId"
         value={formData.componentStatusId}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={!!formErrors.componentStatusId}
         helperText={formErrors.componentStatusId}
         menuItems={componentStatusMenuItems()}

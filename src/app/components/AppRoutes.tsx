@@ -37,7 +37,6 @@ import { checkUserHasPermission, isLoggedIn } from '@users/utils/users.utils.ts'
 
 import NotFound from './NotFound.tsx'
 
-
 const publicRoutes: RoutesType[] = [
   {
     path: '*',

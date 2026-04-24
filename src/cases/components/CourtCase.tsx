@@ -22,7 +22,11 @@ import {
   DefaultCourtCaseFormData,
   DefaultCourtCaseFormErrorData,
 } from '@cases/types/courtCases.data.types.ts'
-import { getCourtCaseFormDataFromSchema, isAreTwoCourtCasesSame, validateCourtCase } from '@cases/utils/courtCases.utils.ts'
+import {
+  getCourtCaseFormDataFromSchema,
+  isAreTwoCourtCasesSame,
+  validateCourtCase,
+} from '@cases/utils/courtCases.utils.ts'
 import { getClients } from '@clients/actions/clients.action.ts'
 import { ClientSchema } from '@clients/types/clients.data.types.ts'
 import Collections from '@collections/components/Collections.tsx'

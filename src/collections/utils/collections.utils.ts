@@ -12,7 +12,6 @@ import {
 } from '@collections/types/collections.data.types.ts'
 import { AMOUNT_DEFAULT, COLLECTION_TYPES, ID_DEFAULT } from '@constants/index.ts'
 
-
 export const getAmountForDisplay = (value: number) => {
   if (value) {
     if (getNumber(value) === AMOUNT_DEFAULT) {

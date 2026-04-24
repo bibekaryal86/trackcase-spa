@@ -163,7 +163,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         name="nameOrComponentName"
         required
         value={formData.nameOrComponentName}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
         helperText={formErrors.nameOrComponentName}
         menuItems={componentNameMenuItems()}
@@ -173,7 +175,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         name="descOrStatusName"
         required
         value={formData.descOrStatusName}
-        onChange={(event: SelectChangeEvent) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: SelectChangeEvent) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
         helperText={formErrors.descOrStatusName}
         menuItems={componentStatusMenuItems()}
@@ -184,7 +188,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
           <Checkbox
             name="isActive"
             checked={formData.isActive}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+            }
           />
         }
       />
@@ -197,7 +203,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         componentLabel={`${refTypeTitle()}--${nameOrComponentName}`}
         name="nameOrComponentName"
         value={formData.nameOrComponentName}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={Boolean(formErrors.nameOrComponentName) || !formData.nameOrComponentName}
         helperText={formErrors.nameOrComponentName}
         required
@@ -206,7 +214,9 @@ const RefTypes = (props: RefTypeProps): React.ReactElement => {
         componentLabel={`${refTypeTitle()}--${descOrStatusName}`}
         name="descOrStatusName"
         value={formData.descOrStatusName}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleFormChange(event, formData, formErrors, setFormData, setFormErrors)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          handleFormChange(event, formData, formErrors, setFormData, setFormErrors)
+        }
         error={Boolean(formErrors.descOrStatusName) || !formData.descOrStatusName}
         helperText={formErrors.descOrStatusName}
         required

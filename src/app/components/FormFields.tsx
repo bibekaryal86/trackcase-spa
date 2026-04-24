@@ -16,7 +16,6 @@ import { getDayjs } from '@app/utils/app.utils.ts'
 import { DATE_FORMAT, ID_DEFAULT, STATES_LIST } from '@constants/index.ts'
 import { ComponentStatusSchema } from '@ref_types/types/refTypes.data.types.ts'
 
-
 interface FormWrapperProps {
   isSmallScreen?: boolean
   isShowOne?: boolean
