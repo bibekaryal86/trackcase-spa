@@ -99,8 +99,7 @@ export const collectionsAction = ({
 
     try {
       const collectionResponse = (await Async.fetch(endpoint, options)) as
-        | CaseCollectionResponse
-        | CashCollectionResponse
+        CaseCollectionResponse | CashCollectionResponse
       if (collectionResponse.detail) {
         dispatch(collectionDispatch({ type: typeFailure, error: getErrMsg(collectionResponse.detail) }))
       } else {
