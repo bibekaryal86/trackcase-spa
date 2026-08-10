@@ -88,11 +88,7 @@ export type RefTypeSchema =
   | TaskTypeSchema
 
 export type RefTypeLessStatusSchema =
-  | CaseTypeSchema
-  | CollectionMethodSchema
-  | FilingTypeSchema
-  | HearingTypeSchema
-  | TaskTypeSchema
+  CaseTypeSchema | CollectionMethodSchema | FilingTypeSchema | HearingTypeSchema | TaskTypeSchema
 
 // states and actions
 export interface RefTypesRequestMetadataState {
