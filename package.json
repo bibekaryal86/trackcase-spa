@@ -43,7 +43,7 @@
     "react-router-dom": "^7.18.2",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "styled-components": "^6.5.1"
+    "styled-components": "^6.5.2"
   },
   "devDependencies": {
     "@babel/core": "^8.0.1",
@@ -80,7 +80,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-webpack-plugin": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
-    "globals": "^17.9.0",
+    "globals": "^17.10.0",
     "html-webpack-plugin": "^5.6.8",
     "prettier": "^3.9.6",
     "redux-mock-store": "^1.5.5",
