@@ -40,7 +40,7 @@
     "react-csv": "^2.2.2",
     "react-dom": "^19.2.8",
     "react-redux": "^9.3.0",
-    "react-router-dom": "^7.18.2",
+    "react-router-dom": "^7.18.3",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
     "styled-components": "^6.5.3"
@@ -69,7 +69,7 @@
     "babel-loader": "^10.1.1",
     "babel-plugin-polyfill-regenerator": "^1.0.0",
     "clean-webpack-plugin": "^4.0.0",
-    "css-loader": "^7.1.4",
+    "css-loader": "^7.1.5",
     "dotenv-webpack": "^9.0.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
@@ -87,7 +87,7 @@
     "style-loader": "^4.0.0",
     "typescript": "^6.0.3",
     "webpack": "^5.99.9",
-    "webpack-cli": "^7.2.2",
+    "webpack-cli": "^7.2.3",
     "webpack-dev-server": "^6.0.0"
   }
 }
